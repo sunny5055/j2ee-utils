@@ -3,13 +3,13 @@
 	<groupId>jee-utils</groupId>
 	<artifactId>maven-pom-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>MavenPomParent</name>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/maven-pom-parent/tags/maven-pom-parent-1.0.0</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/maven-pom-parent/tags/maven-pom-parent-1.0.0</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/maven-pom-parent/tags/maven-pom-parent-1.0.0</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/maven-pom-parent/trunk</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/maven-pom-parent/trunk</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/maven-pom-parent/trunk</url>
 	</scm>
 
 	<properties>

@@ -16,7 +16,6 @@
 		<encoding>UTF-8</encoding>
 		<sourceLevel>1.6</sourceLevel>
 		<targetJDK>1.6</targetJDK>
-		<mavenVersion>2.2.1</mavenVersion>
 	</properties>
 
 	<developers>

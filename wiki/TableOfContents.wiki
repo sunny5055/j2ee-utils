@@ -1,0 +1,9 @@
+#summary documentation outline for docreader
+  * [commons-dal]
+  * [csv-exporter]
+  * [hibernate-dal]
+  * [image-util]
+  * [maven-pom-parent]
+  * [spring-util]
+  * [templater]
+  * [utils]

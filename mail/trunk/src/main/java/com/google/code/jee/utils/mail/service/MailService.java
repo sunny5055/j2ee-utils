@@ -1,0 +1,105 @@
+package com.google.code.jee.utils.mail.service;
+
+import java.io.InputStream;
+import java.util.List;
+
+import com.google.code.jee.utils.mail.exception.MailServiceException;
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface MailService.
+ */
+public interface MailService {
+    
+    /**
+     * Send an email via the SMTP protocol.
+     *
+     * @param from the email sender
+     * @param recipients list that contains the email's recipients
+     * @param subject the email subject
+     * @param text the email message
+     * @throws MailServiceException the mail service exception
+     */
+    void sendMail(String from, List<String> recipients, String subject, 
+            String text, boolean htmlMessage) throws MailServiceException;
+    
+    /**
+     * Send an email via the SMTP protocol.
+     *
+     * @param from the email sender
+     * @param replyTo the list of the senders
+     * @param recipients list that contains the email's recipients
+     * @param subject the email subject
+     * @param text the email message
+     * @throws MailServiceException the mail service exception
+     */
+    void sendMail(String from, String replyTo, List<String> recipients, 
+            String subject, String text, boolean htmlMessage) 
+                    throws MailServiceException;
+    
+    /**
+     * Send an email via the SMTP protocol.
+     *
+     * @param from the email sender
+     * @param recipients list that contains the email's recipients
+     * @param subject the email subject
+     * @param text the email message
+     * @param inputStreams list that contains the email's attachments
+     * @throws MailServiceException the mail service exception
+     */
+    void sendMail(String from, List<String> recipients, String subject, 
+            String text, boolean htmlMessage, List<InputStream> inputStreams) 
+                    throws MailServiceException;
+    
+    /**
+     * Send an email via the SMTP protocol.
+     *
+     * @param from the email sender
+     * @param replyTo the list of the senders
+     * @param recipients list that contains the email's recipients
+     * @param subject the email subject
+     * @param text the email message
+     * @param inputStreams list that contains the email's attachments
+     * @throws MailServiceException the mail service exception
+     */
+    void sendMail(String from, String replyTo, List<String> recipients, String subject, 
+            String text, boolean htmlMessage, List<InputStream> inputStreams) 
+                    throws MailServiceException;
+    
+    
+    /**
+     * Send an email via the SMTP protocol.
+     *
+     * @param from the email sender
+     * @param recipients list that contains the email's recipients
+     * @param subject the email subject
+     * @param text the email message
+     * @param inputStreams list that contains the email's attachments
+     * @param carbonCopies list that contains all the carbon copies recipients
+     * @param blindCarbonCopies list that contains all the blind carbon copies recipients
+     * @throws MailServiceException the mail service exception
+     */
+    void sendMail(String from, List<String> recipients, List<String> carbonCopies, 
+            List<String> blindCarbonCopies, String subject, String text, 
+            boolean htmlMessage, List<InputStream> inputStreams)
+                    throws MailServiceException;
+    /**
+     * Send an email via the SMTP protocol.
+     *
+     * @param from the email sender
+     * @param replyTo the list of the senders
+     * @param recipients list that contains the email's recipients
+     * @param carbonCopies list that contains all the carbon copies recipients
+     * @param blindCarbonCopies list that contains all the blind carbon copies recipients
+     * @param subject the email subject
+     * @param text the email message
+     * @param inputStreams list that contains the email's attachments
+     * @param replyTo list that contains all the blind carbon copies recipients
+     * @throws MailServiceException the mail service exception
+     */
+    void sendMail(String from, String replyTo, List<String> recipients, 
+            List<String> carbonCopies, List<String> blindCarbonCopies, String subject, 
+            String text, boolean htmlMessage, List<InputStream> inputStreams) 
+                    throws MailServiceException;
+    
+}

@@ -1,4 +1,0 @@
-#summary Hibernate Data Access Layer.
-=hibernate-dal=
-
-To complete.

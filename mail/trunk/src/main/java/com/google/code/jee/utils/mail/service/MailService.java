@@ -18,6 +18,7 @@ public interface MailService {
      * @param recipients list that contains the email's recipients
      * @param subject the email subject
      * @param text the email message
+     * @param htmlMessage the html message
      * @throws MailServiceException the mail service exception
      */
     void sendMail(String from, List<String> recipients, String subject, String text, boolean htmlMessage)
@@ -31,6 +32,7 @@ public interface MailService {
      * @param recipients list that contains the email's recipients
      * @param subject the email subject
      * @param text the email message
+     * @param htmlMessage the html message
      * @throws MailServiceException the mail service exception
      */
     void sendMail(String from, String replyTo, List<String> recipients, String subject, String text, boolean htmlMessage)
@@ -43,6 +45,7 @@ public interface MailService {
      * @param recipients list that contains the email's recipients
      * @param subject the email subject
      * @param text the email message
+     * @param htmlMessage the html message
      * @param attachments list that contains the email's attachments
      * @throws MailServiceException the mail service exception
      */
@@ -57,6 +60,7 @@ public interface MailService {
      * @param recipients list that contains the email's recipients
      * @param subject the email subject
      * @param text the email message
+     * @param htmlMessage the html message
      * @param attachments list that contains the email's attachments
      * @throws MailServiceException the mail service exception
      */
@@ -68,12 +72,13 @@ public interface MailService {
      * 
      * @param from the email sender
      * @param recipients list that contains the email's recipients
-     * @param subject the email subject
-     * @param text the email message
-     * @param attachments list that contains the email's attachments
      * @param carbonCopies list that contains all the carbon copies recipients
      * @param blindCarbonCopies list that contains all the blind carbon copies
      *            recipients
+     * @param subject the email subject
+     * @param text the email message
+     * @param htmlMessage the html message
+     * @param attachments list that contains the email's attachments
      * @throws MailServiceException the mail service exception
      */
     void sendMail(String from, List<String> recipients, List<String> carbonCopies, List<String> blindCarbonCopies,
@@ -91,8 +96,8 @@ public interface MailService {
      *            recipients
      * @param subject the email subject
      * @param text the email message
+     * @param htmlMessage the html message
      * @param attachments list that contains the email's attachments
-     * @param replyTo list that contains all the blind carbon copies recipients
      * @throws MailServiceException the mail service exception
      */
     void sendMail(String from, String replyTo, List<String> recipients, List<String> carbonCopies,

@@ -43,11 +43,11 @@ public interface MailService {
      * @param recipients list that contains the email's recipients
      * @param subject the email subject
      * @param text the email message
-     * @param inputStreams list that contains the email's attachments
+     * @param attachments list that contains the email's attachments
      * @throws MailServiceException the mail service exception
      */
     void sendMail(String from, List<String> recipients, String subject, String text, boolean htmlMessage,
-            Map<String, InputStream> inputStreams) throws MailServiceException;
+            Map<String, InputStream> attachments) throws MailServiceException;
 
     /**
      * Send an email.
@@ -57,11 +57,11 @@ public interface MailService {
      * @param recipients list that contains the email's recipients
      * @param subject the email subject
      * @param text the email message
-     * @param inputStreams list that contains the email's attachments
+     * @param attachments list that contains the email's attachments
      * @throws MailServiceException the mail service exception
      */
     void sendMail(String from, String replyTo, List<String> recipients, String subject, String text,
-            boolean htmlMessage, Map<String, InputStream> inputStreams) throws MailServiceException;
+            boolean htmlMessage, Map<String, InputStream> attachments) throws MailServiceException;
 
     /**
      * Send an email.
@@ -70,14 +70,14 @@ public interface MailService {
      * @param recipients list that contains the email's recipients
      * @param subject the email subject
      * @param text the email message
-     * @param inputStreams list that contains the email's attachments
+     * @param attachments list that contains the email's attachments
      * @param carbonCopies list that contains all the carbon copies recipients
      * @param blindCarbonCopies list that contains all the blind carbon copies
      *            recipients
      * @throws MailServiceException the mail service exception
      */
     void sendMail(String from, List<String> recipients, List<String> carbonCopies, List<String> blindCarbonCopies,
-            String subject, String text, boolean htmlMessage, Map<String, InputStream> inputStreams)
+            String subject, String text, boolean htmlMessage, Map<String, InputStream> attachments)
             throws MailServiceException;
 
     /**
@@ -91,12 +91,12 @@ public interface MailService {
      *            recipients
      * @param subject the email subject
      * @param text the email message
-     * @param inputStreams list that contains the email's attachments
+     * @param attachments list that contains the email's attachments
      * @param replyTo list that contains all the blind carbon copies recipients
      * @throws MailServiceException the mail service exception
      */
     void sendMail(String from, String replyTo, List<String> recipients, List<String> carbonCopies,
             List<String> blindCarbonCopies, String subject, String text, boolean htmlMessage,
-            Map<String, InputStream> inputStreams) throws MailServiceException;
+            Map<String, InputStream> attachments) throws MailServiceException;
 
 }

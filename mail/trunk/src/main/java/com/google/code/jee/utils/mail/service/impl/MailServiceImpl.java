@@ -52,8 +52,8 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendMail(String from, List<String> recipients, String subject, String text, boolean htmlMessage,
-            Map<String, InputStream> inputStreams) throws MailServiceException {
-        sendMail(from, from, recipients, null, null, subject, text, htmlMessage, inputStreams);
+            Map<String, InputStream> attachments) throws MailServiceException {
+        sendMail(from, from, recipients, null, null, subject, text, htmlMessage, attachments);
     }
 
     /**
@@ -61,8 +61,8 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendMail(String from, String replyTo, List<String> recipients, String subject, String text,
-            boolean htmlMessage, Map<String, InputStream> inputStreams) throws MailServiceException {
-        sendMail(from, replyTo, recipients, null, null, subject, text, htmlMessage, inputStreams);
+            boolean htmlMessage, Map<String, InputStream> attachments) throws MailServiceException {
+        sendMail(from, replyTo, recipients, null, null, subject, text, htmlMessage, attachments);
     }
 
     /**
@@ -71,8 +71,8 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendMail(String from, List<String> recipients, List<String> carbonCopies,
             List<String> blindCarbonCopies, String subject, String text, boolean htmlMessage,
-            Map<String, InputStream> inputStreams) throws MailServiceException {
-        sendMail(from, from, recipients, carbonCopies, blindCarbonCopies, subject, text, htmlMessage, inputStreams);
+            Map<String, InputStream> attachments) throws MailServiceException {
+        sendMail(from, from, recipients, carbonCopies, blindCarbonCopies, subject, text, htmlMessage, attachments);
     }
 
     /**
@@ -81,7 +81,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendMail(String from, String replyTo, List<String> recipients, List<String> carbonCopies,
             List<String> blindCarbonCopies, String subject, String text, boolean htmlMessage,
-            Map<String, InputStream> inputStreams) throws MailServiceException {
+            Map<String, InputStream> attachments) throws MailServiceException {
         if (StringUtil.isBlank(from)) {
             throw new MailServiceException("'From' field is undetermined");
         }
@@ -102,10 +102,7 @@ public class MailServiceImpl implements MailService {
                 mail.setFrom(from);
                 if (!StringUtil.isBlank(replyTo)) {
                     mail.setReplyTo(replyTo);
-                } else {
-                    mail.setReplyTo(from);
                 }
-
                 if (!CollectionUtil.isEmpty(recipients)) {
                     mail.setTo(recipients.toArray(new String[recipients.size()]));
                 }
@@ -122,10 +119,10 @@ public class MailServiceImpl implements MailService {
 
                 mail.setText(text, htmlMessage);
 
-                if (!MapUtil.isEmpty(inputStreams)) {
-                    for (String fileName : inputStreams.keySet()) {
+                if (!MapUtil.isEmpty(attachments)) {
+                    for (final String fileName : attachments.keySet()) {
                         mail.addAttachment(fileName,
-                                new ByteArrayResource(IoUtil.toByteArray(inputStreams.get(fileName))));
+                                new ByteArrayResource(IoUtil.toByteArray(attachments.get(fileName))));
                     }
                 }
             } catch (final MessagingException e) {

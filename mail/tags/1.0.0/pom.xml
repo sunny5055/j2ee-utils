@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>mail</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0.0</version>
+	<name>mail</name>
+
+	<parent>
+		<groupId>jee-utils</groupId>
+		<artifactId>maven-pom-parent</artifactId>
+		<version>1.0.1</version>
+	</parent>
+
+	<scm>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/mail/tags/1.0.0</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/mail/tags/1.0.0</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/mail/tags/1.0.0</url>
+	</scm>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jee-utils</groupId>
+			<artifactId>spring-util</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+	</dependencies>
+</project>

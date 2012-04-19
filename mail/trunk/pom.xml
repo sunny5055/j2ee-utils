@@ -9,13 +9,13 @@
 	<parent>
 		<groupId>jee-utils</groupId>
 		<artifactId>maven-pom-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/mail/tags/1.0.0</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/mail/tags/1.0.0</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/mail/tags/1.0.0</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/mail/trunk/</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/mail/trunk/</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/mail/trunk/</url>
 	</scm>
 
 	<dependencies>
@@ -24,11 +24,11 @@
 			<artifactId>mail</artifactId>
 			<version>1.4.5</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>jee-utils</groupId>
 			<artifactId>spring-util</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
 </project>

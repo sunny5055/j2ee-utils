@@ -8,6 +8,7 @@
   * [csvExporter csv-exporter]
   * [commonsDal commons-dal]
   * [hibernateDal hibernate-dal]
+  * [mail]  
 
 
 

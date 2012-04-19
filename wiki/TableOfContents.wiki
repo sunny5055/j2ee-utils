@@ -1,4 +1,5 @@
 #summary documentation outline for docreader
+  * [index Index]
   * [mavenPomParent maven-pom-parent]
   * [utils]
   * [imageUtil image-util]

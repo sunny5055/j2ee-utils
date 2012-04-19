@@ -29,6 +29,11 @@ To complete.
 }}}
 
 {{{
+Hello ${name} !
+}}}
+
+
+{{{
 public static void main(String[] args) {
 	final ApplicationContext context = new ClassPathXmlApplicationContext(
 			new String[] { "spring/application-context.xml" });

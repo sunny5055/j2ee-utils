@@ -2,6 +2,7 @@ package com.google.code.jee.utils.mail.service;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import com.google.code.jee.utils.mail.exception.MailServiceException;
 
@@ -46,7 +47,7 @@ public interface MailService {
      * @throws MailServiceException the mail service exception
      */
     void sendMail(String from, List<String> recipients, String subject, String text, boolean htmlMessage,
-            List<InputStream> inputStreams) throws MailServiceException;
+            Map<String, InputStream> inputStreams) throws MailServiceException;
 
     /**
      * Send an email.
@@ -60,7 +61,7 @@ public interface MailService {
      * @throws MailServiceException the mail service exception
      */
     void sendMail(String from, String replyTo, List<String> recipients, String subject, String text,
-            boolean htmlMessage, List<InputStream> inputStreams) throws MailServiceException;
+            boolean htmlMessage, Map<String, InputStream> inputStreams) throws MailServiceException;
 
     /**
      * Send an email.
@@ -76,7 +77,7 @@ public interface MailService {
      * @throws MailServiceException the mail service exception
      */
     void sendMail(String from, List<String> recipients, List<String> carbonCopies, List<String> blindCarbonCopies,
-            String subject, String text, boolean htmlMessage, List<InputStream> inputStreams)
+            String subject, String text, boolean htmlMessage, Map<String, InputStream> inputStreams)
             throws MailServiceException;
 
     /**
@@ -96,6 +97,6 @@ public interface MailService {
      */
     void sendMail(String from, String replyTo, List<String> recipients, List<String> carbonCopies,
             List<String> blindCarbonCopies, String subject, String text, boolean htmlMessage,
-            List<InputStream> inputStreams) throws MailServiceException;
+            Map<String, InputStream> inputStreams) throws MailServiceException;
 
 }

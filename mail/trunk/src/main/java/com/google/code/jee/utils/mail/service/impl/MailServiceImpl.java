@@ -3,6 +3,7 @@ package com.google.code.jee.utils.mail.service.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.code.jee.utils.StringUtil;
 import com.google.code.jee.utils.collection.CollectionUtil;
+import com.google.code.jee.utils.collection.MapUtil;
 import com.google.code.jee.utils.io.IoUtil;
 import com.google.code.jee.utils.mail.exception.MailServiceException;
 import com.google.code.jee.utils.mail.service.MailService;
@@ -50,7 +52,7 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendMail(String from, List<String> recipients, String subject, String text, boolean htmlMessage,
-            List<InputStream> inputStreams) throws MailServiceException {
+            Map<String, InputStream> inputStreams) throws MailServiceException {
         sendMail(from, from, recipients, null, null, subject, text, htmlMessage, inputStreams);
     }
 
@@ -59,7 +61,7 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendMail(String from, String replyTo, List<String> recipients, String subject, String text,
-            boolean htmlMessage, List<InputStream> inputStreams) throws MailServiceException {
+            boolean htmlMessage, Map<String, InputStream> inputStreams) throws MailServiceException {
         sendMail(from, replyTo, recipients, null, null, subject, text, htmlMessage, inputStreams);
     }
 
@@ -69,7 +71,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendMail(String from, List<String> recipients, List<String> carbonCopies,
             List<String> blindCarbonCopies, String subject, String text, boolean htmlMessage,
-            List<InputStream> inputStreams) throws MailServiceException {
+            Map<String, InputStream> inputStreams) throws MailServiceException {
         sendMail(from, from, recipients, carbonCopies, blindCarbonCopies, subject, text, htmlMessage, inputStreams);
     }
 
@@ -79,9 +81,12 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendMail(String from, String replyTo, List<String> recipients, List<String> carbonCopies,
             List<String> blindCarbonCopies, String subject, String text, boolean htmlMessage,
-            List<InputStream> inputStreams) throws MailServiceException {
+            Map<String, InputStream> inputStreams) throws MailServiceException {
         if (StringUtil.isBlank(from)) {
             throw new MailServiceException("'From' field is undetermined");
+        }
+        if (StringUtil.isBlank(text)) {
+            throw new MailServiceException("The e-mail cannot be sent without content");
         }
         if (CollectionUtil.isEmpty(recipients) && CollectionUtil.isEmpty(carbonCopies)
                 && CollectionUtil.isEmpty(blindCarbonCopies)) {
@@ -96,6 +101,8 @@ public class MailServiceImpl implements MailService {
                 mail = new MimeMessageHelper(mimeMessage, true);
                 mail.setFrom(from);
                 if (!StringUtil.isBlank(replyTo)) {
+                    mail.setReplyTo(replyTo);
+                } else {
                     mail.setReplyTo(from);
                 }
 
@@ -113,14 +120,12 @@ public class MailServiceImpl implements MailService {
                     mail.setSubject(subject);
                 }
 
-                if (!StringUtil.isEmpty(text)) {
-                    mail.setText(text, htmlMessage);
-                }
+                mail.setText(text, htmlMessage);
 
-                if (!CollectionUtil.isEmpty(inputStreams)) {
-                    int i = 0;
-                    for (final InputStream file : inputStreams) {
-                        mail.addAttachment("Attachment_" + i++, new ByteArrayResource(IoUtil.toByteArray(file)));
+                if (!MapUtil.isEmpty(inputStreams)) {
+                    for (String fileName : inputStreams.keySet()) {
+                        mail.addAttachment(fileName,
+                                new ByteArrayResource(IoUtil.toByteArray(inputStreams.get(fileName))));
                     }
                 }
             } catch (final MessagingException e) {

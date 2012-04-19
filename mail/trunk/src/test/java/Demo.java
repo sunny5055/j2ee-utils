@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -26,7 +28,7 @@ public class Demo {
         final List<String> blindCarbonCopies = new ArrayList<String>();
         blindCarbonCopies.add("mehdi.assem@gmail.com");
 
-        final List<InputStream> inputStreams = new ArrayList<InputStream>();
+        final Map<String, InputStream> inputStreams = new HashMap<String, InputStream>();
         FileInputStream file = null;
         final String currentDirectoryPath = new File(".").getCanonicalPath();
         try {
@@ -35,11 +37,11 @@ public class Demo {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
-        inputStreams.add(file);
+        inputStreams.put("logo_t&s.png", file);
 
         try {
-            mailService.sendMail("mehdi.assem@gmail.com", "m.assem@technologyandstrategy.com", recipients,
-                    carbonCopies, blindCarbonCopies, "", "text", true, inputStreams);
+            mailService.sendMail("mehdi.assem@gmail.com", recipients,
+                    carbonCopies, blindCarbonCopies, "", "<html><head></head><body><h1>text</h1></body></html>", true, inputStreams);
         } catch (final MailServiceException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

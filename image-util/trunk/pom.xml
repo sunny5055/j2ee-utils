@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>image-util</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.2</version>
 	<name>image-util</name>
 
 	<parent>
@@ -13,10 +13,10 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/image-util/trunk/</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/image-util/trunk/
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/image-util/tags/1.0.2</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/image-util/tags/1.0.2
         </developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/image-util/trunk/</url>
+		<url>https://j2ee-utils.googlecode.com/svn/image-util/tags/1.0.2</url>
 	</scm>
 
 	<dependencies>

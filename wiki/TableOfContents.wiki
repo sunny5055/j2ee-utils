@@ -8,7 +8,7 @@
   * [csvExporter csv-exporter]
   * [commonsDal commons-dal]
   * [hibernateDal hibernate-dal]
-  * [mail]  
+  * [mailSender mail-sender]  
 
 
 

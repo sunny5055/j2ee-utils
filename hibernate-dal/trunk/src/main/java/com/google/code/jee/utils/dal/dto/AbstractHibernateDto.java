@@ -2,11 +2,9 @@ package com.google.code.jee.utils.dal.dto;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.HibernateProxyHelper;
 
-import com.google.code.jee.utils.StringUtil;
 import com.google.code.jee.utils.dal.util.HibernateUtil;
 
 /**
@@ -15,15 +13,7 @@ import com.google.code.jee.utils.dal.util.HibernateUtil;
  * @param <PK> the generic type
  */
 @SuppressWarnings ("serial")
-public abstract class AbstractHibernateDto<PK extends Serializable> implements Dto<PK> {
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public String getStringPrimaryKey() {
-        return StringUtil.toString(getPrimaryKey());
-    }
+public abstract class AbstractHibernateDto<PK extends Serializable> extends AbstractDto<PK> {
 
     /**
      * {@inheritedDoc}
@@ -49,25 +39,5 @@ public abstract class AbstractHibernateDto<PK extends Serializable> implements D
 
         final Dto<?> that = (Dto<?>) o;
         return this.getPrimaryKey() != null && this.getPrimaryKey().equals(that.getPrimaryKey());
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(this.getPrimaryKey()).toHashCode();
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public String toString() {
-        final StringBuffer buffer = new StringBuffer(this.getClass().getName());
-        buffer.append(" [id=");
-        buffer.append(this.getStringPrimaryKey());
-        buffer.append("]");
-        return buffer.toString();
     }
 }

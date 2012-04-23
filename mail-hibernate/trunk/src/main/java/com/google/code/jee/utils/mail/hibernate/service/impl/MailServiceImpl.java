@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.code.jee.utils.dal.service.AbstractGenericService;
+import com.google.code.jee.utils.mail.hibernate.dao.MailAttachmentDao;
 import com.google.code.jee.utils.mail.hibernate.dao.MailDao;
 import com.google.code.jee.utils.mail.hibernate.model.Mail;
+import com.google.code.jee.utils.mail.hibernate.model.MailAttachment;
 import com.google.code.jee.utils.mail.hibernate.service.MailService;
 
 /**
@@ -18,11 +20,14 @@ import com.google.code.jee.utils.mail.hibernate.service.MailService;
 @Service
 public class MailServiceImpl extends AbstractGenericService<Integer, Mail, MailDao> implements MailService {
 
-    /*
-     * (non-Javadoc)
-     * @see com.google.code.jee.utils.mail_hibernate.facade.service.MailService#
-     * existWithName(java.lang.String)
-     */
+    /** The mail attachment dao. */
+    @Autowired
+    private MailAttachmentDao mailAttachmentDao; 
+
+    /**
+    * {@inheritedDoc}
+    */
+    
     @Override
     public boolean existWithName(String name) {
         boolean exist = false;
@@ -33,11 +38,10 @@ public class MailServiceImpl extends AbstractGenericService<Integer, Mail, MailD
         return exist;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.google.code.jee.utils.mail_hibernate.facade.service.MailService#
-     * findByName(java.lang.String)
-     */
+    /**
+    * {@inheritedDoc}
+    */
+    
     @Override
     public Mail findByName(String name) {
         Mail mail = null;
@@ -47,30 +51,43 @@ public class MailServiceImpl extends AbstractGenericService<Integer, Mail, MailD
         return mail;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.google.code.jee.utils.mail_hibernate.facade.service.MailService#
-     * findAllByName()
-     */
-    @Override
-    public List<Mail> findAllByName() {
-        List<Mail> mails = dao.findAllByName();
-        if (mails == null) {
-            mails = new ArrayList<Mail>();
-        }
-        return mails;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.service.AbstractGenericReadService#setDao
-     * (com.google.code.jee.utils.dal.dao.GenericReadDao)
-     */
+    /**
+    * {@inheritedDoc}
+    */
+    
     @Autowired
     @Override
     public void setDao(MailDao mailDao) {
         this.dao = mailDao;
+    }
+
+    /**
+    * {@inheritedDoc}
+    */
+    
+    @Override
+    public MailAttachment findMailAttachment(Integer mailPrimaryKey, String attachmentName) {
+        MailAttachment mailAttachment = null;
+        if (!StringUtils.isEmpty(attachmentName) && mailPrimaryKey != null) {
+            mailAttachment = mailAttachmentDao.findMailAttachment(mailPrimaryKey, attachmentName);
+        }
+        return mailAttachment;
+    }
+
+    /**
+    * {@inheritedDoc}
+    */
+    
+    @Override
+    public List<MailAttachment> findAllAttachments(Integer mailPrimaryKey) {
+        List<MailAttachment> attachments = null;
+        if(mailPrimaryKey != null) {
+            mailAttachmentDao.findAllMailAttachments(mailPrimaryKey);
+        }
+        if (attachments == null) {
+            attachments = new ArrayList<MailAttachment>();
+        }
+        return attachments;
     }
 
 }

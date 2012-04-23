@@ -28,29 +28,29 @@ public class Mail extends AbstractHibernateDto<Integer> {
     @Column (name = "MAI_ID", nullable = false, unique = true)
     private Integer id;
 
-    @Column (name = "MAI_NAME")
+    @Column (name = "MAI_NAME", length = 50)
     private String name;
 
-    @Column (name = "MAI_FROM", nullable = false)
+    @Column (name = "MAI_FROM", nullable = false, length = 100)
     private String from;
 
-    @Column (name = "MAI_REPLY_TO")
+    @Column (name = "MAI_REPLY_TO", length = 100)
     private String replyTo;
 
-    @Column (name = "MAI_SUBJECT")
+    @Column (name = "MAI_SUBJECT", length = 250)
     private String subject;
 
-    @Column (name = "MAI_TEXT", nullable = false)
+    @Column (name = "MAI_TEXT", nullable = false, length = 5000)
     private String text;
 
-    @Column (name = "MAI_HTML_MESSAGE")
+    @Column (name = "MAI_HTML_MESSAGE", nullable = false)
     private Boolean htmlMessage;
 
     @OneToMany (cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
     @JoinColumn (name = "MAA_MAIL_ID ", nullable = false)
     private List<MailAttachment> attachments;
 
-    @Column (name = "MAI_TEMPLATE")
+    @Column (name = "MAI_TEMPLATE", nullable = false)
     private Boolean template;
 
     /**

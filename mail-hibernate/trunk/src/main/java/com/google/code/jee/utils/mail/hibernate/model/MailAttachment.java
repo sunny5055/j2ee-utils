@@ -23,7 +23,7 @@ public class MailAttachment extends AbstractHibernateDto<Integer> {
     @Column (name = "MAA_ID", nullable = false, unique = true)
     private Integer id;
 
-    @Column (name = "MAA_NAME", nullable = false)
+    @Column (name = "MAA_NAME", nullable = false, length = 100)
     private String name;
 
     @Lob

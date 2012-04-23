@@ -1,6 +1,5 @@
 package com.google.code.jee.utils.mail.hibernate.dao.impl;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +10,6 @@ import com.google.code.jee.utils.dal.SearchCriteria;
 import com.google.code.jee.utils.dal.SortOrder;
 import com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate;
 import com.google.code.jee.utils.mail.hibernate.dao.MailAttachmentDao;
-import com.google.code.jee.utils.mail.hibernate.dao.MailDao;
 import com.google.code.jee.utils.mail.hibernate.model.MailAttachment;
 
 /**
@@ -28,176 +26,38 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
         super(MailAttachment.class);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate#create(
-     * com.google.code.jee.utils.dal.dto.Dto)
+    /**
+     * {@inheritedDoc}
      */
-    @Override
-    public Integer create(MailAttachment mailAttachment) {
-        return super.create(mailAttachment);
-    }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate#delete(
-     * com.google.code.jee.utils.dal.dto.Dto)
-     */
-    @Override
-    public Integer delete(MailAttachment mailAttachment) {
-        return super.delete(mailAttachment);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate#
-     * deleteByPrimaryKey(java.io.Serializable)
-     */
-    @Override
-    public Integer deleteByPrimaryKey(Integer primaryKey) {
-        return super.deleteByPrimaryKey(primaryKey);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate#update(
-     * com.google.code.jee.utils.dal.dto.Dto)
-     */
-    @Override
-    public Integer update(MailAttachment mailAttachment) {
-        return super.update(mailAttachment);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.dao.AbstractGenericReadDaoHibernate#count()
-     */
-    @Override
-    public Integer count() {
-        return super.count();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.dao.AbstractGenericReadDaoHibernate#count
-     * (com.google.code.jee.utils.dal.SearchCriteria)
-     */
-    @Override
-    public Integer count(SearchCriteria searchCriteria) {
-        return super.count(searchCriteria);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.dao.AbstractGenericReadDaoHibernate#existPk
-     * (java.io.Serializable)
-     */
-    @Override
-    public boolean existPk(Integer primaryKey) {
-        return super.existPk(primaryKey);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.dao.AbstractGenericReadDaoHibernate#findAll
-     * ()
-     */
-    @Override
-    public List<MailAttachment> findAll() {
-        return super.findAll();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.dao.AbstractGenericReadDaoHibernate#findAll
-     * (com.google.code.jee.utils.dal.SearchCriteria)
-     */
-    @Override
-    public List<MailAttachment> findAll(SearchCriteria searchCriteria) {
-        return super.findAll(searchCriteria);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.dao.AbstractGenericReadDaoHibernate#get
-     * (java.io.Serializable)
-     */
-    @Override
-    public MailAttachment get(Integer primaryKey) {
-        return super.get(primaryKey);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.dao.AbstractGenericReadDaoHibernate#getObjects
-     * (PK[])
-     */
-    @Override
-    public List<MailAttachment> getObjects(Integer... primaryKeys) {
-        return super.getObjects(primaryKeys);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.dao.AbstractGenericReadDaoHibernate#getObjects
-     * (java.util.Collection)
-     */
-    @Override
-    public List<MailAttachment> getObjects(Collection<Integer> primaryKeys) {
-        return super.getObjects(primaryKeys);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.mail_hibernate.facade.dao.MailAttachmentDao
-     * #countByName(java.lang.String)
-     */
     @Override
     public Integer countByName(String name) {
         return this.getNumberByNamedQueryAndNamedParam(MailAttachmentDao.COUNT_BY_NAME, new String[] { "name" }, name);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.mail_hibernate.facade.dao.MailAttachmentDao
-     * #findByName(java.lang.String)
+    /**
+     * {@inheritedDoc}
      */
+
     @Override
     public MailAttachment findByName(String name) {
-        return this.getByNamedQueryAndNamedParam(MailDao.FIND_BY_NAME, new String[] { "name" }, name);
+        return this.getByNamedQueryAndNamedParam(MailAttachmentDao.FIND_BY_NAME, new String[] { "name" }, name);
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.mail_hibernate.facade.dao.MailAttachmentDao
-     * #findAllByName()
+    /**
+     * {@inheritedDoc}
      */
+
     @Override
     public List<MailAttachment> findAllByName() {
-        return this.findByNamedQuery(MailDao.FIND_ALL_BY_NAME);
+        return this.findByNamedQuery(MailAttachmentDao.FIND_ALL_BY_NAME);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.dal.dao.AbstractGenericReadDao#getSearch(com
-     * .google.code.jee.utils.dal.SearchCriteria)
+    /**
+     * {@inheritedDoc}
      */
+
     @Override
     protected Search getSearch(SearchCriteria searchCriteria) {
         Search search = null;
@@ -205,7 +65,7 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
             search = new Search();
 
             final StringBuilder buffer = new StringBuilder();
-            buffer.append("from MailAttachment m ");
+            buffer.append("from MailAttachment maa, Mail mai ");
             if (searchCriteria.hasFilters()) {
                 buffer.append("where ");
                 int index = 0;
@@ -214,9 +74,12 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
                         if (index != 0) {
                             buffer.append("AND ");
                         }
-                        if (entry.getKey().equals("name")) {
-                            buffer.append("upper(m.name) like upper(:name) ");
-                            search.addStringParameter("name", entry.getValue());
+                        if (entry.getKey().equals("mailPrimaryKey")) {
+                            buffer.append("mai.id = mailPrimaryKey ");
+                            search.addStringParameter("mailPrimaryKey", entry.getValue());
+                        } else if (entry.getKey().equals("attachmentName")) {
+                            buffer.append("upper(maa.attachmentName) like upper(:attachmentName) ");
+                            search.addStringParameter("attachmentName", entry.getValue());
                         }
                         index++;
                     }
@@ -233,7 +96,7 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
                         buffer.append(", ");
                     }
                     if (entry.getKey().equals("name")) {
-                        buffer.append("m.name ");
+                        buffer.append("maa.name ");
                         if (entry.getValue() == SortOrder.DESCENDING) {
                             buffer.append("desc ");
                         }
@@ -246,4 +109,25 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
         }
         return search;
     }
+
+    /**
+     * {@inheritedDoc}
+     */
+
+    @Override
+    public MailAttachment findMailAttachment(Integer mailPrimaryKey, String attachmentName) {
+        return this.getByNamedQueryAndNamedParam(MailAttachmentDao.FIND_MAIL_ATTACHMENT, new String[] {
+                "mailPrimaryKey", "attachmentName" }, mailPrimaryKey, attachmentName);
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+
+    @Override
+    public List<MailAttachment> findAllMailAttachments(Integer mailPrimaryKey) {
+        return this.findByNamedQueryAndNamedParam(MailAttachmentDao.FIND_ALL_MAIL_ATTACHMENTS,
+                new String[] { "mailPrimaryKey" }, mailPrimaryKey);
+    }
+
 }

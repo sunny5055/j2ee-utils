@@ -1,6 +1,4 @@
-package com.google.code.jee.utils.mail.hibernate.facade.model;
-
-import java.io.Serializable;
+package com.google.code.jee.utils.mail.hibernate.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,32 +13,22 @@ import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
 /**
  * The Class MailAttachment.
  */
+@SuppressWarnings ("serial")
 @Entity
-@Table(name = "MAA_MAIL_ATTACHMENT")
-public class MailAttachment extends AbstractHibernateDto<Integer> implements Serializable {
-    
-    /** The id. */
+@Table (name = "MAA_MAIL_ATTACHMENT")
+public class MailAttachment extends AbstractHibernateDto<Integer> {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "MAA_ID", nullable = false, unique = true)
+    @GeneratedValue (strategy = GenerationType.AUTO)
+    @Column (name = "MAA_ID", nullable = false, unique = true)
     private Integer id;
 
-    /** The name. */
-    @Column(name = "MAA_NAME", nullable = false)
+    @Column (name = "MAA_NAME", nullable = false)
     private String name;
 
-    /** The content. */
     @Lob
-    @Column(name = "MAA_CONTENT", nullable = false)
+    @Column (name = "MAA_CONTENT", nullable = false)
     private byte[] content;
-
-    /* (non-Javadoc)
-     * @see com.google.code.jee.utils.dal.dto.Dto#getPrimaryKey()
-     */
-    @Override
-    public Integer getPrimaryKey() {
-        return this.id;
-    }
 
     /**
      * Instantiates a new mail attachment.
@@ -48,9 +36,17 @@ public class MailAttachment extends AbstractHibernateDto<Integer> implements Ser
     public MailAttachment() {
         super();
     }
-    
-    /* (non-Javadoc)
-     * @see com.google.code.jee.utils.dal.dto.Dto#setPrimaryKey(java.io.Serializable)
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public Integer getPrimaryKey() {
+        return this.id;
+    }
+
+    /**
+     * {@inheritedDoc}
      */
     @Override
     public void setPrimaryKey(Integer primaryKey) {
@@ -59,7 +55,7 @@ public class MailAttachment extends AbstractHibernateDto<Integer> implements Ser
 
     /**
      * Gets the id.
-     *
+     * 
      * @return the id
      */
     public Integer getId() {
@@ -68,7 +64,7 @@ public class MailAttachment extends AbstractHibernateDto<Integer> implements Ser
 
     /**
      * Sets the id.
-     *
+     * 
      * @param id the new id
      */
     public void setId(Integer id) {
@@ -77,7 +73,7 @@ public class MailAttachment extends AbstractHibernateDto<Integer> implements Ser
 
     /**
      * Gets the name.
-     *
+     * 
      * @return the name
      */
     public String getName() {
@@ -86,7 +82,7 @@ public class MailAttachment extends AbstractHibernateDto<Integer> implements Ser
 
     /**
      * Sets the name.
-     *
+     * 
      * @param name the new name
      */
     public void setName(String name) {
@@ -95,7 +91,7 @@ public class MailAttachment extends AbstractHibernateDto<Integer> implements Ser
 
     /**
      * Gets the content.
-     *
+     * 
      * @return the content
      */
     public byte[] getContent() {
@@ -104,7 +100,7 @@ public class MailAttachment extends AbstractHibernateDto<Integer> implements Ser
 
     /**
      * Sets the attachment.
-     *
+     * 
      * @param content the new attachment
      */
     public void setAttachment(byte[] content) {

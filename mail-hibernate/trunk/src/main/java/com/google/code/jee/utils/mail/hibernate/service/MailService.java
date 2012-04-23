@@ -1,9 +1,9 @@
-package com.google.code.jee.utils.mail.hibernate.facade.service;
+package com.google.code.jee.utils.mail.hibernate.service;
 
 import java.util.List;
 
 import com.google.code.jee.utils.dal.service.GenericService;
-import com.google.code.jee.utils.mail.hibernate.facade.model.Mail;
+import com.google.code.jee.utils.mail.hibernate.model.Mail;
 
 /**
  * The Interface MailService.

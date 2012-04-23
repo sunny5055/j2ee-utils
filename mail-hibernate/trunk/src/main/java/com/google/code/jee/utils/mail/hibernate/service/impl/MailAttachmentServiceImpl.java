@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.mail.hibernate.impl.service;
+package com.google.code.jee.utils.mail.hibernate.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.code.jee.utils.dal.service.AbstractGenericService;
-import com.google.code.jee.utils.mail.hibernate.facade.dao.MailAttachmentDao;
-import com.google.code.jee.utils.mail.hibernate.facade.model.MailAttachment;
-import com.google.code.jee.utils.mail.hibernate.facade.service.MailAttachmentService;
+import com.google.code.jee.utils.mail.hibernate.dao.MailAttachmentDao;
+import com.google.code.jee.utils.mail.hibernate.model.MailAttachment;
+import com.google.code.jee.utils.mail.hibernate.service.MailAttachmentService;
 
 /**
  * The Class MailAttachmentServiceImpl.
@@ -19,8 +19,11 @@ import com.google.code.jee.utils.mail.hibernate.facade.service.MailAttachmentSer
 public class MailAttachmentServiceImpl extends AbstractGenericService<Integer, MailAttachment, MailAttachmentDao>
         implements MailAttachmentService {
 
-    /* (non-Javadoc)
-     * @see com.google.code.jee.utils.mail_hibernate.facade.service.MailAttachmentService#existWithName(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * @see
+     * com.google.code.jee.utils.mail_hibernate.facade.service.MailAttachmentService
+     * #existWithName(java.lang.String)
      */
     @Override
     public boolean existWithName(String name) {
@@ -32,8 +35,11 @@ public class MailAttachmentServiceImpl extends AbstractGenericService<Integer, M
         return exist;
     }
 
-    /* (non-Javadoc)
-     * @see com.google.code.jee.utils.mail_hibernate.facade.service.MailAttachmentService#findByName(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * @see
+     * com.google.code.jee.utils.mail_hibernate.facade.service.MailAttachmentService
+     * #findByName(java.lang.String)
      */
     @Override
     public MailAttachment findByName(String name) {
@@ -44,8 +50,11 @@ public class MailAttachmentServiceImpl extends AbstractGenericService<Integer, M
         return mailAttachment;
     }
 
-    /* (non-Javadoc)
-     * @see com.google.code.jee.utils.mail_hibernate.facade.service.MailAttachmentService#findAllByName()
+    /*
+     * (non-Javadoc)
+     * @see
+     * com.google.code.jee.utils.mail_hibernate.facade.service.MailAttachmentService
+     * #findAllByName()
      */
     @Override
     public List<MailAttachment> findAllByName() {
@@ -56,8 +65,11 @@ public class MailAttachmentServiceImpl extends AbstractGenericService<Integer, M
         return attachments;
     }
 
-    /* (non-Javadoc)
-     * @see com.google.code.jee.utils.dal.service.AbstractGenericReadService#setDao(com.google.code.jee.utils.dal.dao.GenericReadDao)
+    /*
+     * (non-Javadoc)
+     * @see
+     * com.google.code.jee.utils.dal.service.AbstractGenericReadService#setDao
+     * (com.google.code.jee.utils.dal.dao.GenericReadDao)
      */
     @Autowired
     @Override

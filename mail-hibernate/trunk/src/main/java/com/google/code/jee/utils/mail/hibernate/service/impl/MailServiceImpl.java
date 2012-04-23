@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.mail.hibernate.impl.service;
+package com.google.code.jee.utils.mail.hibernate.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.code.jee.utils.dal.service.AbstractGenericService;
-import com.google.code.jee.utils.mail.hibernate.facade.dao.MailDao;
-import com.google.code.jee.utils.mail.hibernate.facade.model.Mail;
-import com.google.code.jee.utils.mail.hibernate.facade.service.MailService;
+import com.google.code.jee.utils.mail.hibernate.dao.MailDao;
+import com.google.code.jee.utils.mail.hibernate.model.Mail;
+import com.google.code.jee.utils.mail.hibernate.service.MailService;
 
 /**
  * The Class MailServiceImpl.

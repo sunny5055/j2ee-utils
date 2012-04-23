@@ -1,19 +1,18 @@
-package com.google.code.jee.utils.mail.hibernate.facade.model;
+package com.google.code.jee.utils.mail.hibernate.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
 
@@ -21,66 +20,57 @@ import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
  * The Class Mail.
  */
 @Entity
-@Table(name = "MAI_MAIL")
-public class Mail extends AbstractHibernateDto<Integer> implements Serializable {
-    
-    /** The id. */
+@Table (name = "MAI_MAIL")
+@SuppressWarnings ("serial")
+public class Mail extends AbstractHibernateDto<Integer> {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "MAI_ID", nullable = false, unique = true)
+    @GeneratedValue (strategy = GenerationType.AUTO)
+    @Column (name = "MAI_ID", nullable = false, unique = true)
     private Integer id;
 
-    /** The from. */
-    @Column(name = "MAI_FROM", nullable = false)
+    @Column (name = "MAI_NAME")
+    private String name;
+
+    @Column (name = "MAI_FROM", nullable = false)
     private String from;
 
-    /** The reply to. */
-    @Column(name = "MAI_REPLY_TO")
+    @Column (name = "MAI_REPLY_TO")
     private String replyTo;
 
-    /** The subject. */
-    @Column(name = "MAI_SUBJECT")
+    @Column (name = "MAI_SUBJECT")
     private String subject;
 
-    /** The text. */
-    @Column(name = "MAI_TEXT", nullable = false)
+    @Column (name = "MAI_TEXT", nullable = false)
     private String text;
 
-    /** The html message. */
-    @Column(name = "MAI_HTML_MESSAGE")
+    @Column (name = "MAI_HTML_MESSAGE")
     private Boolean htmlMessage;
 
-    /** The attachments. */
-    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-    @JoinColumn(name = "MAA_MAIL_ID ", nullable = false)
+    @OneToMany (cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+    @JoinColumn (name = "MAA_MAIL_ID ", nullable = false)
     private List<MailAttachment> attachments;
 
-    /** The template. */
-    @Column(name = "MAI_TEMPLATE")
+    @Column (name = "MAI_TEMPLATE")
     private Boolean template;
-    
-    /** The template name. */
-    @Column(name = "MAI_NAME")
-    private Boolean name;
 
     /**
      * Instantiates a new mail.
      */
     public Mail() {
         super();
-        attachments = new ArrayList<MailAttachment>();
+        this.attachments = new ArrayList<MailAttachment>();
     }
 
-    /* (non-Javadoc)
-     * @see com.google.code.jee.utils.dal.dto.Dto#getPrimaryKey()
+    /**
+     * {@inheritedDoc}
      */
     @Override
     public Integer getPrimaryKey() {
         return this.id;
     }
 
-    /* (non-Javadoc)
-     * @see com.google.code.jee.utils.dal.dto.Dto#setPrimaryKey(java.io.Serializable)
+    /**
+     * {@inheritedDoc}
      */
     @Override
     public void setPrimaryKey(Integer primaryKey) {
@@ -88,8 +78,8 @@ public class Mail extends AbstractHibernateDto<Integer> implements Serializable 
     }
 
     /**
-     * Gets the id.
-     *
+     * Getter : return the id
+     * 
      * @return the id
      */
     public Integer getId() {
@@ -97,17 +87,35 @@ public class Mail extends AbstractHibernateDto<Integer> implements Serializable 
     }
 
     /**
-     * Sets the id.
-     *
-     * @param id the new id
+     * Setter : affect the id
+     * 
+     * @param id the id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     * Gets the from.
-     *
+     * Getter : return the name
+     * 
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Setter : affect the name
+     * 
+     * @param name the name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Getter : return the from
+     * 
      * @return the from
      */
     public String getFrom() {
@@ -115,35 +123,35 @@ public class Mail extends AbstractHibernateDto<Integer> implements Serializable 
     }
 
     /**
-     * Sets the from.
-     *
-     * @param from the new from
+     * Setter : affect the from
+     * 
+     * @param from the from
      */
     public void setFrom(String from) {
         this.from = from;
     }
 
     /**
-     * Gets the reply to.
-     *
-     * @return the reply to
+     * Getter : return the replyTo
+     * 
+     * @return the replyTo
      */
     public String getReplyTo() {
         return replyTo;
     }
 
     /**
-     * Sets the reply to.
-     *
-     * @param replyTo the new reply to
+     * Setter : affect the replyTo
+     * 
+     * @param replyTo the replyTo
      */
     public void setReplyTo(String replyTo) {
         this.replyTo = replyTo;
     }
 
     /**
-     * Gets the subject.
-     *
+     * Getter : return the subject
+     * 
      * @return the subject
      */
     public String getSubject() {
@@ -151,17 +159,17 @@ public class Mail extends AbstractHibernateDto<Integer> implements Serializable 
     }
 
     /**
-     * Sets the subject.
-     *
-     * @param subject the new subject
+     * Setter : affect the subject
+     * 
+     * @param subject the subject
      */
     public void setSubject(String subject) {
         this.subject = subject;
     }
 
     /**
-     * Gets the text.
-     *
+     * Getter : return the text
+     * 
      * @return the text
      */
     public String getText() {
@@ -169,35 +177,35 @@ public class Mail extends AbstractHibernateDto<Integer> implements Serializable 
     }
 
     /**
-     * Sets the text.
-     *
-     * @param text the new text
+     * Setter : affect the text
+     * 
+     * @param text the text
      */
     public void setText(String text) {
         this.text = text;
     }
 
     /**
-     * Checks if is html message.
-     *
-     * @return the boolean
+     * Getter : return the htmlMessage
+     * 
+     * @return the htmlMessage
      */
-    public Boolean isHtmlMessage() {
+    public Boolean getHtmlMessage() {
         return htmlMessage;
     }
 
     /**
-     * Sets the html message.
-     *
-     * @param htmlMessage the new html message
+     * Setter : affect the htmlMessage
+     * 
+     * @param htmlMessage the htmlMessage
      */
     public void setHtmlMessage(Boolean htmlMessage) {
         this.htmlMessage = htmlMessage;
     }
 
     /**
-     * Gets the attachments.
-     *
+     * Getter : return the attachments
+     * 
      * @return the attachments
      */
     public List<MailAttachment> getAttachments() {
@@ -205,37 +213,29 @@ public class Mail extends AbstractHibernateDto<Integer> implements Serializable 
     }
 
     /**
-     * Sets the attachments.
-     *
-     * @param attachments the new attachments
+     * Setter : affect the attachments
+     * 
+     * @param attachments the attachments
      */
     public void setAttachments(List<MailAttachment> attachments) {
         this.attachments = attachments;
     }
 
     /**
-     * Checks if is template.
-     *
-     * @return the boolean
+     * Getter : return the template
+     * 
+     * @return the template
      */
-    public Boolean isTemplate() {
+    public Boolean getTemplate() {
         return template;
     }
 
     /**
-     * Sets the template.
-     *
-     * @param template the new template
+     * Setter : affect the template
+     * 
+     * @param template the template
      */
     public void setTemplate(Boolean template) {
         this.template = template;
-    }
-
-    public Boolean getName() {
-        return name;
-    }
-
-    public void setName(Boolean name) {
-        this.name = name;
     }
 }

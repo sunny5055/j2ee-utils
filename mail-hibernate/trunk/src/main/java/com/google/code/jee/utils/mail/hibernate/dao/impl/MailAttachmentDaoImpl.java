@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.mail.hibernate.impl.dao;
+package com.google.code.jee.utils.mail.hibernate.dao.impl;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,22 +10,22 @@ import com.google.code.jee.utils.dal.Search;
 import com.google.code.jee.utils.dal.SearchCriteria;
 import com.google.code.jee.utils.dal.SortOrder;
 import com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate;
-import com.google.code.jee.utils.mail.hibernate.facade.dao.MailDao;
-import com.google.code.jee.utils.mail.hibernate.facade.model.Mail;
-import com.google.code.jee.utils.mail.hibernate.facade.model.MailAttachment;
+import com.google.code.jee.utils.mail.hibernate.dao.MailAttachmentDao;
+import com.google.code.jee.utils.mail.hibernate.dao.MailDao;
+import com.google.code.jee.utils.mail.hibernate.model.MailAttachment;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class MailDaoImpl.
+ * The Class MailAttachmentDaoImpl.
  */
 @Repository
-public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> implements MailDao {
+public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, MailAttachment> implements
+        MailAttachmentDao {
 
     /**
-     * Instantiates a new mail dao impl.
+     * Instantiates a new mail attachment dao impl.
      */
-    public MailDaoImpl() {
-        super(Mail.class);
+    public MailAttachmentDaoImpl() {
+        super(MailAttachment.class);
     }
 
     /*
@@ -35,8 +35,8 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
      * com.google.code.jee.utils.dal.dto.Dto)
      */
     @Override
-    public Integer create(Mail mail) {
-        return super.create(mail);
+    public Integer create(MailAttachment mailAttachment) {
+        return super.create(mailAttachment);
     }
 
     /*
@@ -46,8 +46,8 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
      * com.google.code.jee.utils.dal.dto.Dto)
      */
     @Override
-    public Integer delete(Mail mail) {
-        return super.delete(mail);
+    public Integer delete(MailAttachment mailAttachment) {
+        return super.delete(mailAttachment);
     }
 
     /*
@@ -67,8 +67,8 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
      * com.google.code.jee.utils.dal.dto.Dto)
      */
     @Override
-    public Integer update(Mail mail) {
-        return super.update(mail);
+    public Integer update(MailAttachment mailAttachment) {
+        return super.update(mailAttachment);
     }
 
     /*
@@ -94,8 +94,9 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
 
     /*
      * (non-Javadoc)
-     * @see com.google.code.jee.utils.dal.dao.AbstractGenericReadDaoHibernate#
-     * existprimaryKey(java.io.Serializable)
+     * @see
+     * com.google.code.jee.utils.dal.dao.AbstractGenericReadDaoHibernate#existPk
+     * (java.io.Serializable)
      */
     @Override
     public boolean existPk(Integer primaryKey) {
@@ -109,7 +110,7 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
      * ()
      */
     @Override
-    public List<Mail> findAll() {
+    public List<MailAttachment> findAll() {
         return super.findAll();
     }
 
@@ -120,7 +121,7 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
      * (com.google.code.jee.utils.dal.SearchCriteria)
      */
     @Override
-    public List<Mail> findAll(SearchCriteria searchCriteria) {
+    public List<MailAttachment> findAll(SearchCriteria searchCriteria) {
         return super.findAll(searchCriteria);
     }
 
@@ -131,7 +132,7 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
      * (java.io.Serializable)
      */
     @Override
-    public Mail get(Integer primaryKey) {
+    public MailAttachment get(Integer primaryKey) {
         return super.get(primaryKey);
     }
 
@@ -139,10 +140,10 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
      * (non-Javadoc)
      * @see
      * com.google.code.jee.utils.dal.dao.AbstractGenericReadDaoHibernate#getObjects
-     * (primaryKey[])
+     * (PK[])
      */
     @Override
-    public List<Mail> getObjects(Integer... primaryKeys) {
+    public List<MailAttachment> getObjects(Integer... primaryKeys) {
         return super.getObjects(primaryKeys);
     }
 
@@ -153,8 +154,42 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
      * (java.util.Collection)
      */
     @Override
-    public List<Mail> getObjects(Collection<Integer> primaryKeys) {
+    public List<MailAttachment> getObjects(Collection<Integer> primaryKeys) {
         return super.getObjects(primaryKeys);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * com.google.code.jee.utils.mail_hibernate.facade.dao.MailAttachmentDao
+     * #countByName(java.lang.String)
+     */
+    @Override
+    public Integer countByName(String name) {
+        return this.getNumberByNamedQueryAndNamedParam(MailAttachmentDao.COUNT_BY_NAME, new String[] { "name" }, name);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * com.google.code.jee.utils.mail_hibernate.facade.dao.MailAttachmentDao
+     * #findByName(java.lang.String)
+     */
+    @Override
+    public MailAttachment findByName(String name) {
+        return this.getByNamedQueryAndNamedParam(MailDao.FIND_BY_NAME, new String[] { "name" }, name);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * com.google.code.jee.utils.mail_hibernate.facade.dao.MailAttachmentDao
+     * #findAllByName()
+     */
+    @Override
+    public List<MailAttachment> findAllByName() {
+        return this.findByNamedQuery(MailDao.FIND_ALL_BY_NAME);
     }
 
     /*
@@ -170,7 +205,7 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
             search = new Search();
 
             final StringBuilder buffer = new StringBuilder();
-            buffer.append("from Mail m ");
+            buffer.append("from MailAttachment m ");
             if (searchCriteria.hasFilters()) {
                 buffer.append("where ");
                 int index = 0;
@@ -182,12 +217,6 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
                         if (entry.getKey().equals("name")) {
                             buffer.append("upper(m.name) like upper(:name) ");
                             search.addStringParameter("name", entry.getValue());
-                            buffer.append("AND ");
-                            buffer.append("m.template = true ");
-                            search.addStringParameter("template", true);
-                        } else if (entry.getKey().equals("subject")) {
-                            buffer.append("upper(m.subject) like upper(:subject) ");
-                            search.addStringParameter("subject", entry.getValue());
                         }
                         index++;
                     }
@@ -208,11 +237,6 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
                         if (entry.getValue() == SortOrder.DESCENDING) {
                             buffer.append("desc ");
                         }
-                    } else if (entry.getKey().equals("subject")) {
-                        buffer.append("m.subject ");
-                        if (entry.getValue() == SortOrder.DESCENDING) {
-                            buffer.append("desc ");
-                        }
                     }
                     index++;
                 }
@@ -221,62 +245,5 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
             search.setQuery(buffer.toString());
         }
         return search;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.mail_hibernate.facade.dao.MailDao#countByName
-     * (java.lang.String)
-     */
-    @Override
-    public Integer countByName(String name) {
-        return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_BY_NAME, new String[] { "name" }, name);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.code.jee.utils.mail_hibernate.facade.dao.MailDao#findByName
-     * (java.lang.String)
-     */
-    @Override
-    public Mail findByName(String name) {
-        return this.getByNamedQueryAndNamedParam(MailDao.FIND_BY_NAME, new String[] { "name" }, name);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.google.code.jee.utils.mail_hibernate.facade.dao.MailDao#
-     * findAllOrderByName()
-     */
-    @Override
-    public List<Mail> findAllByName() {
-        return this.findByNamedQuery(MailDao.FIND_ALL_BY_NAME);
-    }
-
-    /* (non-Javadoc)
-     * @see com.google.code.jee.utils.mail_hibernate.facade.dao.MailDao#countBySubject(java.lang.String)
-     */
-    @Override
-    public Integer countBySubject(String subject) {
-        return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_BY_SUBJECT, new String[] { "subject" }, subject);
-    }
-
-    /* (non-Javadoc)
-     * @see com.google.code.jee.utils.mail_hibernate.facade.dao.MailDao#findBySubject(java.lang.String)
-     */
-    @Override
-    public Mail findBySubject(String subject) {
-        return this.getByNamedQueryAndNamedParam(MailDao.FIND_BY_SUBJECT, new String[] { "subject" }, subject);
-
-    }
-
-    /* (non-Javadoc)
-     * @see com.google.code.jee.utils.mail_hibernate.facade.dao.MailDao#findAllBySubject()
-     */
-    @Override
-    public List<Mail> findAllBySubject() {
-        return this.findByNamedQuery(MailDao.FIND_ALL_BY_SUBJECT);
     }
 }

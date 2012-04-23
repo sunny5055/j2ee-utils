@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.mail_hibernate.facade.model;
+package com.google.code.jee.utils.mail.hibernate.facade.model;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.mail_hibernate.impl.dao;
+package com.google.code.jee.utils.mail.hibernate.impl.dao;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,9 +10,9 @@ import com.google.code.jee.utils.dal.Search;
 import com.google.code.jee.utils.dal.SearchCriteria;
 import com.google.code.jee.utils.dal.SortOrder;
 import com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate;
-import com.google.code.jee.utils.mail_hibernate.facade.dao.MailDao;
-import com.google.code.jee.utils.mail_hibernate.facade.model.Mail;
-import com.google.code.jee.utils.mail_hibernate.facade.model.MailAttachment;
+import com.google.code.jee.utils.mail.hibernate.facade.dao.MailDao;
+import com.google.code.jee.utils.mail.hibernate.facade.model.Mail;
+import com.google.code.jee.utils.mail.hibernate.facade.model.MailAttachment;
 
 // TODO: Auto-generated Javadoc
 /**

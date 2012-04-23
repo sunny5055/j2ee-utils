@@ -1,14 +1,14 @@
-package com.google.code.jee.utils.mail_hibernate.facade.service;
+package com.google.code.jee.utils.mail.hibernate.facade.service;
 
 import java.util.List;
 
 import com.google.code.jee.utils.dal.service.GenericService;
-import com.google.code.jee.utils.mail_hibernate.facade.model.Mail;
+import com.google.code.jee.utils.mail.hibernate.facade.model.MailAttachment;
 
 /**
- * The Interface MailService.
+ * The Interface MailAttachmentService.
  */
-public interface MailService extends GenericService<Integer, Mail> {
+public interface MailAttachmentService extends GenericService<Integer, MailAttachment> {
     /**
      * Test the existence of an element with the parameter 'name'.
      * 
@@ -23,12 +23,12 @@ public interface MailService extends GenericService<Integer, Mail> {
      * @param code the code
      * @return the mail
      */
-    Mail findByName(String name);
+    MailAttachment findByName(String name);
 
     /**
      * Search all the elements and sorts them by name.
      * 
      * @return the list of mails
      */
-    List<Mail> findAllByName();
+    List<MailAttachment> findAllByName();
 }

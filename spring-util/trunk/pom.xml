@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>spring-util</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.3</version>
+	<version>.</version>
 	<name>SpringUtil</name>
 
 	<parent>
@@ -12,10 +12,10 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/spring-util/tags/1.0.3</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/spring-util/tags/1.0.3
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/spring-util/trunk/</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/spring-util/trunk/
         </developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/spring-util/tags/1.0.3</url>
+		<url>https://j2ee-utils.googlecode.com/svn/spring-util/trunk/</url>
 	</scm>
 
 	<properties>

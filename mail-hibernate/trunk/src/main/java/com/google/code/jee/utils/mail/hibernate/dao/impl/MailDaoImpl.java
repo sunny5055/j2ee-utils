@@ -47,9 +47,24 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
                         if (entry.getKey().equals("name")) {
                             buffer.append("upper(m.name) like upper(:name) ");
                             search.addStringParameter("name", entry.getValue());
-                            buffer.append("AND ");
-                            buffer.append("m.template = true ");
-                            search.addStringParameter("template", true);
+                        } else if (entry.getKey().equals("from")) {
+                            buffer.append("upper(m.from) like upper(:from) ");
+                            search.addStringParameter("from", entry.getValue());
+                        } else if (entry.getKey().equals("replyTo")) {
+                            buffer.append("upper(m.replyTo) like upper(:replyTo) ");
+                            search.addStringParameter("replyTo", entry.getValue());
+                        } else if (entry.getKey().equals("subject")) {
+                            buffer.append("upper(m.subject) like upper(:subject) ");
+                            search.addStringParameter("subject", entry.getValue());
+                        } else if (entry.getKey().equals("text")) {
+                            buffer.append("upper(m.text) like upper(:text) ");
+                            search.addStringParameter("text", entry.getValue());
+                        } else if (entry.getKey().equals("htmlMessage")) {
+                            buffer.append("m.htmlMessage = :htmlMessage ");
+                            search.addBooleanParameter("htmlMessage", entry.getValue());
+                        } else if (entry.getKey().equals("template")) {
+                            buffer.append("m.template = :template ");
+                            search.addBooleanParameter("template", entry.getValue());
                         }
                         index++;
                     }
@@ -70,7 +85,38 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
                         if (entry.getValue() == SortOrder.DESCENDING) {
                             buffer.append("desc ");
                         }
+                    } else if (entry.getKey().equals("from")) {
+                        buffer.append("m.from ");
+                        if (entry.getValue() == SortOrder.DESCENDING) {
+                            buffer.append("desc ");
+                        }
+                    } else if (entry.getKey().equals("replyTo")) {
+                        buffer.append("m.replyTo ");
+                        if (entry.getValue() == SortOrder.DESCENDING) {
+                            buffer.append("desc ");
+                        }
+                    } else if (entry.getKey().equals("subject")) {
+                        buffer.append("m.subject ");
+                        if (entry.getValue() == SortOrder.DESCENDING) {
+                            buffer.append("desc ");
+                        }
+                    } else if (entry.getKey().equals("text")) {
+                        buffer.append("m.text ");
+                        if (entry.getValue() == SortOrder.DESCENDING) {
+                            buffer.append("desc ");
+                        }
+                    } else if (entry.getKey().equals("htmlMessage")) {
+                        buffer.append("m.htmlMessage ");
+                        if (entry.getValue() == SortOrder.DESCENDING) {
+                            buffer.append("desc ");
+                        }
+                    } else if (entry.getKey().equals("template")) {
+                        buffer.append("m.template ");
+                        if (entry.getValue() == SortOrder.DESCENDING) {
+                            buffer.append("desc ");
+                        }
                     }
+
                     index++;
                 }
             }
@@ -83,7 +129,6 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
     /**
      * {@inheritedDoc}
      */
-
     @Override
     public Integer countByName(String name) {
         return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_BY_NAME, new String[] { "name" }, name);
@@ -92,7 +137,6 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
     /**
      * {@inheritedDoc}
      */
-
     @Override
     public Mail findByName(String name) {
         return this.getByNamedQueryAndNamedParam(MailDao.FIND_BY_NAME, new String[] { "name" }, name);

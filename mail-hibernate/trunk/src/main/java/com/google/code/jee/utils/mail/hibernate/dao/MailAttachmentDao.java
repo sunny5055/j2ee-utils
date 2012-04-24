@@ -11,8 +11,8 @@ import com.google.code.jee.utils.mail.hibernate.model.MailAttachment;
 public interface MailAttachmentDao extends GenericDao<Integer, MailAttachment> {
     String COUNT_BY_NAME = "mailAttachment.countByName";
     String FIND_BY_NAME = "mailAttachment.findByName";
-    String FIND_MAIL_ATTACHMENT = "mailAttachment.findMailAttachment";
-    String FIND_ALL_MAIL_ATTACHMENTS = "mailAttachment.findAllMailAttachments";
+    String FIND_BY_MAIL_ID_AND_NAME = "mailAttachment.findByMailIdAndName";
+    String FIND_ALL_BY_MAIL_ID = "mailAttachment.findAllByMailId";
 
     /**
      * Search the number of elements with the 'name' parameter.

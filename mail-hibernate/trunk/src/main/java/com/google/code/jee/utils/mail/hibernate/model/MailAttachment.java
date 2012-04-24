@@ -6,15 +6,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
-
+import com.google.code.jee.utils.mail.hibernate.dao.MailAttachmentDao;
 /**
  * The Class MailAttachment.
  */
 @Entity
 @Table(name = "MAA_MAIL_ATTACHMENT")
+@NamedQueries({
+    @NamedQuery(name = MailAttachmentDao.COUNT_BY_NAME, query = "select count(*) from MailAttachment as m where m.name = :name"),
+    @NamedQuery(name = MailAttachmentDao.FIND_BY_NAME, query = "from MailAttachment as m where m.name = :name"),
+    @NamedQuery(name = MailAttachmentDao.FIND_BY_MAIL_ID_AND_NAME, 
+        query = "from Mail as mai left join mai.attachments as attachment where mai.id = :mailId and attachment.name = :attachmentName"),
+    @NamedQuery(name = MailAttachmentDao.FIND_ALL_BY_MAIL_ID, 
+        query = "from Mail as mai left join mai.attachments as attachment where mai.id = :mailId") })
 @SuppressWarnings("serial")
 public class MailAttachment extends AbstractHibernateDto<Integer> {
 

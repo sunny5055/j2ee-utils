@@ -11,16 +11,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
+import com.google.code.jee.utils.mail.hibernate.dao.MailDao;
 
 /**
  * The Class Mail.
  */
 @Entity
 @Table(name = "MAI_MAIL")
+@NamedQueries({
+    @NamedQuery(name = MailDao.COUNT_BY_NAME, query = "select count(*) from Mail as m where m.name = :name"),
+    @NamedQuery(name = MailDao.FIND_BY_NAME, query = "from Mail as m where m.name = :name") })
 @SuppressWarnings("serial")
 public class Mail extends AbstractHibernateDto<Integer> {
     @Id

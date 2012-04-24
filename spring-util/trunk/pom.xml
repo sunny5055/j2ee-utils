@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>spring-util</artifactId>
 	<packaging>jar</packaging>
-	<version>.</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<name>SpringUtil</name>
 
 	<parent>

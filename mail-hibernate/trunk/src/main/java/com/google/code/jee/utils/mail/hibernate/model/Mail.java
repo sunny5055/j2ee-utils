@@ -25,8 +25,8 @@ import com.google.code.jee.utils.mail.hibernate.dao.MailDao;
 @Entity
 @Table(name = "MAI_MAIL")
 @NamedQueries({
-    @NamedQuery(name = MailDao.COUNT_BY_NAME, query = "select count(*) from Mail as m where m.name = :name"),
-    @NamedQuery(name = MailDao.FIND_BY_NAME, query = "from Mail as m where m.name = :name") })
+        @NamedQuery(name = MailDao.COUNT_BY_NAME, query = "select count(*) from Mail as m where m.name = :name"),
+        @NamedQuery(name = MailDao.FIND_BY_NAME, query = "from Mail as m where m.name = :name") })
 @SuppressWarnings("serial")
 public class Mail extends AbstractHibernateDto<Integer> {
     @Id
@@ -49,15 +49,15 @@ public class Mail extends AbstractHibernateDto<Integer> {
     @Column(name = "MAI_TEXT", nullable = false, length = 2000)
     private String text;
 
-    @Column(name = "MAI_HTML_MESSAGE", nullable = false)
-    private Boolean htmlMessage;
+    @Column(name = "MAI_HTML_MESSAGE")
+    private boolean htmlMessage;
 
     @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
     @JoinColumn(name = "MAA_MAIL_ID ", nullable = false)
     private List<MailAttachment> attachments;
 
-    @Column(name = "MAI_TEMPLATE", nullable = false)
-    private Boolean template;
+    @Column(name = "MAI_TEMPLATE")
+    private boolean template;
 
     /**
      * Instantiates a new mail.
@@ -196,7 +196,7 @@ public class Mail extends AbstractHibernateDto<Integer> {
      * 
      * @return the htmlMessage
      */
-    public Boolean getHtmlMessage() {
+    public boolean getHtmlMessage() {
         return htmlMessage;
     }
 
@@ -205,7 +205,7 @@ public class Mail extends AbstractHibernateDto<Integer> {
      * 
      * @param htmlMessage the htmlMessage
      */
-    public void setHtmlMessage(Boolean htmlMessage) {
+    public void setHtmlMessage(boolean htmlMessage) {
         this.htmlMessage = htmlMessage;
     }
 
@@ -232,7 +232,7 @@ public class Mail extends AbstractHibernateDto<Integer> {
      * 
      * @return the template
      */
-    public Boolean getTemplate() {
+    public boolean getTemplate() {
         return template;
     }
 
@@ -241,7 +241,7 @@ public class Mail extends AbstractHibernateDto<Integer> {
      * 
      * @param template the template
      */
-    public void setTemplate(Boolean template) {
+    public void setTemplate(boolean template) {
         this.template = template;
     }
 }

@@ -13,21 +13,21 @@ import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
 /**
  * The Class MailAttachment.
  */
-@SuppressWarnings ("serial")
 @Entity
-@Table (name = "MAA_MAIL_ATTACHMENT")
+@Table(name = "MAA_MAIL_ATTACHMENT")
+@SuppressWarnings("serial")
 public class MailAttachment extends AbstractHibernateDto<Integer> {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    @Column (name = "MAA_ID", nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "MAA_ID", nullable = false)
     private Integer id;
 
-    @Column (name = "MAA_NAME", nullable = false, length = 100)
+    @Column(name = "MAA_NAME", nullable = false, length = 100)
     private String name;
 
     @Lob
-    @Column (name = "MAA_CONTENT", nullable = false)
+    @Column(name = "MAA_CONTENT", nullable = false)
     private byte[] content;
 
     /**

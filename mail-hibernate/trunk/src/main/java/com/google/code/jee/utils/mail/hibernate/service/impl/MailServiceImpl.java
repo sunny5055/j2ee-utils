@@ -66,10 +66,10 @@ public class MailServiceImpl extends AbstractGenericService<Integer, Mail, MailD
     */
     
     @Override
-    public MailAttachment findMailAttachment(Integer mailPrimaryKey, String attachmentName) {
+    public MailAttachment findByMailIdAndName(Integer mailId, String attachmentName) {
         MailAttachment mailAttachment = null;
-        if (!StringUtils.isEmpty(attachmentName) && mailPrimaryKey != null) {
-            mailAttachment = mailAttachmentDao.findMailAttachment(mailPrimaryKey, attachmentName);
+        if (!StringUtils.isEmpty(attachmentName) && mailId != null) {
+            mailAttachment = mailAttachmentDao.findByMailIdAndName(mailId, attachmentName);
         }
         return mailAttachment;
     }
@@ -79,10 +79,10 @@ public class MailServiceImpl extends AbstractGenericService<Integer, Mail, MailD
     */
     
     @Override
-    public List<MailAttachment> findAllAttachments(Integer mailPrimaryKey) {
+    public List<MailAttachment> findAllByMailId(Integer mailId) {
         List<MailAttachment> attachments = null;
-        if(mailPrimaryKey != null) {
-            mailAttachmentDao.findAllMailAttachments(mailPrimaryKey);
+        if(mailId != null) {
+            mailAttachmentDao.findAllByMailId(mailId);
         }
         if (attachments == null) {
             attachments = new ArrayList<MailAttachment>();

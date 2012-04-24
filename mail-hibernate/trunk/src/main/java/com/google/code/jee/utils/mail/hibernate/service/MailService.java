@@ -33,7 +33,7 @@ public interface MailService extends GenericService<Integer, Mail> {
      * @param attachmentName the attachment name
      * @return the mail attachment
      */
-    MailAttachment findMailAttachment(Integer mailPrimaryKey, String attachmentName);
+    MailAttachment findByMailIdAndName(Integer mailId, String attachmentName);
 
     /**
      * Search all the mail's attachments.
@@ -41,5 +41,5 @@ public interface MailService extends GenericService<Integer, Mail> {
      * @param mailPrimaryKey the mail primary key
      * @return the list
      */
-    List<MailAttachment> findAllAttachments(Integer mailPrimaryKey);
+    List<MailAttachment> findAllByMailId(Integer mailId);
 }

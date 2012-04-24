@@ -29,7 +29,7 @@ public abstract class AbstractGenericDaoHibernate<PK extends Serializable, E ext
     public PK create(E dto) {
         PK primaryKey = null;
         if (dto != null) {
-            hibernateTemplate.saveOrUpdate(dto);
+            getCurrentSession().saveOrUpdate(dto);
             primaryKey = dto.getPrimaryKey();
         }
         return primaryKey;
@@ -42,7 +42,7 @@ public abstract class AbstractGenericDaoHibernate<PK extends Serializable, E ext
     public Integer update(E dto) {
         Integer updated = 0;
         if (dto != null) {
-            hibernateTemplate.saveOrUpdate(dto);
+            getCurrentSession().saveOrUpdate(dto);
             updated = 1;
         }
         return updated;
@@ -69,7 +69,7 @@ public abstract class AbstractGenericDaoHibernate<PK extends Serializable, E ext
         if (pk != null) {
             final E dto = get(pk);
             if (dto != null) {
-                hibernateTemplate.delete(dto);
+                getCurrentSession().delete(dto);
                 deleted = 1;
             }
         }

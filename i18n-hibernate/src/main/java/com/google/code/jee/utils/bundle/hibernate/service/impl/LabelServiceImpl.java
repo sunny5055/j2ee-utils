@@ -1,5 +1,8 @@
 package com.google.code.jee.utils.bundle.hibernate.service.impl;
 
+import java.io.InputStream;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.google.code.jee.utils.StringUtil;
@@ -13,6 +16,14 @@ import com.google.code.jee.utils.dal.service.AbstractGenericService;
  */
 @Service
 public class LabelServiceImpl extends AbstractGenericService<Integer, Label, LabelDao> implements LabelService {
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public void setDao(LabelDao dao) {
+        this.dao = dao;
+    }
 
     /**
      * {@inheritedDoc}
@@ -46,7 +57,7 @@ public class LabelServiceImpl extends AbstractGenericService<Integer, Label, Lab
     public boolean existWithLanguage(String language) {
         boolean exist = false;
         if (!StringUtil.isEmpty(language)) {
-            final Integer count = dao.countByKey(language);
+            final Integer count = dao.countByLanguage(language);
             exist = count != 0;
         }
         return exist;
@@ -56,20 +67,41 @@ public class LabelServiceImpl extends AbstractGenericService<Integer, Label, Lab
      * {@inheritedDoc}
      */
     @Override
-    public Label findByLanguage(String language) {
-        Label label = null;
+    public List<Label> findAllByLanguage(String language) {
+        List<Label> labels = null;
         if (!StringUtil.isEmpty(language)) {
-            label = dao.findByKey(language);
+            labels = dao.findAllByLanguage(language);
         }
-        return label;
+        return labels;
     }
 
     /**
      * {@inheritedDoc}
      */
     @Override
-    public void setDao(LabelDao dao) {
-        this.dao = dao;
+    public void toPropertiesFileExportByLanguage(InputStream file, String language) {
+        List<Label> labels = dao.findAllByLanguage(language);
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public void fromPropertiesFileImportByLanguage(InputStream file, String Language) {
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public void toCsvFileExport(InputStream file) {
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public void fromCsvFileImport(InputStream file) {
     }
 
 }

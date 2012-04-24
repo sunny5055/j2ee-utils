@@ -1,5 +1,7 @@
 package com.google.code.jee.utils.bundle.hibernate.dao;
 
+import java.util.List;
+
 import com.google.code.jee.utils.bundle.hibernate.model.Label;
 import com.google.code.jee.utils.dal.dao.GenericDao;
 
@@ -10,7 +12,7 @@ public interface LabelDao extends GenericDao<Integer, Label> {
     String COUNT_BY_KEY = "label.countByKey";
     String FIND_BY_KEY = "label.findByKey";
     String COUNT_BY_LANGUAGE = "label.countByLanguage";
-    String FIND_BY_LANGUAGE = "label.findByLanguage";
+    String FIND_ALL_BY_LANGUAGE = "label.findAllByLanguage";
 
     /**
      * Search the number of elements with the 'key' parameter.
@@ -37,10 +39,10 @@ public interface LabelDao extends GenericDao<Integer, Label> {
     Integer countByLanguage(String language);
 
     /**
-     * Finds the by language.
+     * Finds the labels by language.
      *
      * @param language the language
      * @return the label
      */
-    Label findByLanguage(String language);
+    List<Label> findAllByLanguage(String language);
 }

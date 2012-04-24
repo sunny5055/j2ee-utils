@@ -23,5 +23,10 @@
 			<artifactId>hibernate-dal</artifactId>
 			<version>1.0.3</version>
 		</dependency>
+		<dependency>
+            		<groupId>jee-utils</groupId>
+            		<artifactId>csv-exporter</artifactId>
+            		<version>1.0.3</version>
+            	</dependency>
 	</dependencies>
 </project>

@@ -1,5 +1,6 @@
 package com.google.code.jee.utils.bundle.hibernate.dao.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -53,8 +54,8 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<Integer, Label> im
      * {@inheritedDoc}
      */
     @Override
-    public Label findByLanguage(String language) {
-        return this.getByNamedQueryAndNamedParam(LabelDao.FIND_BY_LANGUAGE, new String[] { "language" }, language);
+    public List<Label> findAllByLanguage(String language) {
+        return this.findByNamedQueryAndNamedParam(LabelDao.FIND_ALL_BY_LANGUAGE, new String[] { "language" }, language);
     }
 
     /**

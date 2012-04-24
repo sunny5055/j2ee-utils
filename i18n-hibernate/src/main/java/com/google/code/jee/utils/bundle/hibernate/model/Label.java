@@ -21,7 +21,7 @@ import com.google.code.jee.utils.bundle.hibernate.dao.LabelDao;
         @NamedQuery(name = LabelDao.COUNT_BY_KEY, query = "select count(*) from Label as l where l.key = :key"),
         @NamedQuery(name = LabelDao.FIND_BY_KEY, query = "from Label as l where l.key = :key"),
         @NamedQuery(name = LabelDao.COUNT_BY_LANGUAGE, query = "select count(*) from Label as l where l.language = :language"),
-        @NamedQuery(name = LabelDao.FIND_BY_LANGUAGE, query = "from Label as l where l.language = :language") })
+        @NamedQuery(name = LabelDao.FIND_ALL_BY_LANGUAGE, query = "from Label as l where l.language = :language") })
 @SuppressWarnings("serial")
 public class Label extends AbstractHibernateDto<Integer> {
     @Id

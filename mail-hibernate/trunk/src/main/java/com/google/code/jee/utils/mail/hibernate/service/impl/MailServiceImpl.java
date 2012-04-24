@@ -1,12 +1,11 @@
 package com.google.code.jee.utils.mail.hibernate.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.code.jee.utils.StringUtil;
 import com.google.code.jee.utils.dal.service.AbstractGenericService;
 import com.google.code.jee.utils.mail.hibernate.dao.MailAttachmentDao;
 import com.google.code.jee.utils.mail.hibernate.dao.MailDao;
@@ -19,42 +18,12 @@ import com.google.code.jee.utils.mail.hibernate.service.MailService;
  */
 @Service
 public class MailServiceImpl extends AbstractGenericService<Integer, Mail, MailDao> implements MailService {
-
-    /** The mail attachment dao. */
     @Autowired
-    private MailAttachmentDao mailAttachmentDao; 
+    private MailAttachmentDao mailAttachmentDao;
 
     /**
-    * {@inheritedDoc}
-    */
-    
-    @Override
-    public boolean existWithName(String name) {
-        boolean exist = false;
-        if (!StringUtils.isEmpty(name)) {
-            final Integer count = dao.countByName(name);
-            exist = count != 0;
-        }
-        return exist;
-    }
-
-    /**
-    * {@inheritedDoc}
-    */
-    
-    @Override
-    public Mail findByName(String name) {
-        Mail mail = null;
-        if (!StringUtils.isEmpty(name)) {
-            mail = dao.findByName(name);
-        }
-        return mail;
-    }
-
-    /**
-    * {@inheritedDoc}
-    */
-    
+     * {@inheritedDoc}
+     */
     @Autowired
     @Override
     public void setDao(MailDao mailDao) {
@@ -62,30 +31,50 @@ public class MailServiceImpl extends AbstractGenericService<Integer, Mail, MailD
     }
 
     /**
-    * {@inheritedDoc}
-    */
-    
+     * {@inheritedDoc}
+     */
+    @Override
+    public boolean existWithName(String name) {
+        boolean exist = false;
+        if (!StringUtil.isEmpty(name)) {
+            final Integer count = dao.countByName(name);
+            exist = count != 0;
+        }
+        return exist;
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public Mail findByName(String name) {
+        Mail mail = null;
+        if (!StringUtil.isEmpty(name)) {
+            mail = dao.findByName(name);
+        }
+        return mail;
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
     @Override
     public MailAttachment findByMailIdAndName(Integer mailId, String attachmentName) {
         MailAttachment mailAttachment = null;
-        if (!StringUtils.isEmpty(attachmentName) && mailId != null) {
+        if (!StringUtil.isEmpty(attachmentName) && mailId != null) {
             mailAttachment = mailAttachmentDao.findByMailIdAndName(mailId, attachmentName);
         }
         return mailAttachment;
     }
 
     /**
-    * {@inheritedDoc}
-    */
-    
+     * {@inheritedDoc}
+     */
     @Override
     public List<MailAttachment> findAllByMailId(Integer mailId) {
         List<MailAttachment> attachments = null;
-        if(mailId != null) {
-            mailAttachmentDao.findAllByMailId(mailId);
-        }
-        if (attachments == null) {
-            attachments = new ArrayList<MailAttachment>();
+        if (mailId != null) {
+            attachments = mailAttachmentDao.findAllByMailId(mailId);
         }
         return attachments;
     }

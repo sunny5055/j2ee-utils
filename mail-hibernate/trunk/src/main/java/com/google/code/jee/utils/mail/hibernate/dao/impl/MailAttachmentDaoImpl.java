@@ -27,7 +27,10 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
     }
 
     /**
-     * {@inheritedDoc}
+     * Count by name.
+     * 
+     * @param name the name
+     * @return the integer {@inheritedDoc}
      */
 
     @Override
@@ -36,7 +39,10 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
     }
 
     /**
-     * {@inheritedDoc}
+     * Finds the by name.
+     * 
+     * @param name the name
+     * @return the mail attachment {@inheritedDoc}
      */
 
     @Override
@@ -46,17 +52,49 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
     }
 
     /**
-     * {@inheritedDoc}
+     * Finds the by mail id and name.
+     * 
+     * @param mailId the mail id
+     * @param attachmentName the attachment name
+     * @return the mail attachment {@inheritedDoc}
      */
 
     @Override
-    protected Search getSearch(SearchCriteria searchCriteria) {
-        Search search = null;
-        if (searchCriteria != null) {
-            search = new Search();
+    public MailAttachment findByMailIdAndName(Integer mailId, String attachmentName) {
+        return this.getByNamedQueryAndNamedParam(MailAttachmentDao.FIND_BY_MAIL_ID_AND_NAME, new String[] { "mailId",
+                "attachmentName" }, mailId, attachmentName);
+    }
 
+    /**
+     * Finds the all by mail id.
+     * 
+     * @param mailId the mail id
+     * @return the list {@inheritedDoc}
+     */
+
+    @Override
+    public List<MailAttachment> findAllByMailId(Integer mailId) {
+        return this.findByNamedQueryAndNamedParam(MailAttachmentDao.FIND_ALL_BY_MAIL_ID, new String[] { "mailId" },
+                mailId);
+    }
+
+    /**
+     * Gets the search.
+     * 
+     * @param mailId the mail id
+     * @param searchCriteria the search criteria
+     * @return the search
+     */
+    protected Search getSearch(Integer mailId, SearchCriteria searchCriteria) {
+        Search search = null;
+        if (mailId != null && searchCriteria != null) {
+            search = new Search();
             final StringBuilder buffer = new StringBuilder();
-            buffer.append("from MailAttachment maa, Mail mai ");
+            buffer.append("from Mail mai ");
+            buffer.append("left join mai.attachments as attachment ");
+            buffer.append("where mai.id = :mailId ");
+            search.addIntegerParameter("mailId", mailId);
+
             if (searchCriteria.hasFilters()) {
                 buffer.append("where ");
                 int index = 0;
@@ -65,16 +103,65 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
                         if (index != 0) {
                             buffer.append("AND ");
                         }
-                        if (entry.getKey().equals("mailPrimaryKey")) {
-                            buffer.append("mai.id = mailPrimaryKey ");
-                            search.addStringParameter("mailPrimaryKey", entry.getValue());
-                        } else if (entry.getKey().equals("attachmentName")) {
-                            buffer.append("upper(maa.attachmentName) like upper(:attachmentName) ");
-                            search.addStringParameter("attachmentName", entry.getValue());
-                        } else if (entry.getKey().equals("name")) {
+                        if (entry.getKey().equals("name")) {
+                            buffer.append("upper(attachment.name) like upper(:name) ");
+                            search.addStringParameter("name", entry.getValue());
+                        }
+                        index++;
+                    }
+                }
+            }
+
+            search.setCountQuery("select count(attachment) " + buffer.toString());
+
+            if (searchCriteria.hasSorts()) {
+                buffer.append("order by ");
+                int index = 0;
+                for (final Map.Entry<String, SortOrder> entry : searchCriteria.getSorts().entrySet()) {
+                    if (index != 0) {
+                        buffer.append(", ");
+                    }
+                    if (entry.getKey().equals("name")) {
+                        buffer.append("maa.name ");
+                        if (entry.getValue() == SortOrder.DESCENDING) {
+                            buffer.append("desc ");
+                        }
+                    }
+                    index++;
+                }
+            }
+
+            search.setQuery("select attachment " + buffer.toString());
+        }
+        return search;
+    }
+
+    /**
+     * Gets the search.
+     * 
+     * @param searchCriteria the search criteria
+     * @return the search {@inheritedDoc}
+     */
+    @Override
+    protected Search getSearch(SearchCriteria searchCriteria) {
+        Search search = null;
+        if (searchCriteria != null) {
+            search = new Search();
+
+            final StringBuilder buffer = new StringBuilder();
+            buffer.append("from MailAttachment maa ");
+            if (searchCriteria.hasFilters()) {
+                buffer.append("where ");
+                int index = 0;
+                for (final Map.Entry<String, Object> entry : searchCriteria.getFilters().entrySet()) {
+                    if (entry.getValue() != null) {
+                        if (index != 0) {
+                            buffer.append("AND ");
+                        }
+                        if (entry.getKey().equals("name")) {
                             buffer.append("upper(maa.name) like upper(:name) ");
                             search.addStringParameter("name", entry.getValue());
-                        } 
+                        }
                         index++;
                     }
                 }
@@ -94,7 +181,7 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
                         if (entry.getValue() == SortOrder.DESCENDING) {
                             buffer.append("desc ");
                         }
-                    } 
+                    }
                     index++;
                 }
             }
@@ -103,25 +190,4 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
         }
         return search;
     }
-
-    /**
-     * {@inheritedDoc}
-     */
-
-    @Override
-    public MailAttachment findByMailIdAndName(Integer mailPrimaryKey, String attachmentName) {
-        return this.getByNamedQueryAndNamedParam(MailAttachmentDao.FIND_BY_MAIL_ID_AND_NAME, new String[] {
-                "mailPrimaryKey", "attachmentName" }, mailPrimaryKey, attachmentName);
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-
-    @Override
-    public List<MailAttachment> findAllByMailId(Integer mailPrimaryKey) {
-        return this.findByNamedQueryAndNamedParam(MailAttachmentDao.FIND_ALL_BY_MAIL_ID,
-                new String[] { "mailPrimaryKey" }, mailPrimaryKey);
-    }
-
 }

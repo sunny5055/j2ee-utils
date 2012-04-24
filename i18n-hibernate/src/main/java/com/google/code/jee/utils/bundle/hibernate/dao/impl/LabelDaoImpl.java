@@ -2,6 +2,8 @@ package com.google.code.jee.utils.bundle.hibernate.dao.impl;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.google.code.jee.utils.bundle.hibernate.dao.LabelDao;
 import com.google.code.jee.utils.bundle.hibernate.model.Label;
 import com.google.code.jee.utils.dal.Search;
@@ -12,6 +14,7 @@ import com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate;
 /**
  * The Class LabelDaoImpl.
  */
+@Repository
 public class LabelDaoImpl extends AbstractGenericDaoHibernate<Integer, Label> implements LabelDao {
 
     /**

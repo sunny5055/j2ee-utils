@@ -1,5 +1,7 @@
 package com.google.code.jee.utils.bundle.hibernate.service.impl;
 
+import org.springframework.stereotype.Service;
+
 import com.google.code.jee.utils.StringUtil;
 import com.google.code.jee.utils.bundle.hibernate.dao.LabelDao;
 import com.google.code.jee.utils.bundle.hibernate.model.Label;
@@ -9,6 +11,7 @@ import com.google.code.jee.utils.dal.service.AbstractGenericService;
 /**
  * The Class LabelServiceImpl.
  */
+@Service
 public class LabelServiceImpl extends AbstractGenericService<Integer, Label, LabelDao> implements LabelService {
 
     /**

@@ -20,37 +20,37 @@ import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
  * The Class Mail.
  */
 @Entity
-@Table (name = "MAI_MAIL")
-@SuppressWarnings ("serial")
+@Table(name = "MAI_MAIL")
+@SuppressWarnings("serial")
 public class Mail extends AbstractHibernateDto<Integer> {
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    @Column (name = "MAI_ID", nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "MAI_ID", nullable = false)
     private Integer id;
 
-    @Column (name = "MAI_NAME", length = 50)
+    @Column(name = "MAI_NAME", length = 50, nullable = false, unique = true)
     private String name;
 
-    @Column (name = "MAI_FROM", nullable = false, length = 100)
+    @Column(name = "MAI_FROM", nullable = false, length = 100)
     private String from;
 
-    @Column (name = "MAI_REPLY_TO", length = 100)
+    @Column(name = "MAI_REPLY_TO", length = 100)
     private String replyTo;
 
-    @Column (name = "MAI_SUBJECT", length = 250)
+    @Column(name = "MAI_SUBJECT", length = 250)
     private String subject;
 
-    @Column (name = "MAI_TEXT", nullable = false, length = 5000)
+    @Column(name = "MAI_TEXT", nullable = false, length = 2000)
     private String text;
 
-    @Column (name = "MAI_HTML_MESSAGE", nullable = false)
+    @Column(name = "MAI_HTML_MESSAGE", nullable = false)
     private Boolean htmlMessage;
 
-    @OneToMany (cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-    @JoinColumn (name = "MAA_MAIL_ID ", nullable = false)
+    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+    @JoinColumn(name = "MAA_MAIL_ID ", nullable = false)
     private List<MailAttachment> attachments;
 
-    @Column (name = "MAI_TEMPLATE", nullable = false)
+    @Column(name = "MAI_TEMPLATE", nullable = false)
     private Boolean template;
 
     /**

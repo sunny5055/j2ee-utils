@@ -1,7 +1,5 @@
 =templater=
 
-To complete.
-
 ==Getting started==
 
 ===Spring configuration===

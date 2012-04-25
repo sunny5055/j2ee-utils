@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.google.code.jee.utils.bundle.hibernate.dao.LabelDao;
 import com.google.code.jee.utils.bundle.hibernate.model.Label;
+import com.google.code.jee.utils.bundle.hibernate.model.LabelId;
 import com.google.code.jee.utils.dal.Search;
 import com.google.code.jee.utils.dal.SearchCriteria;
 import com.google.code.jee.utils.dal.SortOrder;
@@ -16,7 +17,7 @@ import com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate;
  * The Class LabelDaoImpl.
  */
 @Repository
-public class LabelDaoImpl extends AbstractGenericDaoHibernate<Integer, Label> implements LabelDao {
+public class LabelDaoImpl extends AbstractGenericDaoHibernate<LabelId, Label> implements LabelDao {
 
     /**
      * Instantiates a new label dao impl.
@@ -37,8 +38,8 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<Integer, Label> im
      * {@inheritedDoc}
      */
     @Override
-    public Label findByKey(String key) {
-        return this.getByNamedQueryAndNamedParam(LabelDao.FIND_BY_KEY, new String[] { "key" }, key);
+    public List<Label> findAllByKey(String key) {
+        return this.findByNamedQueryAndNamedParam(LabelDao.FIND_ALL_BY_KEY, new String[] { "key" }, key);
     }
 
     /**
@@ -70,7 +71,7 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<Integer, Label> im
             final StringBuilder buffer = new StringBuilder();
             buffer.append("from Label l ");
             if (searchCriteria.hasFilters()) {
-                buffer.append("where ");
+                buffer.append("where l");
                 int index = 0;
                 for (final Map.Entry<String, Object> entry : searchCriteria.getFilters().entrySet()) {
                     if (entry.getValue() != null) {
@@ -78,13 +79,13 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<Integer, Label> im
                             buffer.append("AND ");
                         }
                         if (entry.getKey().equals("key")) {
-                            buffer.append("upper(l.key) like upper(:key) ");
+                            buffer.append("upper(l.primaryKey.key) like upper(:key) ");
                             search.addStringParameter("key", entry.getValue());
                         } else if (entry.getKey().equals("value")) {
                             buffer.append("upper(l.value) like upper(:value) ");
                             search.addStringParameter("value", entry.getValue());
                         } else if (entry.getKey().equals("language")) {
-                            buffer.append("upper(l.language) like upper(:language) ");
+                            buffer.append("upper(l.primaryKey.language) like upper(:language) ");
                             search.addStringParameter("language", entry.getValue());
                         }
                         index++;
@@ -102,7 +103,7 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<Integer, Label> im
                         buffer.append(", ");
                     }
                     if (entry.getKey().equals("key")) {
-                        buffer.append("l.key ");
+                        buffer.append("l.primaryKey.key ");
                         if (entry.getValue() == SortOrder.DESCENDING) {
                             buffer.append("desc ");
                         }

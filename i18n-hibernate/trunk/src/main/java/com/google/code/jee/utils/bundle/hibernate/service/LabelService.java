@@ -1,16 +1,18 @@
 package com.google.code.jee.utils.bundle.hibernate.service;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import com.google.code.jee.utils.bundle.hibernate.model.Label;
+import com.google.code.jee.utils.bundle.hibernate.model.LabelId;
 import com.google.code.jee.utils.dal.service.GenericService;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Interface LabelService.
  */
-public interface LabelService extends GenericService<Integer, Label> {
+public interface LabelService extends GenericService<LabelId, Label> {
 
     /**
      * Test the existence of an element with the parameter 'key'.
@@ -21,12 +23,12 @@ public interface LabelService extends GenericService<Integer, Label> {
     boolean existWithKey(String key);
 
     /**
-     * Search an element by its key.
+     * Search all elements by their key.
      * 
      * @param key the key
      * @return the label
      */
-    Label findByKey(String key);
+    List<Label> findAllByKey(String key);
 
     /**
      * Test the existence of an element with the parameter 'language'.
@@ -50,7 +52,7 @@ public interface LabelService extends GenericService<Integer, Label> {
      * @param file the file
      * @param Language the Language
      */
-    void toPropertiesFileExportByLanguage(InputStream file, String Language);
+    void exportBundle(OutputStream outputStream, String language);
 
     /**
      * Import all the labels by a specific language.
@@ -58,19 +60,19 @@ public interface LabelService extends GenericService<Integer, Label> {
      * @param file the file
      * @param Language the Language
      */
-    void fromPropertiesFileImportByLanguage(InputStream file, String Language);
+    void importBundle(InputStream inputStream, String language);
 
     /**
      * To csv file export.
      *
      * @param file the file
      */
-    void toCsvFileExport(InputStream file);
+    void toCsvFileExport(InputStream file, String Language);
 
     /**
      * From csv file import.
      *
      * @param file the file
      */
-    void fromCsvFileImport(InputStream file);
+    void fromCsvFileImport(InputStream file, String Language);
 }

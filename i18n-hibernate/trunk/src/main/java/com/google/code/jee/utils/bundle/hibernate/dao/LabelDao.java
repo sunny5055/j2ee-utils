@@ -3,14 +3,15 @@ package com.google.code.jee.utils.bundle.hibernate.dao;
 import java.util.List;
 
 import com.google.code.jee.utils.bundle.hibernate.model.Label;
+import com.google.code.jee.utils.bundle.hibernate.model.LabelId;
 import com.google.code.jee.utils.dal.dao.GenericDao;
 
 /**
  * The Interface LabelDao.
  */
-public interface LabelDao extends GenericDao<Integer, Label> {
+public interface LabelDao extends GenericDao<LabelId, Label> {
     String COUNT_BY_KEY = "label.countByKey";
-    String FIND_BY_KEY = "label.findByKey";
+    String FIND_ALL_BY_KEY = "label.findAllByKey";
     String COUNT_BY_LANGUAGE = "label.countByLanguage";
     String FIND_ALL_BY_LANGUAGE = "label.findAllByLanguage";
 
@@ -28,7 +29,7 @@ public interface LabelDao extends GenericDao<Integer, Label> {
      * @param key the key
      * @return the mail
      */
-    Label findByKey(String key);
+    List<Label> findAllByKey(String key);
 
     /**
      * Count by language.

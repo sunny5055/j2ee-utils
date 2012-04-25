@@ -9,7 +9,6 @@ import com.google.code.jee.utils.bundle.hibernate.model.Label;
 import com.google.code.jee.utils.bundle.hibernate.model.LabelId;
 import com.google.code.jee.utils.dal.service.GenericService;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface LabelService.
  */

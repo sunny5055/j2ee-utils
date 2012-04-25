@@ -47,7 +47,7 @@ public interface LabelService extends GenericService<LabelId, Label> {
     List<Label> findAllByLanguage(String language);
 
     /**
-     * Export all the labels by a specific language.
+     * Export all the labels for a specific language.
      * 
      * @param outputStream the output stream
      * @param language the language
@@ -56,7 +56,7 @@ public interface LabelService extends GenericService<LabelId, Label> {
     void exportBundle(OutputStream outputStream, String language) throws IOException;
 
     /**
-     * Import all the labels by a specific language.
+     * Import all the labels for a specific language.
      * 
      * @param inputStream the input stream
      * @param language the language

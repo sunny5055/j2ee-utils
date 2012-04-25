@@ -27,24 +27,16 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
     }
 
     /**
-     * Count by name.
-     * 
-     * @param name the name
-     * @return the integer {@inheritedDoc}
-     */
-
+    * {@inheritedDoc}
+    */
     @Override
     public Integer countByName(String name) {
         return this.getNumberByNamedQueryAndNamedParam(MailAttachmentDao.COUNT_BY_NAME, new String[] { "name" }, name);
     }
 
     /**
-     * Finds the by name.
-     * 
-     * @param name the name
-     * @return the mail attachment {@inheritedDoc}
-     */
-
+    * {@inheritedDoc}
+    */
     @Override
     public MailAttachment findByName(String name) {
         return this.getByNamedQueryAndNamedParam(MailAttachmentDao.FIND_BY_NAME, new String[] { "name" }, name);
@@ -52,13 +44,8 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
     }
 
     /**
-     * Finds the by mail id and name.
-     * 
-     * @param mailId the mail id
-     * @param attachmentName the attachment name
-     * @return the mail attachment {@inheritedDoc}
-     */
-
+    * {@inheritedDoc}
+    */
     @Override
     public MailAttachment findByMailIdAndName(Integer mailId, String attachmentName) {
         return this.getByNamedQueryAndNamedParam(MailAttachmentDao.FIND_BY_MAIL_ID_AND_NAME, new String[] { "mailId",
@@ -66,12 +53,8 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
     }
 
     /**
-     * Finds the all by mail id.
-     * 
-     * @param mailId the mail id
-     * @return the list {@inheritedDoc}
-     */
-
+    * {@inheritedDoc}
+    */
     @Override
     public List<MailAttachment> findAllByMailId(Integer mailId) {
         return this.findByNamedQueryAndNamedParam(MailAttachmentDao.FIND_ALL_BY_MAIL_ID, new String[] { "mailId" },
@@ -80,7 +63,7 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
 
     /**
      * Gets the search.
-     * 
+     *
      * @param mailId the mail id
      * @param searchCriteria the search criteria
      * @return the search
@@ -137,11 +120,8 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
     }
 
     /**
-     * Gets the search.
-     * 
-     * @param searchCriteria the search criteria
-     * @return the search {@inheritedDoc}
-     */
+    * {@inheritedDoc}
+    */
     @Override
     protected Search getSearch(SearchCriteria searchCriteria) {
         Search search = null;

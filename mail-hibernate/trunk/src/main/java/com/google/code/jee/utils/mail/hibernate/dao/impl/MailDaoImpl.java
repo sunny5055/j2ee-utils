@@ -27,7 +27,6 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
     /**
      * {@inheritedDoc}
      */
-
     @Override
     protected Search getSearch(SearchCriteria searchCriteria) {
         Search search = null;
@@ -142,11 +141,18 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
         return this.getByNamedQueryAndNamedParam(MailDao.FIND_BY_NAME, new String[] { "name" }, name);
     }
 
+    /**
+     * {@inheritedDoc}
+     */
     @Override
     public Integer countForMailIdAndName(Integer mailId, String attachmentName) {
-        return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_FOR_MAIL_ID_AND_NAME, new String[] { "mailId" , "attachmentName" }, mailId, attachmentName);
+        return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_FOR_MAIL_ID_AND_NAME, new String[] { "mailId",
+                "attachmentName" }, mailId, attachmentName);
     }
 
+    /**
+     * {@inheritedDoc}
+     */
     @Override
     public Integer countForMailId(Integer mailId) {
         return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_FOR_MAIL_ID, new String[] { "mailId" }, mailId);

@@ -29,15 +29,19 @@ public interface MailDao extends GenericDao<Integer, Mail> {
     Mail findByName(String name);
 
     /**
+     * Count the number of attachment with a specific name and corresponding to a specific mail
+     * 
      * @param mailId
      * @param attachmentName
-     * @return
+     * @return the number of attachments
      */
     Integer countForMailIdAndName(Integer mailId, String attachmentName);
 
     /**
-     * @param mailId
-     * @return
+     * Count the number of attachments of a specific mail
+     * 
+     * @param mailId the mail id
+     * @return the number of attachments
      */
     Integer countForMailId(Integer mailId);
 }

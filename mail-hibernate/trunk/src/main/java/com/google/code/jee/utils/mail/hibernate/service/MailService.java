@@ -20,7 +20,7 @@ public interface MailService extends GenericService<Integer, Mail> {
 
     /**
      * Search an element by its name.
-     *
+     * 
      * @param name the name
      * @return the mail
      */
@@ -34,25 +34,30 @@ public interface MailService extends GenericService<Integer, Mail> {
      * @return the mail attachment
      */
     MailAttachment findByMailIdAndName(Integer mailId, String attachmentName);
-    
+
     /**
+     * Test the existence of an attachment with the parameter 'name' and its mail id.
+     * 
      * @param mailId the mailId
      * @param attachmentName
-     * @return
+     * @return true, if success
      */
     boolean existWithMailIdAndName(Integer mailId, String attachmentName);
 
     /**
+     * Count a mail numbers of attachments
+     * 
+     * @param mailId the mailId
+     * @return the number of attachments corresponding to the mail id
+     */
+    Integer countForMailId(Integer mailId);
+
+    /**
      * Search all the mail's attachments.
-     *
+     * 
      * @param mailPrimaryKey the mail primary key
      * @return the list
      */
     List<MailAttachment> findAllByMailId(Integer mailId);
-    
-    /**
-     * @param mailId the mailId
-     * @return 
-     */
-    Integer countForMailId(Integer mailId);
+
 }

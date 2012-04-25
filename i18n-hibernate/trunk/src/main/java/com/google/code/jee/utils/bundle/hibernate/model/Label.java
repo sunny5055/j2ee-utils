@@ -16,9 +16,9 @@ import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
 @Entity
 @Table(name = "LAB_LABEL")
 @NamedQueries({
-        @NamedQuery(name = LabelDao.COUNT_BY_KEY, query = "select count(*) from Label as l where l.primaryKey.key = :key"),
+        @NamedQuery(name = LabelDao.COUNT_FOR_KEY, query = "select count(*) from Label as l where l.primaryKey.key = :key"),
         @NamedQuery(name = LabelDao.FIND_ALL_BY_KEY, query = "from Label as l where l.primaryKey.key = :key"),
-        @NamedQuery(name = LabelDao.COUNT_BY_LANGUAGE, query = "select count(*) from Label as l where l.primaryKey.language = :language"),
+        @NamedQuery(name = LabelDao.COUNT_FOR_LANGUAGE, query = "select count(*) from Label as l where l.primaryKey.language = :language"),
         @NamedQuery(name = LabelDao.FIND_ALL_BY_LANGUAGE, query = "from Label as l where l.primaryKey.language = :language") })
 @SuppressWarnings("serial")
 public class Label extends AbstractHibernateDto<LabelId> {

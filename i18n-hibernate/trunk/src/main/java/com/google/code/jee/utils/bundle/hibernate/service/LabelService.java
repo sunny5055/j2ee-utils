@@ -19,9 +19,9 @@ public interface LabelService extends GenericService<LabelId, Label> {
      * Test the existence of an element with the parameter 'key'.
      * 
      * @param key the key
-     * @return true, if success
+     * @return number of elements
      */
-    boolean existWithKey(String key);
+    Integer countForKey(String key);
 
     /**
      * Search all elements by their key.
@@ -35,9 +35,9 @@ public interface LabelService extends GenericService<LabelId, Label> {
      * Test the existence of an element with the parameter 'language'.
      * 
      * @param language the language
-     * @return true, if success
+     * @return number of elements
      */
-    boolean existWithLanguage(String language);
+    Integer countForLanguage(String language);
 
     /**
      * Search all elements by their language.

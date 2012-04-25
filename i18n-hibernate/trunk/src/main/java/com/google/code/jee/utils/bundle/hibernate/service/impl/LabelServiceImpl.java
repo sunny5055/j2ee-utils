@@ -36,13 +36,8 @@ public class LabelServiceImpl extends AbstractGenericService<LabelId, Label, Lab
      * {@inheritedDoc}
      */
     @Override
-    public boolean existWithKey(String key) {
-        boolean exist = false;
-        if (!StringUtil.isEmpty(key)) {
-            final Integer count = dao.countByKey(key);
-            exist = count != 0;
-        }
-        return exist;
+    public Integer countForKey(String key) {
+        return dao.countForKey(key);
     }
 
     /**
@@ -61,13 +56,8 @@ public class LabelServiceImpl extends AbstractGenericService<LabelId, Label, Lab
      * {@inheritedDoc}
      */
     @Override
-    public boolean existWithLanguage(String language) {
-        boolean exist = false;
-        if (!StringUtil.isEmpty(language)) {
-            final Integer count = dao.countByLanguage(language);
-            exist = count != 0;
-        }
-        return exist;
+    public Integer countForLanguage(String language) {
+        return dao.countForLanguage(language);
     }
 
     /**

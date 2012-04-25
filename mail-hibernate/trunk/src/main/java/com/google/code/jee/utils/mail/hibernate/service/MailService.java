@@ -29,11 +29,18 @@ public interface MailService extends GenericService<Integer, Mail> {
     /**
      * Search a mail attachment with its name and its mail primary key.
      * 
-     * @param mailPrimaryKey the mail primary key
+     * @param mailId the mailId
      * @param attachmentName the attachment name
      * @return the mail attachment
      */
     MailAttachment findByMailIdAndName(Integer mailId, String attachmentName);
+    
+    /**
+     * @param mailId the mailId
+     * @param attachmentName
+     * @return
+     */
+    boolean existWithMailIdAndName(Integer mailId, String attachmentName);
 
     /**
      * Search all the mail's attachments.
@@ -42,4 +49,10 @@ public interface MailService extends GenericService<Integer, Mail> {
      * @return the list
      */
     List<MailAttachment> findAllByMailId(Integer mailId);
+    
+    /**
+     * @param mailId the mailId
+     * @return 
+     */
+    Integer countForMailId(Integer mailId);
 }

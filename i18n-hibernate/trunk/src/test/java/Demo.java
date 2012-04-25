@@ -1,7 +1,9 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -22,7 +24,9 @@ public class Demo {
             e1.printStackTrace();
         }
         
-        labelService.importBundle(fileInputStream, "US");
+        OutputStream outputStream = new FileOutputStream(currentDirectoryPath + "/src/test/resources/bundle/text_FR.properties");
+        //labelService.importBundle(fileInputStream, "US");
+        labelService.exportBundle(outputStream, "US");
         System.out.println();
 
         //

@@ -30,8 +30,8 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<LabelId, Label> im
      * {@inheritedDoc}
      */
     @Override
-    public Integer countByKey(String key) {
-        return this.getNumberByNamedQueryAndNamedParam(LabelDao.COUNT_BY_KEY, new String[] { "key" }, key);
+    public Integer countForKey(String key) {
+        return this.getNumberByNamedQueryAndNamedParam(LabelDao.COUNT_FOR_KEY, new String[] { "key" }, key);
     }
 
     /**
@@ -46,8 +46,8 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<LabelId, Label> im
      * {@inheritedDoc}
      */
     @Override
-    public Integer countByLanguage(String language) {
-        return this.getNumberByNamedQueryAndNamedParam(LabelDao.COUNT_BY_LANGUAGE, new String[] { "language" },
+    public Integer countForLanguage(String language) {
+        return this.getNumberByNamedQueryAndNamedParam(LabelDao.COUNT_FOR_LANGUAGE, new String[] { "language" },
                 language);
     }
 
@@ -71,7 +71,7 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<LabelId, Label> im
             final StringBuilder buffer = new StringBuilder();
             buffer.append("from Label l ");
             if (searchCriteria.hasFilters()) {
-                buffer.append("where l");
+                buffer.append("where ");
                 int index = 0;
                 for (final Map.Entry<String, Object> entry : searchCriteria.getFilters().entrySet()) {
                     if (entry.getValue() != null) {

@@ -10,9 +10,9 @@ import com.google.code.jee.utils.dal.dao.GenericDao;
  * The Interface LabelDao.
  */
 public interface LabelDao extends GenericDao<LabelId, Label> {
-    String COUNT_BY_KEY = "label.countByKey";
+    String COUNT_FOR_KEY = "label.countForKey";
     String FIND_ALL_BY_KEY = "label.findAllByKey";
-    String COUNT_BY_LANGUAGE = "label.countByLanguage";
+    String COUNT_FOR_LANGUAGE = "label.countForLanguage";
     String FIND_ALL_BY_LANGUAGE = "label.findAllByLanguage";
 
     /**
@@ -21,7 +21,7 @@ public interface LabelDao extends GenericDao<LabelId, Label> {
      * @param key the key
      * @return the number of element found
      */
-    Integer countByKey(String key);
+    Integer countForKey(String key);
 
     /**
      * Search an element by its key.
@@ -37,7 +37,7 @@ public interface LabelDao extends GenericDao<LabelId, Label> {
      * @param language the language
      * @return the number of element found
      */
-    Integer countByLanguage(String language);
+    Integer countForLanguage(String language);
 
     /**
      * Finds the labels by language.

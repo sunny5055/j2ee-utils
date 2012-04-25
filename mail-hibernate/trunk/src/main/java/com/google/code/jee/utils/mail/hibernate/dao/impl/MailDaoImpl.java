@@ -141,4 +141,14 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
     public Mail findByName(String name) {
         return this.getByNamedQueryAndNamedParam(MailDao.FIND_BY_NAME, new String[] { "name" }, name);
     }
+
+    @Override
+    public Integer countForMailIdAndName(Integer mailId, String attachmentName) {
+        return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_FOR_MAIL_ID_AND_NAME, new String[] { "mailId" , "attachmentName" }, mailId, attachmentName);
+    }
+
+    @Override
+    public Integer countForMailId(Integer mailId) {
+        return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_FOR_MAIL_ID, new String[] { "mailId" }, mailId);
+    }
 }

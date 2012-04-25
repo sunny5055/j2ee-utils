@@ -79,4 +79,25 @@ public class MailServiceImpl extends AbstractGenericService<Integer, Mail, MailD
         return attachments;
     }
 
+    /**
+    * {@inheritedDoc}
+    */
+    @Override
+    public boolean existWithMailIdAndName(Integer mailId, String attachmentName) {
+        boolean exist = false;
+        if (mailId != null && (!StringUtil.isEmpty(attachmentName))) {
+            final Integer count = dao.countForMailIdAndName(mailId, attachmentName);
+            exist = count != 0;
+        }
+        return exist;
+    }
+
+    /**
+    * {@inheritedDoc}
+    */
+    @Override
+    public Integer countForMailId(Integer mailId) {
+        return dao.countForMailId(mailId);
+    }
+
 }

@@ -40,7 +40,7 @@ Define a `JavaMailSenderImpl` as following :
 </beans>
 }}}
 
-Assume you have the following Java class :
+Use the component as follows :
 
 {{{
  public static void main(String[] args) throws IOException {

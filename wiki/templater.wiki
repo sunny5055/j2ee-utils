@@ -3,6 +3,11 @@
 To complete.
 
 ==Getting started==
+
+===Spring configuration===
+
+Define a *FreeMarkerConfigurationFactoryBean* as following :
+
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -28,10 +33,13 @@ To complete.
 </beans>
 }}}
 
+Assume you have a template named *Test.ftl* with the following content :
+
 {{{
 Hello ${name} !
 }}}
 
+and the following Java class :
 
 {{{
 public static void main(String[] args) {
@@ -50,6 +58,8 @@ public static void main(String[] args) {
 	System.out.println(content);
 }
 }}}	
+
+The result :
 
 {{{
 Hello John !

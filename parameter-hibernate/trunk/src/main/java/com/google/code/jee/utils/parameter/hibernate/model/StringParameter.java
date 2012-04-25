@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.mail.hibernate.model;
+package com.google.code.jee.utils.parameter.hibernate.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,33 +8,34 @@ import javax.persistence.Table;
  * The Class StringParameter.
  */
 @Entity
-@Table(name = "STR_STRING_PARAMETER")
+@Table(name = "STP_STRING_PARAMETER")
 @SuppressWarnings("serial")
-public class StringParameter extends Parameter {
-    @Column(name = "STR_VALUE", length = 500, nullable = false, unique = true)
+public class StringParameter extends AbstractParameter<String> {
+    public static final String TYPE = "STRING";
+
+    @Column(name = "STP_VALUE", length = 255, nullable = false)
     private String value;
 
     /**
      * Instantiates a new string parameter.
      */
     public StringParameter() {
-        type = "String";
+        super();
+        this.type = TYPE;
     }
 
     /**
-     * Gets the value.
-     * 
-     * @return the value
+     * {@inheritedDoc}
      */
+    @Override
     public String getValue() {
         return value;
     }
 
     /**
-     * Sets the value.
-     * 
-     * @param value the new value
+     * {@inheritedDoc}
      */
+    @Override
     public void setValue(String value) {
         this.value = value;
     }

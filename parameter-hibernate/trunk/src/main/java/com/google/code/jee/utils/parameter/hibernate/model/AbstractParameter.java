@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.mail.hibernate.model;
+package com.google.code.jee.utils.parameter.hibernate.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,17 +18,24 @@ import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = "PAR_PARAMETER")
 @SuppressWarnings("serial")
-public abstract class Parameter extends AbstractHibernateDto<Integer> {
+public abstract class AbstractParameter<V> extends AbstractHibernateDto<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PAR_ID", nullable = false)
-    private Integer id;
+    protected Integer id;
 
     @Column(name = "PAR_NAME", length = 50, nullable = false, unique = true)
     protected String name;
 
-    @Column(name = "PAR_TYPE", length = 40, nullable = false, unique = true)
+    @Column(name = "PAR_TYPE", length = 50, nullable = false)
     protected String type;
+
+    /**
+     * Instantiates a new parameter.
+     */
+    public AbstractParameter() {
+        super();
+    }
 
     /**
      * {@inheritedDoc}
@@ -99,4 +106,18 @@ public abstract class Parameter extends AbstractHibernateDto<Integer> {
     public void setType(String type) {
         this.type = type;
     }
+
+    /**
+     * Getter : return the value
+     * 
+     * @return the value
+     */
+    public abstract V getValue();
+
+    /**
+     * Setter : affect the value
+     * 
+     * @param value the value
+     */
+    public abstract void setValue(V value);
 }

@@ -59,12 +59,33 @@ public class MailServiceImpl extends AbstractGenericService<Integer, Mail, MailD
      * {@inheritedDoc}
      */
     @Override
+    public boolean existWithMailIdAndName(Integer mailId, String attachmentName) {
+        boolean exist = false;
+        if (mailId != null && !StringUtil.isEmpty(attachmentName)) {
+            final Integer count = mailAttachmentDao.countForMailIdAndName(mailId, attachmentName);
+            exist = count != 0;
+        }
+        return exist;
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
     public MailAttachment findByMailIdAndName(Integer mailId, String attachmentName) {
         MailAttachment mailAttachment = null;
         if (!StringUtil.isEmpty(attachmentName) && mailId != null) {
             mailAttachment = mailAttachmentDao.findByMailIdAndName(mailId, attachmentName);
         }
         return mailAttachment;
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public Integer countForMailId(Integer mailId) {
+        return mailAttachmentDao.countForMailId(mailId);
     }
 
     /**
@@ -78,26 +99,4 @@ public class MailServiceImpl extends AbstractGenericService<Integer, Mail, MailD
         }
         return attachments;
     }
-
-    /**
-    * {@inheritedDoc}
-    */
-    @Override
-    public boolean existWithMailIdAndName(Integer mailId, String attachmentName) {
-        boolean exist = false;
-        if (mailId != null && (!StringUtil.isEmpty(attachmentName))) {
-            final Integer count = dao.countForMailIdAndName(mailId, attachmentName);
-            exist = count != 0;
-        }
-        return exist;
-    }
-
-    /**
-    * {@inheritedDoc}
-    */
-    @Override
-    public Integer countForMailId(Integer mailId) {
-        return dao.countForMailId(mailId);
-    }
-
 }

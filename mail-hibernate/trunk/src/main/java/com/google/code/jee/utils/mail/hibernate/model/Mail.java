@@ -26,9 +26,7 @@ import com.google.code.jee.utils.mail.hibernate.dao.MailDao;
 @Table(name = "MAI_MAIL")
 @NamedQueries({
         @NamedQuery(name = MailDao.COUNT_BY_NAME, query = "select count(*) from Mail as m where m.name = :name"),
-        @NamedQuery(name = MailDao.FIND_BY_NAME, query = "from Mail as m where m.name = :name"),
-        @NamedQuery(name = MailDao.COUNT_FOR_MAIL_ID_AND_NAME, query = "select count(*) from Mail as m where m.id = :id and m.name = :name"),
-        @NamedQuery(name = MailDao.COUNT_FOR_MAIL_ID, query = "select count(*) from Mail as m where m.id = :id") })
+        @NamedQuery(name = MailDao.FIND_BY_NAME, query = "from Mail as m where m.name = :name") })
 @SuppressWarnings("serial")
 public class Mail extends AbstractHibernateDto<Integer> {
     @Id

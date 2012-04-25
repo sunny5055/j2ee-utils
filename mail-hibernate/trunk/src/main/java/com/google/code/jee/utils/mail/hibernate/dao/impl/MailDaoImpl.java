@@ -28,6 +28,22 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
      * {@inheritedDoc}
      */
     @Override
+    public Integer countByName(String name) {
+        return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_BY_NAME, new String[] { "name" }, name);
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public Mail findByName(String name) {
+        return this.getByNamedQueryAndNamedParam(MailDao.FIND_BY_NAME, new String[] { "name" }, name);
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
     protected Search getSearch(SearchCriteria searchCriteria) {
         Search search = null;
         if (searchCriteria != null) {
@@ -123,38 +139,5 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
             search.setQuery(buffer.toString());
         }
         return search;
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public Integer countByName(String name) {
-        return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_BY_NAME, new String[] { "name" }, name);
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public Mail findByName(String name) {
-        return this.getByNamedQueryAndNamedParam(MailDao.FIND_BY_NAME, new String[] { "name" }, name);
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public Integer countForMailIdAndName(Integer mailId, String attachmentName) {
-        return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_FOR_MAIL_ID_AND_NAME, new String[] { "mailId",
-                "attachmentName" }, mailId, attachmentName);
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public Integer countForMailId(Integer mailId) {
-        return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_FOR_MAIL_ID, new String[] { "mailId" }, mailId);
     }
 }

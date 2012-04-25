@@ -2,9 +2,7 @@
 
 ==Getting started==
 
-===Spring configuration===
-
-Define a *FreeMarkerConfigurationFactoryBean* as following :
+Define a `FreeMarkerConfigurationFactoryBean` as following :
 
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
@@ -31,7 +29,7 @@ Define a *FreeMarkerConfigurationFactoryBean* as following :
 </beans>
 }}}
 
-Assume you have a template named *Test.ftl* with the following content :
+Assume you have a template named `Test.ftl` with the following content :
 
 {{{
 Hello ${name} !

@@ -2,7 +2,7 @@
 
 ==Getting started==
 
-Define a `FreeMarkerConfigurationFactoryBean` as following :
+Define a `JavaMailSenderImpl` as following :
 
 {{{
 <?xml version="1.0" encoding="UTF-8"?>

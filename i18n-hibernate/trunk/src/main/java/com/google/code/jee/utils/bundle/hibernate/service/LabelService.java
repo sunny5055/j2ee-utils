@@ -1,5 +1,6 @@
 package com.google.code.jee.utils.bundle.hibernate.service;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -48,31 +49,19 @@ public interface LabelService extends GenericService<LabelId, Label> {
 
     /**
      * Export all the labels by a specific language.
-     *
-     * @param file the file
-     * @param Language the Language
+     * 
+     * @param outputStream the output stream
+     * @param language the language
+     * @throws IOException Signals that an I/O exception has occurred.
      */
-    void exportBundle(OutputStream outputStream, String language);
+    void exportBundle(OutputStream outputStream, String language) throws IOException;
 
     /**
      * Import all the labels by a specific language.
-     *
-     * @param file the file
-     * @param Language the Language
+     * 
+     * @param inputStream the input stream
+     * @param language the language
+     * @throws IOException Signals that an I/O exception has occurred.
      */
-    void importBundle(InputStream inputStream, String language);
-
-    /**
-     * To csv file export.
-     *
-     * @param file the file
-     */
-    void toCsvFileExport(InputStream file, String Language);
-
-    /**
-     * From csv file import.
-     *
-     * @param file the file
-     */
-    void fromCsvFileImport(InputStream file, String Language);
+    void importBundle(InputStream inputStream, String language) throws IOException;
 }

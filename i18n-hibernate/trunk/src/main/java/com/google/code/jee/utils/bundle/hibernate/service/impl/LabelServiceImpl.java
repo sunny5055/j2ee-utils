@@ -3,8 +3,6 @@ package com.google.code.jee.utils.bundle.hibernate.service.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
@@ -16,6 +14,7 @@ import com.google.code.jee.utils.bundle.hibernate.dao.LabelDao;
 import com.google.code.jee.utils.bundle.hibernate.model.Label;
 import com.google.code.jee.utils.bundle.hibernate.model.LabelId;
 import com.google.code.jee.utils.bundle.hibernate.service.LabelService;
+import com.google.code.jee.utils.collection.CollectionUtil;
 import com.google.code.jee.utils.dal.service.AbstractGenericService;
 
 /**
@@ -87,59 +86,43 @@ public class LabelServiceImpl extends AbstractGenericService<LabelId, Label, Lab
      * {@inheritedDoc}
      */
     @Override
-    public void exportBundle(OutputStream outputStream, String language) {
-        List<Label> labels = dao.findAllByLanguage(language);
-        final PrintStream printStream = new PrintStream(outputStream);
-        for (Label label : labels) {
-            printStream.println(label.getPrimaryKey().getKey() + "=" + label.getValue());
+    public void exportBundle(OutputStream outputStream, String language) throws IOException {
+        if (outputStream != null && !StringUtil.isBlank(language)) {
+            final List<Label> labels = dao.findAllByLanguage(language);
+            if (!CollectionUtil.isEmpty(labels)) {
+                final Properties properties = new Properties();
+                for (final Label label : labels) {
+                    properties.put(label.getPrimaryKey().getKey(), label.getValue());
+                }
+
+                properties.store(outputStream, null);
+            }
         }
-        printStream.close();
     }
 
     /**
      * {@inheritedDoc}
      */
     @Override
-    public void importBundle(InputStream inputStream, String language) {
-        try {
+    public void importBundle(InputStream inputStream, String language) throws IOException {
+        if (inputStream != null && !StringUtil.isBlank(language)) {
             // Load properties
             final Properties properties = new Properties();
             properties.load(inputStream);
 
             // Create a label for each element contained in the file
-            for(Enumeration<Object> keys = properties.keys(); keys.hasMoreElements();) {
-                String key = (String) keys.nextElement();
-                
-                // LabelId creation
-                LabelId labelId = new LabelId();
-                labelId.setKey(key);
-                labelId.setLanguage(language);
-                
-                // Label creation
-                Label label = new Label();
+            for (final Object key : properties.keySet()) {
+                final String keyString = (String) key;
+                final String value = properties.getProperty(keyString);
+
+                final LabelId labelId = new LabelId(keyString, language);
+                final Label label = new Label();
                 label.setPrimaryKey(labelId);
-                label.setValue(properties.getProperty(key));
-                
+                label.setValue(value);
+
                 // Database insertion
                 dao.create(label);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public void toCsvFileExport(InputStream file, String language) {
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public void fromCsvFileImport(InputStream file, String language) {
-    }
-
 }

@@ -39,7 +39,7 @@ public interface MailService extends GenericService<Integer, Mail> {
      * Test the existence of an attachment with the parameter 'name' and its mail id.
      * 
      * @param mailId the mailId
-     * @param attachmentName
+     * @param attachmentName the attachment name
      * @return true, if success
      */
     boolean existWithMailIdAndName(Integer mailId, String attachmentName);

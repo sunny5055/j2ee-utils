@@ -19,7 +19,7 @@ public interface LabelDao extends GenericDao<LabelId, Label> {
      * Search the number of elements with the 'key' parameter.
      * 
      * @param key the key
-     * @return the number of element found
+     * @return the number of elements found
      */
     Integer countForKey(String key);
 
@@ -35,7 +35,7 @@ public interface LabelDao extends GenericDao<LabelId, Label> {
      * Count by language.
      *
      * @param language the language
-     * @return the number of element found
+     * @return the number of elements found
      */
     Integer countForLanguage(String language);
 

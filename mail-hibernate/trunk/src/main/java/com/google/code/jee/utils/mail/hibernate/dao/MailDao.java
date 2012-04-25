@@ -16,7 +16,7 @@ public interface MailDao extends GenericDao<Integer, Mail> {
      * Search the number of elements with the 'name' parameter.
      * 
      * @param name the name
-     * @return the number of element found
+     * @return the number of elements found
      */
     Integer countByName(String name);
 
@@ -31,8 +31,8 @@ public interface MailDao extends GenericDao<Integer, Mail> {
     /**
      * Count the number of attachment with a specific name and corresponding to a specific mail
      * 
-     * @param mailId
-     * @param attachmentName
+     * @param mailId the mailId
+     * @param attachmentName the attachment name
      * @return the number of attachments
      */
     Integer countForMailIdAndName(Integer mailId, String attachmentName);

@@ -1,5 +1,8 @@
 package com.google.code.jee.utils.parameter.hibernate.service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import com.google.code.jee.utils.dal.SearchCriteria;
@@ -80,4 +83,22 @@ public interface ParameterService {
      * @return the integer
      */
     Integer removeAllValues();
+
+    /**
+     * Export all the parameters into a .properties file .
+     * 
+     * @param outputStream the output stream
+     * @param dateFormat the date format. If no date format is specified, the
+     *            default one will be used instead.
+     * @throws IOException
+     */
+    void exportProperties(OutputStream outputStream) throws IOException;
+
+    /**
+     * Import properties.
+     *
+     * @param inputStream the input stream
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    void importProperties(InputStream inputStream) throws IOException;
 }

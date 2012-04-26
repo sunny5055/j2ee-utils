@@ -1,13 +1,20 @@
 package com.google.code.jee.utils.parameter.hibernate.service.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.code.jee.utils.DateUtil;
 import com.google.code.jee.utils.StringUtil;
+import com.google.code.jee.utils.collection.CollectionUtil;
 import com.google.code.jee.utils.dal.SearchCriteria;
 import com.google.code.jee.utils.parameter.hibernate.dao.ParameterDao;
 import com.google.code.jee.utils.parameter.hibernate.model.AbstractParameter;
@@ -20,8 +27,38 @@ import com.google.code.jee.utils.parameter.hibernate.service.ParameterService;
 
 @Service
 public class ParameterServiceImpl implements ParameterService {
+    private static final String DEFAULT_DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
+
     @Autowired
     private ParameterDao dao;
+
+    private String dateFormat;
+
+    /**
+     * Instantiates a new parameter service impl.
+     */
+    public ParameterServiceImpl() {
+        super();
+        this.dateFormat = DEFAULT_DATE_FORMAT;
+    }
+
+    /**
+     * Gets the date format.
+     * 
+     * @return the date format
+     */
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    /**
+     * Sets the date format.
+     * 
+     * @param dateFormat the new date format
+     */
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
 
     /**
      * {@inheritedDoc}
@@ -163,5 +200,85 @@ public class ParameterServiceImpl implements ParameterService {
             }
         }
         return deleted;
+    }
+
+    /**
+     * {@inheritedDoc}
+     * 
+     * @throws IOException
+     */
+    @Override
+    public void exportProperties(OutputStream outputStream) throws IOException {
+        if (outputStream != null) {
+            final List<AbstractParameter<?>> abstractParameters = dao.findAll();
+            if (!CollectionUtil.isEmpty(abstractParameters)) {
+                final Properties properties = new Properties();
+                for (final AbstractParameter<?> parameter : abstractParameters) {
+                    if (parameter.getValue() instanceof Date) {
+                        properties.put(parameter.getType(), DateUtil.format((Date) parameter.getValue(), dateFormat));
+                    } else {
+                        properties.put(parameter.getType(), parameter.getValue().toString());
+                    }
+                }
+                properties.store(outputStream, null);
+            }
+        }
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public void importProperties(InputStream inputStream) throws IOException {
+        if (inputStream != null) {
+            if (StringUtil.isBlank(dateFormat)) {
+                dateFormat = DEFAULT_DATE_FORMAT;
+            }
+            // Load properties
+            final Properties properties = new Properties();
+            properties.load(inputStream);
+
+            // Create a label for each element contained in the file
+            for (final Object key : properties.keySet()) {
+                final String keyString = (String) key;
+                final String value = properties.getProperty(keyString);
+
+                Object convertedValue = null;
+                try {
+                    convertedValue = DateUtil.parseDate(value, dateFormat);
+                } catch (ParseException e) {
+                    convertedValue = null;
+                }
+
+                if (convertedValue == null) {
+                    try {
+                        convertedValue = Integer.parseInt(value);
+                        setValue(keyString, convertedValue);
+                    } catch (Exception e) {
+                        convertedValue = null;
+                    }
+                }
+
+                if (convertedValue == null) {
+                    try {
+                        convertedValue = Float.parseFloat(value);
+                        setValue(keyString, convertedValue);
+                    } catch (Exception e) {
+                        convertedValue = null;
+                    }
+                }
+
+                if (convertedValue == null) {
+                    if (value.equals("true") || value.equals("false")) {
+                        convertedValue = Boolean.parseBoolean(value);
+                        setValue(keyString, convertedValue);
+                    } else {
+                        setValue(keyString, value);
+                    }
+                }
+
+                setValue(keyString, convertedValue);
+            }
+        }
     }
 }

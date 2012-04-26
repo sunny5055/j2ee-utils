@@ -20,14 +20,14 @@ import com.google.code.jee.utils.parameter.hibernate.service.ParameterService;
 @Service
 public class ParameterServiceImpl implements ParameterService {
     @Autowired
-    private ParameterDao parameterDao;
+    private ParameterDao dao;
 
     /**
      * {@inheritedDoc}
      */
     @Override
     public Integer count() {
-        return parameterDao.count();
+        return dao.count();
     }
 
     /**
@@ -35,7 +35,7 @@ public class ParameterServiceImpl implements ParameterService {
      */
     @Override
     public List<AbstractParameter<?>> findAll() {
-        return parameterDao.findAll();
+        return dao.findAll();
     }
 
     /**
@@ -43,7 +43,7 @@ public class ParameterServiceImpl implements ParameterService {
      */
     @Override
     public Integer count(SearchCriteria searchCriteria) {
-        return parameterDao.count(searchCriteria);
+        return dao.count(searchCriteria);
     }
 
     /**
@@ -51,7 +51,7 @@ public class ParameterServiceImpl implements ParameterService {
      */
     @Override
     public List<AbstractParameter<?>> findAll(SearchCriteria searchCriteria) {
-        return parameterDao.findAll(searchCriteria);
+        return dao.findAll(searchCriteria);
     }
 
     /**
@@ -61,7 +61,7 @@ public class ParameterServiceImpl implements ParameterService {
     public boolean existWithName(String name) {
         boolean exist = false;
         if (!StringUtil.isEmpty(name)) {
-            final Integer count = parameterDao.countByName(name);
+            final Integer count = dao.countByName(name);
             exist = count != 0;
         }
         return exist;
@@ -75,8 +75,10 @@ public class ParameterServiceImpl implements ParameterService {
     public <V> V getValue(String name) {
         V value = null;
         if (!StringUtil.isBlank(name)) {
-            final AbstractParameter<?> parameter = parameterDao.findByName(name);
-            value = (V) parameter.getValue();
+            final AbstractParameter<?> parameter = dao.findByName(name);
+            if (parameter != null) {
+                value = (V) parameter.getValue();
+            }
         }
         return value;
     }
@@ -89,56 +91,43 @@ public class ParameterServiceImpl implements ParameterService {
      */
     @Override
     public <V> void setValue(String name, V value) {
-        if (value != null) {
+        if (!StringUtil.isBlank(name) && value != null) {
+            AbstractParameter<?> parameter = null;
             if (!existWithName(name)) {
-                if (value instanceof String) {
-                    StringParameter stringParameter = new StringParameter();
-                    stringParameter.setName(name);
-                    stringParameter.setValue((String) value);
-                    parameterDao.save(stringParameter);
-                } else if (value instanceof Boolean) {
-                    BooleanParameter booleanParameter = new BooleanParameter();
-                    booleanParameter.setName(name);
-                    booleanParameter.setValue((Boolean) value);
-                    parameterDao.save(booleanParameter);
+                if (value instanceof Boolean) {
+                    parameter = new BooleanParameter();
                 } else if (value instanceof Float) {
-                    FloatParameter floatParameter = new FloatParameter();
-                    floatParameter.setName(name);
-                    floatParameter.setValue((Float) value);
-                    parameterDao.save(floatParameter);
+                    parameter = new FloatParameter();
                 } else if (value instanceof Integer) {
-                    IntegerParameter integerParameter = new IntegerParameter();
-                    integerParameter.setName(name);
-                    integerParameter.setValue((Integer) value);
-                    parameterDao.save(integerParameter);
+                    parameter = new IntegerParameter();
                 } else if (value instanceof Date) {
-                    DateParameter dateParameter = new DateParameter();
-                    dateParameter.setName(name);
-                    dateParameter.setValue((Date) value);
-                    parameterDao.save(dateParameter);
+                    parameter = new DateParameter();
+                } else {
+                    parameter = new StringParameter();
                 }
+
+                if (parameter != null) {
+                    parameter.setName(name);
+                }
+
             } else {
-                if (value instanceof String) {
-                    StringParameter stringParameter = (StringParameter) parameterDao.findByName(name);
-                    stringParameter.setValue((String) value);
-                    parameterDao.save(stringParameter);
-                } else if (value instanceof Boolean) {
-                    BooleanParameter booleanParameter = (BooleanParameter) parameterDao.findByName(name);
-                    booleanParameter.setValue((Boolean) value);
-                    parameterDao.save(booleanParameter);
-                } else if (value instanceof Float) {
-                    FloatParameter floatParameter = (FloatParameter) parameterDao.findByName(name);
-                    floatParameter.setValue((Float) value);
-                    parameterDao.save(floatParameter);
-                } else if (value instanceof Integer) {
-                    IntegerParameter integerParameter = (IntegerParameter) parameterDao.findByName(name);
-                    integerParameter.setValue((Integer) value);
-                    parameterDao.save(integerParameter);
-                } else if (value instanceof Date) {
-                    DateParameter dateParameter = (DateParameter) parameterDao.findByName(name);
-                    dateParameter.setValue((Date) value);
-                    parameterDao.save(dateParameter);
+                parameter = dao.findByName(name);
+            }
+
+            if (parameter != null) {
+                if (parameter instanceof BooleanParameter && value instanceof Boolean) {
+                    ((BooleanParameter) parameter).setValue((Boolean) value);
+                } else if (parameter instanceof FloatParameter && value instanceof Float) {
+                    ((FloatParameter) parameter).setValue((Float) value);
+                } else if (parameter instanceof IntegerParameter && value instanceof Integer) {
+                    ((IntegerParameter) parameter).setValue((Integer) value);
+                } else if (parameter instanceof DateParameter && value instanceof Date) {
+                    ((DateParameter) parameter).setValue((Date) value);
+                } else if (parameter instanceof StringParameter) {
+                    ((StringParameter) parameter).setValue(value.toString());
                 }
+
+                dao.save(parameter);
             }
         }
     }
@@ -151,10 +140,12 @@ public class ParameterServiceImpl implements ParameterService {
         Integer returnValue = 0;
         if (!StringUtil.isBlank(name)) {
             if (existWithName(name)) {
-                returnValue = parameterDao.delete(parameterDao.findByName(name));
+                final AbstractParameter<?> parameter = dao.findByName(name);
+                if (parameter != null) {
+                    returnValue = dao.delete(parameter);
+                }
             }
         }
         return returnValue;
     }
-
 }

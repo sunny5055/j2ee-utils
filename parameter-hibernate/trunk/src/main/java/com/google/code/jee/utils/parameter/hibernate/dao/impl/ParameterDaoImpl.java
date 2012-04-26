@@ -1,12 +1,9 @@
 package com.google.code.jee.utils.parameter.hibernate.dao.impl;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,9 +13,11 @@ import org.springframework.stereotype.Repository;
 
 import com.google.code.jee.utils.StringUtil;
 import com.google.code.jee.utils.collection.ArrayUtil;
+import com.google.code.jee.utils.collection.CollectionUtil;
 import com.google.code.jee.utils.dal.Search;
 import com.google.code.jee.utils.dal.SearchCriteria;
 import com.google.code.jee.utils.dal.SortOrder;
+import com.google.code.jee.utils.dal.util.QueryUtil;
 import com.google.code.jee.utils.parameter.hibernate.dao.ParameterDao;
 import com.google.code.jee.utils.parameter.hibernate.model.AbstractParameter;
 
@@ -66,13 +65,13 @@ public class ParameterDaoImpl implements ParameterDao {
 
                 final Query query = getCurrentSession().createQuery(search.getCountQuery());
                 if (!ArrayUtil.isEmpty(parameterNames)) {
-                    applyNamedParametersToQuery(query, parameterNames, values);
+                    QueryUtil.applyNamedParametersToQuery(query, parameterNames, values);
                 } else {
-                    applyParametersToQuery(query, values);
+                    QueryUtil.applyParametersToQuery(query, values);
                 }
 
                 final List<?> result = query.list();
-                count = getIntegerElementFromList(result);
+                count = CollectionUtil.getIntegerElementFromList(result);
             }
         }
         return count;
@@ -93,9 +92,9 @@ public class ParameterDaoImpl implements ParameterDao {
 
                 final Query query = getCurrentSession().createQuery(search.getQuery());
                 if (!ArrayUtil.isEmpty(parameterNames)) {
-                    applyNamedParametersToQuery(query, parameterNames, values);
+                    QueryUtil.applyNamedParametersToQuery(query, parameterNames, values);
                 } else {
-                    applyParametersToQuery(query, values);
+                    QueryUtil.applyParametersToQuery(query, values);
                 }
 
                 if (searchCriteria.hasPagination()) {
@@ -116,11 +115,8 @@ public class ParameterDaoImpl implements ParameterDao {
     public Integer countByName(String name) {
         Integer count = 0;
         if (!StringUtil.isBlank(name)) {
-            final Query query = getCurrentSession().getNamedQuery(ParameterDao.COUNT_BY_NAME);
-            query.setParameter("name", name);
-
-            final List<?> result = query.list();
-            count = getIntegerElementFromList(result);
+            count = QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), ParameterDao.COUNT_BY_NAME,
+                    new String[] { "name" }, name);
         }
         return count;
     }
@@ -129,14 +125,11 @@ public class ParameterDaoImpl implements ParameterDao {
      * {@inheritedDoc}
      */
     @Override
-    @SuppressWarnings("unchecked")
     public AbstractParameter<?> findByName(String name) {
         AbstractParameter<?> parameter = null;
         if (!StringUtil.isBlank(name)) {
-            final Query query = getCurrentSession().getNamedQuery(ParameterDao.FIND_BY_NAME);
-            query.setParameter("name", name);
-            final List<AbstractParameter<?>> parameters = query.list();
-            parameter = getFirstElementFromList(parameters);
+            parameter = QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), ParameterDao.FIND_BY_NAME,
+                    new String[] { "name" }, name);
         }
         return parameter;
     }
@@ -194,7 +187,7 @@ public class ParameterDaoImpl implements ParameterDao {
                         } else if (entry.getKey().equals("type")) {
                             buffer.append("upper(p.type) like upper(:type) ");
                             search.addStringParameter("type", entry.getValue());
-                        } 
+                        }
                         index++;
                     }
                 }
@@ -227,94 +220,6 @@ public class ParameterDaoImpl implements ParameterDao {
             search.setQuery(buffer.toString());
         }
         return search;
-    }
-
-    /**
-     * Gets the first element from list.
-     * 
-     * @param <T> the generic type
-     * @param result the result
-     * @return the first element from list
-     */
-    private <T> T getFirstElementFromList(List<T> result) {
-        T object = null;
-        if (!CollectionUtils.isEmpty(result)) {
-            object = result.get(0);
-        }
-        return object;
-    }
-
-    /**
-     * Gets the integer element from list.
-     * 
-     * @param result the result
-     * @return the integer element from list
-     */
-    private Integer getIntegerElementFromList(List<?> result) {
-        Integer value = null;
-        final Object object = getFirstElementFromList(result);
-        if (object != null) {
-            if (object instanceof Long) {
-                value = ((Long) object).intValue();
-            } else if (object instanceof Integer) {
-                value = (Integer) object;
-            }
-        }
-        return value;
-    }
-
-    /**
-     * Apply parameters to query.
-     * 
-     * @param query the query
-     * @param values the values
-     * @throws HibernateException the hibernate exception
-     */
-    private void applyParametersToQuery(Query query, Object... values) throws HibernateException {
-        if (query != null) {
-            if (!ArrayUtil.isEmpty(values)) {
-                for (int i = 0; i < values.length; i++) {
-                    query.setParameter(i, values[i]);
-                }
-            }
-        }
-    }
-
-    /**
-     * Apply named parameters to query.
-     * 
-     * @param query the query
-     * @param paramNames the param names
-     * @param values the values
-     * @throws HibernateException the hibernate exception
-     */
-    private void applyNamedParametersToQuery(Query query, String[] paramNames, Object... values)
-            throws HibernateException {
-        if (query != null) {
-            if (!ArrayUtil.isEmpty(paramNames) && !ArrayUtil.isEmpty(values)) {
-                for (int i = 0; i < values.length; i++) {
-                    applyNamedParameterToQuery(query, paramNames[i], values[i]);
-                }
-            }
-        }
-    }
-
-    /**
-     * Apply named parameter to query.
-     * 
-     * @param query the query
-     * @param paramName the param name
-     * @param value the value
-     * @throws HibernateException the hibernate exception
-     */
-    private void applyNamedParameterToQuery(Query query, String paramName, Object value) throws HibernateException {
-        if (value instanceof Collection<?>) {
-            query.setParameterList(paramName, (Collection<?>) value);
-        } else if (value instanceof Object[]) {
-            query.setParameterList(paramName, (Object[]) value);
-        } else {
-            query.setParameter(paramName, value);
-        }
     }
 
     /**

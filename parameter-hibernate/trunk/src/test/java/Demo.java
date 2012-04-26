@@ -33,11 +33,11 @@ public class Demo {
         final FloatParameter floatParameter = new FloatParameter();
 
         // Setting names
-        integerParameter.setName("integer");
-        floatParameter.setName("float");
-        dateParameter.setName("date");
-        booleanParameter.setName("boolean");
-        stringParameter.setName("string");
+        integerParameter.setName("integerTest");
+        floatParameter.setName("floatTest");
+        dateParameter.setName("dateTest");
+        booleanParameter.setName("booleanTest");
+        stringParameter.setName("stringTest");
 
         // Setting values
         integerParameter.setValue(5020);

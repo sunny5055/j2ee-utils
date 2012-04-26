@@ -2,6 +2,7 @@ package com.google.code.jee.utils.parameter.hibernate.dao.impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Criteria;
@@ -17,6 +18,7 @@ import com.google.code.jee.utils.StringUtil;
 import com.google.code.jee.utils.collection.ArrayUtil;
 import com.google.code.jee.utils.dal.Search;
 import com.google.code.jee.utils.dal.SearchCriteria;
+import com.google.code.jee.utils.dal.SortOrder;
 import com.google.code.jee.utils.parameter.hibernate.dao.ParameterDao;
 import com.google.code.jee.utils.parameter.hibernate.model.AbstractParameter;
 
@@ -172,7 +174,59 @@ public class ParameterDaoImpl implements ParameterDao {
      * @return the search
      */
     private Search getSearch(SearchCriteria searchCriteria) {
-        return null; // TODO to complete
+        Search search = null;
+        if (searchCriteria != null) {
+            search = new Search();
+
+            final StringBuilder buffer = new StringBuilder();
+            buffer.append("from AbstractParameter p ");
+            if (searchCriteria.hasFilters()) {
+                buffer.append("where ");
+                int index = 0;
+                for (final Map.Entry<String, Object> entry : searchCriteria.getFilters().entrySet()) {
+                    if (entry.getValue() != null) {
+                        if (index != 0) {
+                            buffer.append("AND ");
+                        }
+                        if (entry.getKey().equals("name")) {
+                            buffer.append("upper(p.name) like upper(:name) ");
+                            search.addStringParameter("name", entry.getValue());
+                        } else if (entry.getKey().equals("type")) {
+                            buffer.append("upper(p.type) like upper(:type) ");
+                            search.addStringParameter("type", entry.getValue());
+                        } 
+                        index++;
+                    }
+                }
+            }
+
+            search.setCountQuery("select count(*) " + buffer.toString());
+
+            if (searchCriteria.hasSorts()) {
+                buffer.append("order by ");
+                int index = 0;
+                for (final Map.Entry<String, SortOrder> entry : searchCriteria.getSorts().entrySet()) {
+                    if (index != 0) {
+                        buffer.append(", ");
+                    }
+                    if (entry.getKey().equals("name")) {
+                        buffer.append("p.name ");
+                        if (entry.getValue() == SortOrder.DESCENDING) {
+                            buffer.append("desc ");
+                        }
+                    } else if (entry.getKey().equals("type")) {
+                        buffer.append("p.type ");
+                        if (entry.getValue() == SortOrder.DESCENDING) {
+                            buffer.append("desc ");
+                        }
+                    }
+                    index++;
+                }
+            }
+
+            search.setQuery(buffer.toString());
+        }
+        return search;
     }
 
     /**

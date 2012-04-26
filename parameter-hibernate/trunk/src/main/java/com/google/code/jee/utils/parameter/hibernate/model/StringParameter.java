@@ -39,4 +39,5 @@ public class StringParameter extends AbstractParameter<String> {
     public void setValue(String value) {
         this.value = value;
     }
+
 }

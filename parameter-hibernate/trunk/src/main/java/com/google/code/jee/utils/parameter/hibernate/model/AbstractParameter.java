@@ -1,5 +1,7 @@
 package com.google.code.jee.utils.parameter.hibernate.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,18 +9,24 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
+import com.google.code.jee.utils.parameter.hibernate.dao.ParameterDao;
 
 /**
  * The Class Parameter.
  */
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "PAR_PARAMETER")
+@NamedQueries({
+        @NamedQuery(name = ParameterDao.COUNT_BY_NAME, query = "select count(*) from AbstractParameter p where p.name = :name"),
+        @NamedQuery(name = ParameterDao.FIND_BY_NAME, query = "from AbstractParameter p where p.name = :name") })
 @SuppressWarnings("serial")
-public abstract class AbstractParameter<V> extends AbstractHibernateDto<Integer> {
+public abstract class AbstractParameter<V extends Serializable> extends AbstractHibernateDto<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PAR_ID", nullable = false)

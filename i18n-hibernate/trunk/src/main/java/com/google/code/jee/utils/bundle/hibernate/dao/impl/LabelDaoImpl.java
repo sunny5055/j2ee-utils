@@ -12,6 +12,7 @@ import com.google.code.jee.utils.dal.Search;
 import com.google.code.jee.utils.dal.SearchCriteria;
 import com.google.code.jee.utils.dal.SortOrder;
 import com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate;
+import com.google.code.jee.utils.dal.util.QueryUtil;
 
 /**
  * The Class LabelDaoImpl.
@@ -31,7 +32,8 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<LabelId, Label> im
      */
     @Override
     public Integer countForKey(String key) {
-        return this.getNumberByNamedQueryAndNamedParam(LabelDao.COUNT_FOR_KEY, new String[] { "key" }, key);
+        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), LabelDao.COUNT_FOR_KEY,
+                new String[] { "key" }, key);
     }
 
     /**
@@ -39,7 +41,8 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<LabelId, Label> im
      */
     @Override
     public List<Label> findAllByKey(String key) {
-        return this.findByNamedQueryAndNamedParam(LabelDao.FIND_ALL_BY_KEY, new String[] { "key" }, key);
+        return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), LabelDao.FIND_ALL_BY_KEY,
+                new String[] { "key" }, key);
     }
 
     /**
@@ -47,8 +50,8 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<LabelId, Label> im
      */
     @Override
     public Integer countForLanguage(String language) {
-        return this.getNumberByNamedQueryAndNamedParam(LabelDao.COUNT_FOR_LANGUAGE, new String[] { "language" },
-                language);
+        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), LabelDao.COUNT_FOR_LANGUAGE,
+                new String[] { "language" }, language);
     }
 
     /**
@@ -56,7 +59,8 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<LabelId, Label> im
      */
     @Override
     public List<Label> findAllByLanguage(String language) {
-        return this.findByNamedQueryAndNamedParam(LabelDao.FIND_ALL_BY_LANGUAGE, new String[] { "language" }, language);
+        return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), LabelDao.FIND_ALL_BY_LANGUAGE,
+                new String[] { "language" }, language);
     }
 
     /**

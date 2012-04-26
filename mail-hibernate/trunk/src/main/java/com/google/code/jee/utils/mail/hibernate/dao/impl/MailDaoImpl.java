@@ -8,6 +8,7 @@ import com.google.code.jee.utils.dal.Search;
 import com.google.code.jee.utils.dal.SearchCriteria;
 import com.google.code.jee.utils.dal.SortOrder;
 import com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate;
+import com.google.code.jee.utils.dal.util.QueryUtil;
 import com.google.code.jee.utils.mail.hibernate.dao.MailDao;
 import com.google.code.jee.utils.mail.hibernate.model.Mail;
 
@@ -29,7 +30,8 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
      */
     @Override
     public Integer countByName(String name) {
-        return this.getNumberByNamedQueryAndNamedParam(MailDao.COUNT_BY_NAME, new String[] { "name" }, name);
+        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), MailDao.COUNT_BY_NAME,
+                new String[] { "name" }, name);
     }
 
     /**
@@ -37,7 +39,8 @@ public class MailDaoImpl extends AbstractGenericDaoHibernate<Integer, Mail> impl
      */
     @Override
     public Mail findByName(String name) {
-        return this.getByNamedQueryAndNamedParam(MailDao.FIND_BY_NAME, new String[] { "name" }, name);
+        return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), MailDao.FIND_BY_NAME,
+                new String[] { "name" }, name);
     }
 
     /**

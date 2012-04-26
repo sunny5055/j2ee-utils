@@ -9,6 +9,7 @@ import com.google.code.jee.utils.dal.Search;
 import com.google.code.jee.utils.dal.SearchCriteria;
 import com.google.code.jee.utils.dal.SortOrder;
 import com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate;
+import com.google.code.jee.utils.dal.util.QueryUtil;
 import com.google.code.jee.utils.mail.hibernate.dao.MailAttachmentDao;
 import com.google.code.jee.utils.mail.hibernate.model.MailAttachment;
 
@@ -31,7 +32,8 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
      */
     @Override
     public Integer countByName(String name) {
-        return this.getNumberByNamedQueryAndNamedParam(MailAttachmentDao.COUNT_BY_NAME, new String[] { "name" }, name);
+        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), MailAttachmentDao.COUNT_BY_NAME,
+                new String[] { "name" }, name);
     }
 
     /**
@@ -39,7 +41,8 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
      */
     @Override
     public MailAttachment findByName(String name) {
-        return this.getByNamedQueryAndNamedParam(MailAttachmentDao.FIND_BY_NAME, new String[] { "name" }, name);
+        return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), MailAttachmentDao.FIND_BY_NAME,
+                new String[] { "name" }, name);
 
     }
 
@@ -48,8 +51,8 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
      */
     @Override
     public Integer countForMailId(Integer mailId) {
-        return this.getNumberByNamedQueryAndNamedParam(MailAttachmentDao.COUNT_FOR_MAIL_ID, new String[] { "mailId" },
-                mailId);
+        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), MailAttachmentDao.COUNT_FOR_MAIL_ID,
+                new String[] { "mailId" }, mailId);
     }
 
     /**
@@ -57,8 +60,8 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
      */
     @Override
     public List<MailAttachment> findAllByMailId(Integer mailId) {
-        return this.findByNamedQueryAndNamedParam(MailAttachmentDao.FIND_ALL_BY_MAIL_ID, new String[] { "mailId" },
-                mailId);
+        return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), MailAttachmentDao.FIND_ALL_BY_MAIL_ID,
+                new String[] { "mailId" }, mailId);
     }
 
     /**
@@ -66,8 +69,9 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
      */
     @Override
     public Integer countForMailIdAndName(Integer mailId, String attachmentName) {
-        return this.getNumberByNamedQueryAndNamedParam(MailAttachmentDao.COUNT_FOR_MAIL_ID_AND_NAME, new String[] {
-                "mailId", "attachmentName" }, mailId, attachmentName);
+        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(),
+                MailAttachmentDao.COUNT_FOR_MAIL_ID_AND_NAME, new String[] { "mailId", "attachmentName" }, mailId,
+                attachmentName);
     }
 
     /**
@@ -75,8 +79,8 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
      */
     @Override
     public MailAttachment findByMailIdAndName(Integer mailId, String attachmentName) {
-        return this.getByNamedQueryAndNamedParam(MailAttachmentDao.FIND_BY_MAIL_ID_AND_NAME, new String[] { "mailId",
-                "attachmentName" }, mailId, attachmentName);
+        return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), MailAttachmentDao.FIND_BY_MAIL_ID_AND_NAME,
+                new String[] { "mailId", "attachmentName" }, mailId, attachmentName);
     }
 
     /**

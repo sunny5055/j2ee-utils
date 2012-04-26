@@ -12,6 +12,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.code.jee.utils.BooleanUtil;
 import com.google.code.jee.utils.DateUtil;
 import com.google.code.jee.utils.StringUtil;
 import com.google.code.jee.utils.collection.CollectionUtil;
@@ -214,11 +215,14 @@ public class ParameterServiceImpl implements ParameterService {
             if (!CollectionUtil.isEmpty(abstractParameters)) {
                 final Properties properties = new Properties();
                 for (final AbstractParameter<?> parameter : abstractParameters) {
+                    String value = null;
                     if (parameter.getValue() instanceof Date) {
-                        properties.put(parameter.getType(), DateUtil.format((Date) parameter.getValue(), dateFormat));
+                        value = DateUtil.format((Date) parameter.getValue(), dateFormat);
                     } else {
-                        properties.put(parameter.getType(), parameter.getValue().toString());
+                        value = parameter.getValue().toString();
                     }
+
+                    properties.put(parameter.getName(), value);
                 }
                 properties.store(outputStream, null);
             }
@@ -234,47 +238,51 @@ public class ParameterServiceImpl implements ParameterService {
             if (StringUtil.isBlank(dateFormat)) {
                 dateFormat = DEFAULT_DATE_FORMAT;
             }
+
             // Load properties
             final Properties properties = new Properties();
             properties.load(inputStream);
 
-            // Create a label for each element contained in the file
             for (final Object key : properties.keySet()) {
                 final String keyString = (String) key;
                 final String value = properties.getProperty(keyString);
-
                 Object convertedValue = null;
+
+                // Date
                 try {
                     convertedValue = DateUtil.parseDate(value, dateFormat);
-                } catch (ParseException e) {
+                } catch (final ParseException e) {
                     convertedValue = null;
                 }
 
+                // Integer
                 if (convertedValue == null) {
                     try {
                         convertedValue = Integer.parseInt(value);
                         setValue(keyString, convertedValue);
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         convertedValue = null;
                     }
                 }
 
+                // Float
                 if (convertedValue == null) {
                     try {
                         convertedValue = Float.parseFloat(value);
                         setValue(keyString, convertedValue);
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         convertedValue = null;
                     }
                 }
 
+                // Boolean
                 if (convertedValue == null) {
-                    if (value.equals("true") || value.equals("false")) {
-                        convertedValue = Boolean.parseBoolean(value);
-                        setValue(keyString, convertedValue);
-                    } else {
-                        setValue(keyString, value);
-                    }
+                    convertedValue = BooleanUtil.toBooleanObject(value);
+                }
+
+                // String
+                if (convertedValue == null) {
+                    convertedValue = value;
                 }
 
                 setValue(keyString, convertedValue);

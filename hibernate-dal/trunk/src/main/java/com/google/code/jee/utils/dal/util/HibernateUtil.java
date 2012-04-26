@@ -1,11 +1,6 @@
 package com.google.code.jee.utils.dal.util;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.proxy.HibernateProxy;
@@ -13,8 +8,6 @@ import org.hibernate.proxy.HibernateProxyHelper;
 
 import com.google.code.jee.utils.StringUtil;
 import com.google.code.jee.utils.collection.ArrayUtil;
-import com.google.code.jee.utils.collection.CollectionUtil;
-import com.google.code.jee.utils.dal.dto.Dto;
 
 /**
  * The Class HibernateUtil.
@@ -72,36 +65,5 @@ public class HibernateUtil {
             }
         }
         return hibernateEntity;
-    }
-
-    /**
-     * Gets the id list.
-     * 
-     * @param dtos the dtos
-     * @return the id list
-     */
-    public static <PK extends Serializable, E extends Dto<PK>> List<PK> getIdList(E... dtos) {
-        List<PK> pks = null;
-        if (!ArrayUtil.isEmpty(dtos)) {
-            pks = getIdList(Arrays.asList(dtos));
-        }
-        return pks;
-    }
-
-    /**
-     * Gets the id list.
-     * 
-     * @param dtos the dtos
-     * @return the id list
-     */
-    public static <PK extends Serializable, E extends Dto<PK>> List<PK> getIdList(Collection<E> dtos) {
-        List<PK> pks = null;
-        if (!CollectionUtil.isEmpty(dtos)) {
-            pks = new ArrayList<PK>();
-            for (final E dto : dtos) {
-                pks.add(dto.getPrimaryKey());
-            }
-        }
-        return pks;
     }
 }

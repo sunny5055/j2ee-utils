@@ -3,6 +3,7 @@ package com.google.code.jee.utils.parameter.hibernate.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -137,15 +138,30 @@ public class ParameterServiceImpl implements ParameterService {
      */
     @Override
     public Integer removeValue(String name) {
-        Integer returnValue = 0;
+        Integer deleted = 0;
         if (!StringUtil.isBlank(name)) {
             if (existWithName(name)) {
                 final AbstractParameter<?> parameter = dao.findByName(name);
                 if (parameter != null) {
-                    returnValue = dao.delete(parameter);
+                    deleted = dao.delete(parameter);
                 }
             }
         }
-        return returnValue;
+        return deleted;
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public Integer removeAllValues() {
+        Integer deleted = 0;
+        final List<AbstractParameter<?>> parameters = this.dao.findAll();
+        if (!CollectionUtils.isEmpty(parameters)) {
+            for (final AbstractParameter<?> parameter : parameters) {
+                deleted += this.dao.delete(parameter);
+            }
+        }
+        return deleted;
     }
 }

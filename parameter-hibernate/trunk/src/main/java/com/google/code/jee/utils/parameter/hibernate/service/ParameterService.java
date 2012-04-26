@@ -73,4 +73,11 @@ public interface ParameterService {
      * @return the integer
      */
     Integer removeValue(String name);
+
+    /**
+     * Removes all the values.
+     * 
+     * @return the integer
+     */
+    Integer removeAllValues();
 }

@@ -165,8 +165,14 @@ public class ParameterDaoImpl implements ParameterDao {
         return deleted;
     }
 
+    /**
+     * Gets the search.
+     * 
+     * @param searchCriteria the search criteria
+     * @return the search
+     */
     private Search getSearch(SearchCriteria searchCriteria) {
-        return null;
+        return null; // TODO to complete
     }
 
     /**
@@ -176,7 +182,7 @@ public class ParameterDaoImpl implements ParameterDao {
      * @param result the result
      * @return the first element from list
      */
-    protected <T> T getFirstElementFromList(List<T> result) {
+    private <T> T getFirstElementFromList(List<T> result) {
         T object = null;
         if (!CollectionUtils.isEmpty(result)) {
             object = result.get(0);
@@ -210,7 +216,7 @@ public class ParameterDaoImpl implements ParameterDao {
      * @param values the values
      * @throws HibernateException the hibernate exception
      */
-    protected void applyParametersToQuery(Query query, Object... values) throws HibernateException {
+    private void applyParametersToQuery(Query query, Object... values) throws HibernateException {
         if (query != null) {
             if (!ArrayUtil.isEmpty(values)) {
                 for (int i = 0; i < values.length; i++) {

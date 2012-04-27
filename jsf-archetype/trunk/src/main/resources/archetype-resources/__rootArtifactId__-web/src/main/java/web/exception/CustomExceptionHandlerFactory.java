@@ -7,27 +7,23 @@ import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerFactory;
 
 /**
- * Classe pour créer des objets qui gèrent les exceptions
+ * A factory for creating CustomExceptionHandler objects.
  */
 public class CustomExceptionHandlerFactory extends ExceptionHandlerFactory {
     private ExceptionHandlerFactory parent;
 
     /**
-     * Instantie un nouveau custom exception handler factory.
-     * 
-     * @param parent le parent
+     * Instantiates a new custom exception handler factory.
+     *
+     * @param parent the parent
      */
     public CustomExceptionHandlerFactory(ExceptionHandlerFactory parent) {
         this.parent = parent;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see javax.faces.context.ExceptionHandlerFactory${symbol_pound}getExceptionHandler()
-     */
     /**
-     * Gére les exceptions
-     */
+    * {@inheritedDoc}
+    */
     @Override
     public ExceptionHandler getExceptionHandler() {
         ExceptionHandler result = parent.getExceptionHandler();

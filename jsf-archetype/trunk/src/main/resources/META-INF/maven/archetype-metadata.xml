@@ -19,9 +19,6 @@
 			<defaultValue>${artifactId}</defaultValue>
 		</requiredProperty>
 		<requiredProperty key="resourceBundleClassName" />
-		<requiredProperty key="defaultLocale">
-			<defaultValue>fr</defaultValue>
-		</requiredProperty>
 	</requiredProperties>
 	<modules>
 		<module id="${rootArtifactId}-business" dir="__rootArtifactId__-business"

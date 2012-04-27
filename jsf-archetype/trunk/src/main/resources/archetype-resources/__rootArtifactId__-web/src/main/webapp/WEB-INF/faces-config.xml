@@ -19,4 +19,15 @@
 	<factory>
 		<exception-handler-factory>${package}.web.exception.CustomExceptionHandlerFactory</exception-handler-factory>
 	</factory>
+	<lifecycle>
+		<phase-listener>com.google.code.jee.utils.jsf.listener.CustomScopeListener</phase-listener>
+		<phase-listener>com.google.code.jee.utils.jsf.listener.MessageHandler</phase-listener>
+	</lifecycle>
+	<render-kit>
+		<renderer>
+			<component-family>org.primefaces.component</component-family>
+			<renderer-type>org.primefaces.component.DataTableRenderer</renderer-type>
+			<renderer-class>org.primefaces.component.datatable.MyDataTableRenderer</renderer-class>
+		</renderer>		
+	</render-kit>
 </faces-config>

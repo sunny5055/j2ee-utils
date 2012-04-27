@@ -17,7 +17,7 @@
 
 	<import resource="classpath:spring/business-context.xml" />
 
-	<bean id="config" class="${package}.bassins.util.SpringPropertiesUtil">
+	<bean id="config" class="com.google.code.jee.utils.spring.EnhancedPropertyPlaceholderConfigurer">
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="location">
@@ -30,7 +30,7 @@
 		<property name="scopes">
 			<map>
 				<entry key="view">
-					<bean class="${package}.bassins.web.scope.ViewScope" />
+					<bean class="com.google.code.jee.utils.jsf.scope.ViewScope" />
 				</entry>
 			</map>
 		</property>

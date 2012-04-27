@@ -1,0 +1,63 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ft="http://primefaces.prime.com.tr/facestrace"
+	xmlns:util="http://java.sun.com/jsf/composite/components/util"
+	xmlns:t="http://myfaces.apache.org/tomahawk">
+<h:head>
+	<title><ui:insert name="headTitle" /></title>
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />	
+</h:head>
+
+<h:body>
+	<f:view contentType="text/html">
+		<link rel="stylesheet" href="${symbol_pound}{resource['css:main.css']}" type="text/css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="${symbol_pound}{resource['css:main-ie.css']}" type="text/css" /><![endif]-->
+	
+		<ui:insert name="stylesheet" />
+	
+		<!--[if lt IE 7]><script type="text/javascript" language="javascript" src="${symbol_pound}{resource['js:DD_belatedPNG_0.0.8a-min.js']}"></script><![endif]-->
+		<!--[if IE]><script type="text/javascript" src="${symbol_pound}{resource['js:html5.js']}"></script><![endif]-->
+		<!--[if lte IE 7]><script type="text/javascript" src="${symbol_pound}{resource['js:IE8.js']}"></script><![endif]-->	
+		
+		<script type="text/javascript" src="${symbol_pound}{resource['js:main.js']}"></script>
+		
+		<ui:insert name="javascript" />
+	
+		<ui:insert name="header">
+			<ui:include src="/xhtml/common/header.xhtml" />
+		</ui:insert>
+
+		<div id="wrapper">
+			<div id="content" class="ui-corner-bottom">
+				<h:form id="contentForm" enctype="multipart/form-data">
+					<ui:insert name="content" />
+				</h:form>
+			</div>
+		</div>
+
+		<ui:insert name="footer">
+			<ui:include src="/xhtml/common/footer.xhtml" />
+		</ui:insert>
+
+		<ui:insert name="confirmDialog" />
+
+		<ui:insert name="ajaxStatus">
+			<p:ajaxStatus onstart="statusDialog.show();"
+				onsuccess="statusDialog.hide();" />
+			<p:dialog modal="true" widgetVar="statusDialog" header="Status"
+				draggable="false" closable="false" width="240">
+				<h:graphicImage name="ajaxloadingbar.gif" library="img"
+					alt="Loading bar" />
+			</p:dialog>
+		</ui:insert>
+	</f:view>
+</h:body>
+</html>

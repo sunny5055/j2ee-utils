@@ -1,0 +1,11 @@
+=jsf-archetype=
+
+To complete.
+
+{{{
+mvn archetype:generate -DgroupId=com.google
+	-DartifactId=test 
+	-DarchetypeGroupId=jee-utils 
+	-DarchetypeArtifactId=jsf-archetype 
+	-DarchetypeVersion=1.0.0
+}}}

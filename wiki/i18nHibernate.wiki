@@ -1,0 +1,4 @@
+#summary Hibernate i18n.
+=i18n-hibernate=
+
+To complete.

@@ -1,0 +1,4 @@
+#summary Hibernate mail.
+=mail-hibernate=
+
+To complete.

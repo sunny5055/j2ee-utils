@@ -9,6 +9,9 @@
   * [commonsDal commons-dal]
   * [hibernateDal hibernate-dal]
   * [mailSender mail-sender]  
-
-
-
+  * [i18nHibernate i18n-hibernate]
+  * [jsfArchetype jsf-archetype]
+  * [jsfUtil jsf-util]
+  * [mailHibernate mail-hibernate]
+  * [parameterHibernate parameter-hibernate]
+  

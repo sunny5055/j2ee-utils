@@ -8,7 +8,7 @@ There are several parts in the `mail-hibernate` configuration :
 	<li>You need to set up a proper connection to your database, using Hibernate : </li>
 		<ul>
 			<li> The first bean you must declare is a `ComboPooledDataSource` object type. It handles a connection pool to your database.</li>
-			<li> The second bean is a `LocalSessionFactoryBean` type of bean. It handles a JDBC connection to your database and manage the persisted objects. </li>
+			<li> The second bean is a `LocalSessionFactoryBean` type of bean. It handles a JDBC connection to your database and manage the persisted objects. It reads into a `hibernate.properties``file. </li>
 			<li> The thid bean is a `HibernateTransactionManager` type of bean. It uses the `sessionFactory` and handles all the database transactions </li>
 		</ul>
 	<li> You need to define a configuration using Spring's AOP, in order to manage the Hibernate transactions : </li>
@@ -131,6 +131,29 @@ c3p0.min_size=10
 c3p0.max_size=100
 c3p0.timeout=100
 c3p0.max_statements=0
+}}}
+
+Finally, you must define a log4j.xml file that handles all the logging functions.
+
+{{{
+<?xml version="1.0" encoding="UTF-8" ?>
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<!-- APPENDER -->
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{3}] %m%n" />
+		</layout>
+	</appender>
+
+	<logger name="org.hibernate">
+		<level value="debug" />
+		<appender-ref ref="CONSOLE" />
+	</logger>
+	<root>
+		<level value="debug" />
+		<appender-ref ref="CONSOLE" />
+	</root>
+</log4j:configuration>
 }}}
 
 Use the component as follows :

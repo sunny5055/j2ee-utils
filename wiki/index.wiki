@@ -3,3 +3,24 @@
 ==Summary==
 
 This wiki sums up all the projects's aims and goals. It explains how you can use them and gives details and quick descriptions of their configurations files.
+
+==Cyclic dependencies==
+
+Most of the project are linked and must be invoked follwing a specific order, in order to avoid potentials dependencies' problems.
+
+maven-pom-parent : must be defined in every project.
+<ul>
+	<li> utils : can be added as a dependency in any project because it's not a project parent.
+	<li> image-util > utils</li> 
+	<li> spring-util > utils </li> 
+	<li> templater > spring-util > utils </li> 
+	<li> csv-exporter > spring-util > utils </li> 
+	<li> commons-dal > spring-util > utils </li> 
+	<li> hibernate-dal > commons-dal > spring-util > utils </li> 
+	<li> mail-sender > spring-util > utils</li> 
+	<li> i18n-hibernate > hibernate-dal > commons-dal > spring-util > utils</li> 
+	<li> jsf-archetype : is an independant project </li> 
+	<li> jsf-util > hibernate-dal > commons-dal > spring-util > utils </li> 
+	<li> mail-hibernate > hibernate-dal > commons-dal > spring-util > utils </li> 
+	<li> parameter-hibernate hibernate-dal > commons-dal > spring-util > utils </li> 
+</ul>

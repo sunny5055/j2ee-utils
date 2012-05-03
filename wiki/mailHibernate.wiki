@@ -4,15 +4,20 @@
 ==Getting started==
 
 There are several parts in the `mail-hibernate` configuration :
-1) You need to set up a proper connection to your database, using Hibernate :
-	- The first bean you must declare is a `ComboPooledDataSource` object type. It handles a connection pool to your database.
-	- The second bean is a `LocalSessionFactoryBean` type of bean. It handles a JDBC connection to your database and manage the persisted objects.
-	- The thid bean is a `HibernateTransactionManager` type of bean. It uses the `sessionFactory` and handles all the database transactions
-2) You need to define a configuration using Spring's AOP, in order to manage the Hibernate transactions :
-	- Fist of all, you must define pointcuts for every of your DAOs and Services classes. All the methods contained in those classes, have to be handled by a transaction.
-	- You must define a `<tx:advice>` tag for your Services. Every method that begins with `get`, `find`, `exist` or `count` are read-only methods and implies that a transaction as already been opened.
-	- You must define a `<tx:advice>` tag for your DAOs. Every method that begins with `get`, `find`, `exist` or `count` are read-only methods, but doesn't implies that a transaction as already been opened.
-	  Generally, a transaction is opened every time a DAO method is being used.
+<ol> 
+	<li>You need to set up a proper connection to your database, using Hibernate : </li>
+		<ul>
+			<li> The first bean you must declare is a `ComboPooledDataSource` object type. It handles a connection pool to your database.</li>
+			<li> The second bean is a `LocalSessionFactoryBean` type of bean. It handles a JDBC connection to your database and manage the persisted objects. </li>
+			<li> The thid bean is a `HibernateTransactionManager` type of bean. It uses the `sessionFactory` and handles all the database transactions </li>
+		</ul>
+	<li> You need to define a configuration using Spring's AOP, in order to manage the Hibernate transactions : </li>
+		<ul>
+			<li> Fist of all, you must define pointcuts for every of your DAOs and Services classes. All the methods contained in those classes, have to be handled by a transaction. </li>
+			<li> You must define a `<tx:advice>` tag for your Services. Every method that begins with `get`, `find`, `exist` or `count` are read-only methods and implies that a transaction as already been opened. </li>
+			<li> You must define a `<tx:advice>` tag for your DAOs. Every method that begins with `get`, `find`, `exist` or `count` are read-only methods, but doesn't implies that a transaction as already been opened. Generally, a transaction is opened every time a DAO method is being used.  </li>
+		 </ul>
+</ol>
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"

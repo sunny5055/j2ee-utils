@@ -1,4 +1,5 @@
 #summary Hibernate Data Access Layer.
 =hibernate-dal=
 
-To complete.
+This projects extends classes contains in 'common-dal' and adapts them to a Hibernate usage.
+In addition, it provides utilitary classes used for entity management.

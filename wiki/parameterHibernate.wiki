@@ -1,4 +1,207 @@
 #summary Hibernate parameter.
 =parameter-hibernate=
 
-To complete.
+==Getting started==
+
+There are several parts in the `mail-hibernate` configuration. The first one, is the definition of an `application-context.xml` config file :
+1) You need to set up a proper connection to your database, using Hibernate :
+	- The first bean you must declare is a `ComboPooledDataSource` object type. It handles a connection pool to your database.
+	- The second bean is a `LocalSessionFactoryBean` type of bean. It handles a JDBC connection to your database and manage the persisted objects.
+	- The thid bean is a `HibernateTransactionManager` type of bean. It uses the `sessionFactory` and handles all the database transactions
+2) You need to define a configuration using Spring's AOP, in order to manage the Hibernate transactions :
+	- Fist of all, you must define pointcuts for every of your DAOs and Services classes. All the methods contained in those classes, have to be handled by a transaction.
+	- You must define a `<tx:advice>` tag for your Services. Every method that begins with `get`, `find`, `exist` or `count` are read-only methods and implies that a transaction as already been opened.
+	- You must define a `<tx:advice>` tag for your DAOs. Every method that begins with `get`, `find`, `exist` or `count` are read-only methods, but doesn't implies that a transaction as already been opened.
+	  Generally, a transaction is opened every time a DAO method is being used.
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<context:component-scan base-package="com.google" />
+	<context:annotation-config />
+
+	<context:property-placeholder location="classpath:spring/database.properties" />
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="acquireIncrement" value="${c3p0.acquire_increment}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idle_test_period}" />
+		<property name="minPoolSize" value="${c3p0.min_size}" />
+		<property name="maxPoolSize" value="${c3p0.max_size}" />
+		<property name="loginTimeout" value="${c3p0.timeout}" />
+		<property name="maxStatements" value="${c3p0.max_statements}" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
+				<prop key="hibernate.connection.release_mode">${hibernate.connection.release_mode}</prop>
+				<prop key="hibernate.auto_close_session">${hibernate.auto_close_session}</prop>
+			</props>
+		</property>
+		<property name="packagesToScan" value="com.google" />
+	</bean>
+
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="nestedTransactionAllowed" value="true" />
+	</bean>
+
+	<aop:config>
+		<!-- Pointcut utilisé pour les transactions -->
+		<aop:pointcut id="servicePointcut"
+			expression="execution(* com.google..*Service*.*(..))" />
+		<aop:pointcut id="daoPointcut" expression="execution(* com.google..*Dao*.*(..))" />
+
+		<aop:advisor advice-ref="serviceTxAdvice" pointcut-ref="servicePointcut" />
+		<aop:advisor advice-ref="daoTxAdvice" pointcut-ref="daoPointcut" />
+	</aop:config>
+
+	<tx:advice id="serviceTxAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="find*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="count*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="exist*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	<tx:advice id="daoTxAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" propagation="MANDATORY" />
+			<tx:method name="find*" read-only="true" propagation="MANDATORY" />
+			<tx:method name="count*" read-only="true" propagation="MANDATORY" />
+			<tx:method name="exist*" read-only="true" propagation="MANDATORY" />
+			<tx:method name="*" propagation="MANDATORY" />
+		</tx:attributes>
+	</tx:advice>
+</beans>
+}}}
+
+After you've finished the Spring configuration, you must now define a `database.properties`, which is used by the `application-context.xml` file.
+Here is an example of a `PostgreSQL` connection with `Hibernate` abd `c3po`.
+
+{{{
+# Jdbc
+jdbc.driverClassName=org.postgresql.Driver
+jdbc.maxActive=100
+jdbc.maxWait=1000
+jdbc.url=jdbc:postgresql://localhost:5432/parameter-hibernate
+jdbc.username=postgres
+jdbc.password=postgres
+
+# Hibernate
+hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+hibernate.show_sql=false
+hibernate.hbm2ddl.auto=update
+hibernate.connection.release_mode=auto
+hibernate.auto_close_session=true
+hibernate.cache.use_query_cache=false
+
+# c3p0
+c3p0.acquire_increment=1
+c3p0.idle_test_period=100
+c3p0.min_size=10
+c3p0.max_size=100
+c3p0.timeout=100
+c3p0.max_statements=0
+}}}
+
+Use the component as follows :
+
+{{{
+    public static void main(String[] args) throws IOException {
+        final ApplicationContext context = new ClassPathXmlApplicationContext("spring/application-context.xml");
+        final ParameterService parameterService = context.getBean(ParameterService.class);
+
+        // Test all values removal
+        parameterService.removeAllValues();
+
+        // Creation of values of all types
+        final IntegerParameter integerParameter = new IntegerParameter();
+        final StringParameter stringParameter = new StringParameter();
+        final BooleanParameter booleanParameter = new BooleanParameter();
+        final DateParameter dateParameter = new DateParameter();
+        final FloatParameter floatParameter = new FloatParameter();
+
+        // Setting names
+        integerParameter.setName("integerTest");
+        floatParameter.setName("floatTest");
+        dateParameter.setName("dateTest");
+        booleanParameter.setName("booleanTest");
+        stringParameter.setName("stringTest");
+
+        // Setting values
+        integerParameter.setValue(5020);
+        floatParameter.setValue(2.F);
+        dateParameter.setValue(new Date());
+        booleanParameter.setValue(true);
+        stringParameter.setValue("A test string");
+
+        // setValue method call
+        parameterService.setValue(integerParameter.getName(), integerParameter.getValue());
+        parameterService.setValue(floatParameter.getName(), floatParameter.getValue());
+        parameterService.setValue(dateParameter.getName(), dateParameter.getValue());
+        parameterService.setValue(booleanParameter.getName(), booleanParameter.getValue());
+        parameterService.setValue(stringParameter.getName(), stringParameter.getValue());
+
+        // getValue test
+        System.err.println(parameterService.getValue(integerParameter.getName()).toString());
+        System.err.println(parameterService.getValue(floatParameter.getName()).toString());
+        System.err.println(parameterService.getValue(dateParameter.getName()).toString());
+        System.err.println(parameterService.getValue(booleanParameter.getName()).toString());
+        System.err.println(parameterService.getValue(stringParameter.getName()));
+
+        // count test
+        System.out.println(parameterService.count());
+
+        // findAll listing
+        for (AbstractParameter<?> param : parameterService.findAll()) {
+            System.out.println(param.getName());
+            System.out.println(param.getType());
+        }
+
+        // Test existsWithName
+        System.out.println(parameterService.existWithName("test"));
+
+        final String currentDirectoryPath = new File(".").getCanonicalPath();
+
+        // export properties
+        OutputStream outputStream = new FileOutputStream(currentDirectoryPath
+                + "/src/test/resources/properties/parameters.properties");
+        parameterService.exportProperties(outputStream);
+
+        parameterService.removeAllValues();
+
+        // import values into the database
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(currentDirectoryPath
+                    + "/src/test/resources/properties/parameters.properties");
+        } catch (final FileNotFoundException e1) {
+            e1.printStackTrace();
+        }
+        parameterService.importProperties(fileInputStream);
+    }
+}}}	

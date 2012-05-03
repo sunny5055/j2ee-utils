@@ -1,4 +1,6 @@
 #summary Commons Data Access Layer.
 =commons-dal=
 
-To complete.
+This project provides generics classes and interfaces for DAOs, DTOs and models management.
+Moreover, it provides classes that helps queries handling via Hibernate.
+

@@ -1,6 +1,4 @@
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,6 +6,8 @@ import java.io.OutputStream;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.google.code.jee.utils.bundle.hibernate.model.Label;
+import com.google.code.jee.utils.bundle.hibernate.model.LabelId;
 import com.google.code.jee.utils.bundle.hibernate.service.LabelService;
 
 public class Demo {
@@ -15,26 +15,20 @@ public class Demo {
         final ApplicationContext context = new ClassPathXmlApplicationContext("spring/application-context.xml");
         final LabelService labelService = context.getBean(LabelService.class);
 
-        FileInputStream fileInputStream = null;
-        final String currentDirectoryPath = new File(".").getCanonicalPath();
-        try {
-            fileInputStream = new FileInputStream(currentDirectoryPath + "/src/test/resources/bundle/text_US.properties");
-        } catch (final FileNotFoundException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-        
-        OutputStream outputStream = new FileOutputStream(currentDirectoryPath + "/src/test/resources/bundle/text_FR.properties");
-        //labelService.importBundle(fileInputStream, "US");
-        labelService.exportBundle(outputStream, "US");
-        System.out.println();
+        LabelId labelId = new LabelId();
+        labelId.setKey("test");
+        labelId.setLanguage("US");
 
-        //
-        // final List<Mail> mails = mailService.findAll();
-        // if (!CollectionUtil.isEmpty(mails)) {
-        // for (final Mail mail : mails) {
-        // System.out.println(mail.getName());
-        // }
-        // }
+        Label label = new Label();
+        label.setPrimaryKey(labelId);
+        label.setValue("This is a test !");
+
+        labelService.create(label);
+
+        final String currentDirectoryPath = new File(".").getCanonicalPath();
+
+        OutputStream outputStream = new FileOutputStream(currentDirectoryPath
+                + "/src/test/resources/bundle/text_US.properties");
+        labelService.exportBundle(outputStream, "US");
     }
 }

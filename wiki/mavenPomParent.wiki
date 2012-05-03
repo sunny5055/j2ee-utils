@@ -1,3 +1,3 @@
 =maven-pom-parent=
 
-This project is the parent of all the projects that are contained in `j2ee-utils`. <br/> It defines all the Maven's properties, aimed at building the different projects.
+<p>This project is the parent of all the projects that are contained in `j2ee-utils`. <br/> It defines all the Maven's properties, aimed at building the different projects.</p>

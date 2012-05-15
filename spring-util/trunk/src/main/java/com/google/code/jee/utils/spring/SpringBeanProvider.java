@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 /**
  * The Class SpringBeanProvider.
  */
-@Component ("springBeanProvider")
+@Component("springBeanProvider")
 public class SpringBeanProvider implements ApplicationContextAware {
     private static ApplicationContext CONTEXT = null;
 
@@ -28,6 +28,17 @@ public class SpringBeanProvider implements ApplicationContextAware {
      */
     public static Object getBean(String beanName) {
         return CONTEXT.getBean(beanName);
+    }
+
+    /**
+     * Gets the bean.
+     * 
+     * @param <T> the generic type
+     * @param clazz the clazz
+     * @return the bean
+     */
+    public static <T> T getBean(Class<T> clazz) {
+        return CONTEXT.getBean(clazz);
     }
 
     /**

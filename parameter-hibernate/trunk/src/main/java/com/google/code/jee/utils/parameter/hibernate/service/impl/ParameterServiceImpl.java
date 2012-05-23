@@ -42,6 +42,14 @@ public class ParameterServiceImpl implements ParameterService {
         super();
         this.dateFormat = DEFAULT_DATE_FORMAT;
     }
+    
+    /**
+     * {@inheritedDoc}
+     */
+    @Autowired
+    public void setDao(ParameterDao parameterDao) {
+        this.dao = parameterDao;
+    }
 
     /**
      * Gets the date format.

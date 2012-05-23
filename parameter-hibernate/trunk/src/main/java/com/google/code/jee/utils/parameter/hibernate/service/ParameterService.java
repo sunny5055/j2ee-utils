@@ -52,6 +52,14 @@ public interface ParameterService {
     boolean existWithName(String name);
 
     /**
+     * Search an element by its name.
+     * 
+     * @param name the name
+     * @return the parameter
+     */
+    AbstractParameter<?> findByName(String name);
+    
+    /**
      * Gets the value.
      * 
      * @param <V> the value type

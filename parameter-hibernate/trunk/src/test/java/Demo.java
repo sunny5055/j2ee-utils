@@ -63,6 +63,12 @@ public class Demo {
         // count test
         System.out.println(parameterService.count());
 
+        //exists test
+        AbstractParameter<?> parameter = parameterService.findByName("integerTest");
+        System.out.println(parameter.getName());
+        System.out.println(parameter.getValue());
+        System.out.println(parameter.getType());
+        
         // findAll listing
         for (AbstractParameter<?> param : parameterService.findAll()) {
             System.out.println(param.getName());

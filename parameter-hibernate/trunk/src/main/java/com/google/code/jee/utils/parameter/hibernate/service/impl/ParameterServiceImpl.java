@@ -110,6 +110,18 @@ public class ParameterServiceImpl implements ParameterService {
      * {@inheritedDoc}
      */
     @Override
+    public AbstractParameter<?> findByName(String name) {
+        AbstractParameter<?> parameter = null;
+        if (!StringUtil.isEmpty(name)) {
+            parameter = dao.findByName(name);
+        }
+        return parameter;
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
     @SuppressWarnings("unchecked")
     public <V> V getValue(String name) {
         V value = null;
@@ -289,4 +301,5 @@ public class ParameterServiceImpl implements ParameterService {
             }
         }
     }
+
 }

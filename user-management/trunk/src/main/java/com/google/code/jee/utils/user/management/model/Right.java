@@ -21,9 +21,9 @@ import com.google.code.jee.utils.user.management.dao.RightDao;
     @NamedQuery(name = RightDao.COUNT_BY_NAME, query = "select count(*) from Right as rig where rig.name = :name"),
     @NamedQuery(name = RightDao.FIND_BY_NAME, query = "from Right as rig where rig.name = :name"),
     @NamedQuery(name = RightDao.COUNT_FOR_ROLE_ID, query = "select count(*) from Role as r where r.id = :id"),
-    @NamedQuery(name = RightDao.FIND_ALL_BY_ROLE_ID, query = "select right from Role as r left join r.rights as right where r.id = :roleId"),
-    @NamedQuery(name = RightDao.COUNT_FOR_ROLE_ID_AND_NAME, query = "select count(*) from Role as r left join r.rights as right where r.id = :roleId and right.name = :rightName"),
-    @NamedQuery(name = RightDao.FIND_BY_ROLE_ID_AND_NAME, query = "select right from Role as r left join r.rights as right where r.id = :roleId and right.name = :rightName") })
+    @NamedQuery(name = RightDao.FIND_ALL_BY_ROLE_ID, query = "select r from Role as role left join role.rights as r where role.id = :roleId"),
+    @NamedQuery(name = RightDao.COUNT_FOR_ROLE_ID_AND_NAME, query = "select count(*) from Role as role left join role.rights as r where role.id = :roleId and r.name = :rightName"),
+    @NamedQuery(name = RightDao.FIND_BY_ROLE_ID_AND_NAME, query = "select r from Role as role left join role.rights as r where role.id = :roleId and r.name = :rightName") })
 @SuppressWarnings("serial")
 public class Right extends AbstractHibernateDto<Integer> {
 
@@ -92,6 +92,14 @@ public class Right extends AbstractHibernateDto<Integer> {
      */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Right [id=" + id + ", name=" + name + "]";
 	}
 	
 }

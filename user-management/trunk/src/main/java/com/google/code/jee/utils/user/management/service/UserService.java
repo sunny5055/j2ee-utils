@@ -27,6 +27,52 @@ public interface UserService extends GenericService<Integer, User> {
      * @return the user
      */
 	public User findByLogin(String login);
+	
+	/**
+     * Test the existence of an element with the parameter 'roleName'.
+     * 
+     * @param roleName the roleName
+     * @return true, if success
+     */
+	public boolean existWithRoleName(String roleName);
+
+    /**
+     * Search an element by its roleName.
+     * 
+     * @param roleName the roleName
+     * @return the role
+     */
+	public Role findByRoleName(String roleName);
+	
+	/**
+     * Test the existence of an element with the parameter 'rightName'.
+     * 
+     * @param rightName the rightName
+     * @return true, if success
+     */
+	public boolean existWithRightName(String rightName);
+
+    /**
+     * Search an element by its rightName.
+     * 
+     * @param rightName the rightName
+     * @return the right
+     */
+	public Right findByRightName(String rightName);
+	
+	/**
+     * Search all the roles.
+     * 
+     * @return the list
+     */
+	public List<Role> findAllRoles();
+	
+	/**
+     * Search all the rights.
+     * 
+     * @return the list
+     */
+	public List<Right> findAllRights();
 
     /**
      * Test the existence of a role with the parameter 'name' and its

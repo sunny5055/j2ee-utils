@@ -53,9 +53,75 @@ public class UserServiceImpl extends AbstractGenericService<Integer, User, UserD
     public User findByLogin(String login) {
     	User user = null;
         if (!StringUtil.isEmpty(login)) {
-            user = dao.findByLogin(login);
+            user = this.dao.findByLogin(login);
         }
         return user;
+    }
+    
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public boolean existWithRoleName(String roleName) {
+    	boolean exist = false;
+        if (!StringUtil.isEmpty(roleName)) {
+            final Integer count = this.roleDao.countByName(roleName);
+            exist = count != 0;
+        }
+        return exist;
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public Role findByRoleName(String roleName) {
+    	Role role = null;
+        if (!StringUtil.isEmpty(roleName)) {
+            role = this.roleDao.findByName(roleName);
+        }
+        return role;
+    }
+    
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public boolean existWithRightName(String rightName) {
+    	boolean exist = false;
+        if (!StringUtil.isEmpty(rightName)) {
+            final Integer count = this.rightDao.countByName(rightName);
+            exist = count != 0;
+        }
+        return exist;
+    }
+
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public Right findByRightName(String rightName) {
+    	Right right = null;
+        if (!StringUtil.isEmpty(rightName)) {
+            right = this.rightDao.findByName(rightName);
+        }
+        return right;
+    }
+    
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public List<Role> findAllRoles() {
+    	return this.roleDao.findAll();
+    }
+    
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public List<Right> findAllRights() {
+    	return this.rightDao.findAll();
     }
 
     /**

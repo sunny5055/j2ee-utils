@@ -151,7 +151,7 @@ public class RightDaoImpl extends AbstractGenericDaoHibernate<Integer, Right> im
             search = new Search();
 
             final StringBuilder buffer = new StringBuilder();
-            buffer.append("from Right maa ");
+            buffer.append("from Right rig ");
             if (searchCriteria.hasFilters()) {
                 buffer.append("where ");
                 int index = 0;

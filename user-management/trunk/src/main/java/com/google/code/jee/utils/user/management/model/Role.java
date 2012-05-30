@@ -25,9 +25,9 @@ import com.google.code.jee.utils.user.management.dao.RoleDao;
 @Entity
 @Table(name = "ROL_ROLE")
 @NamedQueries({
-    @NamedQuery(name = RoleDao.COUNT_BY_NAME, query = "select count(*) from Role as m where m.name = :name"),
-    @NamedQuery(name = RoleDao.FIND_BY_NAME, query = "from Role as m where m.name = :name"),
-    @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID, query = "select count(*) from User as m where m.id = :id"),
+    @NamedQuery(name = RoleDao.COUNT_BY_NAME, query = "select count(*) from Role as r where r.name = :name"),
+    @NamedQuery(name = RoleDao.FIND_BY_NAME, query = "from Role as r where r.name = :name"),
+    @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID, query = "select count(*) from User as u where u.id = :id"),
     @NamedQuery(name = RoleDao.FIND_ALL_BY_USER_ID, query = "select role from User as u left join u.roles as role where u.id = :userId"),
     @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID_AND_NAME, query = "select count(*) from User as u left join u.roles as role where u.id = :userId and role.name = :roleName"),
     @NamedQuery(name = RoleDao.FIND_BY_USER_ID_AND_NAME, query = "select role from User as u left join u.roles as role where u.id = :userId and role.name = :roleName") })
@@ -121,6 +121,14 @@ public class Role extends AbstractHibernateDto<Integer> {
      */
 	public void setRights(List<Right> rights) {
 		this.rights = rights;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Role [id=" + id + ", name=" + name + /*", rights=" + rights + */"]";
 	}
 	
 }

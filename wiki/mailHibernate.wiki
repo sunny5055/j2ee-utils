@@ -9,7 +9,7 @@ There are several parts in the `mail-hibernate` configuration :
 		<ul>
 			<li> The first bean you must declare is a `ComboPooledDataSource` object type. It handles a connection pool to your database.</li>
 			<li> The second bean is a `LocalSessionFactoryBean` type of bean. It handles a JDBC connection to your database and manage the persisted objects. It reads into a `hibernate.properties``file. </li>
-			<li> The thid bean is a `HibernateTransactionManager` type of bean. It uses the `sessionFactory` and handles all the database transactions </li>
+			<li> The third bean is a `HibernateTransactionManager` type of bean. It uses the `sessionFactory` and handles all the database transactions </li>
 		</ul>
 	<li> You need to define a configuration using Spring's AOP, in order to manage the Hibernate transactions : </li>
 		<ul>
@@ -74,7 +74,7 @@ There are several parts in the `mail-hibernate` configuration :
 	</bean>
 
 	<aop:config>
-		<!-- Pointcut utilisé pour les transactions -->
+		<!-- Pointcut utilisï¿½ pour les transactions -->
 		<aop:pointcut id="servicePointcut"
 			expression="execution(* com.google..*Service*.*(..))" />
 		<aop:pointcut id="daoPointcut" expression="execution(* com.google..*Dao*.*(..))" />

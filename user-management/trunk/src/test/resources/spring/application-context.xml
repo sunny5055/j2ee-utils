@@ -51,7 +51,7 @@
 		<property name="nestedTransactionAllowed" value="true" />
 	</bean>
 	
-	<!-- Enccrypt JASYPT -->
+	<!-- Encrypt JASYPT -->
 	<bean id="strongEncryptor"
 		class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">   
 	  	<property name="providerName"><value>BC</value></property> 

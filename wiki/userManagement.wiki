@@ -9,7 +9,8 @@ There are several parts in the `user-management` configuration :
 		<ul>
 			<li> The first bean you must declare is a `ComboPooledDataSource` object type. It handles a connection pool to your database.</li>
 			<li> The second bean is a `LocalSessionFactoryBean` type of bean. It handles a JDBC connection to your database and manage the persisted objects. It reads into a `hibernate.properties``file. </li>
-			<li> The thid bean is a `HibernateTransactionManager` type of bean. It uses the `sessionFactory` and handles all the database transactions </li>
+			<li> The third bean is a `HibernateTransactionManager` type of bean. It uses the `sessionFactory` and handles all the database transactions </li>
+<li> The fourth and fifth beans are `strongEncryptor` and `hibernateStringEncryptor` types of bean. It allows to encrypt / decrypt string properties (like passwords) of the persisted objects. The JCE provider is Bouncy Castle.</li>
 		</ul>
 	<li> You need to define a configuration using Spring's AOP, in order to manage the Hibernate transactions : </li>
 		<ul>
@@ -66,7 +67,6 @@ There are several parts in the `user-management` configuration :
 		<property name="packagesToScan" value="com.google" />
 	</bean>
 
-
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
@@ -74,27 +74,27 @@ There are several parts in the `user-management` configuration :
 	</bean>
 	
 	<!-- Enccrypt JASYPT -->
-	 <bean id="strongEncryptor"
-	    class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">   
-	   <property name="providerName"><value>BC</value></property> 
-	    <property name="algorithm">
-	        <value>PBEWITHSHA256AND128BITAES-CBC-BC</value> 
-	    </property>
-	    <property name="password">
-	        <value>jasypt</value>
-	    </property>
-	  </bean>
+	<bean id="strongEncryptor"
+		class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">   
+	  	<property name="providerName"><value>BC</value></property> 
+	   	<property name="algorithm">
+        	<value>PBEWITHSHA256AND128BITAES-CBC-BC</value> 
+	   	</property>
+	   	<property name="password">
+   	    	<value>jasypt</value>
+	   	</property>
+   	</bean>
   
-   <!-- hibernate Encryptor for string -->
-  <bean id="hibernateStringEncryptor"
-    class="org.jasypt.hibernate4.encryptor.HibernatePBEStringEncryptor">
-    <property name="registeredName">
-        <value>strongHibernateStringEncryptor</value>
-    </property>
-    <property name="encryptor">
-        <ref bean="strongEncryptor" />
-    </property>
-  </bean>
+   	<!-- hibernate Encryptor for string -->
+	<bean id="hibernateStringEncryptor"
+		class="org.jasypt.hibernate4.encryptor.HibernatePBEStringEncryptor">
+		<property name="registeredName">
+			<value>strongHibernateStringEncryptor</value>
+	  	</property>
+	  	<property name="encryptor">
+			<ref bean="strongEncryptor" />
+		</property>
+	</bean>
 
 	<aop:config>
 		<!-- Pointcut utilisé pour les transactions -->

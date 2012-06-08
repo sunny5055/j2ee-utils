@@ -31,7 +31,7 @@ public class Right extends AbstractHibernateDto<Integer> {
 	@Column(name = "RIG_CODE", nullable = false, unique = true, length = 50)
 	private String code;
 	
-	@Column(name = "RIG_DESCRIPTION", nullable = false, length = 100)
+	@Column(name = "RIG_DESCRIPTION", nullable = false, length = 255)
 	private String description;
 	
 	/**

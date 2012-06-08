@@ -43,7 +43,7 @@ public class Role extends AbstractHibernateDto<Integer> {
 	@Column(name = "ROL_CODE", nullable = false, unique = true, length = 50)
 	private String code;
 	
-	@Column(name = "ROL_DESCRIPTION", nullable = false, length = 100)
+	@Column(name = "ROL_DESCRIPTION", nullable = false, length = 255)
 	private String description;
 	
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)

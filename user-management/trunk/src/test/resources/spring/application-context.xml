@@ -45,7 +45,6 @@
 		<property name="packagesToScan" value="com.google" />
 	</bean>
 
-
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
@@ -53,27 +52,27 @@
 	</bean>
 	
 	<!-- Enccrypt JASYPT -->
-	 <bean id="strongEncryptor"
-	    class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">   
-	   <property name="providerName"><value>BC</value></property> 
-	    <property name="algorithm">
-	        <value>PBEWITHSHA256AND128BITAES-CBC-BC</value> 
-	    </property>
-	    <property name="password">
-	        <value>jasypt</value>
-	    </property>
-	  </bean>
+	<bean id="strongEncryptor"
+		class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">   
+	  	<property name="providerName"><value>BC</value></property> 
+	   	<property name="algorithm">
+        	<value>PBEWITHSHA256AND128BITAES-CBC-BC</value> 
+	   	</property>
+	   	<property name="password">
+   	    	<value>jasypt</value>
+	   	</property>
+   	</bean>
   
-   <!-- hibernate Encryptor for string -->
-  <bean id="hibernateStringEncryptor"
-    class="org.jasypt.hibernate4.encryptor.HibernatePBEStringEncryptor">
-    <property name="registeredName">
-        <value>strongHibernateStringEncryptor</value>
-    </property>
-    <property name="encryptor">
-        <ref bean="strongEncryptor" />
-    </property>
-  </bean>
+   	<!-- hibernate Encryptor for string -->
+	<bean id="hibernateStringEncryptor"
+		class="org.jasypt.hibernate4.encryptor.HibernatePBEStringEncryptor">
+		<property name="registeredName">
+			<value>strongHibernateStringEncryptor</value>
+	  	</property>
+	  	<property name="encryptor">
+			<ref bean="strongEncryptor" />
+		</property>
+	</bean>
 
 	<aop:config>
 		<!-- Pointcut utilisé pour les transactions -->

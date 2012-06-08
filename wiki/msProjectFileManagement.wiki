@@ -10,16 +10,16 @@ Use the component as follows :
 
 {{{
 	public static void main(String[] args) throws MPXJException, InstantiationException, IllegalAccessException, IOException {
-    	MSProjectService msProjectService = new MSProjectServiceImpl();
+		MSProjectService msProjectService = new MSProjectServiceImpl();
 
-    	String filePath = "C:\\Users\\j.neuhart\\Desktop\\CRLorraine_Planning.mpp";
-    	InputStream inputFilePath = new ByteArrayInputStream(filePath.getBytes());
-    	
-    	String destinationPath = "C:\\Users\\j.neuhart\\Desktop\\";
-    	InputStream inputDestinationPath = new ByteArrayInputStream(destinationPath.getBytes());
-    	
-    	MSProject msProject = msProjectService.importProject(inputFilePath);       	
-    	msProjectService.exportProjectToMSPDIFile(msProject, inputDestinationPath);
+		String filePath = "C:\\Users\\j.neuhart\\Desktop\\CRLorraine_Planning.mpp";
+		InputStream inputFilePath = new ByteArrayInputStream(filePath.getBytes());
+
+		String destinationPath = "C:\\Users\\j.neuhart\\Desktop\\";
+		InputStream inputDestinationPath = new ByteArrayInputStream(destinationPath.getBytes());
+
+		MSProject msProject = msProjectService.importProject(inputFilePath);       	
+		msProjectService.exportProjectToMSPDIFile(msProject, inputDestinationPath);
 		System.out.println("Project imported and exported !");
-    }
+	}
 }}}	

@@ -4,7 +4,7 @@
 ==Getting started==
 
 Work in progress :<br />
-Some properties need to be verified : currently, I don't know how it works precisely in MS Project.
+Some properties need to be verified : for example, I don't know how Duration (or Percentage) work precisely in MS Project.
 
 Use the component as follows :
 

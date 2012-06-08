@@ -11,6 +11,7 @@ import com.google.code.jee.utils.dal.SortOrder;
 import com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate;
 import com.google.code.jee.utils.dal.util.QueryUtil;
 import com.google.code.jee.utils.user.management.dao.RoleDao;
+import com.google.code.jee.utils.user.management.model.Right;
 import com.google.code.jee.utils.user.management.model.Role;
 
 /**
@@ -31,18 +32,18 @@ public class RoleDaoImpl  extends AbstractGenericDaoHibernate<Integer, Role> imp
      * {@inheritedDoc}
      */
     @Override
-    public Integer countByName(String name) {
-        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_BY_NAME,
-                new String[] { "name" }, name);
+    public Integer countByCode(String code) {
+        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_BY_CODE,
+                new String[] { "code" }, code);
     }
 
     /**
      * {@inheritedDoc}
      */
     @Override
-    public Role findByName(String name) {
-        return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.FIND_BY_NAME,
-                new String[] { "name" }, name);
+    public Role findByCode(String code) {
+        return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.FIND_BY_CODE,
+                new String[] { "code" }, code);
 
     }
 
@@ -68,19 +69,34 @@ public class RoleDaoImpl  extends AbstractGenericDaoHibernate<Integer, Role> imp
      * {@inheritedDoc}
      */
     @Override
-    public Integer countForUserIdAndName(Integer userId, String roleName) {
+    public Integer countForUserIdAndCode(Integer userId, String roleCode) {
         return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(),
-                RoleDao.COUNT_FOR_USER_ID_AND_NAME, new String[] { "userId", "roleName" }, userId,
-                roleName);
+                RoleDao.COUNT_FOR_USER_ID_AND_CODE, new String[] { "userId", "roleCode" }, userId,
+                roleCode);
     }
-
+    
     /**
      * {@inheritedDoc}
      */
-    @Override
-    public Role findByUserIdAndName(Integer userId, String roleName) {
-        return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.FIND_BY_USER_ID_AND_NAME,
-                new String[] { "userId", "roleName" }, userId, roleName);
+    public Integer countForRoleIdAndRightCode(Integer roleId, String rightCode) {
+    	return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_FOR_ROLE_ID_AND_RIGHT_CODE,
+                new String[] { "roleId", "rightCode" }, roleId, rightCode);
+    }
+    
+    /**
+     * {@inheritedDoc}
+     */
+    public Integer countRightsForRoleId(Integer roleId) {
+    	return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_RIGHTS_FOR_ROLE_ID,
+                new String[] { "roleId" }, roleId);
+    }
+    
+    /**
+     * {@inheritedDoc}
+     */
+    public List<Right> findAllRightsByRoleId(Integer roleId) {
+    	return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.FIND_ALL_RIGHTS_BY_ROLE_ID,
+                new String[] { "roleId" }, roleId);
     }
 
     /**
@@ -108,9 +124,9 @@ public class RoleDaoImpl  extends AbstractGenericDaoHibernate<Integer, Role> imp
                         if (index != 0) {
                             buffer.append("AND ");
                         }
-                        if (entry.getKey().equals("name")) {
-                            buffer.append("upper(role.name) like upper(:name) ");
-                            search.addStringParameter("name", entry.getValue());
+                        if (entry.getKey().equals("code")) {
+                            buffer.append("upper(role.code) like upper(:code) ");
+                            search.addStringParameter("code", entry.getValue());
                         }
                         index++;
                     }
@@ -126,8 +142,8 @@ public class RoleDaoImpl  extends AbstractGenericDaoHibernate<Integer, Role> imp
                     if (index != 0) {
                         buffer.append(", ");
                     }
-                    if (entry.getKey().equals("name")) {
-                        buffer.append("r.name ");
+                    if (entry.getKey().equals("code")) {
+                        buffer.append("r.code ");
                         if (entry.getValue() == SortOrder.DESCENDING) {
                             buffer.append("desc ");
                         }
@@ -160,9 +176,9 @@ public class RoleDaoImpl  extends AbstractGenericDaoHibernate<Integer, Role> imp
                         if (index != 0) {
                             buffer.append("AND ");
                         }
-                        if (entry.getKey().equals("name")) {
-                            buffer.append("upper(r.name) like upper(:name) ");
-                            search.addStringParameter("name", entry.getValue());
+                        if (entry.getKey().equals("code")) {
+                            buffer.append("upper(r.code) like upper(:code) ");
+                            search.addStringParameter("code", entry.getValue());
                         }
                         index++;
                     }
@@ -178,8 +194,8 @@ public class RoleDaoImpl  extends AbstractGenericDaoHibernate<Integer, Role> imp
                     if (index != 0) {
                         buffer.append(", ");
                     }
-                    if (entry.getKey().equals("name")) {
-                        buffer.append("r.name ");
+                    if (entry.getKey().equals("code")) {
+                        buffer.append("r.code ");
                         if (entry.getValue() == SortOrder.DESCENDING) {
                             buffer.append("desc ");
                         }

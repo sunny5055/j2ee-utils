@@ -18,12 +18,8 @@ import com.google.code.jee.utils.user.management.dao.RightDao;
 @Entity
 @Table(name = "RIG_RIGHT")
 @NamedQueries({
-    @NamedQuery(name = RightDao.COUNT_BY_NAME, query = "select count(*) from Right as rig where rig.name = :name"),
-    @NamedQuery(name = RightDao.FIND_BY_NAME, query = "from Right as rig where rig.name = :name"),
-    @NamedQuery(name = RightDao.COUNT_FOR_ROLE_ID, query = "select count(*) from Role as r where r.id = :id"),
-    @NamedQuery(name = RightDao.FIND_ALL_BY_ROLE_ID, query = "select r from Role as role left join role.rights as r where role.id = :roleId"),
-    @NamedQuery(name = RightDao.COUNT_FOR_ROLE_ID_AND_NAME, query = "select count(*) from Role as role left join role.rights as r where role.id = :roleId and r.name = :rightName"),
-    @NamedQuery(name = RightDao.FIND_BY_ROLE_ID_AND_NAME, query = "select r from Role as role left join role.rights as r where role.id = :roleId and r.name = :rightName") })
+    @NamedQuery(name = RightDao.COUNT_BY_CODE, query = "select count(*) from Right as rig where rig.code = :code"),
+    @NamedQuery(name = RightDao.FIND_BY_CODE, query = "from Right as rig where rig.code = :code"), })
 @SuppressWarnings("serial")
 public class Right extends AbstractHibernateDto<Integer> {
 
@@ -32,8 +28,11 @@ public class Right extends AbstractHibernateDto<Integer> {
     @Column(name = "RIG_ID", nullable = false)
 	private Integer id;
 	
-	@Column(name = "RIG_NAME", nullable = false, unique = true, length = 50)
-	private String name;
+	@Column(name = "RIG_CODE", nullable = false, unique = true, length = 50)
+	private String code;
+	
+	@Column(name = "RIG_DESCRIPTION", nullable = false, length = 100)
+	private String description;
 	
 	/**
      * Instantiates a new right.
@@ -77,29 +76,39 @@ public class Right extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Getter : return the name
-     * 
-     * @return the name
-     */
-	public String getName() {
-		return name;
+	 * Getter : return the code
+	 * 
+	 * @return the code
+	 */
+	public String getCode() {
+		return code;
+	}
+	
+	/**
+	 * Getter : return the description
+	 * 
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
 	}
 
 	/**
-     * Setter : affect the name
-     * 
-     * @param name the name
-     */
-	public void setName(String name) {
-		this.name = name;
+	 * Setter : affect the description
+	 * 
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 * Setter : affect the code
+	 * 
+	 * @param code the code to set
 	 */
-	@Override
-	public String toString() {
-		return "Right [id=" + id + ", name=" + name + "]";
+	public void setCode(String code) {
+		this.code = code;
 	}
-	
+
 }

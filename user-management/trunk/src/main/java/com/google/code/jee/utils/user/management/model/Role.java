@@ -25,12 +25,14 @@ import com.google.code.jee.utils.user.management.dao.RoleDao;
 @Entity
 @Table(name = "ROL_ROLE")
 @NamedQueries({
-    @NamedQuery(name = RoleDao.COUNT_BY_NAME, query = "select count(*) from Role as r where r.name = :name"),
-    @NamedQuery(name = RoleDao.FIND_BY_NAME, query = "from Role as r where r.name = :name"),
-    @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID, query = "select count(*) from User as u where u.id = :id"),
+    @NamedQuery(name = RoleDao.COUNT_BY_CODE, query = "select count(*) from Role as r where r.code = :code"),
+    @NamedQuery(name = RoleDao.FIND_BY_CODE, query = "from Role as r where r.code = :code"),
+    @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID, query = "select count(role) from User as u left join u.roles as role where u.id = :userId"),
     @NamedQuery(name = RoleDao.FIND_ALL_BY_USER_ID, query = "select role from User as u left join u.roles as role where u.id = :userId"),
-    @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID_AND_NAME, query = "select count(*) from User as u left join u.roles as role where u.id = :userId and role.name = :roleName"),
-    @NamedQuery(name = RoleDao.FIND_BY_USER_ID_AND_NAME, query = "select role from User as u left join u.roles as role where u.id = :userId and role.name = :roleName") })
+    @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID_AND_CODE, query = "select count(*) from User as u left join u.roles as role where u.id = :userId and role.code = :roleCode"),
+    @NamedQuery(name = RoleDao.COUNT_FOR_ROLE_ID_AND_RIGHT_CODE, query = "select count(rig) from Role as r left join r.rights as rig where r.id = :roleId and rig.code = :rightCode"),
+    @NamedQuery(name = RoleDao.COUNT_RIGHTS_FOR_ROLE_ID, query = "select count(rig) from Role as r left join r.rights as rig where r.id = :roleId"),
+    @NamedQuery(name = RoleDao.FIND_ALL_RIGHTS_BY_ROLE_ID, query = "select rig from Role as r left join r.rights as rig where r.id = :roleId") })
 @SuppressWarnings("serial")
 public class Role extends AbstractHibernateDto<Integer> {
 	@Id
@@ -38,8 +40,11 @@ public class Role extends AbstractHibernateDto<Integer> {
     @Column(name = "ROL_ID", nullable = false)
 	private Integer id;
 	
-	@Column(name = "ROL_NAME", nullable = false, unique = true, length = 50)
-	private String name;
+	@Column(name = "ROL_CODE", nullable = false, unique = true, length = 50)
+	private String code;
+	
+	@Column(name = "ROL_DESCRIPTION", nullable = false, length = 100)
+	private String description;
 	
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
     @JoinColumn(name = "RIG_ROLE_ID", nullable = false)
@@ -88,21 +93,35 @@ public class Role extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Getter : return the name
+     * Getter : return the code
      * 
-     * @return the name
+     * @return the code
      */
-	public String getName() {
-		return name;
+	public String getCode() {
+		return code;
 	}
 
 	/**
-     * Setter : affect the name
+     * Setter : affect the code
      * 
-     * @param name the name
+     * @param code the code
      */
-	public void setName(String name) {
-		this.name = name;
+	public void setCode(String code) {
+		this.code = code;
+	}
+	
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	/**
@@ -121,14 +140,6 @@ public class Role extends AbstractHibernateDto<Integer> {
      */
 	public void setRights(List<Right> rights) {
 		this.rights = rights;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Role [id=" + id + ", name=" + name + /*", rights=" + rights + */"]";
 	}
 	
 }

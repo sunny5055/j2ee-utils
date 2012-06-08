@@ -1,6 +1,5 @@
 package com.google.code.jee.utils.user.management.dao.impl;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -31,114 +30,19 @@ public class RightDaoImpl extends AbstractGenericDaoHibernate<Integer, Right> im
      * {@inheritedDoc}
      */
     @Override
-    public Integer countByName(String name) {
-        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RightDao.COUNT_BY_NAME,
-                new String[] { "name" }, name);
+    public Integer countByCode(String code) {
+        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RightDao.COUNT_BY_CODE,
+                new String[] { "code" }, code);
     }
 
     /**
      * {@inheritedDoc}
      */
     @Override
-    public Right findByName(String name) {
-        return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), RightDao.FIND_BY_NAME,
-                new String[] { "name" }, name);
+    public Right findByCode(String code) {
+        return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), RightDao.FIND_BY_CODE,
+                new String[] { "code" }, code);
 
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public Integer countForRoleId(Integer roleId) {
-        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RightDao.COUNT_FOR_ROLE_ID,
-                new String[] { "roleId" }, roleId);
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public List<Right> findAllByRoleId(Integer roleId) {
-        return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), RightDao.FIND_ALL_BY_ROLE_ID,
-                new String[] { "roleId" }, roleId);
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public Integer countForRoleIdAndName(Integer roleId, String rightName) {
-        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(),
-                RightDao.COUNT_FOR_ROLE_ID_AND_NAME, new String[] { "roleId", "rightName" }, roleId,
-                rightName);
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public Right findByRoleIdAndName(Integer roleId, String rightName) {
-        return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), RightDao.FIND_BY_ROLE_ID_AND_NAME,
-                new String[] { "roleId", "rightName" }, roleId, rightName);
-    }
-
-    /**
-     * Gets the search.
-     * 
-     * @param roleId the mail id
-     * @param searchCriteria the search criteria
-     * @return the search
-     */
-    protected Search getSearch(Integer roleId, SearchCriteria searchCriteria) {
-        Search search = null;
-        if (roleId != null && searchCriteria != null) {
-            search = new Search();
-            final StringBuilder buffer = new StringBuilder();
-            buffer.append("from Role r ");
-            buffer.append("left join r.rights as right ");
-            buffer.append("where r.id = :roleId ");
-            search.addIntegerParameter("roleId", roleId);
-
-            if (searchCriteria.hasFilters()) {
-                buffer.append("where ");
-                int index = 0;
-                for (final Map.Entry<String, Object> entry : searchCriteria.getFilters().entrySet()) {
-                    if (entry.getValue() != null) {
-                        if (index != 0) {
-                            buffer.append("AND ");
-                        }
-                        if (entry.getKey().equals("name")) {
-                            buffer.append("upper(right.name) like upper(:name) ");
-                            search.addStringParameter("name", entry.getValue());
-                        }
-                        index++;
-                    }
-                }
-            }
-
-            search.setCountQuery("select count(right) " + buffer.toString());
-
-            if (searchCriteria.hasSorts()) {
-                buffer.append("order by ");
-                int index = 0;
-                for (final Map.Entry<String, SortOrder> entry : searchCriteria.getSorts().entrySet()) {
-                    if (index != 0) {
-                        buffer.append(", ");
-                    }
-                    if (entry.getKey().equals("name")) {
-                        buffer.append("rig.name ");
-                        if (entry.getValue() == SortOrder.DESCENDING) {
-                            buffer.append("desc ");
-                        }
-                    }
-                    index++;
-                }
-            }
-
-            search.setQuery("select right " + buffer.toString());
-        }
-        return search;
     }
 
     /**
@@ -160,9 +64,9 @@ public class RightDaoImpl extends AbstractGenericDaoHibernate<Integer, Right> im
                         if (index != 0) {
                             buffer.append("AND ");
                         }
-                        if (entry.getKey().equals("name")) {
-                            buffer.append("upper(rig.name) like upper(:name) ");
-                            search.addStringParameter("name", entry.getValue());
+                        if (entry.getKey().equals("code")) {
+                            buffer.append("upper(rig.code) like upper(:code) ");
+                            search.addStringParameter("code", entry.getValue());
                         }
                         index++;
                     }
@@ -178,8 +82,8 @@ public class RightDaoImpl extends AbstractGenericDaoHibernate<Integer, Right> im
                     if (index != 0) {
                         buffer.append(", ");
                     }
-                    if (entry.getKey().equals("name")) {
-                        buffer.append("rig.name ");
+                    if (entry.getKey().equals("code")) {
+                        buffer.append("rig.code ");
                         if (entry.getValue() == SortOrder.DESCENDING) {
                             buffer.append("desc ");
                         }

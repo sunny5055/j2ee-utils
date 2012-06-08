@@ -1,14 +1,13 @@
-import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.google.code.jee.utils.user.management.model.Right;
 import com.google.code.jee.utils.user.management.model.Role;
 import com.google.code.jee.utils.user.management.model.User;
+import com.google.code.jee.utils.user.management.service.RoleService;
 import com.google.code.jee.utils.user.management.service.UserService;
 
 public class Demo {
@@ -16,8 +15,8 @@ public class Demo {
     public static void main(String[] args) {
     	
         final ApplicationContext context = new ClassPathXmlApplicationContext("spring/application-context.xml");
-        Security.addProvider(new BouncyCastleProvider());
         final UserService userService = context.getBean(UserService.class);
+        final RoleService roleService = context.getBean(RoleService.class);
 
         // Create an user with one role and three rights
         User user = new User();
@@ -28,11 +27,14 @@ public class Demo {
         user.setMail("malcom.x@gmail.com");
         
         Right delete = new Right();
-        delete.setName("Delete");
+        delete.setCode("DELETE");
+        delete.setDescription("Allows to delete");
         Right insert = new Right();
-        insert.setName("Insert");
+        insert.setCode("INSERT");
+        insert.setDescription("Allows to insert");
         Right edit = new Right();
-        edit.setName("Edit");
+        edit.setCode("EDIT");
+        edit.setDescription("Allows to edit");
         
         List<Right> rights = new ArrayList<Right>();
         rights.add(delete);
@@ -40,54 +42,26 @@ public class Demo {
         rights.add(edit);
         
         Role administrator = new Role();
-        administrator.setName("Administrator");
+        administrator.setCode("ADMIN");
+        administrator.setDescription("The administrator of the system");
         administrator.setRights(rights);
         
         List<Role> roles = new ArrayList<Role>();
         roles.add(administrator);
         user.setRoles(roles);
         
+        // Insert the user, his roles and his rights
         userService.create(user);
         user.setLogin(user.getFirstName() + user.getId());
         userService.update(user);
         
-        StringBuffer buffer = new StringBuffer();
-        
-        // Print all users
-        List<User> users = userService.findAll();
-        buffer.append("Users :\n");
-        for (User currentUser : users) {
-        	buffer.append("\t"  + currentUser + "\n");
-        	// Print his roles
-        	List<Role> userRoles = userService.findAllByUserId(currentUser.getId());
-        	buffer.append("His roles :\n");
-        	for (Role currentRole : userRoles ) {
-        		buffer.append("\t" + currentRole + "\n");
-        		// Print his rights for current role
-        		List<Right> roleRights = userService.findAllByRoleId(currentRole.getId());
-        		buffer.append("His rights with the current Role :\n");
-        		for (Right currentRight : roleRights)
-        			buffer.append("\t" + currentRight + "\n");
-        	}
-        }
-        
-        // Print all roles
-        List<Role> allRoles = userService.findAllRoles();
-        buffer.append("\nAll roles :\n");
-        for (Role currentRole : allRoles)
-        	buffer.append("\t" + currentRole + "\n");
-        
-        // Print all rights
-        List<Right> allRights = userService.findAllRights();
-        buffer.append("All rights :\n");
-        for (Right currentRight : allRights)
-        	buffer.append("\t" + currentRight + "\n");
+        // Print a the roles of the user
+        List<Role> userRoles = roleService.findAllByUserId(user.getId());
+        for (Role currentRole : userRoles)
+        	System.out.println(currentRole.getCode());
         
         // Delete the user, his roles and his rights
-        //userService.delete(user);
-        
-        // Print the buffer
-        System.out.println(buffer);
+        userService.delete(user);
         
     }
     

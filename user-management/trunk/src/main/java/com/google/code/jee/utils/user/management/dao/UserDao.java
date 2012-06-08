@@ -5,8 +5,8 @@ import com.google.code.jee.utils.user.management.model.User;
 
 public interface UserDao extends GenericDao<Integer, User> {
 
-	public final String COUNT_BY_LOGIN = "user.countByLogin";
-	public final String FIND_BY_LOGIN = "user.findByLogin";
+	String COUNT_BY_LOGIN = "user.countByLogin";
+	String FIND_BY_LOGIN = "user.findByLogin";
 	
 	/**
      * Search the number of elements with the 'login' parameter.
@@ -14,7 +14,7 @@ public interface UserDao extends GenericDao<Integer, User> {
      * @param login the login
      * @return the number of elements found
      */
-	public Integer countByLogin(String login);
+	Integer countByLogin(String login);
 
     /**
      * Search an element by its login.
@@ -22,6 +22,6 @@ public interface UserDao extends GenericDao<Integer, User> {
      * @param login the login
      * @return the user
      */
-	public User findByLogin(String login);
+	User findByLogin(String login);
 	
 }

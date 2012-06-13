@@ -3,7 +3,6 @@ package com.google.code.jee.utils.user.management.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,10 +28,7 @@ import com.google.code.jee.utils.user.management.dao.RoleDao;
     @NamedQuery(name = RoleDao.FIND_BY_CODE, query = "from Role as r where r.code = :code"),
     @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID, query = "select count(role) from User as u left join u.roles as role where u.id = :userId"),
     @NamedQuery(name = RoleDao.FIND_ALL_BY_USER_ID, query = "select role from User as u left join u.roles as role where u.id = :userId"),
-    @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID_AND_CODE, query = "select count(*) from User as u left join u.roles as role where u.id = :userId and role.code = :roleCode"),
-    @NamedQuery(name = RoleDao.COUNT_FOR_ROLE_ID_AND_RIGHT_CODE, query = "select count(rig) from Role as r left join r.rights as rig where r.id = :roleId and rig.code = :rightCode"),
-    @NamedQuery(name = RoleDao.COUNT_RIGHTS_FOR_ROLE_ID, query = "select count(rig) from Role as r left join r.rights as rig where r.id = :roleId"),
-    @NamedQuery(name = RoleDao.FIND_ALL_RIGHTS_BY_ROLE_ID, query = "select rig from Role as r left join r.rights as rig where r.id = :roleId") })
+    @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID_AND_CODE, query = "select count(*) from User as u left join u.roles as role where u.id = :userId and role.code = :roleCode") })
 @SuppressWarnings("serial")
 public class Role extends AbstractHibernateDto<Integer> {
 	@Id
@@ -46,8 +42,8 @@ public class Role extends AbstractHibernateDto<Integer> {
 	@Column(name = "ROL_DESCRIPTION", nullable = false, length = 255)
 	private String description;
 	
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-    @JoinColumn(name = "RIG_ROLE_ID", nullable = false)
+	@OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "RIG_ROLE_ID")
     private List<Right> rights;
 	
 	/**

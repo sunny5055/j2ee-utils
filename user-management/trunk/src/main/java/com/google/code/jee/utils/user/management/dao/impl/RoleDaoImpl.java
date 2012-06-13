@@ -11,7 +11,6 @@ import com.google.code.jee.utils.dal.SortOrder;
 import com.google.code.jee.utils.dal.dao.AbstractGenericDaoHibernate;
 import com.google.code.jee.utils.dal.util.QueryUtil;
 import com.google.code.jee.utils.user.management.dao.RoleDao;
-import com.google.code.jee.utils.user.management.model.Right;
 import com.google.code.jee.utils.user.management.model.Role;
 
 /**
@@ -46,6 +45,16 @@ public class RoleDaoImpl  extends AbstractGenericDaoHibernate<Integer, Role> imp
                 new String[] { "code" }, code);
 
     }
+    
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public Integer countForUserIdAndCode(Integer userId, String roleCode) {
+        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(),
+                RoleDao.COUNT_FOR_USER_ID_AND_CODE, new String[] { "userId", "roleCode" }, userId,
+                roleCode);
+    }
 
     /**
      * {@inheritedDoc}
@@ -63,40 +72,6 @@ public class RoleDaoImpl  extends AbstractGenericDaoHibernate<Integer, Role> imp
     public List<Role> findAllByUserId(Integer userId) {
         return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.FIND_ALL_BY_USER_ID,
                 new String[] { "userId" }, userId);
-    }
-
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public Integer countForUserIdAndCode(Integer userId, String roleCode) {
-        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(),
-                RoleDao.COUNT_FOR_USER_ID_AND_CODE, new String[] { "userId", "roleCode" }, userId,
-                roleCode);
-    }
-    
-    /**
-     * {@inheritedDoc}
-     */
-    public Integer countForRoleIdAndRightCode(Integer roleId, String rightCode) {
-    	return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_FOR_ROLE_ID_AND_RIGHT_CODE,
-                new String[] { "roleId", "rightCode" }, roleId, rightCode);
-    }
-    
-    /**
-     * {@inheritedDoc}
-     */
-    public Integer countRightsForRoleId(Integer roleId) {
-    	return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_RIGHTS_FOR_ROLE_ID,
-                new String[] { "roleId" }, roleId);
-    }
-    
-    /**
-     * {@inheritedDoc}
-     */
-    public List<Right> findAllRightsByRoleId(Integer roleId) {
-    	return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.FIND_ALL_RIGHTS_BY_ROLE_ID,
-                new String[] { "roleId" }, roleId);
     }
 
     /**

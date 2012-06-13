@@ -68,9 +68,11 @@ public final class SftpUtil {
      * 
      * @param channel the channel
      * @return the channel
+     * @throws JSchException 
      */
-    public static void closeChannel(Channel channel) {
-        if (channel != null && channel.isConnected()) {
+    public static void closeChannel(Channel channel) throws JSchException {
+        if (channel != null && channel.isConnected() && channel.getSession().isConnected()) {
+            channel.getSession().disconnect();
             channel.disconnect();
         }
     }

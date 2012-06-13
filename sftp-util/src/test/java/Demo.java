@@ -9,23 +9,23 @@ import org.apache.commons.io.IOUtils;
 
 import com.google.code.jee.utils.sftp.SftpUtil;
 import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import com.zehon.exception.FileTransferException;
-import com.zehon.ftp.ZehonFTPFileEntryParserFactory;
-import com.zehon.sftp.SFTP;
-import com.zehon.sftp.SFTPClient;
 
 /**
  * Read me :
  * 
- * If you want to use this program, you need to follow these steps : 1) Create a
- * directory named "ftp" at the root of your C: directory 2) Launch
- * "msftpsrvr.exe" located in "src/test/resources" 3) Once the program is
- * launched, enter the following informations - User : test - password : test -
- * Port : 22 - Root path : C:/ftp Then, click on the start button. 4) Launch the
- * Demo.java program
+ * If you want to use this program, you need to follow these steps : 
+ * 1) Create a directory named "ftp" at the root of your C: directory 
+ * 2) Launch "msftpsrvr.exe" located in "src/test/resources" 
+ * 3) Once the program is launched, enter the following informations 
+ * - User : test 
+ * - Password : test 
+ * - Port : 22 
+ * - Root path : C:/ftp 
+ *  Then, click on the start button. 
+ * 4) Launch the Demo.java program
  * 
  */
 public class Demo {
@@ -87,7 +87,8 @@ public class Demo {
         }
         
         // Deletes the directory
-        boolean deleteDirectory = SftpUtil.deleteDirectory(channel, "logos", "/home/t&s/files/images");
+        channel.cd("/");
+        boolean deleteDirectory = SftpUtil.deleteDirectory(channel, "facestrace", "/");
         
         if(deleteDirectory) {
             System.out.println("Directory has been deleted");

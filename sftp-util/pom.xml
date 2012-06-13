@@ -29,12 +29,5 @@
 			<artifactId>utils</artifactId>
 			<version>1.0.3</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.zehon.sftp</groupId>
-			<artifactId>zehon-file-transfer</artifactId>
-			<version>1.1.6</version>
-		</dependency>
-
 	</dependencies>
 </project>

@@ -4,7 +4,6 @@ import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -70,8 +69,8 @@ public class User extends AbstractHibernateDto<Integer> {
 	@Column(name = "USE_MAIL", length = 100)
 	private String mail;
 	
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ROL_USER_ID ", nullable = false)
+	@OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ROL_USER_ID")
     private List<Role> roles;
 	
     /**

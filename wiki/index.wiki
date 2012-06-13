@@ -25,5 +25,6 @@ The following scheme shows the dependency cycle of each project. The project the
 	<li> mail-hibernate -- hibernate-dal -- commons-dal -- spring-util -- utils </li> 
 	<li> parameter-hibernate -- hibernate-dal -- commons-dal -- spring-util -- utils </li>
 	<li> user-management -- hibernate-dal -- commons-dal -- spring-util -- utils </li>
-	<li> ms-project-file-management -- hibernate-dal -- commons-dal -- utils </li>	
+	<li> ms-project-file-management -- hibernate-dal -- commons-dal -- utils </li>
+	<li> sftp-util -- utils </li>	
 </ul>

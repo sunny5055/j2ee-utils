@@ -4,12 +4,14 @@ import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Vector;
 
 import org.apache.commons.io.FilenameUtils;
 
 import com.google.code.jee.utils.StringUtil;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -68,7 +70,7 @@ public final class SftpUtil {
      * 
      * @param channel the channel
      * @return the channel
-     * @throws JSchException 
+     * @throws JSchException
      */
     public static void closeChannel(Channel channel) throws JSchException {
         if (channel != null && channel.isConnected() && channel.getSession().isConnected()) {
@@ -281,15 +283,25 @@ public final class SftpUtil {
         boolean success = true;
         if (StringUtil.isNotEmpty(directoryName) && StringUtil.isNotEmpty(workingDirectory)) {
             if (isDirectoryExisting(channel, directoryName, workingDirectory)) {
-                channel.cd(workingDirectory);
-                if (isDirectoryExisting(channel, directoryName, workingDirectory)) {
+                if (isDirectoryEmpty(channel, directoryName, workingDirectory)) {
                     channel.rmdir(directoryName);
                 } else {
-                    success = false;
+                    channel.cd(workingDirectory);
+                    Vector files = channel.ls(directoryName);
+
+                    for (int i = 0; i < files.size(); i++) {
+                        LsEntry lsEntry = (LsEntry) files.get(i);
+
+                        if (!lsEntry.getFilename().equals(".") && !lsEntry.getFilename().equals("..")) {
+                            System.out.println("Downloading file" + lsEntry.getFilename());
+
+                            channel.rm(lsEntry.getFilename());
+                        }
+                    }
                 }
+            } else {
+                success = false;
             }
-        } else {
-            success = false;
         }
         return success;
     }
@@ -395,6 +407,27 @@ public final class SftpUtil {
         }
 
         return exists;
+    }
+
+    /**
+     * Checks if a directory is empty.
+     * 
+     * @param channel the channel
+     * @param directoryName the directory name
+     * @param workingDirectory the working directory
+     * @return true, if is directory empty
+     * @throws SftpException the sftp exception
+     */
+    public static boolean isDirectoryEmpty(ChannelSftp channel, String directoryName, String workingDirectory)
+            throws SftpException {
+        boolean empty = true;
+
+        if (StringUtil.isNotEmpty(directoryName) && StringUtil.isNotEmpty(workingDirectory)) {
+            if (channel.ls(directoryName).size() != 0) {
+                empty = false;
+            }
+        }
+        return empty;
     }
 
     /**

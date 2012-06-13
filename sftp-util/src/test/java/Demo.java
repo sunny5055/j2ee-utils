@@ -87,8 +87,8 @@ public class Demo {
         }
         
         // Deletes the directory
-        channel.cd("/");
-        boolean deleteDirectory = SftpUtil.deleteDirectory(channel, "facestrace", "/");
+        channel.cd("/home");
+         boolean deleteDirectory = SftpUtil.deleteDirectory(channel, "files", "./t&s");
         
         if(deleteDirectory) {
             System.out.println("Directory has been deleted");

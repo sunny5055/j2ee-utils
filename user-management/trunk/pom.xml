@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>user-management</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.2</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<name>user-management</name>
 
 	<parent>
@@ -12,9 +12,9 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/user-management/tags/1.0.2</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/user-management/tags/1.0.2</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/user-management/tags/1.0.2</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/user-management/trunk/</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/user-management/trunk/</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/user-management/trunk/</url>
 	</scm>
 
 	<dependencies>

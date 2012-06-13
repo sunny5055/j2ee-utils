@@ -12,9 +12,9 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/user-management/tags/1.0.0</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/user-management/tags/1.0.0</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/user-management/tags/1.0.0</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/user-management/trunk/</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/user-management/trunk/</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/user-management/trunk/</url>
 	</scm>
 
 	<dependencies>

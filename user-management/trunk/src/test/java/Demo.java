@@ -82,7 +82,7 @@ public class Demo {
         }
         
         // Create users and binds them to roles
-        for (int i = 0 ; i < 8 ; i++) {
+        for (int i = 0 ; i < 9 ; i++) {
         	User user = new User();
         	user.setFirstName(firstNames[i]);
         	user.setLastName(lastNames[i]);
@@ -112,6 +112,21 @@ public class Demo {
         	userService.create(user);
         }
         
+        // Get informations about an user
+        StringBuffer buffer = new StringBuffer();
+        User justine = userService.findByLogin("j.lopez54");
+        buffer.append(justine.getFirstName() + " :\n");
+        List<Role> justineRoles = roleService.findAllByUserId(justine.getId());
+        for (Role currentRole : justineRoles) {
+        	buffer.append("\t" + currentRole.getCode() + " :\n");
+        	List<Right> rights = rightService.findAllRightsByRoleId(currentRole.getId());
+        	for (Right currentRight : rights) {
+        		buffer.append("\t\t" + currentRight.getCode() + "\n");
+        	}
+        }
+        
+        // Print the informations
+        System.out.println(buffer);
     }
     
 }

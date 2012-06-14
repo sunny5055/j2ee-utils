@@ -182,7 +182,7 @@ Finally, you must define a log4j.xml file that handles all the logging functions
 Use the component as follows :
 
 {{{
-   public static void main(String[] args) {
+	public static void main(String[] args) {
     	
         final ApplicationContext context = new ClassPathXmlApplicationContext("spring/application-context.xml");
         final UserService userService = context.getBean(UserService.class);
@@ -251,7 +251,7 @@ Use the component as follows :
         }
         
         // Create users and binds them to roles
-        for (int i = 0 ; i < 8 ; i++) {
+        for (int i = 0 ; i < 9 ; i++) {
         	User user = new User();
         	user.setFirstName(firstNames[i]);
         	user.setLastName(lastNames[i]);
@@ -281,5 +281,20 @@ Use the component as follows :
         	userService.create(user);
         }
         
+        // Get informations about an user
+        StringBuffer buffer = new StringBuffer();
+        User justine = userService.findByLogin("j.lopez54");
+        buffer.append(justine.getFirstName() + " :\n");
+        List<Role> justineRoles = roleService.findAllByUserId(justine.getId());
+        for (Role currentRole : justineRoles) {
+        	buffer.append("\t" + currentRole.getCode() + " :\n");
+        	List<Right> rights = rightService.findAllRightsByRoleId(currentRole.getId());
+        	for (Right currentRight : rights) {
+        		buffer.append("\t\t" + currentRight.getCode() + "\n");
+        	}
+        }
+        
+        // Print the informations
+        System.out.println(buffer);
     }
 }}}	

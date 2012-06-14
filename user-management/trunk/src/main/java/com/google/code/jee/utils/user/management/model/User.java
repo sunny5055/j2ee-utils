@@ -11,9 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -69,8 +70,10 @@ public class User extends AbstractHibernateDto<Integer> {
 	@Column(name = "USE_MAIL", length = 100)
 	private String mail;
 	
-	@OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ROL_USER_ID")
+	@ManyToMany(fetch = FetchType.LAZY)   
+    @JoinTable(name="USER_ROLE",
+    		   joinColumns=@JoinColumn(name="USE_ID"),
+    		   inverseJoinColumns=@JoinColumn(name="ROL_ID"))
     private List<Role> roles;
 	
     /**

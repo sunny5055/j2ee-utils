@@ -10,9 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
@@ -42,8 +43,16 @@ public class Role extends AbstractHibernateDto<Integer> {
 	@Column(name = "ROL_DESCRIPTION", nullable = false, length = 255)
 	private String description;
 	
-	@OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "RIG_ROLE_ID")
+	@ManyToMany(fetch = FetchType.LAZY)   
+    @JoinTable(name="USER_ROLE",
+    		   joinColumns=@JoinColumn(name="ROL_ID"),
+    		   inverseJoinColumns=@JoinColumn(name="USE_ID"))
+	private List<User> users;
+	
+	@ManyToMany(fetch = FetchType.LAZY)   
+    @JoinTable(name="ROLE_RIG",
+    		   joinColumns=@JoinColumn(name="ROL_ID"),
+    		   inverseJoinColumns=@JoinColumn(name="RIG_ID"))
     private List<Right> rights;
 	
 	/**
@@ -51,6 +60,7 @@ public class Role extends AbstractHibernateDto<Integer> {
      */
     public Role() {
         super();
+        this.users = new ArrayList<User>();
         this.rights = new ArrayList<Right>();
     }
 
@@ -107,6 +117,8 @@ public class Role extends AbstractHibernateDto<Integer> {
 	}
 	
 	/**
+	 * Getter : return the description
+	 * 
 	 * @return the description
 	 */
 	public String getDescription() {
@@ -114,10 +126,30 @@ public class Role extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
+	 * Setter : affect the description
+	 * 
 	 * @param description the description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	/**
+	 * Getter : return the users
+	 * 
+	 * @return the users
+	 */
+	public List<User> getUsers() {
+		return users;
+	}
+
+	/**
+	 * Setter : affect the users
+	 * 
+	 * @param users the users to set
+	 */
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 
 	/**

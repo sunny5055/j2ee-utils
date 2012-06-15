@@ -44,13 +44,7 @@ public class Role extends AbstractHibernateDto<Integer> {
 	private String description;
 	
 	@ManyToMany(fetch = FetchType.LAZY)   
-    @JoinTable(name="USER_ROLE",
-    		   joinColumns=@JoinColumn(name="ROL_ID"),
-    		   inverseJoinColumns=@JoinColumn(name="USE_ID"))
-	private List<User> users;
-	
-	@ManyToMany(fetch = FetchType.LAZY)   
-    @JoinTable(name="ROLE_RIG",
+    @JoinTable(name="RRI_ROLE_RIGHTS",
     		   joinColumns=@JoinColumn(name="ROL_ID"),
     		   inverseJoinColumns=@JoinColumn(name="RIG_ID"))
     private List<Right> rights;
@@ -60,7 +54,6 @@ public class Role extends AbstractHibernateDto<Integer> {
      */
     public Role() {
         super();
-        this.users = new ArrayList<User>();
         this.rights = new ArrayList<Right>();
     }
 
@@ -132,24 +125,6 @@ public class Role extends AbstractHibernateDto<Integer> {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	/**
-	 * Getter : return the users
-	 * 
-	 * @return the users
-	 */
-	public List<User> getUsers() {
-		return users;
-	}
-
-	/**
-	 * Setter : affect the users
-	 * 
-	 * @param users the users to set
-	 */
-	public void setUsers(List<User> users) {
-		this.users = users;
 	}
 
 	/**

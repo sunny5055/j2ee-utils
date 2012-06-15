@@ -61,11 +61,8 @@ public class Demo {
         	if (role.getCode().equals("ADMINISTRATOR")) {
         		rights.addAll(rightService.findAll());
         	} else if (role.getCode().equals("MODERATOR")) {
-        		rights.add(rightService.findByRightCode("EDIT"));
         		rights.add(rightService.findByRightCode("EDIT_ALL"));
-        		rights.add(rightService.findByRightCode("DELETE"));
         		rights.add(rightService.findByRightCode("DELETE_ALL"));
-        		rights.add(rightService.findByRightCode("READ"));
         		rights.add(rightService.findByRightCode("READ_ALL"));
         	} else if (role.getCode().equals("REDACTOR")) {
         		rights.add(rightService.findByRightCode("WRITE"));

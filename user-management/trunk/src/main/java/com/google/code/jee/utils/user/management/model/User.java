@@ -71,7 +71,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	private String mail;
 	
 	@ManyToMany(fetch = FetchType.LAZY)   
-    @JoinTable(name="USER_ROLE",
+    @JoinTable(name="URO_USER_ROLES",
     		   joinColumns=@JoinColumn(name="USE_ID"),
     		   inverseJoinColumns=@JoinColumn(name="ROL_ID"))
     private List<Role> roles;

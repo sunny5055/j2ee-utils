@@ -11,7 +11,6 @@ import com.google.code.jee.utils.sftp.SftpUtil;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
-import com.zehon.exception.FileTransferException;
 
 /**
  * Read me :
@@ -30,7 +29,7 @@ import com.zehon.exception.FileTransferException;
  */
 public class Demo {
 
-    public static void main(String[] args) throws JSchException, SftpException, IOException, FileTransferException {
+    public static void main(String[] args) throws JSchException, SftpException, IOException {
         // Init the SFTP connexion
         ChannelSftp channel = (ChannelSftp) SftpUtil.getChannel("sftp", "localhost", 22, "test", "test");
 

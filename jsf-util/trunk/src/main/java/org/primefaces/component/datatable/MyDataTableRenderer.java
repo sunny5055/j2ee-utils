@@ -46,10 +46,18 @@ public class MyDataTableRenderer extends DataTableRenderer {
         final DataTable table = (DataTable) component;
         final boolean isSortRequest = table.isSortRequest(context);
 
+        if (table.isDraggableColumns()) {
+            table.syncColumnOrder();
+        }
+
+        if (table.isResizableColumns() && table.isColResizeRequest(context)) {
+            table.syncColumnWidths();
+        }
+
         if (table.isFilteringEnabled()) {
             dataHelper.decodeFilters(context, table);
 
-            if (!isSortRequest && table.getValueExpression("sortBy") != null && !table.isLazy()) {
+            if (!isSortRequest && table.getValueExpression("sortBy") != null && !table.isLazyLoading()) {
                 sort(context, table);
             }
         }
@@ -60,22 +68,11 @@ public class MyDataTableRenderer extends DataTableRenderer {
         }
         // JSC -- Bug fix for "read-only" dataTable
 
-        if (table.isPaginationRequest(context)) {
-            dataHelper.decodePageRequest(context, table);
-        } else if (isSortRequest) {
+        if (isSortRequest) {
             dataHelper.decodeSortRequest(context, table);
         }
 
         decodeBehaviors(context, component);
-
-        if (table.isPaginator()) {
-            updatePaginationMetadata(context, table);
-        }
-
-        // load lazy data if body needs to be updated (page, filter, sort)
-        if (table.isLazy() && table.isBodyUpdate(context)) {
-            table.loadLazyData();
-        }
 
         // JSC -- Add support for dataTable saving
         if (isReloadFiltersRequest(context, component)) {
@@ -94,7 +91,7 @@ public class MyDataTableRenderer extends DataTableRenderer {
         final DataTable table = (DataTable) component;
         if (!isUnloadRequest(context, component)) {
             if (isReloadContentRequest(context, component)) {
-                if (table.isLazy()) {
+                if (table.isLazyLoading()) {
                     table.loadLazyData();
                 }
 
@@ -130,7 +127,7 @@ public class MyDataTableRenderer extends DataTableRenderer {
                 : DataTable.COLUMN_HEADER_CLASS;
         columnClass = hasFilter ? columnClass + " " + DataTable.FILTER_COLUMN_CLASS : columnClass;
         columnClass = selectionMode != null ? columnClass + " " + DataTable.SELECTION_COLUMN_CLASS : columnClass;
-        columnClass = resizable ? columnClass = columnClass + " " + DataTable.RESIZABLE_COLUMN_CLASS : columnClass;
+        columnClass = resizable ? columnClass + " " + DataTable.RESIZABLE_COLUMN_CLASS : columnClass;
         columnClass = column.getStyleClass() != null ? columnClass + " " + column.getStyleClass() : columnClass;
 
         if (isSortable) {
@@ -156,6 +153,7 @@ public class MyDataTableRenderer extends DataTableRenderer {
         writer.startElement("th", null);
         writer.writeAttribute("id", clientId, null);
         writer.writeAttribute("class", columnClass, null);
+        writer.writeAttribute("role", "columnheader", null);
 
         if (column.getStyle() != null) {
             writer.writeAttribute("style", column.getStyle(), null);
@@ -170,6 +168,9 @@ public class MyDataTableRenderer extends DataTableRenderer {
         // column content wrapper
         writer.startElement("div", null);
         writer.writeAttribute("class", DataTable.COLUMN_CONTENT_WRAPPER, null);
+        if (column.getWidth() != -1) {
+            writer.writeAttribute("style", "width:" + column.getWidth() + "px", null);
+        }
 
         if (selectionMode != null && selectionMode.equalsIgnoreCase("multiple")) {
             encodeCheckbox(context, table, false, column.isDisabledSelection(), HTML.CHECKBOX_ALL_CLASS);
@@ -282,7 +283,7 @@ public class MyDataTableRenderer extends DataTableRenderer {
                 if (itemValue != null && String.valueOf(itemValue).equals(filterValue)) {
                     writer.writeAttribute("selected", "selected", null);
                 }
-                writer.write(item.getLabel());
+                writer.writeText(item.getLabel(), null);
                 writer.endElement("option");
             }
 

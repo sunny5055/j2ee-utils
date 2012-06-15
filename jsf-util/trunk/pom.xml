@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>jsf-util</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.2</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<name>jsf-util</name>
 
 	<parent>
@@ -12,9 +12,9 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/jsf-util/tags/1.0.2</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/jsf-util/tags/1.0.2</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/jsf-util/tags/1.0.2</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/jsf-util/trunk/</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/jsf-util/trunk/</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/jsf-util/trunk/</url>
 	</scm>
 
 	<repositories>

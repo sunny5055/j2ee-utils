@@ -2,13 +2,7 @@ package com.google.code.jee.utils.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +14,8 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class XmlUtil {
 
+    private static String UTF8 = "UTF-8";
+
     /**
      * Inits the stream.
      * 
@@ -27,23 +23,60 @@ public class XmlUtil {
      * @return the x stream
      */
     public static XStream initStream(XStream xStream) {
-        return xStream = new XStream(new DomDriver("UTF-8"));
+        return xStream = new XStream(new DomDriver(UTF8));
     }
 
     /**
      * Sets the aliases.
      * 
-     * @param <T> the generic type
      * @param xStream the x stream
      * @param classNames the class names
      */
-    public static <T> void setAliases(XStream xStream, Map<String, Class<T>> classNames) {
+    public static void setAliases(XStream xStream, Map<String, Class<?>> classNames) {
         if (!MapUtil.isEmpty(classNames)) {
             Iterator<String> iter = classNames.keySet().iterator();
 
             while (iter.hasNext()) {
                 String name = (String) iter.next();
                 xStream.alias(name, classNames.get(name));
+            }
+        }
+    }
+
+    /**
+     * Sets the attributes.
+     * 
+     * @param xStream the x stream
+     * @param classNames the class names
+     */
+    public static void setAttributesFor(XStream xStream, Map<Class<?>, List<String>> classNames) {
+        if (!MapUtil.isEmpty(classNames)) {
+            Iterator<Class<?>> iter = classNames.keySet().iterator();
+
+            while (iter.hasNext()) {
+                Class<?> className = (Class<?>) iter.next();
+                for (String attribute : classNames.get(className)) {
+                    xStream.useAttributeFor(attribute, className);
+                }
+            }
+        }
+    }
+
+    /**
+     * Omit fields.
+     * 
+     * @param xStream the x stream
+     * @param classNames the class names
+     */
+    public static void omitFields(XStream xStream, Map<Class<?>, List<String>> classNames) {
+        if (!MapUtil.isEmpty(classNames)) {
+            Iterator<Class<?>> iter = classNames.keySet().iterator();
+
+            while (iter.hasNext()) {
+                Class<?> className = (Class<?>) iter.next();
+                for (String field : classNames.get(className)) {
+                    xStream.omitField(className, field);
+                }
             }
         }
     }
@@ -56,14 +89,13 @@ public class XmlUtil {
      * @param types the types
      * @param outputStream the output stream
      */
-    public static <T> void exportToXml(XStream xStream, String rootNodeName, List<T> types, OutputStream outputStream) {
+    public static <T> void exportToXml(XStream xStream, String rootNodeName, String listFieldName, List<T> types,
+            OutputStream outputStream) {
         if (!CollectionUtil.isEmpty(types)) {
-            // xStream.alias(rootNodeName, List.class);
-            // xStream.addImplicitCollection(List.class, rootNodeName);
             xStream.alias(rootNodeName, GenericList.class);
-            xStream.addImplicitCollection(GenericList.class, rootNodeName);
+            xStream.addImplicitCollection(GenericList.class, listFieldName);
 
-            GenericList<T> genericList = new GenericList<T>();
+            GenericList genericList = new GenericList();
             genericList.setElements(types);
             xStream.toXML(genericList, outputStream);
         }
@@ -78,10 +110,11 @@ public class XmlUtil {
      * @param inputStream the input stream
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public static <T> void importToXml(XStream xStream, List<T> types, InputStream inputStream) throws IOException {
+    public static List<?> importToXml(XStream xStream, InputStream inputStream) throws IOException {
+        GenericList genericList = null;
         if (inputStream != null) {
-            GenericList<Employee> genericList = (GenericList<Employee>) xStream.fromXML(inputStream);
-            types.addAll((Collection<? extends T>) genericList.getElements());
+            genericList = (GenericList) xStream.fromXML(inputStream);
         }
+        return genericList.getElements();
     }
 }

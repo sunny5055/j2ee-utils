@@ -2,14 +2,14 @@ package com.google.code.jee.utils.xml;
 
 import java.util.List;
 
-public class GenericList<T> {
-    private List<T> elements;
+public class GenericList {
+    private List<?> elements;
 
-    public List<T> getElements() {
+    public List<?> getElements() {
         return elements;
     }
 
-    public void setElements(List<T> elements) {
+    public void setElements(List<?> elements) {
         this.elements = elements;
     } 
 }

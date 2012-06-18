@@ -208,11 +208,17 @@ public final class SftpUtil {
      * @return true, if successful
      * @throws SftpException the sftp exception
      */
-    /*
-     * public static boolean createDirectory(ChannelSftp channel, String
-     * directoryPath) throws SftpException { return createDirectory(channel,
-     * directoryPath, FilenameUtils.getFullPath(directoryPath)); }
-     */
+
+    public static boolean createDirectory(ChannelSftp channel, String directoryPath) throws SftpException {
+        String correctPath = FilenameUtils.getPath(directoryPath);
+        if (directoryPath.startsWith("./")) {
+            correctPath = "./" + correctPath;
+        } else if (directoryPath.startsWith("/")) {
+            correctPath = "/" + correctPath;
+        }
+
+        return createDirectory(channel, FilenameUtils.getBaseName(directoryPath), correctPath);
+    }
 
     /**
      * Rename a directory.
@@ -251,7 +257,7 @@ public final class SftpUtil {
     public static boolean renameFile(ChannelSftp channel, String oldName, String newName, String workingDirectory)
             throws SftpException {
         boolean exists = true;
-        ;
+
         if (StringUtil.isNotEmpty(oldName) && StringUtil.isNotEmpty(newName) && StringUtil.isNotEmpty(workingDirectory)) {
             // Fix the workingDirectory by appending a "/" at the end
             if (workingDirectory.lastIndexOf("/") == workingDirectory.length() - 1) {
@@ -268,6 +274,26 @@ public final class SftpUtil {
             }
         }
         return exists;
+    }
+
+    /**
+     * Rename file.
+     * 
+     * @param channel the channel
+     * @param newName the new name
+     * @param workingDirectory the working directory
+     * @return true, if successful
+     * @throws SftpException the sftp exception
+     */
+    public static boolean renameFile(ChannelSftp channel, String newName, String workingDirectory) throws SftpException {
+        String oldName = FilenameUtils.getName(workingDirectory);
+        String filePath = FilenameUtils.getPath(workingDirectory);
+        if (workingDirectory.startsWith("./")) {
+            filePath = "./" + filePath;
+        } else if (workingDirectory.startsWith("/")) {
+            filePath = "/" + filePath;
+        }
+        return renameFile(channel, oldName, newName, filePath);
     }
 
     /**

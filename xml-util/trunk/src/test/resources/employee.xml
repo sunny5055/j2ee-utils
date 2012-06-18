@@ -1,22 +1,15 @@
 <data>
-  <company>
+  <company name="Microsoft">
     <employees>
-      <employee>
-        <name>Robinson</name>
-        <designation>Engineer</designation>
+      <employee name="Robinson" designation="Engineer">
         <address>
           <street>A street</street>
           <city>New-York</city>
           <zip>5498</zip>
         </address>
       </employee>
-      <employee>
-        <name>Smith</name>
-        <designation>Engineer</designation>
-      </employee>
-      <employee>
-        <name>Johnson</name>
-        <designation>Engineer</designation>
+      <employee name="Smith" designation="Engineer"/>
+      <employee name="Johnson" designation="Engineer">
         <address>
           <street>A street</street>
           <city>New-York</city>
@@ -24,11 +17,6 @@
         </address>
       </employee>
     </employees>
-    <name>Microsoft</name>
-  </company>
-  <company>
-    <employees reference="../../company/employees"/>
-    <name>Microsoft2</name>
   </company>
   <user>
     <login>robinson</login>

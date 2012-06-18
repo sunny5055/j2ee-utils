@@ -82,7 +82,7 @@ public class Demo {
         // Export all the elements
         List<T> elements = new ArrayList();
         elements.add((T) company);
-        elements.add((T) company2);
+        //elements.add((T) company2);
         elements.add((T) user);
         elements.add((T) user2);
         XmlUtil.exportToXml(xStream, "data", "elements", elements, fos);

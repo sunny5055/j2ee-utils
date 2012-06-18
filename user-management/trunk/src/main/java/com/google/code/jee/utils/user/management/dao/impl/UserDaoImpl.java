@@ -54,6 +54,7 @@ public class UserDaoImpl extends AbstractGenericDaoHibernate<Integer, User> impl
 
             final StringBuilder buffer = new StringBuilder();
             buffer.append("from User u ");
+            buffer.append("left join u.roles as role ");
             if (searchCriteria.hasFilters()) {
                 buffer.append("where ");
                 int index = 0;
@@ -74,6 +75,9 @@ public class UserDaoImpl extends AbstractGenericDaoHibernate<Integer, User> impl
                         } else if (entry.getKey().equals("mail")) {
                             buffer.append("upper(u.mail) like upper(:mail) ");
                             search.addStringParameter("mail", entry.getValue());
+                        } else if (entry.getKey().equals("roles")) {
+                            buffer.append("role.id in (:roles) ");
+                            search.addIntegerParameter("roles", entry.getValue());
                         }
                         index++;
                     }

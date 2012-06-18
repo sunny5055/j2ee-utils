@@ -1,6 +1,6 @@
 =sftp-util=
 
-This project contains a utilitary class that provides basic functions, in order to establish a SFTP connexion and to manipulate files that are located on the host.
+This project contains a utilitary class that provides basic functions, in order to establish a SFTP connexion and to manipulate files that are located on the host Server.
 
 ==How to launch==
 

@@ -1,7 +1,7 @@
 =xml-util=
 
 This project contains a utilitary class that enables to serialize or deserialize any object with XML.
-It relies on the the XStream API.
+It relies on the XStream API.
 
 ==Install the jar==
 

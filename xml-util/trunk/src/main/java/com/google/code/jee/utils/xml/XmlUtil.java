@@ -56,7 +56,7 @@ public class XmlUtil {
             while (iter.hasNext()) {
                 Class<?> className = (Class<?>) iter.next();
                 for (String attribute : classNames.get(className)) {
-                    xStream.useAttributeFor(attribute, className);
+                    xStream.useAttributeFor(className, attribute);
                 }
             }
         }

@@ -32,12 +32,14 @@ public class Demo {
     public static void main(String[] args) throws JSchException, SftpException, IOException {
         // Init the SFTP connexion
         ChannelSftp channel = (ChannelSftp) SftpUtil.getChannel("sftp", "localhost", 22, "test", "test");
-
+        
         // Tree creation
         boolean creation = SftpUtil.createDirectory(channel, "t&s", "/users");
         creation = SftpUtil.createDirectory(channel, "images", "./t&s/files");
         creation = SftpUtil.createDirectory(channel, "logos", "./images");
         creation = SftpUtil.createDirectory(channel, "documents", "/users/t&s/files");
+        creation = SftpUtil.createDirectory(channel, "/users/admin/files/confs");
+        creation = SftpUtil.createDirectory(channel, "./properties/xml");
 
         if (creation) {
             System.out.println("Creation successful");
@@ -60,7 +62,7 @@ public class Demo {
         }
         
         // Rename the file
-        boolean renameFile = SftpUtil.renameFile(channel, "logo.jpg", "logo_t&s.jpg", "/home/t&s/files/images/logos");
+        boolean renameFile = SftpUtil.renameFile(channel, "logo_t&s.jpg", "/home/t&s/files/images/logos/logo.jpg");
         
         if(renameFile) {
             System.out.println("File renamed properly");
@@ -73,7 +75,7 @@ public class Demo {
             System.out.println("File downloaded");
         }
 
-        // write the inputStream to a FileOutputStream
+        // Write the InputStream to a FileOutputStream
         OutputStream output = new FileOutputStream(new File("src/test/resources/newFile.jpg"));
 
         IOUtils.copy(input, output);
@@ -87,7 +89,8 @@ public class Demo {
         
         // Deletes the directory
         channel.cd("/home");
-         boolean deleteDirectory = SftpUtil.deleteDirectory(channel, "files", "./t&s");
+        
+        boolean deleteDirectory = SftpUtil.deleteDirectory(channel, "files", "./t&s");
         
         if(deleteDirectory) {
             System.out.println("Directory has been deleted");

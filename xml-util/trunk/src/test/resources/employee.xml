@@ -1,39 +1,41 @@
 <data>
-  <elements>
-    <company>
-      <employees>
-        <employee>
-          <name>Robinson</name>
-          <designation>Engineer</designation>
-          <department>IT</department>
-          <address>
-            <street>A street</street>
-            <city>New-York</city>
-            <zip>5498</zip>
-          </address>
-        </employee>
-        <employee>
-          <name>Smith</name>
-          <designation>Engineer</designation>
-          <department>IT</department>
-        </employee>
-        <employee>
-          <name>Johnson</name>
-          <designation>Engineer</designation>
-          <address>
-            <street>A street</street>
-            <city>New-York</city>
-            <zip>5498</zip>
-          </address>
-        </employee>
-      </employees>
-      <name>Microsoft</name>
-      <incomes>1000000</incomes>
-    </company>
-    <company>
-      <employees reference="../../company/employees"/>
-      <name>Microsoft</name>
-      <incomes>1000000</incomes>
-    </company>
-  </elements>
+  <company>
+    <employees>
+      <employee>
+        <name>Robinson</name>
+        <designation>Engineer</designation>
+        <address>
+          <street>A street</street>
+          <city>New-York</city>
+          <zip>5498</zip>
+        </address>
+      </employee>
+      <employee>
+        <name>Smith</name>
+        <designation>Engineer</designation>
+      </employee>
+      <employee>
+        <name>Johnson</name>
+        <designation>Engineer</designation>
+        <address>
+          <street>A street</street>
+          <city>New-York</city>
+          <zip>5498</zip>
+        </address>
+      </employee>
+    </employees>
+    <name>Microsoft</name>
+  </company>
+  <company>
+    <employees reference="../../company/employees"/>
+    <name>Microsoft2</name>
+  </company>
+  <user>
+    <login>robinson</login>
+    <password>password</password>
+  </user>
+  <user>
+    <login>robinson</login>
+    <password>password</password>
+  </user>
 </data>

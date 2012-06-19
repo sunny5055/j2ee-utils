@@ -77,7 +77,8 @@ public class UserDaoImpl extends AbstractGenericDaoHibernate<Integer, User> impl
                             search.addStringParameter("mail", entry.getValue());
                         } else if (entry.getKey().equals("roles")) {
                             buffer.append("role.id in (:roles) ");
-                            search.addIntegerParameter("roles", entry.getValue());
+                            Integer id = (Integer)entry.getValue();
+                            search.addIntegerParameter("roles", id);
                         }
                         index++;
                     }

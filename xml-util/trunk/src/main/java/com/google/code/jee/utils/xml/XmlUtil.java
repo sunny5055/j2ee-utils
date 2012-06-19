@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
+import com.google.code.jee.utils.StringUtil;
 import com.google.code.jee.utils.collection.CollectionUtil;
 import com.google.code.jee.utils.collection.MapUtil;
 import com.thoughtworks.xstream.XStream;
@@ -33,9 +34,13 @@ public class XmlUtil {
      * @return the x stream
      */
     public static XStream getStream(String rootNodeName, String listFieldName) {
-        XStream xStream = new XStream(new DomDriver(UTF8));
-        xStream.alias(rootNodeName, GenericList.class);
-        xStream.addImplicitCollection(GenericList.class, listFieldName);
+        XStream xStream = null;
+
+        if (!StringUtil.isEmpty(rootNodeName) && !StringUtil.isEmpty(listFieldName)) {
+            xStream = new XStream(new DomDriver(UTF8));
+            xStream.alias(rootNodeName, GenericList.class);
+            xStream.addImplicitCollection(GenericList.class, listFieldName);
+        }
 
         return xStream;
     }

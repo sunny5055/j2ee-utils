@@ -3,7 +3,6 @@ package com.google.code.jee.utils.xml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,17 +12,32 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class XmlUtil {
-
-    private static String UTF8 = "UTF-8";
+    private static final String UTF8 = "UTF-8";
+    private static final String ROOT_NODE_NAME = "data";
+    private static final String LIST_FIELD_NAME = "elements";
 
     /**
      * Inits the stream.
      * 
-     * @param xStream the x stream
      * @return the x stream
      */
-    public static XStream initStream(XStream xStream) {
-        return xStream = new XStream(new DomDriver(UTF8));
+    public static XStream getStream() {
+        return getStream(ROOT_NODE_NAME, LIST_FIELD_NAME);
+    }
+
+    /**
+     * Inits the stream.
+     * 
+     * @param rootNodeName the root node name
+     * @param listFieldName the list field name
+     * @return the x stream
+     */
+    public static XStream getStream(String rootNodeName, String listFieldName) {
+        XStream xStream = new XStream(new DomDriver(UTF8));
+        xStream.alias(rootNodeName, GenericList.class);
+        xStream.addImplicitCollection(GenericList.class, listFieldName);
+
+        return xStream;
     }
 
     /**
@@ -33,12 +47,9 @@ public class XmlUtil {
      * @param classNames the class names
      */
     public static void setAliases(XStream xStream, Map<String, Class<?>> classNames) {
-        if (!MapUtil.isEmpty(classNames)) {
-            Iterator<String> iter = classNames.keySet().iterator();
-
-            while (iter.hasNext()) {
-                String name = (String) iter.next();
-                xStream.alias(name, classNames.get(name));
+        if (xStream != null && !MapUtil.isEmpty(classNames)) {
+            for (Map.Entry<String, Class<?>> entry : classNames.entrySet()) {
+                xStream.alias(entry.getKey(), entry.getValue());
             }
         }
     }
@@ -50,13 +61,10 @@ public class XmlUtil {
      * @param classNames the class names
      */
     public static void setAttributesFor(XStream xStream, Map<Class<?>, List<String>> classNames) {
-        if (!MapUtil.isEmpty(classNames)) {
-            Iterator<Class<?>> iter = classNames.keySet().iterator();
-
-            while (iter.hasNext()) {
-                Class<?> className = (Class<?>) iter.next();
-                for (String attribute : classNames.get(className)) {
-                    xStream.useAttributeFor(className, attribute);
+        if (xStream != null && !MapUtil.isEmpty(classNames)) {
+            for (Map.Entry<Class<?>, List<String>> entry : classNames.entrySet()) {
+                for (String attribute : entry.getValue()) {
+                    xStream.useAttributeFor(entry.getKey(), attribute);
                 }
             }
         }
@@ -69,13 +77,10 @@ public class XmlUtil {
      * @param classNames the class names
      */
     public static void omitFields(XStream xStream, Map<Class<?>, List<String>> classNames) {
-        if (!MapUtil.isEmpty(classNames)) {
-            Iterator<Class<?>> iter = classNames.keySet().iterator();
-
-            while (iter.hasNext()) {
-                Class<?> className = (Class<?>) iter.next();
-                for (String field : classNames.get(className)) {
-                    xStream.omitField(className, field);
+        if (xStream != null && !MapUtil.isEmpty(classNames)) {
+            for (Map.Entry<Class<?>, List<String>> entry : classNames.entrySet()) {
+                for (String attribute : entry.getValue()) {
+                    xStream.omitField(entry.getKey(), attribute);
                 }
             }
         }
@@ -84,19 +89,16 @@ public class XmlUtil {
     /**
      * Export to xml.
      * 
-     * @param <T> the generic type
      * @param xStream the x stream
-     * @param types the types
      * @param outputStream the output stream
+     * @param elements the types
+     * 
+     * @param <T> the generic type
      */
-    public static <T> void exportToXml(XStream xStream, String rootNodeName, String listFieldName, List<T> types,
-            OutputStream outputStream) {
-        if (!CollectionUtil.isEmpty(types)) {
-            xStream.alias(rootNodeName, GenericList.class);
-            xStream.addImplicitCollection(GenericList.class, listFieldName);
-
+    public static void exportToXml(XStream xStream, OutputStream outputStream, List<?> elements) {
+        if (xStream != null && outputStream != null && !CollectionUtil.isEmpty(elements)) {
             GenericList genericList = new GenericList();
-            genericList.setElements(types);
+            genericList.setElements(elements);
             xStream.toXML(genericList, outputStream);
         }
     }
@@ -111,10 +113,14 @@ public class XmlUtil {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static List<?> importToXml(XStream xStream, InputStream inputStream) throws IOException {
-        GenericList genericList = null;
-        if (inputStream != null) {
-            genericList = (GenericList) xStream.fromXML(inputStream);
+        List<?> elements = null;
+        if (xStream != null && inputStream != null) {
+            GenericList genericList = (GenericList) xStream.fromXML(inputStream);
+
+            if (genericList != null) {
+                elements = genericList.getElements();
+            }
         }
-        return genericList.getElements();
+        return elements;
     }
 }

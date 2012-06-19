@@ -18,8 +18,7 @@ import com.thoughtworks.xstream.XStream;
 public class Demo {
     public static <T> void main(String[] args) throws IOException {
         // Inits the stream
-        XStream xStream = null;
-        xStream = XmlUtil.initStream(xStream);
+        XStream xStream = XmlUtil.getStream();
 
         // Creates the employees
         Employee employee = new Employee("Robinson", "Engineer", "IT", new Address("A street", "New-York", "5498"));
@@ -38,11 +37,11 @@ public class Demo {
         List<Company> companies = new ArrayList<Company>();
         companies.add(company);
         companies.add(company2);
-        
+
         // Creates the users
         User user = new User("robinson", "password");
         User user2 = new User("robinson", "password");
-        
+
         // Sets the aliases
         Map<String, Class<?>> classNames = new HashMap<String, Class<?>>();
 
@@ -51,7 +50,7 @@ public class Demo {
         classNames.put("user", user.getClass());
 
         XmlUtil.setAliases(xStream, classNames);
-        
+
         // Set fields as attributes
         Map<Class<?>, List<String>> attributeNames = new HashMap<Class<?>, List<String>>();
         List<String> employeeAttributes = new ArrayList<String>();
@@ -62,7 +61,7 @@ public class Demo {
         companyAttributes.add("name");
         attributeNames.put(company.getClass(), companyAttributes);
         XmlUtil.setAttributesFor(xStream, attributeNames);
-        
+
         // Omits fields
         Map<Class<?>, List<String>> fieldNames = new HashMap<Class<?>, List<String>>();
         List<String> employeeFields = new ArrayList<String>();
@@ -73,19 +72,19 @@ public class Demo {
         fieldNames.put(company.getClass(), companyFields);
 
         XmlUtil.omitFields(xStream, fieldNames);
-        
+
         // Creates a new XML file
         File file = new File("src/test/resources/employee.xml");
 
         FileOutputStream fos = new FileOutputStream(file);
 
         // Export all the elements
-        List<T> elements = new ArrayList();
-        elements.add((T) company);
-        //elements.add((T) company2);
-        elements.add((T) user);
-        elements.add((T) user2);
-        XmlUtil.exportToXml(xStream, "data", "elements", elements, fos);
+        List<Object> elements = new ArrayList<Object>();
+        elements.add(company);
+        // elements.add((T) company2);
+        elements.add(user);
+        elements.add(user2);
+        XmlUtil.exportToXml(xStream, fos, elements);
 
         fos.close();
 

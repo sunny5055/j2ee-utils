@@ -33,6 +33,8 @@ public class Demo {
         // Init the SFTP connexion
         ChannelSftp channel = (ChannelSftp) SftpUtil.getChannel("sftp", "localhost", 22, "test", "test");
         
+        channel.ls("/home/t&s/files");
+        
         // Tree creation
         boolean creation = SftpUtil.createDirectory(channel, "t&s", "/users");
         creation = SftpUtil.createDirectory(channel, "images", "./t&s/files");

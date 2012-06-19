@@ -1,15 +1,19 @@
 <data>
   <company name="Microsoft">
     <employees>
-      <employee name="Robinson" designation="Engineer">
+      <employee name="Robinson">
+        <designation>Engineer</designation>
         <address>
           <street>A street</street>
           <city>New-York</city>
           <zip>5498</zip>
         </address>
       </employee>
-      <employee name="Smith" designation="Engineer"/>
-      <employee name="Johnson" designation="Engineer">
+      <employee name="Smith">
+        <designation>Engineer</designation>
+      </employee>
+      <employee name="Johnson">
+        <designation>Engineer</designation>
         <address>
           <street>A street</street>
           <city>New-York</city>

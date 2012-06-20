@@ -29,7 +29,8 @@ import com.google.code.jee.utils.user.management.dao.RoleDao;
     @NamedQuery(name = RoleDao.FIND_BY_CODE, query = "from Role as r where r.code = :code"),
     @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID, query = "select count(role) from User as u left join u.roles as role where u.id = :userId"),
     @NamedQuery(name = RoleDao.FIND_ALL_BY_USER_ID, query = "select role from User as u left join u.roles as role where u.id = :userId"),
-    @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID_AND_CODE, query = "select count(*) from User as u left join u.roles as role where u.id = :userId and role.code = :roleCode") })
+    @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID_AND_CODE, query = "select count(*) from User as u left join u.roles as role where u.id = :userId and role.code = :roleCode"),
+    @NamedQuery(name = RoleDao.COUNT_USERS_FOR_ROLE_ID, query = "select count(u) from User as u left join u.roles as role where role.id = :roleId")})
 @SuppressWarnings("serial")
 public class Role extends AbstractHibernateDto<Integer> {
 	@Id

@@ -69,6 +69,15 @@ public class RightDaoImpl extends AbstractGenericDaoHibernate<Integer, Right> im
     	return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), RightDao.FIND_ALL_RIGHTS_BY_ROLE_ID,
                 new String[] { "roleId" }, roleId);
     }
+ 
+    /**
+     * {@inheritedDoc}
+     */
+	@Override
+	public Integer countRolesForRightId(Integer rightId) {
+		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RightDao.COUNT_ROLES_FOR_RIGHT_ID,
+                new String[] { "rightId" }, rightId);
+	}
     
     /**
      * Gets the search.

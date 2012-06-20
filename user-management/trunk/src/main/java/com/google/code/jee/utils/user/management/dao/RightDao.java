@@ -12,6 +12,7 @@ public interface RightDao extends GenericDao<Integer, Right> {
 	String COUNT_FOR_ROLE_ID_AND_RIGHT_CODE = "right.countForRoleIdAndRightCode";
 	String COUNT_RIGHTS_FOR_ROLE_ID = "right.countRightsForRoleId";
 	String FIND_ALL_RIGHTS_BY_ROLE_ID ="right.findAllRightsByRoleId";
+	String COUNT_ROLES_FOR_RIGHT_ID = "right.countRolesForRightId";
 	
     /**
      * Search the number of elements with the 'code' parameter.
@@ -54,5 +55,13 @@ public interface RightDao extends GenericDao<Integer, Right> {
 	 * @return the list
 	 */
 	List<Right> findAllRightsByRoleId(Integer roleId);
+	
+	/**
+	 * Count the number of roles corresponding to a specific right
+	 * 
+	 * @param rightId the right primary key
+	 * @return the number of roles
+	 */
+	Integer countRolesForRightId(Integer rightId);
 
 }

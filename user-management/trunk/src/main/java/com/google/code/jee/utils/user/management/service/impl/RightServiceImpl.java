@@ -83,5 +83,16 @@ public class RightServiceImpl extends AbstractGenericService<Integer, Right, Rig
         }
         return rights;
     }
+    
+    /**
+     * {@inheritedDoc}
+     */   
+    @Override
+    public boolean isRemovable(Integer rightId) {
+        if (this.dao.countRolesForRightId(rightId) != 0)
+        	return false;
+        else
+        	return true;
+    }
 	
 }

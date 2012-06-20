@@ -22,7 +22,8 @@ import com.google.code.jee.utils.user.management.dao.RightDao;
     @NamedQuery(name = RightDao.FIND_BY_CODE, query = "from Right as rig where rig.code = :code"),
     @NamedQuery(name = RightDao.COUNT_FOR_ROLE_ID_AND_RIGHT_CODE, query = "select count(rig) from Role as r left join r.rights as rig where r.id = :roleId and rig.code = :rightCode"),
     @NamedQuery(name = RightDao.COUNT_RIGHTS_FOR_ROLE_ID, query = "select count(rig) from Role as r left join r.rights as rig where r.id = :roleId"),
-    @NamedQuery(name = RightDao.FIND_ALL_RIGHTS_BY_ROLE_ID, query = "select rig from Role as r left join r.rights as rig where r.id = :roleId") })
+    @NamedQuery(name = RightDao.FIND_ALL_RIGHTS_BY_ROLE_ID, query = "select rig from Role as r left join r.rights as rig where r.id = :roleId"),
+    @NamedQuery(name = RightDao.COUNT_ROLES_FOR_RIGHT_ID, query = "select count(r) from Role as r left join r.rights as rig where rig.id = :rightId")})
 @SuppressWarnings("serial")
 public class Right extends AbstractHibernateDto<Integer> {
 

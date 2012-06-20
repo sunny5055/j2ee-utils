@@ -75,6 +75,15 @@ public class RoleDaoImpl  extends AbstractGenericDaoHibernate<Integer, Role> imp
     }
 
     /**
+     * {@inheritedDoc}
+     */
+	@Override
+	public Integer countUsersForRoleId(Integer roleId) {
+		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_USERS_FOR_ROLE_ID,
+                new String[] { "roleId" }, roleId);
+	}
+
+    /**
      * Gets the search.
      * 
      * @param userId the user id

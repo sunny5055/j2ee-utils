@@ -12,6 +12,7 @@ public interface RoleDao extends GenericDao<Integer, Role> {
 	String COUNT_FOR_USER_ID_AND_CODE = "role.countForUserIdAndCode";
 	String COUNT_FOR_USER_ID = "role.countForUserId";
 	String FIND_ALL_BY_USER_ID = "role.findAllByUserId";
+	String COUNT_USERS_FOR_ROLE_ID = "role.countUsersForRoleId";
     
     /**
      * Search the number of elements with the 'code' parameter.
@@ -54,5 +55,13 @@ public interface RoleDao extends GenericDao<Integer, Role> {
      * @return the list
      */
 	List<Role> findAllByUserId(Integer userId);
+	
+	/**
+	 * Count the number of users of a specific role
+	 * 
+	 * @param roleId the role primary key
+	 * @return the number of users
+	 */
+	Integer countUsersForRoleId(Integer roleId);
 
 }

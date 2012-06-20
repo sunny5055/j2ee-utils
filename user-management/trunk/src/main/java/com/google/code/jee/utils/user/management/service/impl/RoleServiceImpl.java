@@ -83,5 +83,16 @@ public class RoleServiceImpl extends AbstractGenericService<Integer, Role, RoleD
         }
         return roles;
     }
+    
+    /**
+     * {@inheritedDoc}
+     */   
+    @Override
+    public boolean isRemovable(Integer roleId) {
+        if (this.dao.countUsersForRoleId(roleId) != 0)
+        	return false;
+        else
+        	return true;
+    }
 
 }

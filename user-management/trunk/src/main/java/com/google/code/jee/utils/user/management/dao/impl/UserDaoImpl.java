@@ -54,7 +54,7 @@ public class UserDaoImpl extends AbstractGenericDaoHibernate<Integer, User> impl
 
             final StringBuilder buffer = new StringBuilder();
             buffer.append("from User u ");
-            buffer.append("left join u.roles as role ");
+            //buffer.append("left join u.roles as role ");
             if (searchCriteria.hasFilters()) {
                 buffer.append("where ");
                 int index = 0;

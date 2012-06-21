@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import com.google.code.jee.utils.dal.Result;
 import com.google.code.jee.utils.dal.SearchCriteria;
 import com.google.code.jee.utils.parameter.hibernate.model.AbstractParameter;
 
@@ -109,4 +110,12 @@ public interface ParameterService {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     void importProperties(InputStream inputStream) throws IOException;
+    
+    /**
+     * Updates the parameter
+     * 
+     * @param parameter to update
+     * @return the results list
+     */
+    Result<AbstractParameter<?>> update(AbstractParameter<?> parameter);
 }

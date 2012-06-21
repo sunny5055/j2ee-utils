@@ -16,6 +16,7 @@ import com.google.code.jee.utils.BooleanUtil;
 import com.google.code.jee.utils.DateUtil;
 import com.google.code.jee.utils.StringUtil;
 import com.google.code.jee.utils.collection.CollectionUtil;
+import com.google.code.jee.utils.dal.Result;
 import com.google.code.jee.utils.dal.SearchCriteria;
 import com.google.code.jee.utils.parameter.hibernate.dao.ParameterDao;
 import com.google.code.jee.utils.parameter.hibernate.model.AbstractParameter;
@@ -308,6 +309,34 @@ public class ParameterServiceImpl implements ParameterService {
                 setValue(keyString, convertedValue);
             }
         }
+    }
+ 
+    /**
+     * {@inheritedDoc}
+     */
+    @Override
+    public Result<AbstractParameter<?>> update(AbstractParameter<?> parameter) {
+        final Result<AbstractParameter<?>> result = new Result<AbstractParameter<?>>();
+        if (parameter != null) {
+            final Integer updated = this.dao.save(parameter);
+            if (updated != 0) {
+                final AbstractParameter<?> entity = this.findByName(parameter.getName());
+                if (entity != null) {
+                    result.setValid(true);
+                    result.setValue(entity);
+                } else {
+                    result.setValid(false);
+                    result.addErrorMessage("error_updated_entity_not_found");
+                }
+            } else {
+                result.setValid(false);
+                result.addErrorMessage("error_update_failed");
+            }
+        } else {
+            result.setValid(false);
+            result.addErrorMessage("error_wrong_parameter");
+        }
+        return result;
     }
 
 }

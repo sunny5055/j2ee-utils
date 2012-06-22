@@ -38,8 +38,15 @@ public class Demo {
         dateParameter.setName("dateTest");
         booleanParameter.setName("booleanTest");
         stringParameter.setName("stringTest");
-
-        // Setting values
+        
+        // Setting descriptions
+        integerParameter.setDescription("An integer parameter");
+        floatParameter.setDescription("A float parameter");
+        dateParameter.setDescription("A date parameter");
+        booleanParameter.setDescription("A boolean parameter");
+        stringParameter.setDescription("A string parameter");
+        
+        // Setting values0
         integerParameter.setValue(5020);
         floatParameter.setValue(2.F);
         dateParameter.setValue(new Date());
@@ -47,11 +54,11 @@ public class Demo {
         stringParameter.setValue("A test string");
 
         // setValue method call
-        parameterService.setValue(integerParameter.getName(), integerParameter.getValue());
-        parameterService.setValue(floatParameter.getName(), floatParameter.getValue());
-        parameterService.setValue(dateParameter.getName(), dateParameter.getValue());
-        parameterService.setValue(booleanParameter.getName(), booleanParameter.getValue());
-        parameterService.setValue(stringParameter.getName(), stringParameter.getValue());
+        parameterService.setValue(integerParameter.getName(), integerParameter.getDescription(), integerParameter.getValue());
+        parameterService.setValue(floatParameter.getName(), floatParameter.getDescription(), floatParameter.getValue());
+        parameterService.setValue(dateParameter.getName(), dateParameter.getDescription(), dateParameter.getValue());
+        parameterService.setValue(booleanParameter.getName(), booleanParameter.getDescription(), booleanParameter.getValue());
+        parameterService.setValue(stringParameter.getName(), stringParameter.getDescription(), stringParameter.getValue());
 
         // getValue test
         System.err.println(parameterService.getValue(integerParameter.getName()).toString());
@@ -68,11 +75,13 @@ public class Demo {
         System.out.println(parameter.getName());
         System.out.println(parameter.getValue());
         System.out.println(parameter.getType());
+        System.out.println(parameter.getDescription());
         
         // findAll listing
         for (AbstractParameter<?> param : parameterService.findAll()) {
             System.out.println(param.getName());
             System.out.println(param.getType());
+            System.out.println(param.getDescription());
         }
 
         // Test existsWithName

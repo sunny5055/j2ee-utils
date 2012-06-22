@@ -151,47 +151,58 @@ public class ParameterServiceImpl implements ParameterService {
      */
     @Override
     public <V> void setValue(String name, V value) {
-        if (!StringUtil.isBlank(name) && value != null) {
-            AbstractParameter<?> parameter = null;
-            if (!existWithName(name)) {
-                if (value instanceof Boolean) {
-                    parameter = new BooleanParameter();
-                } else if (value instanceof Float) {
-                    parameter = new FloatParameter();
-                } else if (value instanceof Integer) {
-                    parameter = new IntegerParameter();
-                } else if (value instanceof Date) {
-                    parameter = new DateParameter();
-                } else {
-                    parameter = new StringParameter();
-                }
-
-                if (parameter != null) {
-                    parameter.setName(name);
-                }
-
-            } else {
-                parameter = dao.findByName(name);
-            }
-
-            if (parameter != null) {
-                if (parameter instanceof BooleanParameter && value instanceof Boolean) {
-                    ((BooleanParameter) parameter).setValue((Boolean) value);
-                } else if (parameter instanceof FloatParameter && value instanceof Float) {
-                    ((FloatParameter) parameter).setValue((Float) value);
-                } else if (parameter instanceof IntegerParameter && value instanceof Integer) {
-                    ((IntegerParameter) parameter).setValue((Integer) value);
-                } else if (parameter instanceof DateParameter && value instanceof Date) {
-                    ((DateParameter) parameter).setValue((Date) value);
-                } else if (parameter instanceof StringParameter) {
-                    ((StringParameter) parameter).setValue(value.toString());
-                }
-
-                dao.save(parameter);
-            }
-        }
+        this.setValue(name, null, value);
     }
+    
+   /** 
+    * {@inheritedDoc}
+    * 
+    * @throws IllegalAccessException
+    * @throws InstantiationException
+    */
+   @Override
+   public <V> void setValue(String name, String description, V value) {
+	   if (!StringUtil.isBlank(name) && value != null) {
+           AbstractParameter<?> parameter = null;
+           if (!existWithName(name)) {
+               if (value instanceof Boolean) {
+                   parameter = new BooleanParameter();
+               } else if (value instanceof Float) {
+                   parameter = new FloatParameter();
+               } else if (value instanceof Integer) {
+                   parameter = new IntegerParameter();
+               } else if (value instanceof Date) {
+                   parameter = new DateParameter();
+               } else {
+                   parameter = new StringParameter();
+               }
 
+               if (parameter != null) {
+                   parameter.setName(name);
+                   parameter.setDescription(description);
+               }
+
+           } else {
+               parameter = dao.findByName(name);
+           }
+
+           if (parameter != null) {
+               if (parameter instanceof BooleanParameter && value instanceof Boolean) {
+                   ((BooleanParameter) parameter).setValue((Boolean) value);
+               } else if (parameter instanceof FloatParameter && value instanceof Float) {
+                   ((FloatParameter) parameter).setValue((Float) value);
+               } else if (parameter instanceof IntegerParameter && value instanceof Integer) {
+                   ((IntegerParameter) parameter).setValue((Integer) value);
+               } else if (parameter instanceof DateParameter && value instanceof Date) {
+                   ((DateParameter) parameter).setValue((Date) value);
+               } else if (parameter instanceof StringParameter) {
+                   ((StringParameter) parameter).setValue(value.toString());
+               }
+               
+               dao.save(parameter);
+           }
+       }
+    }
     /**
      * {@inheritedDoc}
      */

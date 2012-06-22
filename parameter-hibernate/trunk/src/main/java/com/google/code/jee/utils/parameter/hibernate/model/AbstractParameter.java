@@ -37,6 +37,9 @@ public abstract class AbstractParameter<V extends Serializable> extends Abstract
 
     @Column(name = "PAR_TYPE", length = 50, nullable = false)
     protected String type;
+    
+    @Column(name = "PAR_DESCRIPTION", length = 255)
+    protected String description;
 
     /**
      * Instantiates a new parameter.
@@ -116,6 +119,24 @@ public abstract class AbstractParameter<V extends Serializable> extends Abstract
     }
 
     /**
+     * Gets the descriptions
+     * 
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * Sets the description.
+	 * 
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
      * Getter : return the value
      * 
      * @return the value

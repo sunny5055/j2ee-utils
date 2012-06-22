@@ -77,6 +77,16 @@ public interface ParameterService {
      * @param value the value
      */
     <V> void setValue(String name, V value);
+    
+    /**
+     * Sets the value.
+     * 
+     * @param <V> the value type
+     * @param name the name
+     * @param description the description
+     * @param value the value
+     */
+    <V> void setValue(String name, String description, V value);
 
     /**
      * Removes the value.

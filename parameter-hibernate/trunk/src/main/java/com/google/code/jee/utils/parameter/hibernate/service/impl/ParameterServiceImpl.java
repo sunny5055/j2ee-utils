@@ -3,12 +3,14 @@ package com.google.code.jee.utils.parameter.hibernate.service.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import com.google.code.jee.utils.collection.CollectionUtil;
 import com.google.code.jee.utils.dal.Result;
 import com.google.code.jee.utils.dal.SearchCriteria;
 import com.google.code.jee.utils.parameter.hibernate.dao.ParameterDao;
+import com.google.code.jee.utils.parameter.hibernate.enumeration.DateFormatEnum;
 import com.google.code.jee.utils.parameter.hibernate.model.AbstractParameter;
 import com.google.code.jee.utils.parameter.hibernate.model.BooleanParameter;
 import com.google.code.jee.utils.parameter.hibernate.model.DateParameter;
@@ -29,8 +32,9 @@ import com.google.code.jee.utils.parameter.hibernate.service.ParameterService;
 
 @Service
 public class ParameterServiceImpl implements ParameterService {
-    private static final String DEFAULT_DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
-
+	
+    private static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
+    
     @Autowired
     private ParameterDao dao;
 
@@ -162,47 +166,64 @@ public class ParameterServiceImpl implements ParameterService {
     */
    @Override
    public <V> void setValue(String name, String description, V value) {
-	   if (!StringUtil.isBlank(name) && value != null) {
-           AbstractParameter<?> parameter = null;
-           if (!existWithName(name)) {
-               if (value instanceof Boolean) {
-                   parameter = new BooleanParameter();
-               } else if (value instanceof Float) {
-                   parameter = new FloatParameter();
-               } else if (value instanceof Integer) {
-                   parameter = new IntegerParameter();
-               } else if (value instanceof Date) {
-                   parameter = new DateParameter();
-               } else {
-                   parameter = new StringParameter();
-               }
+	  this.setValue(name, description, value, null);   
+   }
 
-               if (parameter != null) {
-                   parameter.setName(name);
-                   parameter.setDescription(description);
-               }
-
-           } else {
-               parameter = dao.findByName(name);
-           }
-
-           if (parameter != null) {
-               if (parameter instanceof BooleanParameter && value instanceof Boolean) {
-                   ((BooleanParameter) parameter).setValue((Boolean) value);
-               } else if (parameter instanceof FloatParameter && value instanceof Float) {
-                   ((FloatParameter) parameter).setValue((Float) value);
-               } else if (parameter instanceof IntegerParameter && value instanceof Integer) {
-                   ((IntegerParameter) parameter).setValue((Integer) value);
-               } else if (parameter instanceof DateParameter && value instanceof Date) {
-                   ((DateParameter) parameter).setValue((Date) value);
-               } else if (parameter instanceof StringParameter) {
-                   ((StringParameter) parameter).setValue(value.toString());
-               }
-               
-               dao.save(parameter);
-           }
-       }
-    }
+   /** 
+    * {@inheritedDoc}
+    * 
+    * @throws IllegalAccessException
+    * @throws InstantiationException
+    */
+   @Override
+   public <V> void setValue(String name, String description, V value, String format) {
+		if (!StringUtil.isBlank(name) && value != null) {
+		    AbstractParameter<?> parameter = null;
+		    if (!existWithName(name)) {
+		        if (value instanceof Boolean) {
+		            parameter = new BooleanParameter();
+		        } else if (value instanceof Float) {
+		            parameter = new FloatParameter();
+		        } else if (value instanceof Integer) {
+		            parameter = new IntegerParameter();
+		        } else if (value instanceof Date) {
+		   		   parameter = new DateParameter();           		   		              		   
+		        } else {
+		            parameter = new StringParameter();
+		        }
+		
+		        if (parameter != null) {
+		            parameter.setName(name);
+		            parameter.setDescription(description);
+		        }
+		
+		    } else {
+		        parameter = dao.findByName(name);
+		    }
+		
+		    if (parameter != null) {
+		        if (parameter instanceof BooleanParameter && value instanceof Boolean) {
+		            ((BooleanParameter) parameter).setValue((Boolean) value);
+		        } else if (parameter instanceof FloatParameter && value instanceof Float) {
+		            ((FloatParameter) parameter).setValue((Float) value);
+		        } else if (parameter instanceof IntegerParameter && value instanceof Integer) {
+		            ((IntegerParameter) parameter).setValue((Integer) value);
+		        } else if (parameter instanceof DateParameter && value instanceof Date) {
+		            ((DateParameter) parameter).setValue((Date) value);
+		            if (format != null)
+		            	((DateParameter) parameter).setDateFormat(format);
+		            else {
+		            	((DateParameter) parameter).setDateFormat(DEFAULT_DATE_FORMAT);
+		            }
+		        } else if (parameter instanceof StringParameter) {
+		            ((StringParameter) parameter).setValue(value.toString());
+		        }
+		        
+		        dao.save(parameter);
+		    }
+		}
+   }
+   	
     /**
      * {@inheritedDoc}
      */
@@ -249,7 +270,11 @@ public class ParameterServiceImpl implements ParameterService {
                 for (final AbstractParameter<?> parameter : abstractParameters) {
                     String value = null;
                     if (parameter.getValue() instanceof Date) {
-                        value = DateUtil.format((Date) parameter.getValue(), dateFormat);
+                    	String format = ((DateParameter) parameter).getDateFormat();
+                    	if (StringUtils.isBlank(format)) {
+                    		format = dateFormat;
+                    	}
+                        value = DateUtil.format((Date) parameter.getValue(), format);
                     } else {
                         value = parameter.getValue().toString();
                     }
@@ -263,6 +288,8 @@ public class ParameterServiceImpl implements ParameterService {
 
     /**
      * {@inheritedDoc}
+     * 
+     * @throws IOException
      */
     @Override
     public void importProperties(InputStream inputStream) throws IOException {
@@ -282,7 +309,8 @@ public class ParameterServiceImpl implements ParameterService {
 
                 // Date
                 try {
-                    convertedValue = DateUtil.parseDate(value, dateFormat);
+                	DateFormat df = DateFormat.getInstance();
+                    convertedValue = df.parse(value);
                 } catch (final ParseException e) {
                     convertedValue = null;
                 }
@@ -291,7 +319,6 @@ public class ParameterServiceImpl implements ParameterService {
                 if (convertedValue == null) {
                     try {
                         convertedValue = Integer.parseInt(value);
-                        setValue(keyString, convertedValue);
                     } catch (final Exception e) {
                         convertedValue = null;
                     }
@@ -301,7 +328,6 @@ public class ParameterServiceImpl implements ParameterService {
                 if (convertedValue == null) {
                     try {
                         convertedValue = Float.parseFloat(value);
-                        setValue(keyString, convertedValue);
                     } catch (final Exception e) {
                         convertedValue = null;
                     }
@@ -317,7 +343,15 @@ public class ParameterServiceImpl implements ParameterService {
                     convertedValue = value;
                 }
 
-                setValue(keyString, convertedValue);
+                if (convertedValue instanceof Date) {
+                	String format = DateFormatEnum.DATE_TIME.getValue();
+                	if (value.matches("\\d{2}/\\d{2}/\\d{4}"))
+                		format = DateFormatEnum.DATE_ONLY.getValue();
+                	else if (value.matches("\\d{2}:\\d{2}:\\d{2}"))
+                		format = DateFormatEnum.TIME_ONLY.getValue();
+                	setValue(keyString, null, convertedValue, format);
+                } else
+                	setValue(keyString, convertedValue);
             }
         }
     }

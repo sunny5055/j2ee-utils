@@ -9,6 +9,7 @@ import java.util.Date;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.google.code.jee.utils.parameter.hibernate.enumeration.DateFormatEnum;
 import com.google.code.jee.utils.parameter.hibernate.model.AbstractParameter;
 import com.google.code.jee.utils.parameter.hibernate.model.BooleanParameter;
 import com.google.code.jee.utils.parameter.hibernate.model.DateParameter;
@@ -30,12 +31,16 @@ public class Demo {
         final StringParameter stringParameter = new StringParameter();
         final BooleanParameter booleanParameter = new BooleanParameter();
         final DateParameter dateParameter = new DateParameter();
+        final DateParameter timeParameter = new DateParameter();
+        final DateParameter dateTimeParameter = new DateParameter();
         final FloatParameter floatParameter = new FloatParameter();
 
         // Setting names
         integerParameter.setName("integerTest");
         floatParameter.setName("floatTest");
         dateParameter.setName("dateTest");
+        timeParameter.setName("timeTest");
+        dateTimeParameter.setName("dateTimeTest");
         booleanParameter.setName("booleanTest");
         stringParameter.setName("stringTest");
         
@@ -43,20 +48,31 @@ public class Demo {
         integerParameter.setDescription("An integer parameter");
         floatParameter.setDescription("A float parameter");
         dateParameter.setDescription("A date parameter");
+        timeParameter.setDescription("A time parameter");
+        dateTimeParameter.setDescription("A date time parameter");
         booleanParameter.setDescription("A boolean parameter");
         stringParameter.setDescription("A string parameter");
         
-        // Setting values0
+        // Setting values
         integerParameter.setValue(5020);
         floatParameter.setValue(2.F);
         dateParameter.setValue(new Date());
+        timeParameter.setValue(new Date());
+        dateTimeParameter.setValue(new Date());
         booleanParameter.setValue(true);
         stringParameter.setValue("A test string");
+        
+        // Setting date formats
+        dateParameter.setDateFormat(DateFormatEnum.DATE_ONLY.getValue());
+        timeParameter.setDateFormat(DateFormatEnum.TIME_ONLY.getValue());
+        dateTimeParameter.setDateFormat(DateFormatEnum.DATE_TIME.getValue());
 
         // setValue method call
         parameterService.setValue(integerParameter.getName(), integerParameter.getDescription(), integerParameter.getValue());
         parameterService.setValue(floatParameter.getName(), floatParameter.getDescription(), floatParameter.getValue());
-        parameterService.setValue(dateParameter.getName(), dateParameter.getDescription(), dateParameter.getValue());
+        parameterService.setValue(dateParameter.getName(), dateParameter.getDescription(), dateParameter.getValue(), dateParameter.getDateFormat());
+        parameterService.setValue(timeParameter.getName(), timeParameter.getDescription(), timeParameter.getValue(), timeParameter.getDateFormat());
+        parameterService.setValue(dateTimeParameter.getName(), dateTimeParameter.getDescription(), dateTimeParameter.getValue(), dateTimeParameter.getDateFormat());
         parameterService.setValue(booleanParameter.getName(), booleanParameter.getDescription(), booleanParameter.getValue());
         parameterService.setValue(stringParameter.getName(), stringParameter.getDescription(), stringParameter.getValue());
 
@@ -64,6 +80,8 @@ public class Demo {
         System.err.println(parameterService.getValue(integerParameter.getName()).toString());
         System.err.println(parameterService.getValue(floatParameter.getName()).toString());
         System.err.println(parameterService.getValue(dateParameter.getName()).toString());
+        System.err.println(parameterService.getValue(timeParameter.getName()).toString());
+        System.err.println(parameterService.getValue(dateTimeParameter.getName()).toString());
         System.err.println(parameterService.getValue(booleanParameter.getName()).toString());
         System.err.println(parameterService.getValue(stringParameter.getName()));
 
@@ -94,7 +112,7 @@ public class Demo {
                 + "/src/test/resources/properties/parameters.properties");
         parameterService.exportProperties(outputStream);
 
-        parameterService.removeAllValues();
+        //parameterService.removeAllValues();
 
         // import values into the database
         FileInputStream fileInputStream = null;

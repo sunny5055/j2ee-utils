@@ -14,9 +14,12 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 public class DateParameter extends AbstractParameter<Date> {
     public static final String DATE = "DATE";
-
+    
     @Column(name = "DAP_VALUE", nullable = false)
     private Date value;
+    
+    @Column(name = "DAP_DATE_FORMAT", nullable = false)
+    private String dateFormat;
 
     /**
      * Instantiates a new date parameter.
@@ -41,4 +44,22 @@ public class DateParameter extends AbstractParameter<Date> {
     public void setValue(Date value) {
         this.value = value;
     }
+
+	/**
+	 * Getter : return the date format
+	 * 
+	 * @return the dateFormat
+	 */
+	public String getDateFormat() {
+		return dateFormat;
+	}
+
+	/**
+	 * Setter : affect the date format
+	 * 
+	 * @param dateFormat the dateFormat to set
+	 */
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
+	}
 }

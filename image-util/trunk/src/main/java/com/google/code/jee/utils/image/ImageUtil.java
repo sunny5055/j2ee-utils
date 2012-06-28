@@ -1,5 +1,12 @@
 package com.google.code.jee.utils.image;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -7,11 +14,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import com.google.code.jee.utils.StringUtil;
 import com.google.code.jee.utils.collection.ArrayUtil;
+import com.google.code.jee.utils.collection.CollectionUtil;
 import com.mortennobel.imagescaling.ResampleOp;
 
 /**
@@ -320,5 +330,134 @@ public final class ImageUtil {
             }
         }
         return imageType;
+    }
+    
+    /**
+     * Resize image.
+     *
+     * @param originalImage the original image
+     * @param width the width
+     * @param height the height
+     * @param type the type
+     * @return the buffered image
+     */
+    public static BufferedImage resizeImage(BufferedImage originalImage, int width, int height, int type) {
+        BufferedImage resizedImage = new BufferedImage(width, height, type);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, width, height, null);
+        g.dispose();
+
+        return resizedImage;
+    }
+
+    /**
+     * Resize image with hint.
+     *
+     * @param originalImage the original image
+     * @param width the width
+     * @param height the height
+     * @param type the type
+     * @return the buffered image
+     */
+    public static BufferedImage resizeImageWithHint(BufferedImage originalImage, int width, int height, int type) {
+
+        BufferedImage resizedImage = new BufferedImage(width, height, type);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, width, height, null);
+        g.dispose();
+        g.setComposite(AlphaComposite.Src);
+
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        return resizedImage;
+    }
+    
+    /**
+     * Checks if is line bigger than borders.
+     *
+     * @param graphics the graphics
+     * @param line the line
+     * @param img the img
+     * @return true, if is line bigger than borders
+     */
+    public static boolean isLineBiggerThanBorders(Graphics2D graphics, String line, ImageIcon img) {
+        return graphics.getFontMetrics().getStringBounds(line, graphics).getWidth() > img.getIconWidth();
+    }
+
+    /**
+     * Adds the infos banner.
+     *
+     * @param image the image
+     * @param infos the infos
+     * @param policeName the police name
+     * @param policeSize the police size
+     * @param policeColor the police color
+     * @param backgroundColor the background color
+     * @return the buffered image
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public static BufferedImage addInfosBanner(String image, List<String> infos, String policeName, int policeSize,
+            Color policeColor, Color backgroundColor) throws IOException {
+        BufferedImage bufferedImage = null;
+        if (image != null && !CollectionUtil.isEmpty(infos) && !StringUtil.isEmpty(policeName) && policeColor != null
+                && backgroundColor != null) {
+            ImageIcon img = new ImageIcon(image);
+            int textPaneHeight = (int) (policeSize * (infos.size() + 1));
+            
+            bufferedImage = new BufferedImage(img.getIconWidth(), img.getIconHeight()
+                    + textPaneHeight, BufferedImage.TYPE_INT_RGB);
+
+            Graphics2D g2d = (Graphics2D) bufferedImage.getGraphics();
+
+            g2d.drawImage(img.getImage(), 0, textPaneHeight, null);
+            
+//            BufferedImage direstImage = ImageIO.read(new File("src/test/resources/Logo_DIR_Est.jpg"));
+//            int type = direstImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : direstImage.getType();
+//            BufferedImage direstImageResized = resizeImageWithHint(direstImage, 50, 62, type);
+//            ImageIO.write(direstImageResized, "jpg", new File("src/test/resources/logo_direst_resized.jpg")); 
+
+
+            g2d.setColor(backgroundColor);
+
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setFont(new Font(policeName, Font.PLAIN, policeSize));
+
+            FontMetrics fontMetrics = g2d.getFontMetrics();
+
+            Rectangle2D rect = fontMetrics.getStringBounds(infos.get(0), g2d);
+
+            // int x = (img.getIconWidth() - (int) rect.getWidth()) / 2;
+            // int y = (img.getIconHeight() - (int) rect.getHeight()) / 2;
+            int y = 0;
+            g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_SPEED);
+            g2d.fillRect(0, y, img.getIconWidth(), (int) rect.getHeight() * (infos.size()));
+
+            ImageIcon direstIcon = new ImageIcon("src/test/resources/logo_direst_resized.jpg");
+
+            g2d.drawImage(direstIcon.getImage(), 10, 5, direstIcon.getIconWidth(), direstIcon.getIconHeight(), null);
+            
+            g2d.setRenderingHint(
+                    RenderingHints.KEY_TEXT_ANTIALIASING,
+                    RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+            
+            g2d.setColor(policeColor);
+            for (int i = 0; i < infos.size(); i++) {
+                String line = infos.get(i);
+                if (isLineBiggerThanBorders(g2d, line, img)) {
+                    //line = splitStringFromList(infos, line, i);
+                }
+                g2d.drawString(line, direstIcon.getIconWidth() + 20, (int) (y + rect.getHeight()));
+                y += rect.getHeight();
+            }
+            g2d.drawString("", direstIcon.getIconWidth() + 20, 7);
+            // Free graphic resources
+            g2d.dispose();
+
+            
+        }
+        return bufferedImage;
     }
 }

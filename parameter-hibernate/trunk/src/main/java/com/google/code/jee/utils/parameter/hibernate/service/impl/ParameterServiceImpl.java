@@ -32,8 +32,6 @@ import com.google.code.jee.utils.parameter.hibernate.service.ParameterService;
 
 @Service
 public class ParameterServiceImpl implements ParameterService {
-	
-    private static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
     
     @Autowired
     private ParameterDao dao;
@@ -45,7 +43,7 @@ public class ParameterServiceImpl implements ParameterService {
      */
     public ParameterServiceImpl() {
         super();
-        this.dateFormat = DEFAULT_DATE_FORMAT;
+        this.dateFormat = DateFormatEnum.DATE_TIME.getValue();
     }
     
     /**
@@ -213,7 +211,7 @@ public class ParameterServiceImpl implements ParameterService {
 		            if (format != null)
 		            	((DateParameter) parameter).setDateFormat(format);
 		            else {
-		            	((DateParameter) parameter).setDateFormat(DEFAULT_DATE_FORMAT);
+		            	((DateParameter) parameter).setDateFormat(DateFormatEnum.DATE_TIME.getValue());
 		            }
 		        } else if (parameter instanceof StringParameter) {
 		            ((StringParameter) parameter).setValue(value.toString());
@@ -295,7 +293,7 @@ public class ParameterServiceImpl implements ParameterService {
     public void importProperties(InputStream inputStream) throws IOException {
         if (inputStream != null) {
             if (StringUtil.isBlank(dateFormat)) {
-                dateFormat = DEFAULT_DATE_FORMAT;
+                dateFormat =  DateFormatEnum.DATE_TIME.getValue();
             }
 
             // Load properties

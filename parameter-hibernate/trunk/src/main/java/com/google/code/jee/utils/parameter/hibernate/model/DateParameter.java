@@ -5,6 +5,10 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.google.code.jee.utils.DateUtil;
 
 /**
  * The Class DateParameter.
@@ -13,37 +17,38 @@ import javax.persistence.Table;
 @Table(name = "DAP_DATE_PARAMETER")
 @SuppressWarnings("serial")
 public class DateParameter extends AbstractParameter<Date> {
-    public static final String DATE = "DATE";
-    
-    @Column(name = "DAP_VALUE", nullable = false)
-    private Date value;
-    
-    @Column(name = "DAP_DATE_FORMAT", nullable = false)
-    private String dateFormat;
+	public static final String DATE = "DATE";
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "DAP_VALUE", nullable = false)
+	private Date value;
 
-    /**
-     * Instantiates a new date parameter.
-     */
-    public DateParameter() {
-        super();
-        this.type = DATE;
-    }
+	@Column(name = "DAP_DATE_FORMAT", length = 50, nullable = false)
+	private String dateFormat;
 
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public Date getValue() {
-        return value;
-    }
+	/**
+	 * Instantiates a new date parameter.
+	 */
+	public DateParameter() {
+		super();
+		this.type = DATE;
+	}
 
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public void setValue(Date value) {
-        this.value = value;
-    }
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public Date getValue() {
+		return value;
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public void setValue(Date value) {
+		this.value = value;
+	}
 
 	/**
 	 * Getter : return the date format
@@ -57,9 +62,19 @@ public class DateParameter extends AbstractParameter<Date> {
 	/**
 	 * Setter : affect the date format
 	 * 
-	 * @param dateFormat the dateFormat to set
+	 * @param dateFormat
+	 *            the dateFormat to set
 	 */
 	public void setDateFormat(String dateFormat) {
 		this.dateFormat = dateFormat;
+	}
+
+	/**
+	 * Getter : return the value as string.
+	 * 
+	 * @return the value as string
+	 */
+	public String getValueAsString() {
+		return DateUtil.format(value, dateFormat);
 	}
 }

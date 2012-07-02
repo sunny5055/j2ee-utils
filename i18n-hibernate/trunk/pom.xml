@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>i18n-hibernate</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.2</version>
 	<name>i18n-hibernate</name>
 
 	<parent>
@@ -12,9 +12,9 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/i18n-hibernate/trunk/</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/i18n-hibernate/trunk/</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/i18n-hibernate/trunk/</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/i18n-hibernate/tags/1.0.2</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/i18n-hibernate/tags/1.0.2</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/i18n-hibernate/tags/1.0.2</url>
 	</scm>
 
 	<dependencies>

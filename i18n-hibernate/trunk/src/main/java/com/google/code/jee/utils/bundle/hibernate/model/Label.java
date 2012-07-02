@@ -25,7 +25,7 @@ public class Label extends AbstractHibernateDto<LabelId> {
     @EmbeddedId
     private LabelId primaryKey;
 
-    @Column(name = "LAB_VALUE", length = 500, nullable = false)
+    @Column(name = "LAB_VALUE", length = 250, nullable = false)
     private String value;
 
     /**

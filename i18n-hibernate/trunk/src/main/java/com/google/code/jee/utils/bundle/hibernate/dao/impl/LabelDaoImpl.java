@@ -85,12 +85,12 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<LabelId, Label> im
                         if (entry.getKey().equals("key")) {
                             buffer.append("upper(l.primaryKey.key) like upper(:key) ");
                             search.addStringParameter("key", entry.getValue());
-                        } else if (entry.getKey().equals("value")) {
-                            buffer.append("upper(l.value) like upper(:value) ");
-                            search.addStringParameter("value", entry.getValue());
                         } else if (entry.getKey().equals("language")) {
                             buffer.append("upper(l.primaryKey.language) like upper(:language) ");
                             search.addStringParameter("language", entry.getValue());
+                        } else if (entry.getKey().equals("value")) {
+                            buffer.append("upper(l.value) like upper(:value) ");
+                            search.addStringParameter("value", entry.getValue());
                         }
                         index++;
                     }
@@ -108,6 +108,11 @@ public class LabelDaoImpl extends AbstractGenericDaoHibernate<LabelId, Label> im
                     }
                     if (entry.getKey().equals("key")) {
                         buffer.append("l.primaryKey.key ");
+                        if (entry.getValue() == SortOrder.DESCENDING) {
+                            buffer.append("desc ");
+                        }
+                    } else if (entry.getKey().equals("language")) {
+                        buffer.append("l.primaryKey.language ");
                         if (entry.getValue() == SortOrder.DESCENDING) {
                             buffer.append("desc ");
                         }

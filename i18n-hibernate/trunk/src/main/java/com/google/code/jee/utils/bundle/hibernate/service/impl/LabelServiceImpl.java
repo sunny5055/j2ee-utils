@@ -33,6 +33,38 @@ public class LabelServiceImpl extends AbstractGenericService<LabelId, Label, Lab
     }
 
     /**
+     * Gets the entity.
+     * 
+     * @param pk the primary key
+     * @return the entity
+     */
+    @Override
+    public Label get(String key, String language) {
+        Label label = null;
+        if (!StringUtil.isBlank(key) && !StringUtil.isBlank(key)) {
+            final LabelId primaryKey = new LabelId(key, language);
+            label = this.get(primaryKey);
+        }
+        return label;
+    }
+
+    /**
+     * Exist primary key.
+     * 
+     * @param pk the primary key
+     * @return true, if successful
+     */
+    @Override
+    public boolean exist(String key, String language) {
+        boolean exist = false;
+        if (!StringUtil.isBlank(key) && !StringUtil.isBlank(key)) {
+            final LabelId primaryKey = new LabelId(key, language);
+            exist = this.existPk(primaryKey);
+        }
+        return exist;
+    }
+
+    /**
      * {@inheritedDoc}
      */
     @Override
@@ -78,7 +110,7 @@ public class LabelServiceImpl extends AbstractGenericService<LabelId, Label, Lab
     @Override
     public void exportBundle(OutputStream outputStream, String language) throws IOException {
         if (outputStream != null && !StringUtil.isBlank(language)) {
-            final List<Label> labels = dao.findAllByLanguage(language);
+            final List<Label> labels = this.findAllByLanguage(language);
             if (!CollectionUtil.isEmpty(labels)) {
                 final Properties properties = new Properties();
                 for (final Label label : labels) {
@@ -111,7 +143,7 @@ public class LabelServiceImpl extends AbstractGenericService<LabelId, Label, Lab
                 label.setValue(value);
 
                 // Database insertion
-                dao.create(label);
+                this.create(label);
             }
         }
     }

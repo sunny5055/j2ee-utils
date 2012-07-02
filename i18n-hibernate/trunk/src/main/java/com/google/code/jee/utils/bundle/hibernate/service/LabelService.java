@@ -15,6 +15,22 @@ import com.google.code.jee.utils.dal.service.GenericService;
 public interface LabelService extends GenericService<LabelId, Label> {
 
     /**
+     * Gets the entity.
+     * 
+     * @param pk the primary key
+     * @return the entity
+     */
+    Label get(String key, String language);
+
+    /**
+     * Exist primary key.
+     * 
+     * @param pk the primary key
+     * @return true, if successful
+     */
+    boolean exist(String key, String language);
+
+    /**
      * Test the existence of an element with the parameter 'key'.
      * 
      * @param key the key

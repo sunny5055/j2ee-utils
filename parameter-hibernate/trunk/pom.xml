@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>parameter-hibernate</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.10-SNAPSHOT</version>
+	<version>1.0.10</version>
 	<name>parameter-hibernate</name>
 
 	<parent>
@@ -12,9 +12,9 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/parameter-hibernate/trunk/</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/parameter-hibernate/trunk/</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/parameter-hibernate/trunk/</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/parameter-hibernate/tags/1.0.10</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/parameter-hibernate/tags/1.0.10</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/parameter-hibernate/tags/1.0.10</url>
 	</scm>
 
 	<dependencies>

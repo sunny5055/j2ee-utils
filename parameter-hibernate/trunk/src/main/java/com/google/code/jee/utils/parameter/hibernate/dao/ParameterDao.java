@@ -59,19 +59,18 @@ public interface ParameterDao {
     AbstractParameter<?> findByName(String name);
 
     /**
-     * Save.
+     * Saves the paramter.
      * 
-     * @param dto the dto
+     * @param parameter the parameter
      * @return the integer
      */
-    Integer save(AbstractParameter<?> dto);
+    Integer save(AbstractParameter<?> parameter);
 
     /**
-     * Deletes the entity.
+     * Deletes the paramter.
      * 
-     * @param dto the dto
-     * @return the number of rows deleted
+     * @param parameter the parameter
+     * @return the integer
      */
-    Integer delete(AbstractParameter<?> dto);
-
+    Integer delete(AbstractParameter<?> parameter);
 }

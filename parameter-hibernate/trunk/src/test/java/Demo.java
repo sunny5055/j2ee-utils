@@ -1,24 +1,20 @@
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.google.code.jee.utils.parameter.hibernate.enumeration.DateFormatEnum;
 import com.google.code.jee.utils.parameter.hibernate.model.AbstractParameter;
-import com.google.code.jee.utils.parameter.hibernate.model.BooleanParameter;
-import com.google.code.jee.utils.parameter.hibernate.model.DateParameter;
-import com.google.code.jee.utils.parameter.hibernate.model.FloatParameter;
-import com.google.code.jee.utils.parameter.hibernate.model.IntegerParameter;
-import com.google.code.jee.utils.parameter.hibernate.model.StringParameter;
 import com.google.code.jee.utils.parameter.hibernate.service.ParameterService;
 
 public class Demo {
+    private static final Logger LOGGER = Logger.getLogger(Demo.class);
+
     public static void main(String[] args) throws IOException {
         final ApplicationContext context = new ClassPathXmlApplicationContext("spring/application-context.xml");
         final ParameterService parameterService = context.getBean(ParameterService.class);
@@ -26,102 +22,60 @@ public class Demo {
         // Test all values removal
         parameterService.removeAllValues();
 
-        // Creation of values of all types
-        final IntegerParameter integerParameter = new IntegerParameter();
-        final StringParameter stringParameter = new StringParameter();
-        final BooleanParameter booleanParameter = new BooleanParameter();
-        final DateParameter dateParameter = new DateParameter();
-        final DateParameter timeParameter = new DateParameter();
-        final DateParameter dateTimeParameter = new DateParameter();
-        final FloatParameter floatParameter = new FloatParameter();
-
-        // Setting names
-        integerParameter.setName("integerTest");
-        floatParameter.setName("floatTest");
-        dateParameter.setName("dateTest");
-        timeParameter.setName("timeTest");
-        dateTimeParameter.setName("dateTimeTest");
-        booleanParameter.setName("booleanTest");
-        stringParameter.setName("stringTest");
-        
-        // Setting descriptions
-        integerParameter.setDescription("An integer parameter");
-        floatParameter.setDescription("A float parameter");
-        dateParameter.setDescription("A date parameter");
-        timeParameter.setDescription("A time parameter");
-        dateTimeParameter.setDescription("A date time parameter");
-        booleanParameter.setDescription("A boolean parameter");
-        stringParameter.setDescription("A string parameter");
-        
-        // Setting values
-        integerParameter.setValue(5020);
-        floatParameter.setValue(2.F);
-        dateParameter.setValue(new Date());
-        timeParameter.setValue(new Date());
-        dateTimeParameter.setValue(new Date());
-        booleanParameter.setValue(true);
-        stringParameter.setValue("A test string");
-        
-        // Setting date formats
-        dateParameter.setDateFormat(DateFormatEnum.DATE_ONLY.getValue());
-        timeParameter.setDateFormat(DateFormatEnum.TIME_ONLY.getValue());
-        dateTimeParameter.setDateFormat(DateFormatEnum.DATE_TIME.getValue());
-
         // setValue method call
-        parameterService.setValue(integerParameter.getName(), integerParameter.getDescription(), integerParameter.getValue());
-        parameterService.setValue(floatParameter.getName(), floatParameter.getDescription(), floatParameter.getValue());
-        parameterService.setValue(dateParameter.getName(), dateParameter.getDescription(), dateParameter.getValue(), dateParameter.getDateFormat());
-        parameterService.setValue(timeParameter.getName(), timeParameter.getDescription(), timeParameter.getValue(), timeParameter.getDateFormat());
-        parameterService.setValue(dateTimeParameter.getName(), dateTimeParameter.getDescription(), dateTimeParameter.getValue(), dateTimeParameter.getDateFormat());
-        parameterService.setValue(booleanParameter.getName(), booleanParameter.getDescription(), booleanParameter.getValue());
-        parameterService.setValue(stringParameter.getName(), stringParameter.getDescription(), stringParameter.getValue());
+        parameterService.setValue("integerTest", "An integer parameter", 5020);
+        parameterService.setValue("floatTest", "A float parameter", 2.F);
+        parameterService.setValue("dateTest", "A date parameter", new Date(), DateFormatEnum.DATE_ONLY.getValue());
+        parameterService.setValue("timeTest", "A time parameter", new Date(), DateFormatEnum.TIME_ONLY.getValue());
+        parameterService.setValue("dateTimeTest", "A date time parameter", new Date(),
+                DateFormatEnum.DATE_TIME.getValue());
+        parameterService.setValue("booleanTest", "A boolean parameter", true);
+        parameterService.setValue("stringTest", "A string parameter", "A test string");
 
         // getValue test
-        System.err.println(parameterService.getValue(integerParameter.getName()).toString());
-        System.err.println(parameterService.getValue(floatParameter.getName()).toString());
-        System.err.println(parameterService.getValue(dateParameter.getName()).toString());
-        System.err.println(parameterService.getValue(timeParameter.getName()).toString());
-        System.err.println(parameterService.getValue(dateTimeParameter.getName()).toString());
-        System.err.println(parameterService.getValue(booleanParameter.getName()).toString());
-        System.err.println(parameterService.getValue(stringParameter.getName()));
+        LOGGER.debug("integerTest : " + parameterService.getValue("integerTest"));
+        LOGGER.debug("floatTest : " + parameterService.getValue("floatTest"));
+        LOGGER.debug("dateTest : " + parameterService.getValue("dateTest"));
+        LOGGER.debug("timeTest : " + parameterService.getValue("timeTest"));
+        LOGGER.debug("dateTimeTest : " + parameterService.getValue("dateTimeTest"));
+        LOGGER.debug("booleanTest : " + parameterService.getValue("booleanTest"));
+        LOGGER.debug("stringTest : " + parameterService.getValue("stringTest"));
 
         // count test
-        System.out.println(parameterService.count());
+        LOGGER.debug(parameterService.count());
 
-        //exists test
-        AbstractParameter<?> parameter = parameterService.findByName("integerTest");
-        System.out.println(parameter.getName());
-        System.out.println(parameter.getValue());
-        System.out.println(parameter.getType());
-        System.out.println(parameter.getDescription());
-        
+        // exists test
+        final AbstractParameter<?> parameter = parameterService.findByName("integerTest");
+        LOGGER.debug(parameter.getName());
+        LOGGER.debug(parameter.getValue());
+        LOGGER.debug(parameter.getType());
+        LOGGER.debug(parameter.getDescription());
+
         // findAll listing
-        for (AbstractParameter<?> param : parameterService.findAll()) {
-            System.out.println(param.getName());
-            System.out.println(param.getType());
-            System.out.println(param.getDescription());
+        for (final AbstractParameter<?> param : parameterService.findAll()) {
+            LOGGER.debug(param.getName() + " - " + param.getType() + " : " + param.getDescription());
         }
 
         // Test existsWithName
-        System.out.println(parameterService.existWithName("test"));
+        LOGGER.debug(parameterService.existWithName("test"));
 
         final String currentDirectoryPath = new File(".").getCanonicalPath();
 
         // export properties
-        OutputStream outputStream = new FileOutputStream(currentDirectoryPath
+        final OutputStream outputStream = new FileOutputStream(currentDirectoryPath
                 + "/src/test/resources/properties/parameters.properties");
         parameterService.exportProperties(outputStream);
 
-        //parameterService.removeAllValues();
+        // parameterService.removeAllValues();
 
-        // import values into the database
-        FileInputStream fileInputStream = null;
-        try {
-            fileInputStream = new FileInputStream(currentDirectoryPath
-                    + "/src/test/resources/properties/parameters.properties");
-        } catch (final FileNotFoundException e1) {
-            e1.printStackTrace();
-        }
-        parameterService.importProperties(fileInputStream);
+        // // import values into the database
+        // FileInputStream fileInputStream = null;
+        // try {
+        // fileInputStream = new FileInputStream(currentDirectoryPath
+        // + "/src/test/resources/properties/parameters.properties");
+        // } catch (final FileNotFoundException e1) {
+        // e1.printStackTrace();
+        // }
+        // parameterService.importProperties(fileInputStream);
     }
 }

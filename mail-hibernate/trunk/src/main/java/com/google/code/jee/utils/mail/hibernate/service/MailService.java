@@ -34,7 +34,7 @@ public interface MailService extends GenericService<Integer, Mail> {
      * @param attachmentName the attachment name
      * @return true, if success
      */
-    boolean existWithMailIdAndName(Integer mailId, String attachmentName);
+    boolean existAttachmentWithName(Integer mailId, String attachmentName);
 
     /**
      * Search a mail attachment with its name and its mail primary key.
@@ -43,7 +43,7 @@ public interface MailService extends GenericService<Integer, Mail> {
      * @param attachmentName the attachment name
      * @return the mail attachment
      */
-    MailAttachment findByMailIdAndName(Integer mailId, String attachmentName);
+    MailAttachment findAttachmentByName(Integer mailId, String attachmentName);
 
     /**
      * Count a mail numbers of attachments
@@ -51,7 +51,7 @@ public interface MailService extends GenericService<Integer, Mail> {
      * @param mailId the mailId
      * @return the number of attachments corresponding to the mail id
      */
-    Integer countForMailId(Integer mailId);
+    Integer countAttachmentForMailId(Integer mailId);
 
     /**
      * Search all the mail's attachments.
@@ -59,6 +59,6 @@ public interface MailService extends GenericService<Integer, Mail> {
      * @param mailPrimaryKey the mail primary key
      * @return the list
      */
-    List<MailAttachment> findAllByMailId(Integer mailId);
+    List<MailAttachment> findAllAttachmentsByMailId(Integer mailId);
 
 }

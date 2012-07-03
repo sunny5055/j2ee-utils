@@ -95,9 +95,9 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
         if (mailId != null && searchCriteria != null) {
             search = new Search();
             final StringBuilder buffer = new StringBuilder();
-            buffer.append("from Mail mai ");
+            buffer.append("from Mail m ");
             buffer.append("left join mai.attachments as attachment ");
-            buffer.append("where mai.id = :mailId ");
+            buffer.append("where m.id = :mailId ");
             search.addIntegerParameter("mailId", mailId);
 
             if (searchCriteria.hasFilters()) {
@@ -127,7 +127,7 @@ public class MailAttachmentDaoImpl extends AbstractGenericDaoHibernate<Integer, 
                         buffer.append(", ");
                     }
                     if (entry.getKey().equals("name")) {
-                        buffer.append("maa.name ");
+                        buffer.append("attachment.name ");
                         if (entry.getValue() == SortOrder.DESCENDING) {
                             buffer.append("desc ");
                         }

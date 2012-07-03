@@ -21,10 +21,10 @@ import com.google.code.jee.utils.mail.hibernate.dao.MailAttachmentDao;
 @NamedQueries({
         @NamedQuery(name = MailAttachmentDao.COUNT_BY_NAME, query = "select count(*) from MailAttachment as m where m.name = :name"),
         @NamedQuery(name = MailAttachmentDao.FIND_BY_NAME, query = "from MailAttachment as m where m.name = :name"),
-        @NamedQuery(name = MailAttachmentDao.COUNT_FOR_MAIL_ID, query = "select count(*) from Mail as m where m.id = :id"),
-        @NamedQuery(name = MailAttachmentDao.FIND_ALL_BY_MAIL_ID, query = "select attachment from Mail as mai left join mai.attachments as attachment where mai.id = :mailId"),
-        @NamedQuery(name = MailAttachmentDao.COUNT_FOR_MAIL_ID_AND_NAME, query = "select count(*) from Mail as m where m.id = :id and m.name = :name"),
-        @NamedQuery(name = MailAttachmentDao.FIND_BY_MAIL_ID_AND_NAME, query = "select attachment from Mail as mai left join mai.attachments as attachment where mai.id = :mailId and attachment.name = :attachmentName") })
+        @NamedQuery(name = MailAttachmentDao.COUNT_FOR_MAIL_ID, query = "select count(attachment) from Mail as m left join mai.attachments as attachment where m.id = :mailId"),
+        @NamedQuery(name = MailAttachmentDao.FIND_ALL_BY_MAIL_ID, query = "select attachment from Mail as m left join mai.attachments as attachment where m.id = :mailId"),
+        @NamedQuery(name = MailAttachmentDao.COUNT_FOR_MAIL_ID_AND_NAME, query = "select count(attachment) from Mail as m left join mai.attachments as attachment where m.id = :mailId and attachment.name = :attachmentName"),
+        @NamedQuery(name = MailAttachmentDao.FIND_BY_MAIL_ID_AND_NAME, query = "select attachment from Mail as m left join mai.attachments as attachment where m.id = :mailId and attachment.name = :attachmentName") })
 @SuppressWarnings("serial")
 public class MailAttachment extends AbstractHibernateDto<Integer> {
 

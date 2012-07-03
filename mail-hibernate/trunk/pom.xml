@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>mail-hibernate</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.2</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<name>mail</name>
 
 	<parent>
@@ -12,9 +12,9 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/mail-hibernate/tags/1.0.2</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/mail-hibernate/tags/1.0.2</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/mail-hibernate/tags/1.0.2</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/mail-hibernate/trunk/</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/mail-hibernate/trunk/</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/mail-hibernate/trunk/</url>
 	</scm>
 
 	<dependencies>

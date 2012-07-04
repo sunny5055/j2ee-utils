@@ -9,6 +9,8 @@ import java.util.Vector;
 import org.apache.commons.io.FilenameUtils;
 
 import com.google.code.jee.utils.StringUtil;
+import com.google.code.jee.utils.collection.ArrayUtil;
+import com.google.code.jee.utils.collection.CollectionUtil;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
@@ -41,26 +43,23 @@ public final class SftpUtil {
      * @return the channel
      * @throws JSchException the Jsch exception
      */
-    public static Channel getChannel(String channelType, String host, int port, String user, String password)
+    public static Channel getChannel(String channelType, String host, Integer port, String user, String password)
             throws JSchException {
-        Session session = null;
         Channel channel = null;
+        if (!StringUtil.isBlank(channelType) && !StringUtil.isBlank(host) && port != null && !StringUtil.isBlank(user)
+                && !StringUtil.isBlank(password)) {
+            final JSch jsch = new JSch();
+            final Session session = jsch.getSession(user, host, port);
+            session.setPassword(password);
 
-        // Create the connexion with the appropriate parameters
-        JSch jsch = new JSch();
-        session = jsch.getSession(user, host, port);
-        session.setPassword(password);
+            final Properties config = new Properties();
+            config.put("StrictHostKeyChecking", "no");
+            session.setConfig(config);
+            session.connect();
 
-        // Setup Strict HostKeyChecking to no so we dont get the
-        // unknown host key exception
-        Properties config = new Properties();
-        config.put("StrictHostKeyChecking", "no");
-        session.setConfig(config);
-        session.connect();
-
-        // Open the channel
-        channel = session.openChannel(channelType);
-        channel.connect();
+            channel = session.openChannel(channelType);
+            channel.connect();
+        }
 
         return channel;
     }
@@ -80,124 +79,68 @@ public final class SftpUtil {
     }
 
     /**
-     * Download file.
+     * Checks if the element exists.
      * 
-     * @param channel the channel
      * @param workingDirectory the working directory
-     * @param fileName the file name
-     * @return the input stream
+     * @param elementName the element name
+     * 
+     * @return true, if element exists
      * @throws SftpException the sftp exception
      */
-    public static InputStream downloadFile(ChannelSftp channel, String workingDirectory, String fileName)
-            throws SftpException {
-        InputStream bis = null;
-        if (!StringUtil.isEmpty(workingDirectory) && !StringUtil.isEmpty(fileName)) {
-            // Fix the workingDirectory by appending a "/" at the end
-            if (workingDirectory.lastIndexOf("/") == workingDirectory.length() - 1) {
-                workingDirectory = workingDirectory.substring(0, workingDirectory.length() - 1);
-            }
-            String baseName = FilenameUtils.getBaseName(workingDirectory);
-            String basePath = FilenameUtils.getPath(workingDirectory);
-            if (SftpUtil.isDirectoryExisting(channel, baseName, basePath)) {
-                channel.cd(workingDirectory);
-                bis = new BufferedInputStream(channel.get(fileName));
-            }
+    public static boolean exist(ChannelSftp channel, String workingDirectory, String elementName) throws SftpException {
+        boolean exists = false;
+        if (!StringUtil.isBlank(workingDirectory) && !StringUtil.isBlank(elementName)) {
+            String elementPath = FilenameUtils.concat(workingDirectory, elementName);
+            elementPath = FilenameUtils.separatorsToUnix(elementPath);
+
+            exists = exist(channel, elementPath);
         }
-        return bis;
+
+        return exists;
     }
 
     /**
-     * Download file.
+     * Checks if the element exists.
      * 
      * @param channel the channel
-     * @param filePath the file path
-     * @return the input stream
+     * @param elementPath the element path
+     * @return true, if element exists
      * @throws SftpException the sftp exception
      */
-    public static InputStream downloadFile(ChannelSftp channel, String filePath) throws SftpException {
-        String fullPath = FilenameUtils.getFullPath(filePath);
-        if (StringUtil.isEmpty(fullPath)) {
-            fullPath = "/";
-        }
 
-        return downloadFile(channel, fullPath);
-    }
-
-    /**
-     * Upload file.
-     * 
-     * @param channel the channel
-     * @param uploadFile the upload file
-     * @param workingDirectory the working directory
-     * @throws SftpException the sftp exception
-     * @throws FileNotFoundException the file not found exception
-     */
-    public static boolean uploadFile(ChannelSftp channel, InputStream file, String fileName, String workingDirectory)
-            throws SftpException, FileNotFoundException {
-        if (file != null && !StringUtil.isEmpty(workingDirectory) && !StringUtil.isEmpty(fileName)) {
-            // Fix the workingDirectory by appending a "/" at the end
-            if (workingDirectory.lastIndexOf("/") == workingDirectory.length() - 1) {
-                workingDirectory = workingDirectory.substring(0, workingDirectory.length() - 1);
-            }
-            String baseName = FilenameUtils.getBaseName(workingDirectory);
-            String basePath = FilenameUtils.getPath(workingDirectory);
-            if (!SftpUtil.isDirectoryExisting(channel, baseName, basePath)) {
-                createDirectory(channel, baseName, basePath);
-            }
-            String uploadPath = workingDirectory + "/" + fileName;
-            if (!isFileExisting(channel, fileName, workingDirectory)) {
-                channel.put(file, uploadPath);
+    public static boolean exist(ChannelSftp channel, String elementPath) throws SftpException {
+        boolean exists = false;
+        if (channel != null && !StringUtil.isBlank(elementPath) && StringUtil.startsWith(elementPath, "/")) {
+            try {
+                final SftpATTRS attrs = channel.stat(elementPath);
+                exists = attrs != null;
+            } catch (final SftpException e) {
+                exists = false;
             }
         }
-        return isFileExisting(channel, fileName, workingDirectory);
-    }
 
-    /**
-     * Upload file.
-     * 
-     * @param channel the channel
-     * @param file the file
-     * @param filePath the file path
-     * @return true, if successful
-     * @throws FileNotFoundException the file not found exception
-     * @throws SftpException the sftp exception
-     */
-    public static boolean uploadFile(ChannelSftp channel, InputStream file, String filePath)
-            throws FileNotFoundException, SftpException {
-        return uploadFile(channel, file, FilenameUtils.getName(filePath), FilenameUtils.getFullPath(filePath));
+        return exists;
     }
 
     /**
      * Creates the directory.
      * 
      * @param channel the channel
-     * @param directoryName the directory name
      * @param workingDirectory the working directory
+     * @param directoryName the directory name
      * @throws SftpException the sftp exception
      */
-    public static boolean createDirectory(ChannelSftp channel, String directoryName, String workingDirectory)
+    public static boolean createDirectory(ChannelSftp channel, String workingDirectory, String directoryName)
             throws SftpException {
-        if (!StringUtil.isEmpty(directoryName) && !StringUtil.isEmpty(workingDirectory)) {
-            // If the directory doesn't exist, we create the tree hierarchy
-            // until we reach the leaf directory
-            if (!isDirectoryExisting(channel, directoryName, workingDirectory)) {
-                String[] paths = workingDirectory.split("/");
-                String currentPath = paths[0] + "/";
-                channel.cd(currentPath);
-                // For each directory, we create it if he doesn't exist
-                for (int i = 1; i < paths.length; i++) {
-                    String path = paths[i];
-                    if (!isDirectoryExisting(channel, path, currentPath)) {
-                        channel.mkdir(path);
-                    }
-                    currentPath += path + "/";
-                    channel.cd(path);
-                }
-                // Create the leaf directory
-                channel.mkdir(directoryName);
-            }
+        boolean created = false;
+        if (!StringUtil.isBlank(workingDirectory) && !StringUtil.isBlank(directoryName)) {
+            String directoryPath = FilenameUtils.concat(workingDirectory, directoryName);
+            directoryPath = FilenameUtils.separatorsToUnix(directoryPath);
+
+            created = createDirectory(channel, directoryPath);
         }
-        return isDirectoryExisting(channel, directoryName, workingDirectory);
+
+        return created;
     }
 
     /**
@@ -210,329 +153,405 @@ public final class SftpUtil {
      */
 
     public static boolean createDirectory(ChannelSftp channel, String directoryPath) throws SftpException {
-        String correctPath = FilenameUtils.getPath(directoryPath);
-        if (directoryPath.startsWith("./")) {
-            correctPath = "./" + correctPath;
-        } else if (directoryPath.startsWith("/")) {
-            correctPath = "/" + correctPath;
-        }
+        boolean created = false;
+        if (channel != null && !StringUtil.isBlank(directoryPath) && StringUtil.startsWith(directoryPath, "/")) {
+            if (!exist(channel, directoryPath)) {
+                created = true;
+                final String[] paths = StringUtil.split(directoryPath, "/");
+                if (!ArrayUtil.isEmpty(paths)) {
+                    String currentPath = "/";
 
-        return createDirectory(channel, FilenameUtils.getBaseName(directoryPath), correctPath);
-    }
+                    channel.cd(currentPath);
 
-    /**
-     * Rename a directory.
-     * 
-     * @param channel the channel
-     * @param oldName the old name
-     * @param newName the new name
-     * @param workingDirectory the working directory
-     * @throws SftpException the sftp exception
-     */
-    public static boolean renameDirectory(ChannelSftp channel, String oldName, String newName, String workingDirectory)
-            throws SftpException {
-        boolean success = true;
-        if (!StringUtil.isEmpty(oldName) && !StringUtil.isEmpty(newName) && !StringUtil.isEmpty(workingDirectory)) {
-            if (isDirectoryExisting(channel, oldName, workingDirectory)) {
-                channel.cd(workingDirectory);
-                try {
-                    channel.rename(oldName, newName);
-                } catch (Exception e) {
-                    success = false;
+                    for (final String path : paths) {
+                        if (!exist(channel, currentPath, path)) {
+                            try {
+                                channel.mkdir(path);
+                            } catch (final SftpException e) {
+                                created = false;
+                            }
+                        }
+                        currentPath += path + "/";
+                        channel.cd(path);
+                    }
                 }
             }
         }
-        return success;
+
+        return created;
     }
 
     /**
-     * Rename file.
+     * Deletes the element.
      * 
      * @param channel the channel
-     * @param oldName the old name
-     * @param newName the new name
-     * @param workingDirectory the working directory
+     * @param element the element
+     * @return true, if successfulf
      * @throws SftpException the sftp exception
      */
-    public static boolean renameFile(ChannelSftp channel, String oldName, String newName, String workingDirectory)
-            throws SftpException {
-        boolean exists = true;
+    public static boolean delete(ChannelSftp channel, String element) throws SftpException {
+        boolean deleted = false;
+        if (!StringUtil.isBlank(element)) {
+            final String workingDirectory = getPathNoEndSeparator(element);
+            final String elementName = getElementName(element);
 
-        if (StringUtil.isNotEmpty(oldName) && StringUtil.isNotEmpty(newName) && StringUtil.isNotEmpty(workingDirectory)) {
-            // Fix the workingDirectory by appending a "/" at the end
-            if (workingDirectory.lastIndexOf("/") == workingDirectory.length() - 1) {
-                workingDirectory = workingDirectory.substring(0, workingDirectory.length() - 1);
-            }
-            if (SftpUtil.isDirectoryExisting(channel, FilenameUtils.getBaseName(workingDirectory),
-                    FilenameUtils.getPath(workingDirectory))) {
-                channel.cd(workingDirectory);
-                try {
-                    channel.rename(oldName, newName);
-                } catch (Exception e) {
-                    return false;
+            deleted = delete(channel, workingDirectory, elementName);
+        }
+
+        return deleted;
+    }
+
+    /**
+     * Deletes the element.
+     * 
+     * @param channel the channel
+     * @param workingDirectory the working directory
+     * @param elementName the element name
+     * @throws SftpException the sftp exception
+     */
+    @SuppressWarnings("unchecked")
+    public static boolean delete(ChannelSftp channel, String workingDirectory, String elementName) throws SftpException {
+        boolean deleted = false;
+        if (channel != null && !StringUtil.isBlank(workingDirectory) && StringUtil.startsWith(workingDirectory, "/")
+                && !StringUtil.isBlank(elementName)) {
+            if (exist(channel, workingDirectory, elementName)) {
+                if (isDirectory(channel, workingDirectory, elementName)) {
+                    if (isDirectoryEmpty(channel, workingDirectory, elementName)) {
+                        channel.cd(workingDirectory);
+                        channel.rmdir(elementName);
+                        deleted = true;
+                    } else {
+                        String directoryPath = FilenameUtils.concat(workingDirectory, elementName);
+                        directoryPath = FilenameUtils.separatorsToUnix(directoryPath);
+
+                        channel.cd(workingDirectory);
+                        final Vector<LsEntry> files = channel.ls(elementName);
+                        if (!CollectionUtil.isEmpty(files)) {
+                            for (final LsEntry file : files) {
+                                if (!file.getFilename().equals(".") && !file.getFilename().equals("..")) {
+                                    deleted = delete(channel, directoryPath, file.getFilename());
+                                }
+
+                                if (!deleted) {
+                                    break;
+                                }
+                            }
+
+                            if (deleted) {
+                                deleted = false;
+                                channel.cd(workingDirectory);
+                                channel.rmdir(elementName);
+                                deleted = true;
+                            }
+                        }
+                    }
+                } else {
+                    channel.cd(workingDirectory);
+                    channel.rm(elementName);
+                    deleted = true;
                 }
             }
         }
-        return exists;
+
+        return deleted;
     }
 
     /**
-     * Rename file.
+     * Rename an element.
      * 
      * @param channel the channel
+     * @param oldElement the old element
      * @param newName the new name
+     * @throws SftpException the sftp exception
+     */
+    public static boolean rename(ChannelSftp channel, String oldElement, String newName) throws SftpException {
+        boolean renamed = false;
+        if (channel != null && !StringUtil.isBlank(oldElement) && StringUtil.startsWith(oldElement, "/")
+                && !StringUtil.isBlank(newName)) {
+            final String workingDirectoryOld = getPathNoEndSeparator(oldElement);
+            final String oldName = getElementName(oldElement);
+
+            renamed = rename(channel, workingDirectoryOld, oldName, newName);
+        }
+        return renamed;
+    }
+
+    /**
+     * Rename an element.
+     * 
+     * @param channel the channel
      * @param workingDirectory the working directory
+     * @param oldName the old name
+     * @param newName the new name
+     * @throws SftpException the sftp exception
+     */
+    public static boolean rename(ChannelSftp channel, String workingDirectory, String oldName, String newName)
+            throws SftpException {
+        boolean renamed = false;
+        if (channel != null && !StringUtil.isBlank(workingDirectory) && StringUtil.startsWith(workingDirectory, "/")
+                && !StringUtil.isBlank(oldName) && !StringUtil.isBlank(newName)) {
+            if (exist(channel, workingDirectory)) {
+                String oldElement = FilenameUtils.concat(workingDirectory, oldName);
+                oldElement = FilenameUtils.separatorsToUnix(oldElement);
+
+                String newElement = FilenameUtils.concat(workingDirectory, newName);
+                newElement = FilenameUtils.separatorsToUnix(newElement);
+
+                if (exist(channel, oldElement)) {
+                    try {
+                        channel.cd(workingDirectory);
+                        channel.rename(oldElement, newElement);
+                        renamed = true;
+                    } catch (final SftpException e) {
+                        renamed = false;
+                    }
+                }
+            }
+        }
+        return renamed;
+    }
+
+    /**
+     * Move.
+     * 
+     * @param channel the channel
+     * @param oldElement the old element
+     * @param newElement the new element
      * @return true, if successful
      * @throws SftpException the sftp exception
      */
-    public static boolean renameFile(ChannelSftp channel, String newName, String workingDirectory) throws SftpException {
-        String oldName = FilenameUtils.getName(workingDirectory);
-        String filePath = FilenameUtils.getPath(workingDirectory);
-        if (workingDirectory.startsWith("./")) {
-            filePath = "./" + filePath;
-        } else if (workingDirectory.startsWith("/")) {
-            filePath = "/" + filePath;
-        }
-        return renameFile(channel, oldName, newName, filePath);
-    }
+    public static boolean move(ChannelSftp channel, String oldElement, String newElement) throws SftpException {
+        boolean copied = false;
+        if (channel != null && !StringUtil.isBlank(oldElement) && StringUtil.startsWith(oldElement, "/")
+                && !StringUtil.isBlank(newElement) && StringUtil.startsWith(newElement, "/")) {
 
-    /**
-     * Deletes the directory.
-     * 
-     * @param channel the channel
-     * @param directoryName the directory name
-     * @param workingDirectory the working directory
-     * @throws SftpException the sftp exception
-     */
-    public static boolean deleteDirectory(ChannelSftp channel, String directoryName, String workingDirectory)
-            throws SftpException {
-        boolean success = true;
-        if (StringUtil.isNotEmpty(directoryName) && StringUtil.isNotEmpty(workingDirectory)) {
-            if (isDirectoryExisting(channel, directoryName, workingDirectory)) {
-                if (isDirectoryEmpty(channel, directoryName, workingDirectory)) {
-                    channel.rmdir(directoryName);
-                } else {
-                    channel.cd(workingDirectory);
-                    Vector files = channel.ls(directoryName);
-
-                    for (int i = 0; i < files.size(); i++) {
-                        LsEntry lsEntry = (LsEntry) files.get(i);
-
-                        if (!lsEntry.getFilename().equals(".") && !lsEntry.getFilename().equals("..")) {
-                            System.out.println("Downloading file" + lsEntry.getFilename());
-
-                            channel.rm(lsEntry.getFilename());
-                        }
-                    }
+            if (exist(channel, oldElement)) {
+                try {
+                    channel.rename(oldElement, newElement);
+                    copied = true;
+                } catch (final SftpException e) {
+                    copied = false;
                 }
-            } else {
-                success = false;
             }
         }
-        return success;
+        return copied;
     }
 
     /**
-     * Deletes the directory.
-     * 
-     * @param channel the channel
-     * @param directoryPath the directory path
-     * @return true, if successfulfd
-     * @throws SftpException the sftp exception
-     */
-    public static boolean deleteDirectory(ChannelSftp channel, String directoryPath) throws SftpException {
-        return deleteDirectory(channel, FilenameUtils.getBaseName(directoryPath),
-                FilenameUtils.getFullPath(directoryPath));
-    }
-
-    /**
-     * Deletes the file.
-     * 
-     * @param channel the channel
-     * @param fileName the file name
-     * @param workingDirectory the working directory
-     * @throws SftpException the sftp exception
-     */
-    public static boolean deleteFile(ChannelSftp channel, String fileName, String workingDirectory)
-            throws SftpException {
-        boolean success = true;
-
-        if (!StringUtil.isEmpty(workingDirectory) && !StringUtil.isEmpty(fileName)) {
-            if (SftpUtil.isDirectoryExisting(channel, FilenameUtils.getBaseName(workingDirectory),
-                    FilenameUtils.getPath(workingDirectory))) {
-                channel.cd(workingDirectory);
-                if (isFileExisting(channel, fileName, workingDirectory)) {
-                    channel.rm(fileName);
-                } else {
-                    success = false;
-                }
-            } else {
-                success = false;
-            }
-        } else {
-            success = false;
-        }
-
-        return success;
-    }
-
-    /**
-     * Deletes the file.
+     * Download file.
      * 
      * @param channel the channel
      * @param filePath the file path
-     * @return true, if successful
+     * @return the input stream
      * @throws SftpException the sftp exception
      */
-    public static boolean deleteFile(ChannelSftp channel, String filePath) throws SftpException {
-        return deleteFile(channel, filePath, FilenameUtils.getFullPath(filePath));
+    public static InputStream downloadFile(ChannelSftp channel, String filePath) throws SftpException {
+        InputStream inputStream = null;
+        if (!StringUtil.isBlank(filePath)) {
+            final String workingDirectory = getPathNoEndSeparator(filePath);
+            final String fileName = getElementName(filePath);
+
+            inputStream = downloadFile(channel, workingDirectory, fileName);
+        }
+        return inputStream;
     }
 
     /**
-     * Change rights.
+     * Download file.
      * 
      * @param channel the channel
-     * @param permissions the permissions
-     * @param directoryPath the directory path
+     * @param workingDirectory the working directory
+     * @param fileName the file name
+     * @return the input stream
      * @throws SftpException the sftp exception
      */
-    public static void changeRights(ChannelSftp channel, int permissions, String directoryName, String workingDirectory)
+    public static InputStream downloadFile(ChannelSftp channel, String workingDirectory, String fileName)
             throws SftpException {
-        channel.cd(workingDirectory);
-        channel.chmod(permissions, directoryName);
+        InputStream inputStream = null;
+        if (channel != null && !StringUtil.isEmpty(workingDirectory) && StringUtil.startsWith(workingDirectory, "/")
+                && !StringUtil.isEmpty(fileName)) {
+            if (exist(channel, workingDirectory, fileName)) {
+                channel.cd(workingDirectory);
+                inputStream = new BufferedInputStream(channel.get(fileName));
+            }
+        }
+        return inputStream;
     }
 
     /**
-     * Checks if the directory exists.
+     * Upload file.
      * 
-     * @param directoryName the directory name
-     * @param workingDirectory the working directory
-     * @return true, if is directory existing
+     * @param channel the channel
+     * @param inputStream the file
+     * @param filePath the file path
+     * @return true, if successful
+     * @throws FileNotFoundException the file not found exception
      * @throws SftpException the sftp exception
      */
-    public static boolean isDirectoryExisting(ChannelSftp channel, String directoryName, String workingDirectory)
-            throws SftpException {
-        boolean exists = true;
+    public static boolean uploadFile(ChannelSftp channel, InputStream inputStream, String filePath)
+            throws FileNotFoundException, SftpException {
+        boolean upload = false;
+        if (!StringUtil.isBlank(filePath)) {
+            final String workingDirectory = getPathNoEndSeparator(filePath);
+            final String fileName = getElementName(filePath);
 
-        if (StringUtil.isNotEmpty(directoryName) && StringUtil.isNotEmpty(workingDirectory)) {
-            try {
-                String directoryPath = "";
-                if (workingDirectory.startsWith("./")) {
-                    directoryPath += "./";
-                } else if (!workingDirectory.startsWith("/")) {
-                    directoryPath += "/";
-                }
-                directoryPath += FilenameUtils.separatorsToUnix(FilenameUtils.concat(workingDirectory, directoryName));
-                SftpATTRS attrs = channel.lstat(directoryPath);
-                exists = attrs != null && attrs.isDir();
-            } catch (Exception e) {
-                exists = false;
+            upload = uploadFile(channel, inputStream, workingDirectory, fileName);
+        }
+        return upload;
+    }
+
+    /**
+     * Upload file.
+     * 
+     * @param channel the channel
+     * @param workingDirectory the working directory
+     * @param uploadFile the upload file
+     * @throws SftpException the sftp exception
+     * @throws FileNotFoundException the file not found exception
+     */
+    public static boolean uploadFile(ChannelSftp channel, InputStream inputStream, String workingDirectory,
+            String fileName) throws SftpException, FileNotFoundException {
+        boolean upload = false;
+        if (channel != null && inputStream != null && !StringUtil.isEmpty(workingDirectory)
+                && StringUtil.startsWith(workingDirectory, "/") && !StringUtil.isEmpty(fileName)) {
+            boolean exist = exist(channel, workingDirectory);
+            if (!exist) {
+                exist = createDirectory(channel, workingDirectory);
             }
-        } else {
-            exists = false;
+
+            if (exist) {
+                String uploadPath = FilenameUtils.concat(workingDirectory, fileName);
+                uploadPath = FilenameUtils.separatorsToUnix(uploadPath);
+
+                channel.put(inputStream, uploadPath);
+                upload = exist(channel, uploadPath);
+            }
+        }
+        return upload;
+    }
+
+    /**
+     * Checks if is directory.
+     * 
+     * @param channel the channel
+     * @param workingDirectory the working directory
+     * @param elementName the element name
+     * @return true, if is directory
+     * @throws SftpException the sftp exception
+     */
+    public static boolean isDirectory(ChannelSftp channel, String workingDirectory, String elementName)
+            throws SftpException {
+        boolean directory = false;
+        if (!StringUtil.isBlank(workingDirectory) && !StringUtil.isBlank(elementName)) {
+            String elementPath = FilenameUtils.concat(workingDirectory, elementName);
+            elementPath = FilenameUtils.separatorsToUnix(elementPath);
+            directory = isDirectory(channel, elementPath);
         }
 
-        return exists;
+        return directory;
+    }
+
+    /**
+     * Checks if is directory.
+     * 
+     * @param channel the channel
+     * @param elementPath the element path
+     * @return true, if is directory
+     * @throws SftpException the sftp exception
+     */
+    public static boolean isDirectory(ChannelSftp channel, String elementPath) throws SftpException {
+        boolean directory = false;
+        if (channel != null && !StringUtil.isBlank(elementPath) && StringUtil.startsWith(elementPath, "/")) {
+            try {
+                final SftpATTRS attrs = channel.stat(elementPath);
+                directory = attrs != null && attrs.isDir();
+            } catch (final SftpException e) {
+                directory = false;
+            }
+        }
+
+        return directory;
     }
 
     /**
      * Checks if a directory is empty.
      * 
      * @param channel the channel
-     * @param directoryName the directory name
-     * @param workingDirectory the working directory
+     * @param directoryPath the directory path
      * @return true, if is directory empty
      * @throws SftpException the sftp exception
      */
-    public static boolean isDirectoryEmpty(ChannelSftp channel, String directoryName, String workingDirectory)
-            throws SftpException {
-        boolean empty = true;
+    public static boolean isDirectoryEmpty(ChannelSftp channel, String directoryPath) throws SftpException {
+        boolean empty = false;
+        if (!StringUtil.isBlank(directoryPath)) {
+            final String workingDirectory = getPathNoEndSeparator(directoryPath);
+            final String diretoryName = getElementName(directoryPath);
 
-        if (StringUtil.isNotEmpty(directoryName) && StringUtil.isNotEmpty(workingDirectory)) {
-            if (channel.ls(directoryName).size() != 0) {
-                empty = false;
-            }
+            empty = isDirectoryEmpty(channel, workingDirectory, diretoryName);
+        }
+
+        return empty;
+    }
+
+    /**
+     * Checks if a directory is empty.
+     * 
+     * @param channel the channel
+     * @param workingDirectory the working directory
+     * @param directoryName the directory name
+     * @return true, if is directory empty
+     * @throws SftpException the sftp exception
+     */
+    public static boolean isDirectoryEmpty(ChannelSftp channel, String workingDirectory, String directoryName)
+            throws SftpException {
+        boolean empty = false;
+        if (channel != null && isDirectory(channel, workingDirectory, directoryName)) {
+            channel.cd(workingDirectory);
+            empty = channel.ls(directoryName).size() == 0;
         }
         return empty;
     }
 
     /**
-     * Checks if the directory exists.
+     * Gets the element name.
      * 
-     * @param channel the channel
-     * @param directoryPath the directory path
-     * @return true, if is directory existing
-     * @throws SftpException the sftp exception
+     * @param elementeName the element name
+     * @return the element name
      */
-    public static boolean isDirectoryExisting(ChannelSftp channel, String directoryPath) throws SftpException {
-        boolean exists = true;
-        if (StringUtil.isNotEmpty(directoryPath)) {
-            try {
-                SftpATTRS attrs = channel.stat(directoryPath);
-                exists = attrs != null && attrs.isDir();
-            } catch (Exception e) {
-                exists = false;
+    private static String getElementName(String elementName) {
+        String newElementName = null;
+        if (!StringUtil.isBlank(elementName)) {
+            newElementName = elementName;
+            if (StringUtil.endsWith(newElementName, "/")) {
+                newElementName = StringUtil.substring(newElementName, 0, StringUtil.lastIndexOf(newElementName, "/"));
             }
-        } else {
-            exists = false;
-        }
 
-        return exists;
+            newElementName = FilenameUtils.getName(newElementName);
+        }
+        return newElementName;
     }
 
     /**
-     * Checks if the file exists.
+     * Gets the path no end separator.
      * 
-     * @param channel the channel
-     * @param fileName the fileName
-     * @param workingDirectory the working directory
-     * @return true, if is file existing
-     * @throws SftpException the sftp exception
+     * @param path the path
+     * @return the path no end separator
      */
-    public static boolean isFileExisting(ChannelSftp channel, String fileName, String workingDirectory)
-            throws SftpException {
-        boolean exists = true;
-        if (!StringUtil.isEmpty(workingDirectory) && !StringUtil.isEmpty(fileName)) {
-            try {
-                String filePath = "";
-                if (workingDirectory.startsWith("./")) {
-                    filePath += "./";
-                } else if (!workingDirectory.startsWith("/")) {
-                    filePath += "/";
-                }
-                filePath += FilenameUtils.separatorsToUnix(FilenameUtils.concat(workingDirectory, fileName));
-                SftpATTRS attrs = channel.lstat(filePath);
-                exists = attrs != null && fileName.contains(".");
-            } catch (Exception e) {
-                exists = false;
+    private static String getPathNoEndSeparator(String path) {
+        String newPath = null;
+        if (!StringUtil.isBlank(path)) {
+            newPath = path;
+            if (StringUtil.endsWith(newPath, "/")) {
+                newPath = StringUtil.substring(newPath, 0, StringUtil.lastIndexOf(newPath, "/"));
             }
-        } else {
-            exists = false;
-        }
-        return exists;
-    }
 
-    /**
-     * Checks if the file exists.
-     * 
-     * @param channel the channel
-     * @param filePath the file path
-     * @return true, if is file existing
-     * @throws SftpException the sftp exception
-     */
-
-    public static boolean isFileExisting(ChannelSftp channel, String filePath) throws SftpException {
-        boolean exists = true;
-        if (!StringUtil.isEmpty(filePath)) {
-            try {
-                SftpATTRS attrs = channel.stat(filePath);
-                exists = attrs != null && FilenameUtils.getName(filePath).contains(".");
-            } catch (Exception e) {
-                exists = false;
+            final int index = FilenameUtils.indexOfLastSeparator(newPath);
+            if (index == 0) {
+                newPath = "/";
+            } else if (index > 0) {
+                newPath = StringUtil.substring(newPath, 0, index);
             }
-        } else {
-            exists = false;
         }
-        return exists;
+        return newPath;
     }
 }

@@ -3,12 +3,12 @@ package com.google.code.jee.utils.xml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import com.google.code.jee.utils.StringUtil;
+import com.google.code.jee.utils.collection.ArrayUtil;
 import com.google.code.jee.utils.collection.CollectionUtil;
-import com.google.code.jee.utils.collection.MapUtil;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -46,16 +46,27 @@ public class XmlUtil {
     }
 
     /**
-     * Sets the aliases.
+     * Adds the alias for class.
      * 
      * @param xStream the x stream
-     * @param classNames the class names
+     * @param clazz the clazz
      */
-    public static void setAliases(XStream xStream, Map<String, Class<?>> classNames) {
-        if (xStream != null && !MapUtil.isEmpty(classNames)) {
-            for (Map.Entry<String, Class<?>> entry : classNames.entrySet()) {
-                xStream.alias(entry.getKey(), entry.getValue());
-            }
+    public static void addAliasForClass(XStream xStream, Class<?> clazz) {
+        if (xStream != null && clazz != null) {
+            xStream.alias(StringUtil.toLowercaseFirstCharacter(clazz.getSimpleName()), clazz);
+        }
+    }
+
+    /**
+     * Sets the attributes for.
+     * 
+     * @param xStream the x stream
+     * @param clazz the clazz
+     * @param fieldNames the field names
+     */
+    public static void setAttributesFor(XStream xStream, Class<?> clazz, String... fieldNames) {
+        if (!ArrayUtil.isEmpty(fieldNames)) {
+            setAttributesFor(xStream, clazz, Arrays.asList(fieldNames));
         }
     }
 
@@ -63,14 +74,13 @@ public class XmlUtil {
      * Sets the attributes.
      * 
      * @param xStream the x stream
-     * @param classNames the class names
+     * @param clazz the clazz
+     * @param fieldNames the field names
      */
-    public static void setAttributesFor(XStream xStream, Map<Class<?>, List<String>> classNames) {
-        if (xStream != null && !MapUtil.isEmpty(classNames)) {
-            for (Map.Entry<Class<?>, List<String>> entry : classNames.entrySet()) {
-                for (String attribute : entry.getValue()) {
-                    xStream.useAttributeFor(entry.getKey(), attribute);
-                }
+    public static void setAttributesFor(XStream xStream, Class<?> clazz, List<String> fieldNames) {
+        if (xStream != null && !CollectionUtil.isEmpty(fieldNames)) {
+            for (final String fieldName : fieldNames) {
+                xStream.useAttributeFor(clazz, fieldName);
             }
         }
     }
@@ -79,14 +89,26 @@ public class XmlUtil {
      * Omit fields.
      * 
      * @param xStream the x stream
-     * @param classNames the class names
+     * @param clazz the clazz
+     * @param fieldNames the field names
      */
-    public static void omitFields(XStream xStream, Map<Class<?>, List<String>> classNames) {
-        if (xStream != null && !MapUtil.isEmpty(classNames)) {
-            for (Map.Entry<Class<?>, List<String>> entry : classNames.entrySet()) {
-                for (String attribute : entry.getValue()) {
-                    xStream.omitField(entry.getKey(), attribute);
-                }
+    public static void omitFields(XStream xStream, Class<?> clazz, String... fieldNames) {
+        if (!ArrayUtil.isEmpty(fieldNames)) {
+            omitFields(xStream, clazz, Arrays.asList(fieldNames));
+        }
+    }
+
+    /**
+     * Omit fields.
+     * 
+     * @param xStream the x stream
+     * @param clazz the clazz
+     * @param fieldNames the field names
+     */
+    public static void omitFields(XStream xStream, Class<?> clazz, List<String> fieldNames) {
+        if (xStream != null && !CollectionUtil.isEmpty(fieldNames)) {
+            for (final String fieldName : fieldNames) {
+                xStream.omitField(clazz, fieldName);
             }
         }
     }
@@ -102,7 +124,7 @@ public class XmlUtil {
      */
     public static void exportToXml(XStream xStream, OutputStream outputStream, List<?> elements) {
         if (xStream != null && outputStream != null && !CollectionUtil.isEmpty(elements)) {
-            GenericList genericList = new GenericList();
+            final GenericList genericList = new GenericList();
             genericList.setElements(elements);
             xStream.toXML(genericList, outputStream);
         }
@@ -120,7 +142,7 @@ public class XmlUtil {
     public static List<?> importToXml(XStream xStream, InputStream inputStream) throws IOException {
         List<?> elements = null;
         if (xStream != null && inputStream != null) {
-            GenericList genericList = (GenericList) xStream.fromXML(inputStream);
+            final GenericList genericList = (GenericList) xStream.fromXML(inputStream);
 
             if (genericList != null) {
                 elements = genericList.getElements();

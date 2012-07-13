@@ -4,7 +4,6 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.google.code.jee.utils.user.management.model.AbstractPerson;
 import com.google.code.jee.utils.user.management.model.Right;
 import com.google.code.jee.utils.user.management.model.Role;
 import com.google.code.jee.utils.user.management.model.User;

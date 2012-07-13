@@ -11,45 +11,35 @@ import com.google.code.jee.utils.user.management.model.Right;
 public interface RightService extends GenericService<Integer, Right> {
 
 	/**
-     * Test the existence of an element with the parameter 'rightCode'.
+     * Test the existence of an element with the parameter 'code'.
      * 
-     * @param rightCode the rightCode
+     * @param code the code
      * @return true, if success
      */
-	boolean existWithRightCode(String rightCode);
+	Boolean existWithCode(String code);
 
     /**
-     * Search an element by its rightCode.
+     * Search an element by its code.
      * 
-     * @param rightCode the rightCode
-     * @return the right
+     * @param code the code
+     * @return the element
      */
-	Right findByRightCode(String rightCode);
+	Right findByCode(String rightCode);
+
+	/**
+	 * Count the number of elements corresponding to a specific role.
+	 * 
+	 * @param roleId the role primary key
+	 * @return the number of elements found
+	 */
+	Integer countByRoleId(Integer roleId);
 	
 	/**
-     * Test the existence of a right with the parameter 'code' and its
-     * role id.
-     * 
-     * @param roleId the roleId
-     * @param rightCode the right code
-     * @return true, if success
-     */
-    boolean existWithRoleIdAndRightCode(Integer roleId, String rightCode);
-
-    /**
-     * Count a role numbers of rights.
-     * 
-     * @param roleId the roleId
-     * @return the number of rights corresponding to the role id
-     */
-    Integer countRightsForRoleId(Integer roleId);
-
-    /**
-     * Search all the role's rights.
-     * 
-     * @param rolePrimaryKey the role primary key
-     * @return the list
-     */
-    List<Right> findAllRightsByRoleId(Integer roleId);
+	 * Finds all elements corresponding to a specific role.
+	 * 
+	 * @param roleId the role primary key
+	 * @return the elements
+	 */
+	List<Right> findAllByRoleId(Integer roleId);
 	
 }

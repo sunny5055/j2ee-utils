@@ -10,7 +10,7 @@ import com.google.code.jee.utils.user.management.model.User;
 import com.google.code.jee.utils.user.management.service.UserService;
 
 /**
- * {@inheritedDoc}
+ * The Class UserServiceImpl.
  */
 @Service
 public class UserServiceImpl extends AbstractGenericService<Integer, User, UserDao> implements UserService {
@@ -20,21 +20,21 @@ public class UserServiceImpl extends AbstractGenericService<Integer, User, UserD
      */
     @Autowired
     @Override
-    public void setDao(UserDao userDao) {
-        this.dao = userDao;
+    public void setDao(UserDao dao) {
+        this.dao = dao;
     }
     
     /**
      * {@inheritedDoc}
      */
     @Override
-    public boolean existWithLogin(String login) {
-    	boolean exist = false;
-        if (!StringUtil.isEmpty(login)) {
-            final Integer count = this.dao.countByLogin(login);
-            exist = count != 0;
-        }
-        return exist;
+    public Boolean existWithLogin(String login) {
+    	 Boolean exist = false;
+         if (!StringUtil.isEmpty(login)) {
+             final Integer count = this.dao.countByLogin(login);
+             exist = count != 0;
+         }
+         return exist;
     }
 
     /**
@@ -43,10 +43,17 @@ public class UserServiceImpl extends AbstractGenericService<Integer, User, UserD
     @Override
     public User findByLogin(String login) {
     	User user = null;
-        if (!StringUtil.isEmpty(login)) {
+        if (!StringUtil.isEmpty(login))
             user = this.dao.findByLogin(login);
-        }
         return user;
     }
+
+    /**
+     * {@inheritedDoc}
+     */
+	@Override
+	public Integer countByRoleId(Integer roleId) {
+		return this.dao.countByRoleId(roleId);
+	}
 
 }

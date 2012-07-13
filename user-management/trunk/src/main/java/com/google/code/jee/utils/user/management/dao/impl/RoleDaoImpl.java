@@ -45,23 +45,13 @@ public class RoleDaoImpl  extends AbstractGenericDaoHibernate<Integer, Role> imp
                 new String[] { "code" }, code);
 
     }
-    
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public Integer countForUserIdAndCode(Integer userId, String roleCode) {
-        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(),
-                RoleDao.COUNT_FOR_USER_ID_AND_CODE, new String[] { "userId", "roleCode" }, userId,
-                roleCode);
-    }
 
     /**
      * {@inheritedDoc}
      */
     @Override
-    public Integer countForUserId(Integer userId) {
-        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_FOR_USER_ID,
+    public Integer countByUserId(Integer userId) {
+        return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_BY_USER_ID,
                 new String[] { "userId" }, userId);
     }
 
@@ -73,73 +63,15 @@ public class RoleDaoImpl  extends AbstractGenericDaoHibernate<Integer, Role> imp
         return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.FIND_ALL_BY_USER_ID,
                 new String[] { "userId" }, userId);
     }
-
+    
     /**
      * {@inheritedDoc}
      */
 	@Override
-	public Integer countUsersForRoleId(Integer roleId) {
-		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_USERS_FOR_ROLE_ID,
-                new String[] { "roleId" }, roleId);
+	public Integer countByRightId(Integer rightId) {
+		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_BY_RIGHT_ID,
+                new String[] { "rightId" }, rightId);
 	}
-
-    /**
-     * Gets the search.
-     * 
-     * @param userId the user id
-     * @param searchCriteria the search criteria
-     * @return the search
-     */
-    protected Search getSearch(Integer userId, SearchCriteria searchCriteria) {
-        Search search = null;
-        if (userId != null && searchCriteria != null) {
-            search = new Search();
-            final StringBuilder buffer = new StringBuilder();
-            buffer.append("from User u ");
-            buffer.append("left join u.roles as role ");
-            buffer.append("where u.id = :userId ");
-            search.addIntegerParameter("userId", userId);
-
-            if (searchCriteria.hasFilters()) {
-                buffer.append("where ");
-                int index = 0;
-                for (final Map.Entry<String, Object> entry : searchCriteria.getFilters().entrySet()) {
-                    if (entry.getValue() != null) {
-                        if (index != 0) {
-                            buffer.append("AND ");
-                        }
-                        if (entry.getKey().equals("code")) {
-                            buffer.append("upper(role.code) like upper(:code) ");
-                            search.addStringParameter("code", entry.getValue());
-                        }
-                        index++;
-                    }
-                }
-            }
-
-            search.setCountQuery("select count(role) " + buffer.toString());
-
-            if (searchCriteria.hasSorts()) {
-                buffer.append("order by ");
-                int index = 0;
-                for (final Map.Entry<String, SortOrder> entry : searchCriteria.getSorts().entrySet()) {
-                    if (index != 0) {
-                        buffer.append(", ");
-                    }
-                    if (entry.getKey().equals("code")) {
-                        buffer.append("r.code ");
-                        if (entry.getValue() == SortOrder.DESCENDING) {
-                            buffer.append("desc ");
-                        }
-                    }
-                    index++;
-                }
-            }
-
-            search.setQuery("select role " + buffer.toString());
-        }
-        return search;
-    }
 
     /**
      * {@inheritedDoc}

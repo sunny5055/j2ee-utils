@@ -3,10 +3,14 @@ package com.google.code.jee.utils.user.management.dao;
 import com.google.code.jee.utils.dal.dao.GenericDao;
 import com.google.code.jee.utils.user.management.model.User;
 
+/**
+ * The Interface UserDao.
+ */
 public interface UserDao extends GenericDao<Integer, User> {
 
 	String COUNT_BY_LOGIN = "user.countByLogin";
 	String FIND_BY_LOGIN = "user.findByLogin";
+	String COUNT_BY_ROLE_ID = "user.countByRoleId";
 	
 	/**
      * Search the number of elements with the 'login' parameter.
@@ -20,8 +24,16 @@ public interface UserDao extends GenericDao<Integer, User> {
      * Search an element by its login.
      * 
      * @param login the login
-     * @return the user
+     * @return the element
      */
 	User findByLogin(String login);
+	
+    /**
+     * Count the number of elements corresponding to a specific role.
+     * 
+     * @param role the role primary key
+     * @return the number of elements found
+     */
+	Integer countByRoleId(Integer roleId);
 	
 }

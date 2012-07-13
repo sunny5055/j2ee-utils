@@ -26,13 +26,13 @@ import com.google.code.jee.utils.user.management.dao.RoleDao;
 @Table(name = "ROL_ROLE")
 @NamedQueries({
     @NamedQuery(name = RoleDao.COUNT_BY_CODE, query = "select count(*) from Role as r where r.code = :code"),
-    @NamedQuery(name = RoleDao.FIND_BY_CODE, query = "from Role as r where r.code = :code"),
-    @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID, query = "select count(role) from User as u left join u.roles as role where u.id = :userId"),
-    @NamedQuery(name = RoleDao.FIND_ALL_BY_USER_ID, query = "select role from User as u left join u.roles as role where u.id = :userId"),
-    @NamedQuery(name = RoleDao.COUNT_FOR_USER_ID_AND_CODE, query = "select count(*) from User as u left join u.roles as role where u.id = :userId and role.code = :roleCode"),
-    @NamedQuery(name = RoleDao.COUNT_USERS_FOR_ROLE_ID, query = "select count(u) from User as u left join u.roles as role where role.id = :roleId")})
+    @NamedQuery(name = RoleDao.FIND_BY_CODE, query = "select r from Role as r where r.code = :code"),
+    @NamedQuery(name = RoleDao.COUNT_BY_USER_ID, query = "select count(r) from User as u left join u.roles as r where u.id = :userId"),
+    @NamedQuery(name = RoleDao.FIND_ALL_BY_USER_ID, query = "select r from User as u left join u.roles as r where u.id = :userId"),
+    @NamedQuery(name = RoleDao.COUNT_BY_RIGHT_ID, query = "select count(r) from Role as r left join r.rights as rig where rig.id = :rightId") })
 @SuppressWarnings("serial")
 public class Role extends AbstractHibernateDto<Integer> {
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ROL_ID", nullable = false)
@@ -46,8 +46,8 @@ public class Role extends AbstractHibernateDto<Integer> {
 	
 	@ManyToMany(fetch = FetchType.LAZY)   
     @JoinTable(name="RRI_ROLE_RIGHTS",
-    		   joinColumns=@JoinColumn(name="ROL_ID"),
-    		   inverseJoinColumns=@JoinColumn(name="RIG_ID"))
+    		   joinColumns=@JoinColumn(name="RRI_ROLE_ID"),
+    		   inverseJoinColumns=@JoinColumn(name="RRI_RIGHT_ID"))
     private List<Right> rights;
 	
 	/**
@@ -75,7 +75,7 @@ public class Role extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Getter : return the id
+     * Getter : return the id.
      * 
      * @return the id
      */
@@ -84,7 +84,7 @@ public class Role extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Setter : affect the id
+     * Setter : affect the id.
      * 
      * @param id the id
      */
@@ -93,7 +93,7 @@ public class Role extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Getter : return the code
+     * Getter : return the code.
      * 
      * @return the code
      */
@@ -102,7 +102,7 @@ public class Role extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Setter : affect the code
+     * Setter : affect the code.
      * 
      * @param code the code
      */
@@ -111,7 +111,7 @@ public class Role extends AbstractHibernateDto<Integer> {
 	}
 	
 	/**
-	 * Getter : return the description
+	 * Getter : return the description.
 	 * 
 	 * @return the description
 	 */
@@ -120,7 +120,7 @@ public class Role extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-	 * Setter : affect the description
+	 * Setter : affect the description.
 	 * 
 	 * @param description the description to set
 	 */
@@ -129,7 +129,7 @@ public class Role extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Getter : return the rights
+     * Getter : return the rights.
      * 
      * @return the rights
      */
@@ -138,7 +138,7 @@ public class Role extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Setter : affect the rights
+     * Setter : affect the rights.
      * 
      * @param rights the rights
      */

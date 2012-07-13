@@ -50,29 +50,6 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 		<property name="nestedTransactionAllowed" value="true" />
 	</bean>
-	
-	<!-- Encrypt JASYPT -->
-	<bean id="strongEncryptor"
-		class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">   
-	  	<property name="providerName"><value>BC</value></property> 
-	   	<property name="algorithm">
-        	<value>PBEWITHSHA256AND128BITAES-CBC-BC</value> 
-	   	</property>
-	   	<property name="password">
-   	    	<value>jasypt</value>
-	   	</property>
-   	</bean>
-  
-   	<!-- hibernate Encryptor for string -->
-	<bean id="hibernateStringEncryptor"
-		class="org.jasypt.hibernate4.encryptor.HibernatePBEStringEncryptor">
-		<property name="registeredName">
-			<value>strongHibernateStringEncryptor</value>
-	  	</property>
-	  	<property name="encryptor">
-			<ref bean="strongEncryptor" />
-		</property>
-	</bean>
 
 	<aop:config>
 		<!-- Pointcut utilisé pour les transactions -->

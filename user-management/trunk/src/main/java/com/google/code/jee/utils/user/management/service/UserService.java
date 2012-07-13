@@ -9,19 +9,27 @@ import com.google.code.jee.utils.user.management.model.User;
 public interface UserService extends GenericService<Integer, User> {
 
 	/**
-     * Test the existence of an element with the parameter 'login'.
+     * Test the existence of an element with the 'login' parameter.
      * 
      * @param login the login
-     * @return true, if success
+     * @return true if success
      */
-	boolean existWithLogin(String login);
+	Boolean existWithLogin(String login);
 
     /**
      * Search an element by its login.
      * 
      * @param login the login
-     * @return the user
+     * @return the element
      */
 	User findByLogin(String login);
+	
+    /**
+     * Count the number of elements corresponding to a specific role.
+     * 
+     * @param role the role primary key
+     * @return the number of elements found
+     */
+	Integer countByRoleId(Integer roleId);
 	
 }

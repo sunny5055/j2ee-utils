@@ -1,6 +1,5 @@
 package com.google.code.jee.utils.user.management.model;
 
-import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,35 +16,18 @@ import javax.persistence.NamedQuery;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.jasypt.hibernate4.type.EncryptedStringType;
-
 import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
 import com.google.code.jee.utils.user.management.dao.UserDao;
 
 /**
- * The Class User
+ * The Class User.
  */
-@TypeDefs
-({
-@TypeDef ( 
-   name="encryptedString",
-   typeClass=EncryptedStringType.class,
-   parameters={
-     @Parameter(name="encryptorRegisteredName",
-     value="strongHibernateStringEncryptor")
-   }
-  )
-})
 @Entity
 @Table(name = "USE_USER")
 @NamedQueries({
     @NamedQuery(name = UserDao.COUNT_BY_LOGIN, query = "select count(*) from User as u where u.login = :login"),
-    @NamedQuery(name = UserDao.FIND_BY_LOGIN, query = "from User as u where u.login = :login") })
+    @NamedQuery(name = UserDao.FIND_BY_LOGIN, query = "select u from User as u where u.login = :login"),
+    @NamedQuery(name = UserDao.COUNT_BY_ROLE_ID, query = "select count(u) from User as u left join u.roles as r where r.id = :roleId") })
 @SuppressWarnings("serial")
 public class User extends AbstractHibernateDto<Integer> {
 	
@@ -63,17 +45,16 @@ public class User extends AbstractHibernateDto<Integer> {
 	@Column(name = "USE_LOGIN", nullable = false, unique = true, length = 50)
 	private String login;
 	
-	@Column(name = "USE_PASSWORD", nullable = false, length = 50)
-	@Type(type="encryptedString")
+	@Column(name = "USE_PASSWORD", nullable = false, length = 100)
 	private String password;
 	
-	@Column(name = "USE_MAIL", length = 100)
+	@Column(name = "USE_MAIL", nullable = false, unique = true, length = 255)
 	private String mail;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="URO_USER_ROLES",
-    		   joinColumns=@JoinColumn(name="USE_ID"),
-    		   inverseJoinColumns=@JoinColumn(name="ROL_ID"))
+    		   joinColumns=@JoinColumn(name="URO_USER_ID"),
+    		   inverseJoinColumns=@JoinColumn(name="URO_ROLE_ID"))
     private List<Role> roles;
 	
     /**
@@ -82,7 +63,6 @@ public class User extends AbstractHibernateDto<Integer> {
     public User() {
         super();
         this.roles = new ArrayList<Role>();
-        Security.addProvider(new BouncyCastleProvider());
     }
 
     /**
@@ -102,7 +82,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	 /**
-     * Getter : return the id
+     * Getter : return the id.
      * 
      * @return the id
      */
@@ -111,7 +91,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Setter : affect the id
+     * Setter : affect the id.
      * 
      * @param id the id
      */
@@ -120,7 +100,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	 /**
-     * Getter : return the first name
+     * Getter : return the first name.
      * 
      * @return the first name
      */
@@ -129,7 +109,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Setter : affect the first name
+     * Setter : affect the first name.
      * 
      * @param first name the first name
      */
@@ -138,7 +118,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	 /**
-     * Getter : return the last name
+     * Getter : return the last name.
      * 
      * @return the last name
      */
@@ -147,7 +127,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Setter : affect the last name
+     * Setter : affect the last name.
      * 
      * @param last name the last name
      */
@@ -156,7 +136,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Getter : return the login
+     * Getter : return the login.
      * 
      * @return the login
      */
@@ -165,7 +145,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Setter : affect the login
+     * Setter : affect the login.
      * 
      * @param login the login
      */
@@ -174,7 +154,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Getter : return the password
+     * Getter : return the password.
      * 
      * @return the password
      */
@@ -183,7 +163,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Setter : affect the password
+     * Setter : affect the password.
      * 
      * @param password the password
      */
@@ -192,7 +172,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 	
 	 /**
-     * Getter : return the mail
+     * Getter : return the mail.
      * 
      * @return the mail
      */
@@ -201,7 +181,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Setter : affect the mail
+     * Setter : affect the mail.
      * 
      * @param mail the mail
      */
@@ -210,7 +190,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Getter : return the roles
+     * Getter : return the roles.
      * 
      * @return the roles
      */
@@ -219,7 +199,7 @@ public class User extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Setter : affect the roles
+     * Setter : affect the roles.
      * 
      * @param roles the roles
      */

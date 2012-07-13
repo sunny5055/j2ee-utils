@@ -10,30 +10,34 @@ import com.google.code.jee.utils.dal.service.AbstractGenericService;
 import com.google.code.jee.utils.user.management.dao.RoleDao;
 import com.google.code.jee.utils.user.management.model.Role;
 import com.google.code.jee.utils.user.management.service.RoleService;
+import com.google.code.jee.utils.user.management.service.UserService;
 
 /**
- * {@inheritedDoc}
+ * The Class RoleServiceImpl.
  */
 @Service
 public class RoleServiceImpl extends AbstractGenericService<Integer, Role, RoleDao> implements RoleService {
+	
+	@Autowired
+	private UserService userService;
 	
 	/**
      * {@inheritedDoc}
      */
     @Autowired
     @Override
-    public void setDao(RoleDao roleDao) {
-        this.dao = roleDao;
+    public void setDao(RoleDao dao) {
+        this.dao = dao;
     }
     
     /**
      * {@inheritedDoc}
      */
     @Override
-    public boolean existWithRoleCode(String roleCode) {
-    	boolean exist = false;
-        if (!StringUtil.isEmpty(roleCode)) {
-            final Integer count = this.dao.countByCode(roleCode);
+    public Boolean existWithCode(String code) {
+    	Boolean exist = false;
+        if (!StringUtil.isEmpty(code)) {
+            final Integer count = this.dao.countByCode(code);
             exist = count != 0;
         }
         return exist;
@@ -43,33 +47,19 @@ public class RoleServiceImpl extends AbstractGenericService<Integer, Role, RoleD
      * {@inheritedDoc}
      */
     @Override
-    public Role findByRoleCode(String roleCode) {
+    public Role findByCode(String code) {
     	Role role = null;
-        if (!StringUtil.isEmpty(roleCode)) {
-            role = this.dao.findByCode(roleCode);
-        }
+        if (!StringUtil.isEmpty(code))
+            role = this.dao.findByCode(code);
         return role;
     }
-    
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public boolean existWithUserIdAndRoleCode(Integer userId, String roleCode) {
-    	boolean exist = false;
-        if (userId != null && !StringUtil.isEmpty(roleCode)) {
-            final Integer count = this.dao.countForUserIdAndCode(userId, roleCode);
-            exist = count != 0;
-        }
-        return exist;
-    }
 
     /**
      * {@inheritedDoc}
      */
     @Override
-    public Integer countForUserId(Integer userId) {
-    	return this.dao.countForUserId(userId);
+    public Integer countByUserId(Integer userId) {
+    	return this.dao.countByUserId(userId);
     }
 
     /**
@@ -78,9 +68,8 @@ public class RoleServiceImpl extends AbstractGenericService<Integer, Role, RoleD
     @Override
     public List<Role> findAllByUserId(Integer userId) {
     	List<Role> roles = null;
-        if (userId != null) {
+        if (userId != null)
             roles = this.dao.findAllByUserId(userId);
-        }
         return roles;
     }
     
@@ -89,10 +78,18 @@ public class RoleServiceImpl extends AbstractGenericService<Integer, Role, RoleD
      */   
     @Override
     public boolean isRemovable(Integer roleId) {
-        if (this.dao.countUsersForRoleId(roleId) != 0)
+        if (this.userService.countByRoleId(roleId) != 0)
         	return false;
         else
         	return true;
     }
+
+    /**
+     * {@inheritedDoc}
+     */   
+	@Override
+	public Integer countByRightId(Integer rightId) {
+		return this.dao.countByRightId(rightId);
+	}
 
 }

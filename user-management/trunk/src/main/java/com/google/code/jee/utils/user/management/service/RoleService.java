@@ -11,45 +11,43 @@ import com.google.code.jee.utils.user.management.model.Role;
 public interface RoleService extends GenericService<Integer, Role> {
 	
 	/**
-     * Test the existence of an element with the parameter 'roleCode'.
+     * Test the existence of an element with the parameter 'code'.
      * 
-     * @param roleCode the roleCode
+     * @param code the code
      * @return true, if success
      */
-	boolean existWithRoleCode(String roleCode);
+	Boolean existWithCode(String code);
 
     /**
-     * Search an element by its roleCode.
+     * Search an element by its code.
      * 
-     * @param roleCode the roleCode
-     * @return the role
+     * @param code the code
+     * @return the element
      */
-	Role findByRoleCode(String roleCode);
+	Role findByCode(String code);
+
+    /**
+     * Count the number of elements corresponding to a specific user.
+     * 
+     * @param userId the user primary key
+     * @return the number of elements found
+     */
+	Integer countByUserId(Integer userId);
+
+    /**
+     * Finds all elements corresponding to a specific user.
+     * 
+     * @param userId the user primary key
+     * @return the elements
+     */
+	List<Role> findAllByUserId(Integer userId);
 	
-	/**
-     * Test the existence of a role with the parameter 'code' and its
-     * user id.
-     * 
-     * @param userId the userId
-     * @param roleCode the role code
-     * @return true, if success
-     */
-	boolean existWithUserIdAndRoleCode(Integer userId, String roleCode);
-
     /**
-     * Count an user numbers of roles.
+     * Count the number of elements corresponding to a specific right.
      * 
-     * @param userId the userId
-     * @return the number of roles corresponding to the user id
+     * @param right the right primary key
+     * @return the number of elements found
      */
-	Integer countForUserId(Integer userId);
-
-    /**
-     * Search all the user's roles.
-     * 
-     * @param userPrimaryKey the user primary key
-     * @return the list
-     */
-    List<Role> findAllByUserId(Integer userId);
+	Integer countByRightId(Integer rightId);
 
 }

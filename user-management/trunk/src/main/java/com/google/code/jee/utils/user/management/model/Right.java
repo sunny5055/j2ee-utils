@@ -19,11 +19,9 @@ import com.google.code.jee.utils.user.management.dao.RightDao;
 @Table(name = "RIG_RIGHT")
 @NamedQueries({
     @NamedQuery(name = RightDao.COUNT_BY_CODE, query = "select count(*) from Right as rig where rig.code = :code"),
-    @NamedQuery(name = RightDao.FIND_BY_CODE, query = "from Right as rig where rig.code = :code"),
-    @NamedQuery(name = RightDao.COUNT_FOR_ROLE_ID_AND_RIGHT_CODE, query = "select count(rig) from Role as r left join r.rights as rig where r.id = :roleId and rig.code = :rightCode"),
-    @NamedQuery(name = RightDao.COUNT_RIGHTS_FOR_ROLE_ID, query = "select count(rig) from Role as r left join r.rights as rig where r.id = :roleId"),
-    @NamedQuery(name = RightDao.FIND_ALL_RIGHTS_BY_ROLE_ID, query = "select rig from Role as r left join r.rights as rig where r.id = :roleId"),
-    @NamedQuery(name = RightDao.COUNT_ROLES_FOR_RIGHT_ID, query = "select count(r) from Role as r left join r.rights as rig where rig.id = :rightId")})
+    @NamedQuery(name = RightDao.FIND_BY_CODE, query = "select rig from Right as rig where rig.code = :code"),
+    @NamedQuery(name = RightDao.COUNT_BY_ROLE_ID, query = "select count(rig) from Role as r left join r.rights as rig where r.id = :roleId"),
+    @NamedQuery(name = RightDao.FIND_ALL_BY_ROLE_ID, query = "select rig from Role as r left join r.rights as rig where r.id = :roleId") })
 @SuppressWarnings("serial")
 public class Right extends AbstractHibernateDto<Integer> {
 
@@ -62,7 +60,7 @@ public class Right extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Getter : return the id
+     * Getter : return the id.
      * 
      * @return the id
      */
@@ -71,7 +69,7 @@ public class Right extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-     * Setter : affect the id
+     * Setter : affect the id.
      * 
      * @param id the id
      */
@@ -80,7 +78,7 @@ public class Right extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-	 * Getter : return the code
+	 * Getter : return the code.
 	 * 
 	 * @return the code
 	 */
@@ -89,7 +87,7 @@ public class Right extends AbstractHibernateDto<Integer> {
 	}
 	
 	/**
-	 * Setter : affect the code
+	 * Setter : affect the code.
 	 * 
 	 * @param code the code to set
 	 */
@@ -98,7 +96,7 @@ public class Right extends AbstractHibernateDto<Integer> {
 	}
 	
 	/**
-	 * Getter : return the description
+	 * Getter : return the description.
 	 * 
 	 * @return the description
 	 */
@@ -107,7 +105,7 @@ public class Right extends AbstractHibernateDto<Integer> {
 	}
 
 	/**
-	 * Setter : affect the description
+	 * Setter : affect the description.
 	 * 
 	 * @param description the description to set
 	 */

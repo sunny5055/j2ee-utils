@@ -61,18 +61,18 @@ public class Demo {
         	if (role.getCode().equals("ADMINISTRATOR")) {
         		rights.addAll(rightService.findAll());
         	} else if (role.getCode().equals("MODERATOR")) {
-        		rights.add(rightService.findByRightCode("EDIT_ALL"));
-        		rights.add(rightService.findByRightCode("DELETE_ALL"));
-        		rights.add(rightService.findByRightCode("READ_ALL"));
+        		rights.add(rightService.findByCode("EDIT_ALL"));
+        		rights.add(rightService.findByCode("DELETE_ALL"));
+        		rights.add(rightService.findByCode("READ_ALL"));
         	} else if (role.getCode().equals("REDACTOR")) {
-        		rights.add(rightService.findByRightCode("WRITE"));
-        		rights.add(rightService.findByRightCode("EDIT"));
-        		rights.add(rightService.findByRightCode("DELETE"));
-        		rights.add(rightService.findByRightCode("READ"));
+        		rights.add(rightService.findByCode("WRITE"));
+        		rights.add(rightService.findByCode("EDIT"));
+        		rights.add(rightService.findByCode("DELETE"));
+        		rights.add(rightService.findByCode("READ"));
         	} else if (role.getCode().equals("CONTRIBUTOR")) {
-        		rights.add(rightService.findByRightCode("READ_ALL"));
+        		rights.add(rightService.findByCode("READ_ALL"));
         	} else if (role.getCode().equals("MEMBER")) {
-        		rights.add(rightService.findByRightCode("READ"));
+        		rights.add(rightService.findByCode("READ"));
         	}
         	role.setRights(rights);
         	roleService.create(role);
@@ -88,22 +88,22 @@ public class Demo {
         	user.setMail(mails[i]);
         	List<Role> roles = new ArrayList<Role>();
         	if (user.getFirstName().equals("Nicolas")) {
-        		roles.add(roleService.findByRoleCode("MEMBER"));
+        		roles.add(roleService.findByCode("MEMBER"));
         	} else if (user.getFirstName().equals("Jérome")) {
-        		roles.add(roleService.findByRoleCode("MEMBER"));
+        		roles.add(roleService.findByCode("MEMBER"));
         	} else if (user.getFirstName().equals("Robert")) {
-        		roles.add(roleService.findByRoleCode("ADMINISTRATOR"));
+        		roles.add(roleService.findByCode("ADMINISTRATOR"));
         	} else if (user.getFirstName().equals("Nathan")) {
-        		roles.add(roleService.findByRoleCode("REDACTOR"));
+        		roles.add(roleService.findByCode("REDACTOR"));
         	} else if (user.getFirstName().equals("Justine")) {
-        		roles.add(roleService.findByRoleCode("REDACTOR"));
-        		roles.add(roleService.findByRoleCode("CONTRIBUTOR"));
+        		roles.add(roleService.findByCode("REDACTOR"));
+        		roles.add(roleService.findByCode("CONTRIBUTOR"));
         	} else if (user.getFirstName().equals("Jordan")) {
-        		roles.add(roleService.findByRoleCode("REDACTOR"));
+        		roles.add(roleService.findByCode("REDACTOR"));
         	} else if (user.getFirstName().equals("Julie")) {
-        		roles.add(roleService.findByRoleCode("GUESS"));
+        		roles.add(roleService.findByCode("GUESS"));
         	} else if (user.getFirstName().equals("Sophie")) {
-        		roles.add(roleService.findByRoleCode("MODERATOR"));
+        		roles.add(roleService.findByCode("MODERATOR"));
         	}
         	user.setRoles(roles);
         	userService.create(user);
@@ -116,7 +116,7 @@ public class Demo {
         List<Role> justineRoles = roleService.findAllByUserId(justine.getId());
         for (Role currentRole : justineRoles) {
         	buffer.append("\t" + currentRole.getCode() + " :\n");
-        	List<Right> rights = rightService.findAllRightsByRoleId(currentRole.getId());
+        	List<Right> rights = rightService.findAllByRoleId(currentRole.getId());
         	for (Right currentRight : rights) {
         		buffer.append("\t\t" + currentRight.getCode() + "\n");
         	}

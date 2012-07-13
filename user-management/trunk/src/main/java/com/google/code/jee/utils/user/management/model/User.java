@@ -51,6 +51,9 @@ public class User extends AbstractHibernateDto<Integer> {
 	@Column(name = "USE_MAIL", nullable = false, unique = true, length = 255)
 	private String mail;
 	
+	@Column(name = "USE_ACTIVE", nullable = false)
+	private Boolean active;
+	
 	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="URO_USER_ROLES",
     		   joinColumns=@JoinColumn(name="URO_USER_ID"),
@@ -187,6 +190,24 @@ public class User extends AbstractHibernateDto<Integer> {
      */
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+
+	/**
+	 * Getter : return the active.
+	 * 
+	 * @return the active
+	 */
+	public Boolean getActive() {
+		return active;
+	}
+
+	/**
+	 * Setter : affect the active.
+	 * 
+	 * @param active the active to set
+	 */
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	/**

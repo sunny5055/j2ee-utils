@@ -83,6 +83,9 @@ public class UserDaoImpl extends AbstractGenericDaoHibernate<Integer, User> impl
                         } else if (entry.getKey().equals("mail")) {
                             buffer.append("upper(u.mail) like upper(:mail) ");
                             search.addStringParameter("mail", entry.getValue());
+                        } else if (entry.getKey().equals("active")) {
+                            buffer.append("upper(u.active) like upper(:active) ");
+                            search.addBooleanParameter("active", entry.getValue());
                         }
                         index++;
                     }
@@ -118,7 +121,12 @@ public class UserDaoImpl extends AbstractGenericDaoHibernate<Integer, User> impl
                         if (entry.getValue() == SortOrder.DESCENDING) {
                             buffer.append("desc ");
                         }
-                    } 
+                    } else if (entry.getKey().equals("active")) {
+                        buffer.append("u.active ");
+                        if (entry.getValue() == SortOrder.DESCENDING) {
+                            buffer.append("desc ");
+                        }
+                    }
                     index++;
                 }
             }

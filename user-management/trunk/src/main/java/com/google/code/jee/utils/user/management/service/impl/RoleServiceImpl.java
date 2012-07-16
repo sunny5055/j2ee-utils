@@ -32,6 +32,17 @@ public class RoleServiceImpl extends AbstractGenericService<Integer, Role, RoleD
     
     /**
      * {@inheritedDoc}
+     */   
+    @Override
+    public boolean isRemovable(Integer pk) {
+        if (this.userService.countByRoleId(pk) != 0)
+        	return false;
+        else
+        	return true;
+    }
+    
+    /**
+     * {@inheritedDoc}
      */
     @Override
     public Boolean existWithCode(String code) {
@@ -71,17 +82,6 @@ public class RoleServiceImpl extends AbstractGenericService<Integer, Role, RoleD
         if (userId != null)
             roles = this.dao.findAllByUserId(userId);
         return roles;
-    }
-    
-    /**
-     * {@inheritedDoc}
-     */   
-    @Override
-    public boolean isRemovable(Integer roleId) {
-        if (this.userService.countByRoleId(roleId) != 0)
-        	return false;
-        else
-        	return true;
     }
 
     /**

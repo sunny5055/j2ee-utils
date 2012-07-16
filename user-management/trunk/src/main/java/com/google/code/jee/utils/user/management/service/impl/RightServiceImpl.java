@@ -32,6 +32,17 @@ public class RightServiceImpl extends AbstractGenericService<Integer, Right, Rig
     
     /**
      * {@inheritedDoc}
+     */   
+    @Override
+    public boolean isRemovable(Integer pk) {
+        if (this.roleService.countByRightId(pk) != 0)
+        	return false;
+        else
+        	return true;
+    }
+    
+    /**
+     * {@inheritedDoc}
      */
     @Override
     public Boolean existWithCode(String code) {
@@ -71,17 +82,6 @@ public class RightServiceImpl extends AbstractGenericService<Integer, Right, Rig
         if (roleId != null)
             rights = this.dao.findAllByRoleId(roleId);
         return rights;
-    }
-    
-    /**
-     * {@inheritedDoc}
-     */   
-    @Override
-    public boolean isRemovable(Integer rightId) {
-        if (this.roleService.countByRightId(rightId) != 0)
-        	return false;
-        else
-        	return true;
     }
 	
 }

@@ -215,8 +215,8 @@ public class TemplaterServiceImpl implements TemplaterService {
 	private void addTemplateMethod(Map<String, Object> data) {
 		if (data != null) {
 			data.put("toUnderscoreCase", new ToUnderscoreCaseMethod());
-			data.put("toCamelCaseMethod", new ToCamelCaseMethod());
-			data.put("toPascalCaseMethod", new ToPascalCaseMethod());
+			data.put("toCamelCase", new ToCamelCaseMethod());
+			data.put("toPascalCase", new ToPascalCaseMethod());
 		}
 	}
 }

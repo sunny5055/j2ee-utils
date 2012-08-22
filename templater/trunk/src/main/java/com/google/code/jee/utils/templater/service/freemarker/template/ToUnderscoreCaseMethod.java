@@ -10,7 +10,14 @@ import freemarker.template.TemplateMethodModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
+/**
+ * The Class ToUnderscoreCaseMethod.
+ */
 public class ToUnderscoreCaseMethod implements TemplateMethodModel {
+
+	/**
+	 * {@inheritedDoc}
+	 */
 	@Override
 	@SuppressWarnings("rawtypes")
 	public TemplateModel exec(List args) throws TemplateModelException {

@@ -10,7 +10,14 @@ import freemarker.template.TemplateMethodModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
+/**
+ * The Class ToCamelCaseMethod.
+ */
 public class ToCamelCaseMethod implements TemplateMethodModel {
+
+	/**
+	 * {@inheritedDoc}
+	 */
 	@Override
 	@SuppressWarnings("rawtypes")
 	public TemplateModel exec(List args) throws TemplateModelException {

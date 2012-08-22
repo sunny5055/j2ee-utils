@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>utils</artifactId>
 	<name>Utils</name>
-	<version>1.0.4</version>
+	<version>1.0.5-SNAPSHOT</version>
 
 	<parent>
 		<groupId>jee-utils</groupId>
@@ -12,10 +12,10 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/utils/tags/1.0.4</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/utils/tags/1.0.4
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/utils/trunk</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/utils/trunk
         </developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/utils/tags/1.0.4</url>
+		<url>https://j2ee-utils.googlecode.com/svn/utils/trunk</url>
 	</scm>
 
 	<dependencies>

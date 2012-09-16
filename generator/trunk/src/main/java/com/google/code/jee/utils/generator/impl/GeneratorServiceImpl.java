@@ -38,6 +38,28 @@ public class GeneratorServiceImpl implements GeneratorService {
 	 * {@inheritedDoc}
 	 */
 	@Override
+	public <E extends AbstractDto<?>> void generateNamedQueries(PropertiesConfiguration configuration, Class<E> clazz) throws TemplateServiceException, IOException {
+		if (configuration != null && clazz != null) {
+			final Map<String, Object> data = getData(configuration, clazz);
+
+			final String namedQueries = templaterService.getContent("model/namedQueries.ftl", data);
+			if (!StringUtil.isBlank(namedQueries)) {
+				//TODO only for test, needs to be uppdated
+				final String modelPackage = (String) data.get("modelPackage") + ".queries";
+				final String rootPath = data.get("rootPath") + File.separator + convertToPath(modelPackage);
+
+				final String modelName = (String) data.get("modelName");
+				final String fileName = modelName + ".java";
+
+				writeToFile(rootPath, fileName, namedQueries);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
 	public <E extends AbstractDto<?>> void generateDao(PropertiesConfiguration configuration, Class<E> clazz) throws TemplateServiceException, IOException {
 		if (configuration != null && clazz != null) {
 			final Map<String, Object> data = getData(configuration, clazz);

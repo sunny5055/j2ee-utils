@@ -36,6 +36,13 @@ public class TemplaterServiceImpl implements TemplaterService {
 	private Configuration configuration;
 
 	/**
+	 * Instantiates a new templater service impl.
+	 */
+	public TemplaterServiceImpl() {
+		super();
+	}
+
+	/**
 	 * {@inheritedDoc}
 	 */
 	@Override

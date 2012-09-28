@@ -15,5 +15,4 @@
   * [mailHibernate mail-hibernate]
   * [parameterHibernate parameter-hibernate]
   * [userManagement user-management]
-  * [msProjectFileManagement ms-project-file-management]
   * [sftpUtil sftp-util]

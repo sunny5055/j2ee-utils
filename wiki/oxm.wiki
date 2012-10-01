@@ -1,0 +1,146 @@
+=oxm=
+
+==Getting started==
+
+Define a `Jaxb2Marshaller` as following :
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<context:component-scan base-package="com.googlecode" />
+	<context:annotation-config />
+
+	<bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="marshallerProperties">
+			<map>
+				<entry>
+					<key>
+						<util:constant static-field="javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT" />
+					</key>
+					<value type="java.lang.Boolean">true</value>
+				</entry>
+			</map>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>model</value>
+			</list>
+		</property>
+		<property name="schema" value="classpath:person.xsd" />
+	</bean>
+
+</beans>
+}}}
+
+Assume you have a xsd file named `person.xsd` with the following content :
+
+{{{
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsd:schema version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:ju="http://code.googlecode.com/p/j2ee-utils/generator"
+	targetNamespace="http://code.googlecode.com/p/j2ee-utils/generator"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:element name="person" type="ju:person" />
+
+	<xsd:complexType name="person">
+		<xsd:sequence>
+			<xsd:element name="firstname" type="xsd:string"
+				minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="lastname" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="friends" minOccurs="0" maxOccurs="1">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element ref="ju:person" minOccurs="0" maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="developer" type="xsd:boolean" use="required" />
+	</xsd:complexType>
+</xsd:schema>
+}}}
+
+and the following Java class :
+
+{{{
+@XmlRootElement(name = "person")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Person {
+	@XmlElement(name = "firstname")
+	private String firstname;
+
+	@XmlElement(name = "lastname")
+	private String lastname;
+
+	@XmlAttribute(name = "developer")
+	private boolean developer;
+
+	@XmlElementWrapper(name = "friends")
+	@XmlElement(name = "person")
+	private List<Person> friends;
+
+	public Person() {
+		super();
+		this.friends = new ArrayList<Person>();
+	}
+	
+	...
+}
+}}}	
+
+You can optionnaly define a "package-info.java" with the following content : 
+
+{{{
+@XmlSchema(xmlns = { @XmlNs(prefix = "ju", namespaceURI = "http://code.googlecode.com/p/j2ee-utils/generator"),
+		@XmlNs(prefix = "xsd", namespaceURI = "http://www.w3.org/2001/XMLSchema") }, namespace = "http://code.googlecode.com/p/j2ee-utils/generator", elementFormDefault = XmlNsForm.QUALIFIED, attributeFormDefault = XmlNsForm.UNQUALIFIED)
+package model;
+
+import javax.xml.bind.annotation.XmlNs;
+import javax.xml.bind.annotation.XmlNsForm;
+import javax.xml.bind.annotation.XmlSchema;
+}}}
+
+Use the component as follows :
+
+{{{
+	public static void main(String[] args) throws OxmServiceException {
+		final ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "spring/application-context.xml" });
+		OxmService oxmService = context.getBean(OxmService.class);
+		if (oxmService != null) {
+			test1();
+
+			test2();
+		}
+	}
+
+	private static void test1() throws OxmServiceException {
+		final Person person = getPerson("Jeremy", "SCHAAL", true);
+		final Person friend1 = getPerson("John", "DOE", false);
+		person.addFriend(friend1);
+		final Person friend2 = getPerson("Steve", "JOBS", true);
+		person.addFriend(friend2);
+
+		final String xmlContent = oxmService.marshall(person);
+		System.out.println(xmlContent);
+
+		oxmService.marshall(person, new File("persons.xml"));
+	}
+
+	private static void test2() throws OxmServiceException {
+		Person person = null;
+
+		person = (Person) oxmService.unmarshall(new File("persons.xml"));
+		System.out.println(person);
+	}
+}}}	

@@ -89,20 +89,6 @@ public interface OxmService {
 	void marshall(Object value, Writer writer) throws OxmServiceException;
 
 	/**
-	 * Marshall.
-	 * 
-	 * @param value
-	 *            the value
-	 * @param writer
-	 *            the writer
-	 * @param encoding
-	 *            the encoding
-	 * @throws OxmServiceException
-	 *             the oxm service exception
-	 */
-	void marshall(Object value, Writer writer, String encoding) throws OxmServiceException;
-
-	/**
 	 * Unmarshall.
 	 * 
 	 * @param xmlContent
@@ -171,17 +157,4 @@ public interface OxmService {
 	 *             the oxm service exception
 	 */
 	Object unmarshall(Reader reader) throws OxmServiceException;
-
-	/**
-	 * Unmarshall.
-	 * 
-	 * @param reader
-	 *            the reader
-	 * @param encoding
-	 *            the encoding
-	 * @return the object
-	 * @throws OxmServiceException
-	 *             the oxm service exception
-	 */
-	Object unmarshall(Reader reader, String encoding) throws OxmServiceException;
 }

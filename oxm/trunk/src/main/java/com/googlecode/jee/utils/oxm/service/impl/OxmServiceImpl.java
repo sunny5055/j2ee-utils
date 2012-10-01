@@ -77,9 +77,21 @@ public class OxmServiceImpl implements OxmService {
 	public String marshall(Object value) throws OxmServiceException {
 		String result = null;
 		if (value != null) {
-			final Writer writer = new StringWriter();
-			marshall(value, writer, defaultEncoding);
-			result = writer.toString();
+			Writer writer = null;
+			try {
+				writer = new StringWriter();
+				marshall(value, writer);
+				result = writer.toString();
+			} finally {
+				if (writer != null) {
+					try {
+						writer.flush();
+						writer.close();
+					} catch (final IOException e) {
+						throw new OxmServiceException(e);
+					}
+				}
+			}
 		}
 		return result;
 	}
@@ -101,12 +113,21 @@ public class OxmServiceImpl implements OxmService {
 			Writer writer = null;
 			try {
 				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(xmlFile), encoding));
+				marshall(value, writer);
 			} catch (final FileNotFoundException e) {
 				throw new OxmServiceException(e);
 			} catch (final Exception e) {
 				throw new OxmServiceException(e);
+			} finally {
+				if (writer != null) {
+					try {
+						writer.flush();
+						writer.close();
+					} catch (final IOException e) {
+						throw new OxmServiceException(e);
+					}
+				}
 			}
-			marshall(value, writer, encoding);
 		}
 	}
 
@@ -130,7 +151,8 @@ public class OxmServiceImpl implements OxmService {
 			} catch (final UnsupportedEncodingException e) {
 				throw new OxmServiceException(e);
 			}
-			marshall(value, writer, encoding);
+
+			marshall(value, writer);
 		}
 	}
 
@@ -139,30 +161,13 @@ public class OxmServiceImpl implements OxmService {
 	 */
 	@Override
 	public void marshall(Object value, Writer writer) throws OxmServiceException {
-		marshall(value, writer, defaultEncoding);
-	}
-
-	/**
-	 * {@inheritedDoc}
-	 */
-	@Override
-	public void marshall(Object value, Writer writer, String encoding) throws OxmServiceException {
-		if (value != null && writer != null && !StringUtil.isBlank(encoding)) {
+		if (value != null && writer != null) {
 			try {
 				marshaller.marshal(value, new StreamResult(writer));
 			} catch (final XmlMappingException e) {
 				throw new OxmServiceException(e);
 			} catch (final IOException e) {
 				throw new OxmServiceException(e);
-			} finally {
-				if (writer != null) {
-					try {
-						writer.flush();
-						writer.close();
-					} catch (final IOException e) {
-						throw new OxmServiceException(e);
-					}
-				}
 			}
 		}
 	}
@@ -174,8 +179,19 @@ public class OxmServiceImpl implements OxmService {
 	public Object unmarshall(String xmlContent) throws OxmServiceException {
 		Object result = null;
 		if (!StringUtil.isBlank(xmlContent)) {
-			final Reader reader = new StringReader(xmlContent);
-			result = unmarshall(reader, defaultEncoding);
+			Reader reader = null;
+			try {
+				reader = new StringReader(xmlContent);
+				result = unmarshall(reader);
+			} finally {
+				if (reader != null) {
+					try {
+						reader.close();
+					} catch (final IOException e) {
+						throw new OxmServiceException(e);
+					}
+				}
+			}
 		}
 		return result;
 	}
@@ -198,12 +214,20 @@ public class OxmServiceImpl implements OxmService {
 			Reader reader = null;
 			try {
 				reader = new BufferedReader(new InputStreamReader(new FileInputStream(xmlFile), encoding));
+				result = unmarshall(reader);
 			} catch (final FileNotFoundException e) {
 				throw new OxmServiceException(e);
 			} catch (final Exception e) {
 				throw new OxmServiceException(e);
+			} finally {
+				if (reader != null) {
+					try {
+						reader.close();
+					} catch (final IOException e) {
+						throw new OxmServiceException(e);
+					}
+				}
 			}
-			result = unmarshall(reader, encoding);
 		}
 		return result;
 	}
@@ -229,7 +253,8 @@ public class OxmServiceImpl implements OxmService {
 			} catch (final UnsupportedEncodingException e) {
 				throw new OxmServiceException(e);
 			}
-			result = unmarshall(reader, encoding);
+
+			result = unmarshall(reader);
 		}
 		return result;
 	}
@@ -239,28 +264,12 @@ public class OxmServiceImpl implements OxmService {
 	 */
 	@Override
 	public Object unmarshall(Reader reader) throws OxmServiceException {
-		return unmarshall(reader, defaultEncoding);
-	}
-
-	/**
-	 * {@inheritedDoc}
-	 */
-	@Override
-	public Object unmarshall(Reader reader, String encoding) throws OxmServiceException {
 		Object result = null;
-		if (reader != null && !StringUtil.isBlank(encoding)) {
+		if (reader != null) {
 			try {
 				result = unmarshaller.unmarshal(new StreamSource(reader));
 			} catch (final IOException e) {
 				throw new OxmServiceException(e);
-			} finally {
-				if (reader != null) {
-					try {
-						reader.close();
-					} catch (final IOException e) {
-						throw new OxmServiceException(e);
-					}
-				}
 			}
 		}
 		return result;

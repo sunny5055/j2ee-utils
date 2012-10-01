@@ -16,3 +16,4 @@
   * [parameterHibernate parameter-hibernate]
   * [userManagement user-management]
   * [sftpUtil sftp-util]
+  * [oxm]

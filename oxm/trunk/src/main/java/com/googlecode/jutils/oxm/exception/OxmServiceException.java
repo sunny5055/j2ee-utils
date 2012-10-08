@@ -1,4 +1,4 @@
-package com.googlecode.jee.utils.oxm.exception;
+package com.googlecode.jutils.oxm.exception;
 
 /**
  * The Class OxmServiceException.

@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.image;
+package com.googlecode.jutils.image;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;

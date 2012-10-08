@@ -1,9 +1,9 @@
-package com.google.code.jee.utils.templater.service.freemarker.template;
+package com.googlecode.jutils.templater.service.freemarker.template;
 
 import java.util.List;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.collection.CollectionUtil;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.CollectionUtil;
 
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModel;
@@ -11,9 +11,9 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * The Class ToCamelCaseMethod.
+ * The Class ToPascalCaseMethod.
  */
-public class ToCamelCaseMethod implements TemplateMethodModel {
+public class ToPascalCaseMethod implements TemplateMethodModel {
 
 	/**
 	 * {@inheritedDoc}
@@ -25,7 +25,7 @@ public class ToCamelCaseMethod implements TemplateMethodModel {
 		if (!CollectionUtil.isEmpty(args)) {
 			final String argValue = (String) args.get(0);
 			if (!StringUtil.isBlank(argValue)) {
-				final String stringValue = StringUtil.toCamelCase(argValue);
+				final String stringValue = StringUtil.toPascalCase(argValue);
 				value = new SimpleScalar(stringValue);
 			}
 		}

@@ -1,11 +1,11 @@
-package com.google.code.jee.utils.templater.service;
+package com.googlecode.jutils.templater.service;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Map;
 
-import com.google.code.jee.utils.templater.exception.TemplateServiceException;
+import com.googlecode.jutils.templater.exception.TemplateServiceException;
 
 /**
  * Interface TemplaterService.

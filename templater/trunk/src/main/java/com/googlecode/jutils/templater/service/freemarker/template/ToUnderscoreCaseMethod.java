@@ -1,9 +1,9 @@
-package com.google.code.jee.utils.templater.service.freemarker.template;
+package com.googlecode.jutils.templater.service.freemarker.template;
 
 import java.util.List;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.collection.CollectionUtil;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.CollectionUtil;
 
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModel;
@@ -11,9 +11,9 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * The Class ToPascalCaseMethod.
+ * The Class ToUnderscoreCaseMethod.
  */
-public class ToPascalCaseMethod implements TemplateMethodModel {
+public class ToUnderscoreCaseMethod implements TemplateMethodModel {
 
 	/**
 	 * {@inheritedDoc}
@@ -25,7 +25,7 @@ public class ToPascalCaseMethod implements TemplateMethodModel {
 		if (!CollectionUtil.isEmpty(args)) {
 			final String argValue = (String) args.get(0);
 			if (!StringUtil.isBlank(argValue)) {
-				final String stringValue = StringUtil.toPascalCase(argValue);
+				final String stringValue = StringUtil.toUnderscoreCase(argValue, true);
 				value = new SimpleScalar(stringValue);
 			}
 		}

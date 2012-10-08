@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.templater.service.freemarker;
+package com.googlecode.jutils.templater.service.freemarker;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,12 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.templater.exception.TemplateServiceException;
-import com.google.code.jee.utils.templater.service.TemplaterService;
-import com.google.code.jee.utils.templater.service.freemarker.template.ToCamelCaseMethod;
-import com.google.code.jee.utils.templater.service.freemarker.template.ToPascalCaseMethod;
-import com.google.code.jee.utils.templater.service.freemarker.template.ToUnderscoreCaseMethod;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.templater.exception.TemplateServiceException;
+import com.googlecode.jutils.templater.service.TemplaterService;
+import com.googlecode.jutils.templater.service.freemarker.template.ToCamelCaseMethod;
+import com.googlecode.jutils.templater.service.freemarker.template.ToPascalCaseMethod;
+import com.googlecode.jutils.templater.service.freemarker.template.ToUnderscoreCaseMethod;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

@@ -1,4 +1,4 @@
-package com.googlecode.jee.utils.generator.exporter;
+package com.googlecode.jutils.generator.exporter;
 
 import java.io.File;
 import java.util.Map;

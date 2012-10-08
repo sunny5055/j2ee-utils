@@ -1,4 +1,4 @@
-package com.googlecode.jee.utils.generator.service.impl;
+package com.googlecode.jutils.generator.service.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,13 +11,13 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.io.IoUtil;
-import com.google.code.jee.utils.templater.exception.TemplateServiceException;
-import com.google.code.jee.utils.templater.service.TemplaterService;
-import com.googlecode.jee.utils.generator.exception.GeneratorServiceException;
-import com.googlecode.jee.utils.generator.exporter.Exporter;
-import com.googlecode.jee.utils.generator.service.GeneratorService;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.generator.exception.GeneratorServiceException;
+import com.googlecode.jutils.generator.exporter.Exporter;
+import com.googlecode.jutils.generator.service.GeneratorService;
+import com.googlecode.jutils.io.IoUtil;
+import com.googlecode.jutils.templater.exception.TemplateServiceException;
+import com.googlecode.jutils.templater.service.TemplaterService;
 
 @Service
 public class GeneratorServiceImpl implements GeneratorService {

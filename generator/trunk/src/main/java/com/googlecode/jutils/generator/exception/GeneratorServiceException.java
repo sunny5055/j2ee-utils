@@ -1,4 +1,4 @@
-package com.googlecode.jee.utils.generator.exception;
+package com.googlecode.jutils.generator.exception;
 
 /**
  * The Class GeneratorServiceException.

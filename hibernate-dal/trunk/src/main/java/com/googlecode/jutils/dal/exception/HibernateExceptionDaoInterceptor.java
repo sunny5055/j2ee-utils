@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.dal.exception;
+package com.googlecode.jutils.dal.exception;
 
 import org.hibernate.HibernateException;
 import org.springframework.aop.ThrowsAdvice;

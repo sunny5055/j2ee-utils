@@ -1,11 +1,11 @@
-package com.google.code.jee.utils.dal.dto;
+package com.googlecode.jutils.dal.dto;
 
 import java.io.Serializable;
 
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.HibernateProxyHelper;
 
-import com.google.code.jee.utils.dal.util.HibernateUtil;
+import com.googlecode.jutils.dal.util.HibernateUtil;
 
 /**
  * The Class AbstractHibernateDto.

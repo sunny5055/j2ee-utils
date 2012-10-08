@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.dal.util;
+package com.googlecode.jutils.dal.util;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -6,8 +6,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.HibernateProxyHelper;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.collection.ArrayUtil;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
 
 /**
  * The Class HibernateUtil.

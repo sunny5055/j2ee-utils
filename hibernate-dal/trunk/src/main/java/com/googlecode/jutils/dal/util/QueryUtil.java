@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.dal.util;
+package com.googlecode.jutils.dal.util;
 
 import java.util.Collection;
 import java.util.List;
@@ -7,9 +7,9 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.collection.ArrayUtil;
-import com.google.code.jee.utils.collection.CollectionUtil;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
+import com.googlecode.jutils.collection.CollectionUtil;
 
 /**
  * The Class SessionUtil.

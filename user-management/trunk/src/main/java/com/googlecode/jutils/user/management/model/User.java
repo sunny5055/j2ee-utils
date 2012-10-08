@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.user.management.model;
+package com.googlecode.jutils.user.management.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,13 +11,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
-import com.google.code.jee.utils.user.management.dao.UserDao;
+import com.googlecode.jutils.dal.dto.AbstractHibernateDto;
+import com.googlecode.jutils.user.management.dao.UserDao;
 
 /**
  * The Class User.

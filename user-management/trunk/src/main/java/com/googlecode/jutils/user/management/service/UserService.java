@@ -1,7 +1,7 @@
-package com.google.code.jee.utils.user.management.service;
+package com.googlecode.jutils.user.management.service;
 
-import com.google.code.jee.utils.dal.service.GenericService;
-import com.google.code.jee.utils.user.management.model.User;
+import com.googlecode.jutils.dal.service.GenericService;
+import com.googlecode.jutils.user.management.model.User;
 
 /**
  * The Interface UserService.

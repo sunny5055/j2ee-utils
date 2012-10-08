@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.csvexporter.exception;
+package com.googlecode.jutils.csvexporter.exception;
 
 /**
  * The Class ExportCsvException.

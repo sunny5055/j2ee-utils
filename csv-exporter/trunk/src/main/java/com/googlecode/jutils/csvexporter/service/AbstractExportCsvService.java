@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.csvexporter.service;
+package com.googlecode.jutils.csvexporter.service;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -13,13 +13,13 @@ import java.util.Map;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.collection.ArrayUtil;
-import com.google.code.jee.utils.collection.CollectionUtil;
-import com.google.code.jee.utils.csvexporter.exception.ExportCsvException;
-import com.google.code.jee.utils.csvexporter.model.CsvCell;
-import com.google.code.jee.utils.csvexporter.model.CsvExporter;
-import com.google.code.jee.utils.csvexporter.util.ExpressionUtil;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
+import com.googlecode.jutils.collection.CollectionUtil;
+import com.googlecode.jutils.csvexporter.exception.ExportCsvException;
+import com.googlecode.jutils.csvexporter.model.CsvCell;
+import com.googlecode.jutils.csvexporter.model.CsvExporter;
+import com.googlecode.jutils.csvexporter.util.ExpressionUtil;
 
 /**
  * The Class AbstractExportCsvService.

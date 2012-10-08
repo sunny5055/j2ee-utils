@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.csvexporter.model;
+package com.googlecode.jutils.csvexporter.model;
 
 /**
  * The Class CsvCellSimple.

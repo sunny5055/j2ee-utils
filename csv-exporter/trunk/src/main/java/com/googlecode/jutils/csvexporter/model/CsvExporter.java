@@ -1,13 +1,13 @@
-package com.google.code.jee.utils.csvexporter.model;
+package com.googlecode.jutils.csvexporter.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.collection.CollectionUtil;
-import com.google.code.jee.utils.collection.MapUtil;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.CollectionUtil;
+import com.googlecode.jutils.collection.MapUtil;
 
 /**
  * The Class CsvExporter.

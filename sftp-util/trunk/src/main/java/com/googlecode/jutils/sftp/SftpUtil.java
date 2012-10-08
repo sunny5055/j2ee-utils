@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.sftp;
+package com.googlecode.jutils.sftp;
 
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
@@ -8,9 +8,9 @@ import java.util.Vector;
 
 import org.apache.commons.io.FilenameUtils;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.collection.ArrayUtil;
-import com.google.code.jee.utils.collection.CollectionUtil;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
+import com.googlecode.jutils.collection.CollectionUtil;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;

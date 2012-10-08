@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.core;
+package com.googlecode.jutils.core;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -22,9 +22,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.log4j.Logger;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.collection.ArrayUtil;
-import com.google.code.jee.utils.collection.MapUtil;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
+import com.googlecode.jutils.collection.MapUtil;
 
 /**
  * Class ClassUtil.

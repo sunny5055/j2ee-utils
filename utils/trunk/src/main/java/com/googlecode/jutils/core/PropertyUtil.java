@@ -1,10 +1,10 @@
-package com.google.code.jee.utils.core;
+package com.googlecode.jutils.core;
 
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
-import com.google.code.jee.utils.StringUtil;
+import com.googlecode.jutils.StringUtil;
 
 /**
  * The Class PropertyUtil.

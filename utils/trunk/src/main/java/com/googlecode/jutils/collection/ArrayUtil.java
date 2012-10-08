@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.collection;
+package com.googlecode.jutils.collection;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;

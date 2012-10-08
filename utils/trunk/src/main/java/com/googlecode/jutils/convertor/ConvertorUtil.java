@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.convertor;
+package com.googlecode.jutils.convertor;
 
 /**
  * Class ConvertorUtil.

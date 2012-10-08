@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.io;
+package com.googlecode.jutils.io;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -13,8 +13,8 @@ import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.collection.ArrayUtil;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
 
 /**
  * Class IoUtil.

@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.collection;
+package com.googlecode.jutils.collection;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 
-import com.google.code.jee.utils.BooleanUtil;
+import com.googlecode.jutils.BooleanUtil;
 
 /**
  * The Class CollectionUtil.

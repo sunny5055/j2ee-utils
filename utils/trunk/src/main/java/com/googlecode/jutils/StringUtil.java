@@ -1,4 +1,4 @@
-package com.google.code.jee.utils;
+package com.googlecode.jutils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.google.code.jee.utils.collection.ArrayUtil;
-import com.google.code.jee.utils.collection.CollectionUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
+import com.googlecode.jutils.collection.CollectionUtil;
 
 /**
  * Class StringUtil.

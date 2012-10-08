@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.core;
+package com.googlecode.jutils.core;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -10,8 +10,8 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.collection.CollectionUtil;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.CollectionUtil;
 
 /**
  * Class AnnotationUtil.

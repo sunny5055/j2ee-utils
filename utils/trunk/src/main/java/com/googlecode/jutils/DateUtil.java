@@ -1,4 +1,4 @@
-package com.google.code.jee.utils;
+package com.googlecode.jutils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

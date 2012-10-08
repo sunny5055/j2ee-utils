@@ -1,4 +1,4 @@
-package com.googlecode.jee.utils.oxm.service.impl;
+package com.googlecode.jutils.oxm.service.impl;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,9 +26,9 @@ import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.stereotype.Service;
 
-import com.google.code.jee.utils.StringUtil;
-import com.googlecode.jee.utils.oxm.exception.OxmServiceException;
-import com.googlecode.jee.utils.oxm.service.OxmService;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.oxm.exception.OxmServiceException;
+import com.googlecode.jutils.oxm.service.OxmService;
 
 /**
  * The Class OxmServiceImpl.

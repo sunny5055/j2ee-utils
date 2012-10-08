@@ -1,4 +1,4 @@
-package com.googlecode.jee.utils.oxm.service;
+package com.googlecode.jutils.oxm.service;
 
 import java.io.File;
 import java.io.InputStream;
@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
-import com.googlecode.jee.utils.oxm.exception.OxmServiceException;
+import com.googlecode.jutils.oxm.exception.OxmServiceException;
 
 /**
  * Interface OxmService.

@@ -1,9 +1,9 @@
-package com.google.code.jee.utils.csvexporter.service;
+package com.googlecode.jutils.csvexporter.service;
 
 import java.io.OutputStream;
 import java.util.List;
 
-import com.google.code.jee.utils.csvexporter.exception.ExportCsvException;
+import com.googlecode.jutils.csvexporter.exception.ExportCsvException;
 
 /**
  * The Interface ExportCsvService.

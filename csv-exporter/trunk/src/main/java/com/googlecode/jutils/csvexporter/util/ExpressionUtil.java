@@ -1,11 +1,11 @@
-package com.google.code.jee.utils.csvexporter.util;
+package com.googlecode.jutils.csvexporter.util;
 
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-import com.google.code.jee.utils.StringUtil;
+import com.googlecode.jutils.StringUtil;
 
 /**
  * The Class ExpressionUtil.

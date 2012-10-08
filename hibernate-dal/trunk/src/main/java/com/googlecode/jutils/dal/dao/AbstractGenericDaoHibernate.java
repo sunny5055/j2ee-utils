@@ -1,8 +1,8 @@
-package com.google.code.jee.utils.dal.dao;
+package com.googlecode.jutils.dal.dao;
 
 import java.io.Serializable;
 
-import com.google.code.jee.utils.dal.dto.Dto;
+import com.googlecode.jutils.dal.dto.Dto;
 
 /**
  * The Class AbstractGenericDaoHibernate.

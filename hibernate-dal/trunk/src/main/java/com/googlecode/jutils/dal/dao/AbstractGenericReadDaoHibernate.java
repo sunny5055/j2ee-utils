@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.dal.dao;
+package com.googlecode.jutils.dal.dao;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -12,12 +12,12 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.metadata.ClassMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.google.code.jee.utils.collection.ArrayUtil;
-import com.google.code.jee.utils.collection.CollectionUtil;
-import com.google.code.jee.utils.dal.Search;
-import com.google.code.jee.utils.dal.SearchCriteria;
-import com.google.code.jee.utils.dal.dto.Dto;
-import com.google.code.jee.utils.dal.util.QueryUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
+import com.googlecode.jutils.collection.CollectionUtil;
+import com.googlecode.jutils.dal.Search;
+import com.googlecode.jutils.dal.SearchCriteria;
+import com.googlecode.jutils.dal.dto.Dto;
+import com.googlecode.jutils.dal.util.QueryUtil;
 
 /**
  * The Class AbstractGenericReadDaoHibernate.

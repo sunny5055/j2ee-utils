@@ -107,16 +107,6 @@
 					<maxmemory>512m</maxmemory>
 				</configuration>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				<configuration>
-					<linkJavadoc>true</linkJavadoc>
-					<inputEncoding>${encoding}</inputEncoding>
-					<outputEncoding>${encoding}</outputEncoding>
-				</configuration>
-			</plugin>
 		</plugins>
 	</reporting>
 </project>

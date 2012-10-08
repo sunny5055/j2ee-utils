@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.user.management.model;
+package com.googlecode.jutils.user.management.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,8 +9,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
-import com.google.code.jee.utils.user.management.dao.RightDao;
+import com.googlecode.jutils.dal.dto.AbstractHibernateDto;
+import com.googlecode.jutils.user.management.dao.RightDao;
 
 /**
  * The Class Right.

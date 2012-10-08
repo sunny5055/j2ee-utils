@@ -1,9 +1,9 @@
-package com.google.code.jee.utils.user.management.dao;
+package com.googlecode.jutils.user.management.dao;
 
 import java.util.List;
 
-import com.google.code.jee.utils.dal.dao.GenericDao;
-import com.google.code.jee.utils.user.management.model.Right;
+import com.googlecode.jutils.dal.dao.GenericDao;
+import com.googlecode.jutils.user.management.model.Right;
 
 /**
  * The Interface RightDao.

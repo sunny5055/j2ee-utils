@@ -4,12 +4,12 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.google.code.jee.utils.user.management.model.Right;
-import com.google.code.jee.utils.user.management.model.Role;
-import com.google.code.jee.utils.user.management.model.User;
-import com.google.code.jee.utils.user.management.service.RightService;
-import com.google.code.jee.utils.user.management.service.RoleService;
-import com.google.code.jee.utils.user.management.service.UserService;
+import com.googlecode.jutils.user.management.model.Right;
+import com.googlecode.jutils.user.management.model.Role;
+import com.googlecode.jutils.user.management.model.User;
+import com.googlecode.jutils.user.management.service.RightService;
+import com.googlecode.jutils.user.management.service.RoleService;
+import com.googlecode.jutils.user.management.service.UserService;
 
 public class Demo {
 	

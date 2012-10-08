@@ -1,9 +1,9 @@
-package com.google.code.jee.utils.user.management.service;
+package com.googlecode.jutils.user.management.service;
 
 import java.util.List;
 
-import com.google.code.jee.utils.dal.service.GenericService;
-import com.google.code.jee.utils.user.management.model.Role;
+import com.googlecode.jutils.dal.service.GenericService;
+import com.googlecode.jutils.user.management.model.Role;
 
 /**
  * The Interface RoleService.

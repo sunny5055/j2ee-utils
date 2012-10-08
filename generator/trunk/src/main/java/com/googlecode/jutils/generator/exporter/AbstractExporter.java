@@ -1,4 +1,4 @@
-package com.googlecode.jee.utils.generator.exporter;
+package com.googlecode.jutils.generator.exporter;
 
 import java.io.File;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import com.google.code.jee.utils.StringUtil;
+import com.googlecode.jutils.StringUtil;
 
 public abstract class AbstractExporter implements Exporter {
 	protected static final Logger LOGGER = Logger.getLogger(AbstractExporter.class);

@@ -1,9 +1,9 @@
-package com.google.code.jee.utils.mail.service;
+package com.googlecode.jutils.mail.service;
 
 import java.util.List;
 import java.util.Map;
 
-import com.google.code.jee.utils.mail.exception.MailSenderServiceException;
+import com.googlecode.jutils.mail.exception.MailSenderServiceException;
 
 /**
  * The Interface MailService.

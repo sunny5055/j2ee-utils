@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.mail.exception;
+package com.googlecode.jutils.mail.exception;
 
 /**
  * The Class MailServiceException.

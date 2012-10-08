@@ -1,10 +1,10 @@
-package com.google.code.jee.utils.dal.dto;
+package com.googlecode.jutils.dal.dto;
 
 import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import com.google.code.jee.utils.StringUtil;
+import com.googlecode.jutils.StringUtil;
 
 /**
  * The Class AbstractDto.

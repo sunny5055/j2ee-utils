@@ -1,11 +1,11 @@
-package com.google.code.jee.utils.dal;
+package com.googlecode.jutils.dal;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 
-import com.google.code.jee.utils.StringUtil;
+import com.googlecode.jutils.StringUtil;
 
 /**
  * The Class Result.

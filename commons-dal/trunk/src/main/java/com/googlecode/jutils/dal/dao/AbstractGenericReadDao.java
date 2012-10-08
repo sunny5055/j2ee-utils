@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.dal.dao;
+package com.googlecode.jutils.dal.dao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,10 +9,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 
-import com.google.code.jee.utils.BooleanUtil;
-import com.google.code.jee.utils.dal.Search;
-import com.google.code.jee.utils.dal.SearchCriteria;
-import com.google.code.jee.utils.dal.dto.Dto;
+import com.googlecode.jutils.BooleanUtil;
+import com.googlecode.jutils.dal.Search;
+import com.googlecode.jutils.dal.SearchCriteria;
+import com.googlecode.jutils.dal.dto.Dto;
 
 /**
  * The Class AbstractGenericReadDao.

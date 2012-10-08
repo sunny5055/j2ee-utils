@@ -1,10 +1,10 @@
-package com.google.code.jee.utils.dal.service;
+package com.googlecode.jutils.dal.service;
 
 import java.io.Serializable;
 import java.util.Collection;
 
-import com.google.code.jee.utils.dal.Result;
-import com.google.code.jee.utils.dal.dto.Dto;
+import com.googlecode.jutils.dal.Result;
+import com.googlecode.jutils.dal.dto.Dto;
 
 /**
  * The Interface GenericService.

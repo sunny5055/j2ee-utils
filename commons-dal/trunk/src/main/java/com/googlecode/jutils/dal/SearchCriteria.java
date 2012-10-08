@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.dal;
+package com.googlecode.jutils.dal;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -20,9 +20,9 @@ import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 import org.primefaces.util.HTML;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.collection.ArrayUtil;
-import com.google.code.jee.utils.jsf.util.FacesUtils;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
+import com.googlecode.jutils.jsf.util.FacesUtils;
 
 /**
  * The Class MyDataTableRenderer.

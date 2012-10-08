@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.mail.hibernate.model;
+package com.googlecode.jutils.mail.hibernate.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +10,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
-import com.google.code.jee.utils.mail.hibernate.dao.MailAttachmentDao;
+import com.googlecode.jutils.dal.dto.AbstractHibernateDto;
+import com.googlecode.jutils.mail.hibernate.dao.MailAttachmentDao;
 
 /**
  * The Class MailAttachment.

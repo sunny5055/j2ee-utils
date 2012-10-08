@@ -1,7 +1,7 @@
-package com.google.code.jee.utils.mail.hibernate.dao;
+package com.googlecode.jutils.mail.hibernate.dao;
 
-import com.google.code.jee.utils.dal.dao.GenericDao;
-import com.google.code.jee.utils.mail.hibernate.model.Mail;
+import com.googlecode.jutils.dal.dao.GenericDao;
+import com.googlecode.jutils.mail.hibernate.model.Mail;
 
 /**
  * The Interface MailDao.

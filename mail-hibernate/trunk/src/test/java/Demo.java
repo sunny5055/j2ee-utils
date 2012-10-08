@@ -1,8 +1,8 @@
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.google.code.jee.utils.mail.hibernate.model.Mail;
-import com.google.code.jee.utils.mail.hibernate.service.MailService;
+import com.googlecode.jutils.mail.hibernate.model.Mail;
+import com.googlecode.jutils.mail.hibernate.service.MailService;
 
 public class Demo {
     public static void main(String[] args) {

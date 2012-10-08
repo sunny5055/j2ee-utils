@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.parameter.hibernate.model;
+package com.googlecode.jutils.parameter.hibernate.model;
 
 import java.util.Date;
 
@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.google.code.jee.utils.DateUtil;
+import com.googlecode.jutils.DateUtil;
 
 /**
  * The Class DateParameter.

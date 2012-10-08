@@ -8,9 +8,9 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.google.code.jee.utils.parameter.hibernate.enumeration.DateFormatEnum;
-import com.google.code.jee.utils.parameter.hibernate.model.AbstractParameter;
-import com.google.code.jee.utils.parameter.hibernate.service.ParameterService;
+import com.googlecode.jutils.parameter.hibernate.enumeration.DateFormatEnum;
+import com.googlecode.jutils.parameter.hibernate.model.AbstractParameter;
+import com.googlecode.jutils.parameter.hibernate.service.ParameterService;
 
 public class Demo {
     private static final Logger LOGGER = Logger.getLogger(Demo.class);

@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.bundle.hibernate.model;
+package com.googlecode.jutils.bundle.hibernate.model;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -7,8 +7,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.google.code.jee.utils.bundle.hibernate.dao.LabelDao;
-import com.google.code.jee.utils.dal.dto.AbstractHibernateDto;
+import com.googlecode.jutils.bundle.hibernate.dao.LabelDao;
+import com.googlecode.jutils.dal.dto.AbstractHibernateDto;
 
 /**
  * The Class Parameter.

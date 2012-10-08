@@ -1,10 +1,10 @@
-package com.google.code.jee.utils.bundle.hibernate.dao;
+package com.googlecode.jutils.bundle.hibernate.dao;
 
 import java.util.List;
 
-import com.google.code.jee.utils.bundle.hibernate.model.Label;
-import com.google.code.jee.utils.bundle.hibernate.model.LabelId;
-import com.google.code.jee.utils.dal.dao.GenericDao;
+import com.googlecode.jutils.bundle.hibernate.model.Label;
+import com.googlecode.jutils.bundle.hibernate.model.LabelId;
+import com.googlecode.jutils.dal.dao.GenericDao;
 
 /**
  * The Interface LabelDao.

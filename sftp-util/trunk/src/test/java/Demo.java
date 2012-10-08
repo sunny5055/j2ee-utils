@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
-import com.google.code.jee.utils.sftp.SftpUtil;
+import com.googlecode.jutils.sftp.SftpUtil;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;

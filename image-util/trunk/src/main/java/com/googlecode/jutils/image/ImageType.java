@@ -1,9 +1,9 @@
-package com.google.code.jee.utils.image;
+package com.googlecode.jutils.image;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.code.jee.utils.StringUtil;
+import com.googlecode.jutils.StringUtil;
 
 /**
  * The Enum ImageType.

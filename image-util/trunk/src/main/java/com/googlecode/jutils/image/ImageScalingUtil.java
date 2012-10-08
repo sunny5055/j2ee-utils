@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.image;
+package com.googlecode.jutils.image;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -10,8 +10,8 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.collection.ArrayUtil;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
 import com.mortennobel.imagescaling.ResampleOp;
 
 /**

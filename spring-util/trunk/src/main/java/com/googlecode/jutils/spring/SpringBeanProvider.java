@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.spring;
+package com.googlecode.jutils.spring;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

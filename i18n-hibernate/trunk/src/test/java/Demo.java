@@ -6,9 +6,9 @@ import java.io.OutputStream;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.google.code.jee.utils.bundle.hibernate.model.Label;
-import com.google.code.jee.utils.bundle.hibernate.model.LabelId;
-import com.google.code.jee.utils.bundle.hibernate.service.LabelService;
+import com.googlecode.jutils.bundle.hibernate.model.Label;
+import com.googlecode.jutils.bundle.hibernate.model.LabelId;
+import com.googlecode.jutils.bundle.hibernate.service.LabelService;
 
 public class Demo {
     public static void main(String[] args) throws IOException {

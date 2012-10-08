@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.bundle.hibernate.model;
+package com.googlecode.jutils.bundle.hibernate.model;
 
 import java.io.Serializable;
 

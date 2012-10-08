@@ -1,13 +1,13 @@
-package com.google.code.jee.utils.bundle.hibernate.service;
+package com.googlecode.jutils.bundle.hibernate.service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-import com.google.code.jee.utils.bundle.hibernate.model.Label;
-import com.google.code.jee.utils.bundle.hibernate.model.LabelId;
-import com.google.code.jee.utils.dal.service.GenericService;
+import com.googlecode.jutils.bundle.hibernate.model.Label;
+import com.googlecode.jutils.bundle.hibernate.model.LabelId;
+import com.googlecode.jutils.dal.service.GenericService;
 
 /**
  * The Interface LabelService.

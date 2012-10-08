@@ -11,8 +11,8 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.google.code.jee.utils.mail.exception.MailSenderServiceException;
-import com.google.code.jee.utils.mail.service.MailSenderService;
+import com.googlecode.jutils.mail.exception.MailSenderServiceException;
+import com.googlecode.jutils.mail.service.MailSenderService;
 
 public class Demo {
     public static void main(String[] args) throws IOException {

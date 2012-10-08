@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.parameter.hibernate.model;
+package com.googlecode.jutils.parameter.hibernate.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

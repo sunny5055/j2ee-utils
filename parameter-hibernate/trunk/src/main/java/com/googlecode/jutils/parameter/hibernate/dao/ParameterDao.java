@@ -1,9 +1,9 @@
-package com.google.code.jee.utils.parameter.hibernate.dao;
+package com.googlecode.jutils.parameter.hibernate.dao;
 
 import java.util.List;
 
-import com.google.code.jee.utils.dal.SearchCriteria;
-import com.google.code.jee.utils.parameter.hibernate.model.AbstractParameter;
+import com.googlecode.jutils.dal.SearchCriteria;
+import com.googlecode.jutils.parameter.hibernate.model.AbstractParameter;
 
 /**
  * The Interface ParameterDao.

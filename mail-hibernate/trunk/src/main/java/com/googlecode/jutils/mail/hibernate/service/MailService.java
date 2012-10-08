@@ -1,10 +1,10 @@
-package com.google.code.jee.utils.mail.hibernate.service;
+package com.googlecode.jutils.mail.hibernate.service;
 
 import java.util.List;
 
-import com.google.code.jee.utils.dal.service.GenericService;
-import com.google.code.jee.utils.mail.hibernate.model.Mail;
-import com.google.code.jee.utils.mail.hibernate.model.MailAttachment;
+import com.googlecode.jutils.dal.service.GenericService;
+import com.googlecode.jutils.mail.hibernate.model.Mail;
+import com.googlecode.jutils.mail.hibernate.model.MailAttachment;
 
 /**
  * The Interface MailService.

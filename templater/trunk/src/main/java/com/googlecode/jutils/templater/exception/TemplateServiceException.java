@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.templater.exception;
+package com.googlecode.jutils.templater.exception;
 
 /**
  * The Class TemplateServiceException.

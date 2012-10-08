@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.dal.dto;
+package com.googlecode.jutils.dal.dto;
 
 import java.io.Serializable;
 

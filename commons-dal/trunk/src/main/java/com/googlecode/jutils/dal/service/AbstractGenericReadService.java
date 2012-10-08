@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.dal.service;
+package com.googlecode.jutils.dal.service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,9 +9,9 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 
-import com.google.code.jee.utils.dal.SearchCriteria;
-import com.google.code.jee.utils.dal.dao.GenericReadDao;
-import com.google.code.jee.utils.dal.dto.Dto;
+import com.googlecode.jutils.dal.SearchCriteria;
+import com.googlecode.jutils.dal.dao.GenericReadDao;
+import com.googlecode.jutils.dal.dto.Dto;
 
 /**
  * The Class AbstractGenericReadService.

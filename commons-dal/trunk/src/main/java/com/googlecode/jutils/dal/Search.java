@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.dal;
+package com.googlecode.jutils.dal;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -7,10 +7,10 @@ import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
 
-import com.google.code.jee.utils.BooleanUtil;
-import com.google.code.jee.utils.DateUtil;
-import com.google.code.jee.utils.StringUtil;
-import com.google.code.jee.utils.convertor.ConvertorUtil;
+import com.googlecode.jutils.BooleanUtil;
+import com.googlecode.jutils.DateUtil;
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.convertor.ConvertorUtil;
 
 /**
  * The Class Search.

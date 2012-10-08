@@ -1,6 +1,6 @@
-package com.google.code.jee.utils.dal;
+package com.googlecode.jutils.dal;
 
-import com.google.code.jee.utils.collection.ArrayUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
 
 /**
  * The Class Message.

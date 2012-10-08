@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.dal.util;
+package com.googlecode.jutils.dal.util;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 
-import com.google.code.jee.utils.collection.ArrayUtil;
-import com.google.code.jee.utils.dal.dto.Dto;
+import com.googlecode.jutils.collection.ArrayUtil;
+import com.googlecode.jutils.dal.dto.Dto;
 
 /**
  * The Class DtoUtil.

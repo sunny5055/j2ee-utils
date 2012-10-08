@@ -1,4 +1,4 @@
-package com.google.code.jee.utils.dal.service;
+package com.googlecode.jutils.dal.service;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -8,9 +8,9 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
-import com.google.code.jee.utils.dal.Result;
-import com.google.code.jee.utils.dal.dao.GenericDao;
-import com.google.code.jee.utils.dal.dto.Dto;
+import com.googlecode.jutils.dal.Result;
+import com.googlecode.jutils.dal.dao.GenericDao;
+import com.googlecode.jutils.dal.dto.Dto;
 
 /**
  * The Class AbstractGenericService.

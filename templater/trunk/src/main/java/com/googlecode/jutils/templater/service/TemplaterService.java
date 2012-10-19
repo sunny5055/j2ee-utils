@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.Map;
 
-import com.googlecode.jutils.templater.exception.TemplateServiceException;
+import com.googlecode.jutils.templater.exception.TemplaterServiceException;
 
 /**
  * Interface TemplaterService.
@@ -20,135 +20,66 @@ public interface TemplaterService {
 	 * @param data
 	 *            the data
 	 * @return String
-	 * @throws TemplateServiceException
-	 *             the TemplateServiceException
+	 * @throws TemplaterServiceException
+	 *             the TemplaterServiceException
 	 */
-	String getContent(String templateName, Map<String, Object> data) throws TemplateServiceException;
-
-	/**
-	 * Get the content from the template using data from the map parameter.
-	 * 
-	 * @param templateName
-	 *            the template name
-	 * @param data
-	 *            the data
-	 * @param encoding
-	 *            the encoding
-	 * @return String
-	 * @throws TemplateServiceException
-	 *             the TemplateServiceException
-	 */
-	String getContent(String templateName, Map<String, Object> data, String encoding) throws TemplateServiceException;
+	String getContent(String templateName, Map<String, Object> data) throws TemplaterServiceException;
 
 	/**
 	 * Get the content from the string using data from the map parameter.
 	 * 
 	 * @param templateContent
 	 *            the templateContent
+	 * @param templateType
+	 *            the template type
 	 * @param data
 	 *            the data
 	 * @return String
-	 * @throws TemplateServiceException
-	 *             the TemplateServiceException
+	 * @throws TemplaterServiceException
+	 *             the TemplaterServiceException
 	 */
-	String getContentFromString(String templateContent, Map<String, Object> data) throws TemplateServiceException;
-
-	/**
-	 * Get the content from the string using data from the map parameter.
-	 * 
-	 * @param templateContent
-	 *            the templateContent
-	 * @param data
-	 *            the data
-	 * @param encoding
-	 *            the encoding
-	 * @return String
-	 * @throws TemplateServiceException
-	 *             the TemplateServiceException
-	 */
-	String getContentFromString(String templateContent, Map<String, Object> data, String encoding) throws TemplateServiceException;
+	String getContentFromString(String templateContent, String templateType, Map<String, Object> data) throws TemplaterServiceException;
 
 	/**
 	 * Get the content from the template using data from the map parameter.
 	 * 
-	 * @param templateAbsoluteFile
-	 *            the templateAbsoluteFile
+	 * @param templateFile
+	 *            the templateFile
 	 * @param data
 	 *            the data
 	 * @return String
-	 * @throws TemplateServiceException
-	 *             the TemplateServiceException
+	 * @throws TemplaterServiceException
+	 *             the TemplaterServiceException
 	 */
-	String getContentFromFile(File templateAbsoluteFile, Map<String, Object> data) throws TemplateServiceException;
+	String getContentFromFile(File templateFile, Map<String, Object> data) throws TemplaterServiceException;
 
 	/**
 	 * Get the content from the template using data from the map parameter.
 	 * 
-	 * @param templateAbsoluteFile
-	 *            the templateAbsoluteFile
+	 * @param inputStream
+	 *            the inputStream
+	 * @param templateType
+	 *            the template type
 	 * @param data
 	 *            the data
-	 * @param encoding
-	 *            the encoding
 	 * @return String
-	 * @throws TemplateServiceException
-	 *             the TemplateServiceException
+	 * @throws TemplaterServiceException
+	 *             the TemplaterServiceException
 	 */
-	String getContentFromFile(File templateAbsoluteFile, Map<String, Object> data, String encoding) throws TemplateServiceException;
+	String getContentFromInputStream(InputStream inputStream, String templateType, Map<String, Object> data) throws TemplaterServiceException;
 
 	/**
 	 * Get the content from the template using data from the map parameter.
 	 * 
-	 * @param inputTemplate
-	 *            the inputTemplate
+	 * @param reader
+	 *            the reader
+	 * @param templateType
+	 *            the template type
 	 * @param data
 	 *            the data
 	 * @return String
-	 * @throws TemplateServiceException
-	 *             the TemplateServiceException
+	 * @throws TemplaterServiceException
+	 *             the TemplaterServiceException
 	 */
-	String getContentFromInputStream(InputStream inputTemplate, Map<String, Object> data) throws TemplateServiceException;
-
-	/**
-	 * Get the content from the template using data from the map parameter.
-	 * 
-	 * @param inputTemplate
-	 *            the inputTemplate
-	 * @param data
-	 *            the data
-	 * @param encoding
-	 *            the encoding
-	 * @return String
-	 * @throws TemplateServiceException
-	 *             the TemplateServiceException
-	 */
-	String getContentFromInputStream(InputStream inputTemplate, Map<String, Object> data, String encoding) throws TemplateServiceException;
-
-	/**
-	 * Get the content from the template using data from the map parameter.
-	 * 
-	 * @param readerTemplate
-	 *            the readerTemplate
-	 * @param data
-	 *            the data
-	 * @return String
-	 * @throws TemplateServiceException
-	 *             the TemplateServiceException
-	 */
-	String getContentFromReader(Reader readerTemplate, Map<String, Object> data) throws TemplateServiceException;
-
-	/**
-	 * Get the content from the template using data from the map parameter.
-	 * 
-	 * @param readerTemplate
-	 *            the readerTemplate
-	 * @param data
-	 *            the data
-	 * @param encoding
-	 *            the encoding
-	 * @return String
-	 * @throws TemplateServiceException
-	 *             the TemplateServiceException
-	 */
-	String getContentFromReader(Reader readerTemplate, Map<String, Object> data, String encoding) throws TemplateServiceException;
+	String getContentFromReader(Reader reader, String templateType, Map<String, Object> data) throws TemplaterServiceException;
 }

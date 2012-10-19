@@ -4,6 +4,10 @@
 
 This wiki sums up all the projects's aims and goals. It explains how you can use them and gives details and quick descriptions of their configurations files.
 
+==Useful command==
+{{{
+mvn clean javadoc:jar source:jar install clean
+}}}
 ==Cyclic dependencies==
 
 Most of the project are linked and must be invoked follwing a specific order, in order to avoid potentials dependencies' problems. <br/>

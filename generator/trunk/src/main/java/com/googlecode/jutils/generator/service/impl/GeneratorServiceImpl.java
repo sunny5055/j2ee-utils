@@ -16,7 +16,7 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import com.googlecode.jutils.generator.exporter.Exporter;
 import com.googlecode.jutils.generator.service.GeneratorService;
 import com.googlecode.jutils.io.IoUtil;
-import com.googlecode.jutils.templater.exception.TemplateServiceException;
+import com.googlecode.jutils.templater.exception.TemplaterServiceException;
 import com.googlecode.jutils.templater.service.TemplaterService;
 
 @Service
@@ -57,7 +57,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 			final Map<String, Object> data = exporter.getData();
 			try {
 				content = templaterService.getContent(templateName, data);
-			} catch (final TemplateServiceException e) {
+			} catch (final TemplaterServiceException e) {
 				throw new GeneratorServiceException(e);
 			}
 		}

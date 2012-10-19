@@ -18,6 +18,37 @@
 		<url>https://j2ee-utils.googlecode.com/svn/generator/trunk/</url>
 	</scm>
 
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>jaxb2-maven-plugin</artifactId>
+					<version>1.5</version>
+
+					<executions>
+						<execution>
+							<id>schemagen</id>
+							<goals>
+								<goal>schemagen</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<includes>
+							<include>com/googlecode/jee/utils/generator/hibernate/model/Entity.java</include>
+							<include>com/googlecode/jee/utils/generator/hibernate/model/Property.java</include>
+							<include>com/googlecode/jee/utils/generator/hibernate/model/SimpleValue.java</include>
+							<include>com/googlecode/jee/utils/generator/hibernate/model/Value.java</include>
+							<include>com/googlecode/jee/utils/generator/hibernate/config/HibernateConfig.java</include>
+						</includes>
+						<outputDirectory>${project.build.directory}/schemas</outputDirectory>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>jee-utils</groupId>
@@ -26,8 +57,8 @@
 		</dependency>
 		<dependency>
 			<groupId>jee-utils</groupId>
-			<artifactId>templater</artifactId>
-			<version>2.0.0</version>
+			<artifactId>freemarker-templater</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>jee-utils</groupId>

@@ -31,4 +31,5 @@ The following scheme shows the dependency cycle of each project. The project the
 	<li> user-management -- hibernate-dal -- commons-dal -- spring-util -- utils </li>
 	<li> sftp-util -- utils </li>  
 	<li> oxm -- spring-util </li>  
+	<li> xslt -- spring-util </li>  	
 </ul>

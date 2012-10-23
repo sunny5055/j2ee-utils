@@ -1,0 +1,179 @@
+=xslt=
+
+==Getting started==
+
+Define a `XsltConfiguration` as following :
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/context
+                http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                http://www.springframework.org/schema/util
+                http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+	<context:component-scan base-package="com.googlecode" />
+	<context:annotation-config />
+	
+	<bean id="xsltConfiguration"
+			class="com.googlecode.jutils.xslt.configuration.XsltConfiguration">
+			<property name="xmlLoaderPath" value="xml/" />
+			<property name="xslLoaderPath" value="xsl/" />
+	</bean>
+</beans>
+}}}
+
+Assume you have a xml named `tables.xml` with the following content :
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<tables>
+    <table name="Author" comment="Author datatable">
+        <field name="id" type="integer"  primaryKey="true"/>
+        <field name="lastName" type="text"/>
+        <field name="firstName" type="text"/>
+    </table>
+    <table name="Book" comment="Book datatable">
+        <field name="id" type="integer" primaryKey="true"/>
+        <field name="name" type="text"/>
+        <field name="authorId" type="integer"/>
+    </table>
+</tables>
+}}}
+
+The following xsl files :
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="2.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:import href="inner-sql.xsl" />
+	<xsl:output method="text" indent="no" omit-xml-declaration="yes" />
+
+	<xsl:template match="/">
+		<xsl:for-each select="//table">
+			<xsl:variable name="fileName" select="concat(@name,'.html')" />
+			<xsl:variable name="tableName" select="@name" />
+			<xsl:call-template name="sql-file">
+				<xsl:with-param name="table" select="." />
+			</xsl:call-template>
+		</xsl:for-each>
+	</xsl:template>
+
+</xsl:stylesheet>
+}}}
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="2.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+	<xsl:template name="sql-file">
+		<xsl:param name="table" />
+		-- This file has been generated
+
+		DROP TABLE IF EXISTS
+		<xsl:value-of select="$table/@name" />
+		;
+		CREATE TABLE
+		<xsl:value-of select="$table/@name" />
+		(
+		<xsl:for-each select="field">
+			<xsl:call-template name="sql-field">
+				<xsl:with-param name="field" select="." />
+			</xsl:call-template>
+			<xsl:if test="position() != last()">
+				,
+			</xsl:if>
+		</xsl:for-each>
+		) ENGINE = MYISAM
+		PACK_KEYS = 1
+		COMMENT = '<xsl:value-of select="$table/@comment" />';
+	</xsl:template>
+
+	<xsl:template name="sql-field">
+		<xsl:param name="field" />
+		<xsl:if test="$field/@type='integer'">
+			<xsl:value-of select="$field/@name" />
+			INTEGER
+		</xsl:if>
+		<xsl:if test="$field/@type='text'">
+			<xsl:value-of select="$field/@name" />
+			VARCHAR(100)
+		</xsl:if>
+		<xsl:if test="$field/@primaryKey='true'">
+			PRIMARY KEY(<xsl:value-of select="$field/@name" />)
+		</xsl:if>
+	</xsl:template>
+</xsl:stylesheet>
+}}}
+
+and the following Java class :
+
+{{{
+public static void main(String[] args) {
+	final ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "spring/application-context.xml" });
+	final XsltService xsltService = context.getBean(XsltService.class);
+	if (xsltService != null) {
+		final String result = xsltService.transform("tables.xml", "sql.xsl");
+		System.out.println(result);
+	}
+}
+}}}	
+
+The result :
+
+{{{
+-- This file has been generated
+
+DROP TABLE IF EXISTS
+Author
+;
+CREATE TABLE
+Author
+(
+id
+	INTEGER
+
+	PRIMARY KEY(id)
+
+		,
+	lastName
+	VARCHAR(100)
+
+		,
+	firstName
+	VARCHAR(100)
+
+) ENGINE = MYISAM
+PACK_KEYS = 1
+COMMENT = 'Author datatable';
+
+-- This file has been generated
+
+DROP TABLE IF EXISTS
+Book
+;
+CREATE TABLE
+Book
+(
+id
+	INTEGER
+
+	PRIMARY KEY(id)
+
+		,
+	name
+	VARCHAR(100)
+
+		,
+	authorId
+	INTEGER
+
+) ENGINE = MYISAM
+PACK_KEYS = 1
+COMMENT = 'Book datatable';
+}}}

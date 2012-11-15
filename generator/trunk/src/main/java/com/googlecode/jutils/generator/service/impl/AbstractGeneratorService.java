@@ -1,0 +1,247 @@
+package com.googlecode.jutils.generator.service.impl;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.Map;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Node;
+import org.dom4j.io.SAXReader;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.MapUtil;
+import com.googlecode.jutils.generator.config.GeneratorConfig;
+import com.googlecode.jutils.generator.exception.GeneratorServiceException;
+import com.googlecode.jutils.generator.service.GeneratorService;
+import com.googlecode.jutils.io.IoUtil;
+import com.googlecode.jutils.templater.exception.TemplaterServiceException;
+import com.googlecode.jutils.templater.service.TemplaterService;
+
+import freemarker.ext.dom.NodeModel;
+
+public abstract class AbstractGeneratorService implements GeneratorService {
+	protected static final Logger LOGGER = Logger.getLogger(AbstractGeneratorService.class);
+	protected GeneratorConfig config;
+
+	@Autowired
+	protected TemplaterService templaterService;
+
+	public AbstractGeneratorService() {
+		super();
+	}
+
+	public GeneratorConfig getConfig() {
+		return config;
+	}
+
+	public void setConfig(GeneratorConfig config) {
+		this.config = config;
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public void generate(String xmlContent) throws GeneratorServiceException {
+		if (!StringUtil.isBlank(xmlContent)) {
+			final Document xmlDocument = getXmlDocument(xmlContent);
+			if (xmlDocument != null) {
+				final NodeModel xmlModel = getModel(xmlContent);
+				if (xmlModel != null) {
+					generate(xmlDocument, xmlModel);
+				}
+			}
+		}
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public void generate(File xmlFile) throws GeneratorServiceException {
+		if (xmlFile != null) {
+			Reader reader = null;
+			try {
+				reader = new BufferedReader(new FileReader(xmlFile));
+				generate(reader);
+			} catch (final FileNotFoundException e) {
+				throw new GeneratorServiceException(e);
+			} catch (final Exception e) {
+				throw new GeneratorServiceException(e);
+			} finally {
+				if (reader != null) {
+					try {
+						reader.close();
+					} catch (final IOException e) {
+						throw new GeneratorServiceException(e);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public void generate(InputStream inputStream) throws GeneratorServiceException {
+		if (inputStream != null) {
+			Reader reader = null;
+			try {
+				reader = new InputStreamReader(inputStream);
+				generate(reader);
+			} catch (final Exception e) {
+				throw new GeneratorServiceException(e);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public void generate(Reader reader) throws GeneratorServiceException {
+		if (reader != null) {
+			String xmlContent = null;
+			try {
+				xmlContent = IoUtil.toString(reader);
+			} catch (final IOException e) {
+				throw new GeneratorServiceException(e);
+			}
+
+			generate(xmlContent);
+		}
+	}
+
+	protected abstract void generate(Document xmlDocument, NodeModel model) throws GeneratorServiceException;
+
+	protected abstract File getOutputDirectory(Node node);
+
+	protected abstract String getOutputFileName(Node node);
+
+	protected File getOutputFile(Node node) {
+		File outputFile = null;
+		if (node != null) {
+			final File outputDirectory = getOutputDirectory(node);
+			final String outputFileName = getOutputFileName(node);
+			if (outputDirectory != null && !StringUtil.isBlank(outputFileName)) {
+				outputFile = new File(outputDirectory, outputFileName);
+			}
+		}
+		return outputFile;
+	}
+
+	protected Document getXmlDocument(String xmlContent) throws GeneratorServiceException {
+		Document document = null;
+		if (!StringUtil.isBlank(xmlContent)) {
+			final StringReader reader = new StringReader(xmlContent);
+			final SAXReader saxReader = new SAXReader();
+			try {
+				document = saxReader.read(reader);
+			} catch (final DocumentException e) {
+				throw new GeneratorServiceException(e);
+			} finally {
+				reader.close();
+			}
+		}
+		return document;
+	}
+
+	protected NodeModel getModel(String xmlContent) throws GeneratorServiceException {
+		NodeModel xmlModel = null;
+		if (!StringUtil.isBlank(xmlContent)) {
+			final StringReader reader = new StringReader(xmlContent);
+			try {
+				xmlModel = NodeModel.parse(new InputSource(reader));
+			} catch (final SAXException e) {
+				throw new GeneratorServiceException(e);
+			} catch (final IOException e) {
+				throw new GeneratorServiceException(e);
+			} catch (final ParserConfigurationException e) {
+				throw new GeneratorServiceException(e);
+			} finally {
+				reader.close();
+			}
+		}
+		return xmlModel;
+	}
+
+	protected void generateFile(Node node, String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
+		if (node != null && !StringUtil.isBlank(templateName) && !MapUtil.isEmpty(data) && model != null) {
+			final File outputDirectory = getOutputDirectory(node);
+			if (outputDirectory != null) {
+				data.put("outputDirectory", outputDirectory);
+			}
+
+			final String outputFileName = getOutputFileName(node);
+			if (!StringUtil.isBlank(outputFileName)) {
+				data.put("outputFileName", outputFileName);
+			}
+
+			final File file = getOutputFile(node);
+			if (file != null) {
+				final String content = getContent(templateName, data, model);
+				if (!StringUtil.isBlank(content)) {
+					try {
+						writeToFile(file, content);
+					} catch (final FileNotFoundException e) {
+						throw new GeneratorServiceException(e);
+					} catch (final IOException e) {
+						throw new GeneratorServiceException(e);
+					}
+				}
+			}
+		}
+	}
+
+	protected String getContent(String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
+		String content = null;
+		if (!StringUtil.isBlank(templateName) && data != null && model != null) {
+			data.put("xmlModel", model);
+			data.put("templateName", templateName);
+			data.putAll(config.getData());
+			try {
+				content = templaterService.getContent(templateName, data);
+			} catch (final TemplaterServiceException e) {
+				throw new GeneratorServiceException(e);
+			}
+		}
+		return content;
+	}
+
+	protected void writeToFile(File file, String content) throws IOException, FileNotFoundException {
+		if (file != null && !StringUtil.isBlank(content)) {
+			final File parent = file.getParentFile();
+			if (!parent.exists()) {
+				FileUtils.forceMkdir(parent);
+			}
+
+			OutputStream outputStream = null;
+			try {
+				outputStream = new FileOutputStream(file);
+				IoUtil.write(content, outputStream);
+			} finally {
+				if (outputStream != null) {
+					outputStream.close();
+				}
+			}
+		}
+	}
+}

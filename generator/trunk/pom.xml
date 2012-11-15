@@ -18,57 +18,21 @@
 		<url>https://j2ee-utils.googlecode.com/svn/generator/trunk/</url>
 	</scm>
 
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>jaxb2-maven-plugin</artifactId>
-					<version>1.5</version>
-
-					<executions>
-						<execution>
-							<id>schemagen</id>
-							<goals>
-								<goal>schemagen</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<includes>
-							<include>com/googlecode/jee/utils/generator/hibernate/model/Entity.java</include>
-							<include>com/googlecode/jee/utils/generator/hibernate/model/Property.java</include>
-							<include>com/googlecode/jee/utils/generator/hibernate/model/SimpleValue.java</include>
-							<include>com/googlecode/jee/utils/generator/hibernate/model/Value.java</include>
-							<include>com/googlecode/jee/utils/generator/hibernate/config/HibernateConfig.java</include>
-						</includes>
-						<outputDirectory>${project.build.directory}/schemas</outputDirectory>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-
 	<dependencies>
-		<dependency>
-			<groupId>jee-utils</groupId>
-			<artifactId>hibernate-dal</artifactId>
-			<version>2.1.0</version>
-		</dependency>
 		<dependency>
 			<groupId>jee-utils</groupId>
 			<artifactId>freemarker-templater</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>jee-utils</groupId>
-			<artifactId>oxm</artifactId>
-			<version>1.0.1</version>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.6</version>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+			<version>1.1.4</version>
 		</dependency>
 	</dependencies>
 </project>

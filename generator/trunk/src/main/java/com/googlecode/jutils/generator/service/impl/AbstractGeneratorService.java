@@ -169,12 +169,15 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 		if (!StringUtil.isBlank(xmlContent)) {
 			final StringReader reader = new StringReader(xmlContent);
 			try {
+				NodeModel.useJaxenXPathSupport();
 				xmlModel = NodeModel.parse(new InputSource(reader));
 			} catch (final SAXException e) {
 				throw new GeneratorServiceException(e);
 			} catch (final IOException e) {
 				throw new GeneratorServiceException(e);
 			} catch (final ParserConfigurationException e) {
+				throw new GeneratorServiceException(e);
+			} catch (final Exception e) {
 				throw new GeneratorServiceException(e);
 			} finally {
 				reader.close();
@@ -214,11 +217,15 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 	protected String getContent(String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
 		String content = null;
 		if (!StringUtil.isBlank(templateName) && data != null && model != null) {
-			data.put("xmlModel", model);
+			data.put("xml", model);
 			data.put("templateName", templateName);
 			data.putAll(config.getData());
 			try {
 				content = templaterService.getContent(templateName, data);
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug(content);
+				}
+
 			} catch (final TemplaterServiceException e) {
 				throw new GeneratorServiceException(e);
 			}
@@ -244,4 +251,5 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 			}
 		}
 	}
+
 }

@@ -132,15 +132,32 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 
 	protected abstract void generate(Document xmlDocument, NodeModel model) throws GeneratorServiceException;
 
-	protected abstract File getOutputDirectory(Node node);
+	protected abstract String getPathToElement(String fileType, Node node);
 
-	protected abstract String getOutputFileName(Node node);
+	protected abstract String getOutputFileName(String fileType, Node node);
 
-	protected File getOutputFile(Node node) {
+	protected File getOutputDirectory(String fileType, Node node) {
+		File outputDirectory = null;
+		if (!StringUtil.isBlank(fileType)) {
+			if (config.hasOutputDirectory(fileType)) {
+				outputDirectory = new File(config.getBaseOutputDirectory(), config.getOutputDirectory(fileType));
+			} else {
+				outputDirectory = config.getBaseOutputDirectory();
+			}
+
+			final String pathToElement = getPathToElement(fileType, node);
+			if (!StringUtil.isBlank(pathToElement)) {
+				outputDirectory = new File(outputDirectory, pathToElement);
+			}
+		}
+		return outputDirectory;
+	}
+
+	protected File getOutputFile(String fileType, Node node) {
 		File outputFile = null;
-		if (node != null) {
-			final File outputDirectory = getOutputDirectory(node);
-			final String outputFileName = getOutputFileName(node);
+		if (!StringUtil.isBlank(fileType) && node != null) {
+			final File outputDirectory = getOutputDirectory(fileType, node);
+			final String outputFileName = getOutputFileName(fileType, node);
 			if (outputDirectory != null && !StringUtil.isBlank(outputFileName)) {
 				outputFile = new File(outputDirectory, outputFileName);
 			}
@@ -148,7 +165,34 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 		return outputFile;
 	}
 
-	protected Document getXmlDocument(String xmlContent) throws GeneratorServiceException {
+	protected void generate(String fileType, Node node, String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
+		if (!StringUtil.isBlank(fileType) && node != null && !StringUtil.isBlank(templateName) && !MapUtil.isEmpty(data) && model != null) {
+			File file = null;
+			final File outputDirectory = getOutputDirectory(fileType, node);
+			final String outputFileName = getOutputFileName(fileType, node);
+
+			if (outputDirectory != null && !StringUtil.isBlank(outputFileName)) {
+				data.put("outputDirectory", outputDirectory);
+				data.put("outputFileName", outputFileName);
+				file = new File(outputDirectory, outputFileName);
+
+				if (file != null) {
+					final String content = getContent(templateName, data, model);
+					if (!StringUtil.isBlank(content)) {
+						try {
+							writeToFile(file, content);
+						} catch (final FileNotFoundException e) {
+							throw new GeneratorServiceException(e);
+						} catch (final IOException e) {
+							throw new GeneratorServiceException(e);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private Document getXmlDocument(String xmlContent) throws GeneratorServiceException {
 		Document document = null;
 		if (!StringUtil.isBlank(xmlContent)) {
 			final StringReader reader = new StringReader(xmlContent);
@@ -164,7 +208,7 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 		return document;
 	}
 
-	protected NodeModel getModel(String xmlContent) throws GeneratorServiceException {
+	private NodeModel getModel(String xmlContent) throws GeneratorServiceException {
 		NodeModel xmlModel = null;
 		if (!StringUtil.isBlank(xmlContent)) {
 			final StringReader reader = new StringReader(xmlContent);
@@ -186,35 +230,7 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 		return xmlModel;
 	}
 
-	protected void generateFile(Node node, String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
-		if (node != null && !StringUtil.isBlank(templateName) && !MapUtil.isEmpty(data) && model != null) {
-			final File outputDirectory = getOutputDirectory(node);
-			if (outputDirectory != null) {
-				data.put("outputDirectory", outputDirectory);
-			}
-
-			final String outputFileName = getOutputFileName(node);
-			if (!StringUtil.isBlank(outputFileName)) {
-				data.put("outputFileName", outputFileName);
-			}
-
-			final File file = getOutputFile(node);
-			if (file != null) {
-				final String content = getContent(templateName, data, model);
-				if (!StringUtil.isBlank(content)) {
-					try {
-						writeToFile(file, content);
-					} catch (final FileNotFoundException e) {
-						throw new GeneratorServiceException(e);
-					} catch (final IOException e) {
-						throw new GeneratorServiceException(e);
-					}
-				}
-			}
-		}
-	}
-
-	protected String getContent(String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
+	private String getContent(String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
 		String content = null;
 		if (!StringUtil.isBlank(templateName) && data != null && model != null) {
 			data.put("xml", model);
@@ -233,7 +249,7 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 		return content;
 	}
 
-	protected void writeToFile(File file, String content) throws IOException, FileNotFoundException {
+	private void writeToFile(File file, String content) throws IOException, FileNotFoundException {
 		if (file != null && !StringUtil.isBlank(content)) {
 			final File parent = file.getParentFile();
 			if (!parent.exists()) {

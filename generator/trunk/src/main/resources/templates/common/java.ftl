@@ -99,3 +99,43 @@
 	<#return primitive>
 </#function>
 
+
+<#function getModifiers abstract static final>
+	<#local modifiers= "">
+	<#if abstract == "true">
+		<#if modifiers?length gt 0>
+			<#local modifiers = modifiers + " abstract">
+		<#else>
+			<#local modifiers = "abstract">
+		</#if>
+	</#if>
+	<#if static == "true">
+		<#if modifiers?length gt 0>
+			<#local modifiers = modifiers + " static">
+		<#else>
+			<#local modifiers = "static">
+		</#if>
+	</#if>
+	<#if final == "true">
+		<#if modifiers?length gt 0>
+			<#local modifiers = modifiers + " final">
+		<#else>
+			<#local modifiers = "final">
+		</#if>
+	</#if>
+	<#return modifiers>
+</#function>
+
+
+<#macro getter type name>
+	public ${type} get${name?cap_first}() {
+		return ${name};
+	}
+</#macro>
+
+
+<#macro setter type name>
+	public void set${name?cap_first}(${type} ${name}) {
+		this.${name} = ${name};
+	}
+</#macro>

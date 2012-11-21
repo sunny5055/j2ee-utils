@@ -25,29 +25,7 @@
 </#function>
 
 <#function getModifiers node>
-	<#local modifiers= "">
-	<#if xml.getAttribute(node.@abstract) == "true">
-		<#if modifiers?length gt 0>
-			<#local modifiers = modifiers + " abstract">
-		<#else>
-			<#local modifiers = "abstract">
-		</#if>
-	</#if>
-	<#if xml.getAttribute(node.@static) == "true">
-		<#if modifiers?length gt 0>
-			<#local modifiers = modifiers + " static">
-		<#else>
-			<#local modifiers = "static">
-		</#if>
-	</#if>
-	<#if xml.getAttribute(node.@final) == "true">
-		<#if modifiers?length gt 0>
-			<#local modifiers = modifiers + " final">
-		<#else>
-			<#local modifiers = "final">
-		</#if>
-	</#if>
-	<#return modifiers>
+	<#return java.getModifiers(xml.getAttribute(node.@abstract), xml.getAttribute(node.@static), xml.getAttribute(node.@final))>
 </#function>
 
 
@@ -73,16 +51,12 @@
 
 
 <#macro getter property>
-	public ${java.getType(property.@type, xml.getAttribute(property.@value), xml.getAttribute(property.@key))} get${property.@name?cap_first}() {
-		return ${property.@name};
-	}
+	<@java.getter type=java.getType(property.@type, xml.getAttribute(property.@value), xml.getAttribute(property.@key)) name=property.@name />
 </#macro>
 
 
 <#macro setter property>
-	public void set${property.@name?cap_first}(${java.getType(property.@type, xml.getAttribute(property.@value), xml.getAttribute(property.@key))} ${property.@name}) {
-		this.${property.@name} = ${property.@name};
-	}
+	<@java.setter type=java.getType(property.@type, xml.getAttribute(property.@value), xml.getAttribute(property.@key)) name=property.@name />
 </#macro>
 
 

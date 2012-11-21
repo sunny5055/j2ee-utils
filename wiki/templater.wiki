@@ -89,3 +89,21 @@ The result :
 {{{
 Hello John !
 }}}
+
+==Tips==
+
+To be able to load template located inside a jar : 
+
+{{{
+<bean id="freemarkerConfiguration"
+	class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+	<property name="templateLoaderPaths">
+		<array>
+			<value>classpath:/templates/</value>
+			<value>templates/</value>
+		</array>
+	</property>
+	<property name="preferFileSystemAccess" value="false"/>
+	<property name="defaultEncoding" value="UTF-8" />
+</bean>
+}}}

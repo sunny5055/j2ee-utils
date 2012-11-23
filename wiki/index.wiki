@@ -8,6 +8,10 @@ This wiki sums up all the projects's aims and goals. It explains how you can use
 {{{
 mvn clean javadoc:jar source:jar install clean
 }}}
+
+{{{
+mvn dependency:sources
+}}}
 ==Cyclic dependencies==
 
 Most of the project are linked and must be invoked follwing a specific order, in order to avoid potentials dependencies' problems. <br/>

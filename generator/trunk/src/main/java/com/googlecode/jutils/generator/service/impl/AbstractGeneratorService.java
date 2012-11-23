@@ -11,11 +11,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -29,6 +31,7 @@ import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.collection.MapUtil;
 import com.googlecode.jutils.generator.config.GeneratorConfig;
 import com.googlecode.jutils.generator.exception.GeneratorServiceException;
+import com.googlecode.jutils.generator.formatter.Formatter;
 import com.googlecode.jutils.generator.service.GeneratorService;
 import com.googlecode.jutils.io.IoUtil;
 import com.googlecode.jutils.templater.exception.TemplaterServiceException;
@@ -39,12 +42,14 @@ import freemarker.ext.dom.NodeModel;
 public abstract class AbstractGeneratorService implements GeneratorService {
 	protected static final Logger LOGGER = Logger.getLogger(AbstractGeneratorService.class);
 	protected GeneratorConfig config;
+	protected Map<String, Formatter> formatters;
 
 	@Autowired
 	protected TemplaterService templaterService;
 
 	public AbstractGeneratorService() {
 		super();
+		this.formatters = new HashMap<String, Formatter>();
 	}
 
 	public GeneratorConfig getConfig() {
@@ -53,6 +58,14 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 
 	public void setConfig(GeneratorConfig config) {
 		this.config = config;
+	}
+
+	public Map<String, Formatter> getFormatters() {
+		return formatters;
+	}
+
+	public void setFormatters(Map<String, Formatter> formatters) {
+		this.formatters = formatters;
 	}
 
 	/**
@@ -263,6 +276,20 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 			} finally {
 				if (outputStream != null) {
 					outputStream.close();
+				}
+			}
+
+			formatFile(file);
+		}
+	}
+
+	private void formatFile(File file) throws IOException {
+		if (file != null) {
+			final String extension = FilenameUtils.getExtension(file.getName());
+			if (!MapUtil.isEmpty(formatters)) {
+				final Formatter formatter = formatters.get(extension);
+				if (formatter != null) {
+					formatter.format(file);
 				}
 			}
 		}

@@ -14,16 +14,23 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.dom4j.DocumentFactory;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -43,6 +50,7 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 	protected static final Logger LOGGER = Logger.getLogger(AbstractGeneratorService.class);
 	protected GeneratorConfig config;
 	protected Map<String, Formatter> formatters;
+	protected Resource schema;
 
 	@Autowired
 	protected TemplaterService templaterService;
@@ -68,12 +76,28 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 		this.formatters = formatters;
 	}
 
+	public Resource getSchema() {
+		return schema;
+	}
+
+	public void setSchema(Resource schema) {
+		this.schema = schema;
+	}
+
 	/**
 	 * {@inheritedDoc}
 	 */
 	@Override
 	public void generate(String xmlContent) throws GeneratorServiceException {
 		if (!StringUtil.isBlank(xmlContent)) {
+			try {
+				validate(xmlContent);
+			} catch (final SAXException e) {
+				throw new GeneratorServiceException(e);
+			} catch (final IOException e) {
+				throw new GeneratorServiceException(e);
+			}
+
 			final Document xmlDocument = getXmlDocument(xmlContent);
 			if (xmlDocument != null) {
 				final NodeModel xmlModel = getModel(xmlContent);
@@ -149,6 +173,8 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 
 	protected abstract String getOutputFileName(String fileType, Node node);
 
+	protected abstract Map<String, String> getNamespaceUris();
+
 	protected File getOutputDirectory(String fileType, Node node) {
 		File outputDirectory = null;
 		if (!StringUtil.isBlank(fileType)) {
@@ -205,12 +231,34 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 		}
 	}
 
+	private void validate(String xmlContent) throws SAXException, IOException {
+		if (!StringUtil.isBlank(xmlContent) && schema != null) {
+			final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			final Schema xmlSchema = factory.newSchema(new StreamSource(schema.getFile()));
+
+			final Validator validator = xmlSchema.newValidator();
+			final StringReader reader = new StringReader(xmlContent);
+			try {
+				validator.validate(new StreamSource(reader));
+			} finally {
+				reader.close();
+			}
+		}
+	}
+
 	private Document getXmlDocument(String xmlContent) throws GeneratorServiceException {
 		Document document = null;
 		if (!StringUtil.isBlank(xmlContent)) {
+			final Map<String, String> namespaceUris = getNamespaceUris();
+			if (!MapUtil.isEmpty(namespaceUris)) {
+				final DocumentFactory factory = new DocumentFactory();
+				factory.setXPathNamespaceURIs(namespaceUris);
+			}
+
 			final StringReader reader = new StringReader(xmlContent);
-			final SAXReader saxReader = new SAXReader();
+			SAXReader saxReader = null;
 			try {
+				saxReader = new SAXReader();
 				document = saxReader.read(reader);
 			} catch (final DocumentException e) {
 				throw new GeneratorServiceException(e);

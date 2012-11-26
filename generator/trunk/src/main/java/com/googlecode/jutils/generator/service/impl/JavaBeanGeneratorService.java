@@ -24,17 +24,25 @@ public class JavaBeanGeneratorService extends AbstractGeneratorService {
 	private static final String INTERFACE_TEMPLATE_FILE = "javaBean/interface.ftl";
 
 	@Override
+	protected Map<String, String> getNamespaceUris() {
+		final Map<String, String> namespaceUris = new HashMap<String, String>();
+		namespaceUris.put("p", "http://code.google.com/p/j2ee-utils/schema/java-beans");
+
+		return namespaceUris;
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	protected void generate(Document xmlDocument, NodeModel model) throws GeneratorServiceException {
 		if (xmlDocument != null && model != null) {
-			final List<Node> classes = xmlDocument.selectNodes("//class");
+			final List<Node> classes = xmlDocument.selectNodes("//p:class");
 			if (!CollectionUtil.isEmpty(classes)) {
 				for (final Node node : classes) {
 					generateClass(node, model);
 				}
 			}
 
-			final List<Node> interfaces = xmlDocument.selectNodes("//interfaces/interface");
+			final List<Node> interfaces = xmlDocument.selectNodes("//p:interfaces/p:interface");
 			if (!CollectionUtil.isEmpty(interfaces)) {
 				for (final Node node : interfaces) {
 					generateInterface(node, model);
@@ -47,7 +55,7 @@ public class JavaBeanGeneratorService extends AbstractGeneratorService {
 	protected String getPathToElement(String fileType, Node node) {
 		String pathToElement = null;
 		if (!StringUtil.isBlank(fileType) && node != null) {
-			final String packageName = node.valueOf("ancestor::package/@name");
+			final String packageName = node.valueOf("ancestor::p:package/@name");
 			if (!StringUtil.isBlank(packageName)) {
 				pathToElement = packageName.replace(".", File.separator);
 			}
@@ -73,7 +81,7 @@ public class JavaBeanGeneratorService extends AbstractGeneratorService {
 	private void generateClass(Node node, NodeModel model) throws GeneratorServiceException {
 		if (node != null && model != null) {
 			final String className = node.valueOf("@name");
-			final String packageName = node.valueOf("ancestor::package/@name");
+			final String packageName = node.valueOf("ancestor::p:package/@name");
 
 			final Map<String, Object> data = new HashMap<String, Object>();
 			data.put("packageName", packageName);
@@ -86,7 +94,7 @@ public class JavaBeanGeneratorService extends AbstractGeneratorService {
 	private void generateInterface(Node node, NodeModel model) throws GeneratorServiceException {
 		if (node != null && model != null) {
 			final String interfaceName = node.valueOf("@name");
-			final String packageName = node.valueOf("ancestor::package/@name");
+			final String packageName = node.valueOf("ancestor::p:package/@name");
 
 			final Map<String, Object> data = new HashMap<String, Object>();
 			data.put("packageName", packageName);

@@ -105,8 +105,8 @@
 	<#local visibility= xml.getAttribute(constructor.@visibility, "public")>
 	${visibility} ${className}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
 	<#compress>
-	<#if constructor.content?is_node>
-		${constructor.content}
+	<#if constructor["p:content"]?is_node>
+		${constructor["p:content"]}
 	</#if>
 	</#compress>
 	}
@@ -116,8 +116,8 @@
 	<#assign parameters = operation["p:parameters/*"]>
 	<#local visibility= xml.getAttribute(operation.@visibility, "public")>
 	${visibility} ${getModifiers(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
-	<#if operation.content?is_node>
-		${operation.content}
+	<#if operation["p:content"]?is_node>
+		${operation["p:content"]}
 	<#else>
 		//TODO to complete
 	</#if>

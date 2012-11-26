@@ -14,14 +14,14 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 
 import freemarker.ext.dom.NodeModel;
 
-public class JavaBeanGeneratorService extends AbstractGeneratorService {
+public class JavaBeansGeneratorService extends AbstractGeneratorService {
 	private static final String DEFAULT_FILE_NAME_PATTERN = "%1s.java";
 
 	private static final String CLASS_TYPE = "class";
-	private static final String CLASS_TEMPLATE_FILE = "javaBean/javaBean.ftl";
+	private static final String CLASS_TEMPLATE_FILE = "java-beans/class.ftl";
 
 	private static final String INTERFACE_TYPE = "interface";
-	private static final String INTERFACE_TEMPLATE_FILE = "javaBean/interface.ftl";
+	private static final String INTERFACE_TEMPLATE_FILE = "java-beans/interface.ftl";
 
 	@Override
 	protected Map<String, String> getNamespaceUris() {

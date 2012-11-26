@@ -299,10 +299,6 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 			data.putAll(config.getData());
 			try {
 				content = templaterService.getContent(templateName, data);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug(content);
-				}
-
 			} catch (final TemplaterServiceException e) {
 				throw new GeneratorServiceException(e);
 			}

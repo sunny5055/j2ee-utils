@@ -1,3 +1,4 @@
+<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/java-beans"}>
 <#import "../common/xml.ftl" as xml>
 <#import "../common/java.ftl" as java>
 
@@ -15,10 +16,10 @@
 
 <#function getReturnType operation>
 	<#local returnType= "">
-	<#if operation.return.type?is_node>
-		<#local returnType = java.getType(operation.return.type.@type)>
+	<#if operation["p:return/p:type"]?is_node>
+		<#local returnType = java.getType(operation["p:return/p:type/@type"])>
 	<#else>
-		<#local typeList = operation["return/type-list"]>
+		<#local typeList = operation["p:return/p:type-list"]>
 		<#local returnType = java.getType(typeList.@type, xml.getAttribute(typeList.@value))>
 	</#if>
 	<#return returnType>
@@ -100,7 +101,7 @@
 </#macro>
 
 <#macro constructor className constructor>
-	<#assign parameters = constructor["parameters/*"]>
+	<#assign parameters = constructor["p:parameters/*"]>
 	<#local visibility= xml.getAttribute(constructor.@visibility, "public")>
 	${visibility} ${className}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
 	<#compress>
@@ -112,7 +113,7 @@
 </#macro>
 
 <#macro operation operation>
-	<#assign parameters = operation["parameters/*"]>
+	<#assign parameters = operation["p:parameters/*"]>
 	<#local visibility= xml.getAttribute(operation.@visibility, "public")>
 	${visibility} ${getModifiers(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
 	<#if operation.content?is_node>
@@ -125,6 +126,6 @@
 
 
 <#macro interfaceOperation operation>
-	<#assign parameters = operation["parameters/*"]>
+	<#assign parameters = operation["p:parameters/*"]>
 	${getModifiers(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>);
 </#macro>

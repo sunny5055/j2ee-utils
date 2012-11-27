@@ -52,11 +52,9 @@ public class FreemarkerTemplaterEngine extends AbstractTemplaterEngine {
 			try {
 				template = configuration.getTemplate(templateName, configuration.getDefaultEncoding());
 				if (template != null) {
-					content = FreeMarkerTemplateUtils.processTemplateIntoString(template, data);
+					content = processTemplateIntoString(template, data);
 				}
 			} catch (final IOException e) {
-				throw new TemplaterServiceException(e);
-			} catch (final TemplateException e) {
 				throw new TemplaterServiceException(e);
 			}
 		}

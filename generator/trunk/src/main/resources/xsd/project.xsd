@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsd:schema version="1.0"
+	xmlns:p="http://code.google.com/p/j2ee-utils/schema/project" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://code.google.com/p/j2ee-utils/schema/project"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:element name="project">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="configuration" type="p:configuration" />
+				<xsd:element name="packages">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="package" type="p:package"
+								minOccurs="1" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="configuration">
+		<xsd:sequence>
+			<xsd:element name="projectName" type="xsd:string"
+				minOccurs="1" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="package">
+		<xsd:sequence>
+			<!-- <xsd:any namespace="##other" processContents="strict" minOccurs="0"
+				maxOccurs="unbounded"/> -->
+			<xsd:any namespace="http://code.google.com/p/j2ee-utils/schema/java-beans"
+				processContents="strict" minOccurs="0" maxOccurs="unbounded" />
+			<xsd:any namespace="http://code.google.com/p/j2ee-utils/schema/hibernate"
+				processContents="strict" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required" />
+	</xsd:complexType>
+</xsd:schema>
+
+

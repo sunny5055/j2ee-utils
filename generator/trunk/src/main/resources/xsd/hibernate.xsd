@@ -1,101 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xsd:schema version="1.0"
-	xmlns:p="http://code.google.com/p/j2ee-utils/schema/hibernate"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://code.google.com/p/j2ee-utils/schema/hibernate"
+	xmlns:h="http://code.google.com/p/j2ee-utils/schema/hibernate"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://code.google.com/p/j2ee-utils/schema/hibernate"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<xsd:include schemaLocation=""></xsd:include>
-	<xsd:element name="hibernate">
+
+	<xsd:include schemaLocation="commons-java.xsd"/>
+
+	<xsd:element name="entity">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element name="configuration" type="p:configuration" />
-				<xsd:element name="packages">
+				<xsd:element name="implements" minOccurs="0">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="package" type="p:package"
-								minOccurs="1" maxOccurs="unbounded" />
+							<xsd:element name="interface" type="xsd:string"
+								minOccurs="0" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:choice>
+					<xsd:element name="id" type="h:id" />
+					<xsd:element name="embedded-id" type="h:embedded-id" />
+				</xsd:choice>
+				<xsd:element name="properties" minOccurs="0">
+					<xsd:complexType>
+						<xsd:choice minOccurs="0" maxOccurs="unbounded">
+							<xsd:element name="column" type="h:column" />
+							<xsd:element name="many-to-one" type="h:many-to-one" />
+							<xsd:element name="one-to-many" type="h:one-to-many" />
+							<xsd:element name="many-to-many" type="h:many-to-many" />
+						</xsd:choice>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="constructors" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="constructor" type="h:constructor"
+								minOccurs="0" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="operations" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="operation" type="h:operation"
+								minOccurs="0" maxOccurs="unbounded" />
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>
 			</xsd:sequence>
+			<xsd:attribute name="name" type="xsd:string" use="required" />
+			<xsd:attribute name="tableName" type="xsd:string" use="required" />
+			<xsd:attribute name="columnPrefix" type="xsd:string"
+				use="required" />
+			<xsd:attribute name="abstract" type="xsd:boolean" use="optional"
+				default="false" />
+			<xsd:attribute name="superClass" type="xsd:string" use="optional" />
 		</xsd:complexType>
 	</xsd:element>
 
-	<xsd:complexType name="configuration">
-		<xsd:sequence>
-			<xsd:element name="projectName" type="xsd:string"
-				minOccurs="1" />
-		</xsd:sequence>
-	</xsd:complexType>
-
-	<xsd:complexType name="package">
-		<xsd:sequence>
-			<xsd:element name="entities">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="entity" type="p:entity" minOccurs="0"
-							maxOccurs="unbounded" />
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
-		</xsd:sequence>
-		<xsd:attribute name="name" type="xsd:string" use="required" />
-	</xsd:complexType>
-
-	<xsd:complexType name="entity">
-		<xsd:sequence>
-			<xsd:element name="implements" minOccurs="0">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="interface" type="xsd:string"
-							minOccurs="0" maxOccurs="unbounded" />
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:choice>
-				<xsd:element name="id" type="p:id" />
-				<xsd:element name="embedded-id" type="p:embedded-id" />
-			</xsd:choice>
-			<xsd:element name="properties" minOccurs="0">
-				<xsd:complexType>
-					<xsd:choice minOccurs="0" maxOccurs="unbounded">
-						<xsd:element name="column" type="p:column" />
-						<xsd:element name="many-to-one" type="p:many-to-one" />
-						<xsd:element name="one-to-many" type="p:one-to-many" />
-						<xsd:element name="many-to-many" type="p:many-to-many" />
-					</xsd:choice>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element name="constructors" minOccurs="0">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="constructor" type="p:constructor"
-							minOccurs="0" maxOccurs="unbounded" />
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element name="operations" minOccurs="0">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="operation" type="p:operation"
-							minOccurs="0" maxOccurs="unbounded" />
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
-		</xsd:sequence>
-		<xsd:attribute name="name" type="xsd:string" use="required" />
-		<xsd:attribute name="tableName" type="xsd:string" use="required" />
-		<xsd:attribute name="columnPrefix" type="xsd:string"
-			use="required" />
-		<xsd:attribute name="abstract" type="xsd:boolean" use="optional"
-			default="false" />
-		<xsd:attribute name="superClass" type="xsd:string" use="optional" />
-	</xsd:complexType>
-
 	<xsd:complexType name="id">
-		<xsd:attribute name="visibility" type="p:visibility"
+		<xsd:attribute name="visibility" type="h:visibility"
 			use="optional" default="private" />
 		<xsd:attribute name="name" type="xsd:string" use="required" />
-		<xsd:attribute name="type" type="p:javaType" use="required" />
+		<xsd:attribute name="type" type="h:javaType" use="required" />
 		<xsd:attribute name="column" type="xsd:string" />
 	</xsd:complexType>
 
@@ -104,12 +72,12 @@
 			<xsd:element name="properties" minOccurs="0">
 				<xsd:complexType>
 					<xsd:choice minOccurs="0" maxOccurs="unbounded">
-						<xsd:element name="column" type="p:column" />
+						<xsd:element name="column" type="h:column" />
 					</xsd:choice>
 				</xsd:complexType>
 			</xsd:element>
 		</xsd:sequence>
-		<xsd:attribute name="visibility" type="p:visibility"
+		<xsd:attribute name="visibility" type="h:visibility"
 			use="optional" default="private" />
 		<xsd:attribute name="name" type="xsd:string" use="required" />
 		<xsd:attribute name="targetEntity" type="xsd:string"
@@ -117,7 +85,7 @@
 	</xsd:complexType>
 
 	<xsd:complexType name="abstract-column" abstract="true">
-		<xsd:attribute name="visibility" type="p:visibility"
+		<xsd:attribute name="visibility" type="h:visibility"
 			use="optional" default="private" />
 		<xsd:attribute name="name" type="xsd:string" use="required" />
 		<xsd:attribute name="column" type="xsd:string" />
@@ -132,16 +100,16 @@
 
 	<xsd:complexType name="column">
 		<xsd:complexContent>
-			<xsd:extension base="p:abstract-column">
-				<xsd:attribute name="type" type="p:javaType" use="required" />
+			<xsd:extension base="h:abstract-column">
+				<xsd:attribute name="type" type="h:javaType" use="required" />
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 
 	<xsd:complexType name="many-to-one">
 		<xsd:complexContent>
-			<xsd:extension base="p:abstract-column">
-				<xsd:attribute name="targetEntity" type="p:javaType"
+			<xsd:extension base="h:abstract-column">
+				<xsd:attribute name="targetEntity" type="h:javaType"
 					use="required" />
 				<xsd:attribute name="joinColumn" type="xsd:string" />
 			</xsd:extension>
@@ -150,10 +118,10 @@
 
 	<xsd:complexType name="one-to-many">
 		<xsd:complexContent>
-			<xsd:extension base="p:abstract-column">
-				<xsd:attribute name="listType" type="p:javaCollectionType"
+			<xsd:extension base="h:abstract-column">
+				<xsd:attribute name="listType" type="h:javaCollectionType"
 					use="required" />
-				<xsd:attribute name="targetEntity" type="p:javaType"
+				<xsd:attribute name="targetEntity" type="h:javaType"
 					use="required" />
 				<xsd:attribute name="joinTable" type="xsd:string" />
 				<xsd:attribute name="joinColumn" type="xsd:string" />
@@ -164,10 +132,10 @@
 
 	<xsd:complexType name="many-to-many">
 		<xsd:complexContent>
-			<xsd:extension base="p:abstract-column">
-				<xsd:attribute name="listType" type="p:javaCollectionType"
+			<xsd:extension base="h:abstract-column">
+				<xsd:attribute name="listType" type="h:javaCollectionType"
 					use="required" />
-				<xsd:attribute name="targetEntity" type="p:javaType"
+				<xsd:attribute name="targetEntity" type="h:javaType"
 					use="required" />
 				<xsd:attribute name="joinTable" type="xsd:string" />
 				<xsd:attribute name="joinColumn" type="xsd:string" />
@@ -175,177 +143,6 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-
-	<xsd:complexType name="constructor">
-		<xsd:sequence>
-			<xsd:element name="content" type="xsd:string" minOccurs="0" />
-			<xsd:element name="parameters" minOccurs="0">
-				<xsd:complexType>
-					<xsd:choice minOccurs="0" maxOccurs="unbounded">
-						<xsd:element name="parameter" type="p:parameter" />
-						<xsd:element name="parameter-list" type="p:parameter-list" />
-						<xsd:element name="parameter-map" type="p:parameter-map" />
-					</xsd:choice>
-				</xsd:complexType>
-			</xsd:element>
-		</xsd:sequence>
-		<xsd:attribute name="visibility" type="p:visibility"
-			use="optional" default="public" />
-	</xsd:complexType>
-
-	<xsd:complexType name="operation-base">
-		<xsd:sequence>
-			<xsd:element name="return" minOccurs="1">
-				<xsd:complexType>
-					<xsd:choice>
-						<xsd:element name="type" type="p:type" />
-						<xsd:element name="type-list" type="p:type-list" />
-						<xsd:element name="type-map" type="p:type-map" />
-					</xsd:choice>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element name="parameters" minOccurs="0">
-				<xsd:complexType>
-					<xsd:choice minOccurs="0" maxOccurs="unbounded">
-						<xsd:element name="parameter" type="p:parameter" />
-						<xsd:element name="parameter-list" type="p:parameter-list" />
-						<xsd:element name="parameter-map" type="p:parameter-map" />
-					</xsd:choice>
-				</xsd:complexType>
-			</xsd:element>
-		</xsd:sequence>
-		<xsd:attribute name="name" type="xsd:string" use="required" />
-		<xsd:attribute name="abstract" type="xsd:boolean" use="optional"
-			default="false" />
-	</xsd:complexType>
-
-	<xsd:complexType name="operation">
-		<xsd:complexContent>
-			<xsd:extension base="p:operation-base">
-				<xsd:sequence>
-					<xsd:element name="content" type="xsd:string"
-						minOccurs="0" />
-				</xsd:sequence>
-				<xsd:attribute name="visibility" type="p:visibility"
-					use="optional" default="public" />
-				<xsd:attribute name="final" type="xsd:boolean" use="optional"
-					default="false" />
-				<xsd:attribute name="static" type="xsd:boolean" use="optional"
-					default="false" />
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<xsd:complexType name="abstract-parameter" abstract="true">
-		<xsd:attribute name="name" type="xsd:string" use="required" />
-	</xsd:complexType>
-
-	<xsd:complexType name="parameter">
-		<xsd:complexContent>
-			<xsd:extension base="p:abstract-parameter">
-				<xsd:attribute name="type" type="p:javaType" use="required" />
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<xsd:complexType name="parameter-list">
-		<xsd:complexContent>
-			<xsd:extension base="p:abstract-parameter">
-				<xsd:attribute name="type" type="p:javaCollectionType"
-					use="required" />
-				<xsd:attribute name="value" type="p:javaType" use="required" />
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<xsd:complexType name="parameter-map">
-		<xsd:complexContent>
-			<xsd:extension base="p:abstract-parameter">
-				<xsd:attribute name="type" type="p:javaMapType" use="required" />
-				<xsd:attribute name="key" type="p:javaType" use="required" />
-				<xsd:attribute name="value" type="p:javaType" use="required" />
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<xsd:simpleType name="visibility">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="default" />
-			<xsd:enumeration value="private" />
-			<xsd:enumeration value="protected" />
-			<xsd:enumeration value="public" />
-		</xsd:restriction>
-	</xsd:simpleType>
-
-	<xsd:complexType name="type">
-		<xsd:attribute name="type" type="p:javaType" use="required" />
-	</xsd:complexType>
-
-	<xsd:complexType name="type-list">
-		<xsd:attribute name="type" type="p:javaCollectionType"
-			use="required" />
-		<xsd:attribute name="value" type="p:javaType" use="required" />
-	</xsd:complexType>
-
-	<xsd:complexType name="type-map">
-		<xsd:attribute name="type" type="p:javaMapType" use="required" />
-		<xsd:attribute name="key" type="p:javaType" use="required" />
-		<xsd:attribute name="value" type="p:javaType" use="required" />
-	</xsd:complexType>
-
-	<xsd:simpleType name="javaType">
-		<xsd:union
-			memberTypes="p:javaObjectType p:javaPrimitiveType p:javaWrapperType xsd:string">
-		</xsd:union>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="javaPrimitiveType">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="char" />
-			<xsd:enumeration value="boolean" />
-			<xsd:enumeration value="byte" />
-			<xsd:enumeration value="short" />
-			<xsd:enumeration value="int" />
-			<xsd:enumeration value="long" />
-			<xsd:enumeration value="float" />
-			<xsd:enumeration value="double" />
-		</xsd:restriction>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="javaWrapperType">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="Character" />
-			<xsd:enumeration value="Boolean" />
-			<xsd:enumeration value="Byte" />
-			<xsd:enumeration value="Short" />
-			<xsd:enumeration value="Integer" />
-			<xsd:enumeration value="Long" />
-			<xsd:enumeration value="Float" />
-			<xsd:enumeration value="Double" />
-		</xsd:restriction>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="javaObjectType">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="String" />
-			<xsd:enumeration value="java.util.Date" />
-		</xsd:restriction>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="javaCollectionType">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="java.util.Collection" />
-			<xsd:enumeration value="java.util.List" />
-			<xsd:enumeration value="java.util.Set" />
-			<xsd:enumeration value="array" />
-		</xsd:restriction>
-	</xsd:simpleType>
-
-	<xsd:simpleType name="javaMapType">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="java.util.Map" />
-		</xsd:restriction>
-	</xsd:simpleType>
 </xsd:schema>
 
 

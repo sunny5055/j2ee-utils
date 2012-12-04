@@ -29,8 +29,6 @@
 
 	<xsd:complexType name="package">
 		<xsd:sequence>
-			<!-- <xsd:any namespace="##other" processContents="strict" minOccurs="0"
-				maxOccurs="unbounded"/> -->
 			<xsd:any namespace="http://code.google.com/p/j2ee-utils/schema/java-beans"
 				processContents="strict" minOccurs="0" maxOccurs="unbounded" />
 			<xsd:any namespace="http://code.google.com/p/j2ee-utils/schema/hibernate"

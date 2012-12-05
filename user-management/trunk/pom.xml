@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>jee-utils</groupId>
 			<artifactId>hibernate-dal</artifactId>
-			<version>2.1.0</version>
+			<version>2.1.1</version>
 		</dependency>
 
 		<!-- Test -->

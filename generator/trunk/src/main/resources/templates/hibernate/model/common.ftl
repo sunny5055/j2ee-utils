@@ -15,9 +15,9 @@
 <#function getPrimaryKeyType class>
 	<#local primaryKeyType= "">
 	<#if class["h:id"]?is_node>
-		<#local primaryKeyType = java.getType(class["h:id/@type"])>
+		<#local primaryKeyType = getType(class["h:id/@type"])>
 	<#else>
-		<#local primaryKeyType = java.getType(class["h:embedded-id/@targetEntity"])>
+		<#local primaryKeyType = getType(class["h:embedded-id/@targetEntity"])>
 	</#if>
 	<#return primaryKeyType>
 </#function>
@@ -26,7 +26,7 @@
 <#function getParametersDeclaration parameters>
 	<#local parametersDeclaration= "">
 	<#list parameters as parameter>
-		<#local parametersDeclaration = parametersDeclaration + java.getType(parameter.@type, xml.getAttribute(parameter.@value)) +" "+ parameter.@name>
+		<#local parametersDeclaration = parametersDeclaration + getType(parameter.@type, xml.getAttribute(parameter.@value)) +" "+ parameter.@name>
 		<#if parameter_has_next>
 			<#local parametersDeclaration = parametersDeclaration + ", ">
 		</#if>
@@ -38,16 +38,16 @@
 <#function getReturnType operation>
 	<#local returnType= "">
 	<#if operation["h:return/h:type"]?is_node>
-		<#local returnType = java.getType(operation["h:return/h:type/@type"])>
+		<#local returnType = getType(operation["h:return/h:type/@type"])>
 	<#else>
 		<#local typeList = operation["h:return/h:type-list"]>
-		<#local returnType = java.getType(typeList.@type, xml.getAttribute(typeList.@value))>
+		<#local returnType = getType(typeList.@type, xml.getAttribute(typeList.@value))>
 	</#if>
 	<#return returnType>
 </#function>
 
-<#function getModifiers node>
-	<#return java.getModifiers(xml.getAttribute(node.@abstract), xml.getAttribute(node.@static), xml.getAttribute(node.@final))>
+<#function getModifiersFrom node>
+	<#return getModifiers(xml.getAttribute(node.@abstract), xml.getAttribute(node.@static), xml.getAttribute(node.@final))>
 </#function>
 
 
@@ -70,7 +70,7 @@
 <#function getJoinColumnName class property>
 	<#local joinColumnName= "">
 	<#if property?node_name = "many-to-one" || property?node_name = "many-to-many">
-		<#local prefix = "${class.@name?substring(0,2)?lower_case+java.getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
+		<#local prefix = "${class.@name?substring(0,2)?lower_case+getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
 		<#local joinColumnName= "${toUnderscoreCase(prefix+'_'+class.@name?lower_case+'_id')}">
 	</#if>
 	<#return joinColumnName>
@@ -79,8 +79,8 @@
 <#function getInverseJoinColumnName class property>
 	<#local inverseJoinColumnName= "">
 	<#if property?node_name = "many-to-one" || property?node_name = "many-to-many">
-		<#local prefix = "${class.@name?substring(0,2)?lower_case+java.getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
-		<#local inverseJoinColumnName= "${toUnderscoreCase(prefix+'_'+java.getClassName(property.@targetEntity)?lower_case+'_id')}">
+		<#local prefix = "${class.@name?substring(0,2)?lower_case+getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
+		<#local inverseJoinColumnName= "${toUnderscoreCase(prefix+'_'+getClassName(property.@targetEntity)?lower_case+'_id')}">
 	</#if>
 	<#return inverseJoinColumnName>
 </#function>
@@ -91,8 +91,8 @@
 		<#if xml.existAttribute(property.@joinTable)>
 			<#local joinTableName= "${property.@joinTable}">
 		<#else>
-			<#local prefix = "${class.@name?substring(0,2)?lower_case+java.getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
-			<#local joinTableName= "${toUnderscoreCase(prefix+'_'+class.@name?lower_case+'_'+java.getClassName(property.@targetEntity)?lower_case)}">
+			<#local prefix = "${class.@name?substring(0,2)?lower_case+getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
+			<#local joinTableName= "${toUnderscoreCase(prefix+'_'+class.@name?lower_case+'_'+getClassName(property.@targetEntity)?lower_case)}">
 		</#if>
 	</#if>
 	<#return joinTableName>
@@ -117,7 +117,7 @@
 		<#if xml.getAttribute(property.@nullable) == "false">
 			<#local hibernateAnnotation= hibernateAnnotation + ", nullable = false">
 		</#if>
-		<#if java.getType(property.@type) == "String" && xml.getAttribute(property.@length) != "">
+		<#if getType(property.@type) == "String" && xml.getAttribute(property.@length) != "">
 			<#local hibernateAnnotation= hibernateAnnotation + ", length = ${xml.getAttribute(property.@length)}">
 		</#if>
 		<#local hibernateAnnotation= hibernateAnnotation + ")">
@@ -148,17 +148,17 @@
 <#macro getProperty property>
 	<#local visibility= xml.getAttribute(property.@visibility, "private")>
 	<#if property?node_name = "id">
-		${visibility} ${java.getType(property.@type)} ${property.@name};
+		${visibility} ${getType(property.@type)} ${property.@name};
 	<#elseif property?node_name = "embedded-id">
-		${visibility} ${java.getType(property.@targetEntity)} ${property.@name};
+		${visibility} ${getType(property.@targetEntity)} ${property.@name};
 	<#elseif property?node_name = "column">
-		${visibility} ${java.getType(property.@type)} ${property.@name};
+		${visibility} ${getType(property.@type)} ${property.@name};
 	<#elseif property?node_name = "many-to-one">
-		${visibility} ${java.getType(xml.getAttribute(property.@targetEntity))} ${property.@name};
+		${visibility} ${getType(xml.getAttribute(property.@targetEntity))} ${property.@name};
 	<#elseif property?node_name = "one-to-many">
-		${visibility} ${java.getType(property.@listType, xml.getAttribute(property.@targetEntity))} ${property.@name};
+		${visibility} ${getType(property.@listType, xml.getAttribute(property.@targetEntity))} ${property.@name};
 	<#elseif property?node_name = "many-to-many">
-		${visibility} ${java.getType(property.@listType, xml.getAttribute(property.@targetEntity))} ${property.@name};
+		${visibility} ${getType(property.@listType, xml.getAttribute(property.@targetEntity))} ${property.@name};
 	</#if>
 </#macro>
 
@@ -174,9 +174,9 @@
 
 <#macro getterPrimaryKey property>
 	<#if property?node_name = "id">
-		<#local type = java.getType(property.@type)>
+		<#local type = getType(property.@type)>
 	<#elseif property?node_name = "embedded-id">
-		<#local type = java.getType(property.@targetEntity)>
+		<#local type = getType(property.@targetEntity)>
 	</#if>
 	@Override
 	public ${type} getPrimaryKey() {
@@ -186,9 +186,9 @@
 
 <#macro setterPrimaryKey property>
 	<#if property?node_name = "id">
-		<#local type = java.getType(property.@type)>
+		<#local type = getType(property.@type)>
 	<#elseif property?node_name = "embedded-id">
-		<#local type = java.getType(property.@targetEntity)>
+		<#local type = getType(property.@targetEntity)>
 	</#if>
 	@Override
 	public void setPrimaryKey(${type} primaryKey) {
@@ -198,41 +198,41 @@
 
 <#macro getter property>
 	<#if property?node_name = "id">
-		<@java.getter type=java.getType(property.@type) name=property.@name />
+		<@java.getter type=getType(property.@type) name=property.@name />
 	<#elseif property?node_name = "embedded-id">
-		<@java.getter type=java.getType(property.@targetEntity) name=property.@name />
+		<@java.getter type=getType(property.@targetEntity) name=property.@name />
 	<#elseif property?node_name = "column">
-		<@java.getter type=java.getType(property.@type) name=property.@name />
+		<@java.getter type=getType(property.@type) name=property.@name />
 	<#elseif property?node_name = "many-to-one">
-		<@java.getter type=java.getType(property.@targetEntity) name=property.@name />
+		<@java.getter type=getType(property.@targetEntity) name=property.@name />
 	<#elseif property?node_name = "one-to-many">
-		<@java.getter type=java.getType(property.@listType, xml.getAttribute(property.@targetEntity)) name=property.@name />
+		<@java.getter type=getType(property.@listType, xml.getAttribute(property.@targetEntity)) name=property.@name />
 	<#elseif property?node_name = "many-to-many">
-		<@java.getter type=java.getType(property.@listType, xml.getAttribute(property.@targetEntity)) name=property.@name />
+		<@java.getter type=getType(property.@listType, xml.getAttribute(property.@targetEntity)) name=property.@name />
 	</#if>
 </#macro>
 
 
 <#macro setter property>
 	<#if property?node_name = "id">
-		<@java.setter type=java.getType(property.@type) name=property.@name />
+		<@java.setter type=getType(property.@type) name=property.@name />
 	<#elseif property?node_name = "embedded-id">
-		<@java.setter type=java.getType(property.@targetEntity) name=property.@name />
+		<@java.setter type=getType(property.@targetEntity) name=property.@name />
 	<#elseif property?node_name = "column">
-		<@java.setter type=java.getType(property.@type) name=property.@name />
+		<@java.setter type=getType(property.@type) name=property.@name />
 	<#elseif property?node_name = "many-to-one">
-		<@java.setter type=java.getType(property.@targetEntity) name=property.@name />
+		<@java.setter type=getType(property.@targetEntity) name=property.@name />
 	<#elseif property?node_name = "one-to-many">
-		<@java.setter type=java.getType(property.@listType, xml.getAttribute(property.@targetEntity)) name=property.@name />
+		<@java.setter type=getType(property.@listType, xml.getAttribute(property.@targetEntity)) name=property.@name />
 	<#elseif property?node_name = "many-to-many">
-		<@java.setter type=java.getType(property.@listType, xml.getAttribute(property.@targetEntity)) name=property.@name />
+		<@java.setter type=getType(property.@listType, xml.getAttribute(property.@targetEntity)) name=property.@name />
 	</#if>
 </#macro>
 
 
 <#macro add property>
 	<#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
-		<#local value= "${java.getClassName(property.@targetEntity)}">
+		<#local value= "${getClassName(property.@targetEntity)}">
 		public void add${value?cap_first}(${value} ${value?uncap_first}) {
 			if (${java.checkNotNull(value, value?uncap_first)}) {
 				this.${property.@name}.add(${value?uncap_first});
@@ -243,7 +243,7 @@
 
 <#macro remove property>
 	<#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
-		<#local value= "${java.getClassName(property.@targetEntity)}">
+		<#local value= "${getClassName(property.@targetEntity)}">
 		public void remove${value?cap_first}(${value} ${value?uncap_first}) {
 			if (${java.checkNotNull(value, value?uncap_first)}) {
 				this.${property.@name}.remove(${value?uncap_first});
@@ -267,7 +267,7 @@
 <#macro operation operation>
 	<#assign parameters = operation["h:parameters/*"]>
 	<#local visibility= xml.getAttribute(operation.@visibility, "public")>
-	${visibility} ${getModifiers(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
+	${visibility} ${getModifiersFrom(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
 	<#if operation["h:content"]?is_node>
 		${operation["h:content"]}
 	<#else>
@@ -279,5 +279,5 @@
 
 <#macro interfaceOperation operation>
 	<#assign parameters = operation["h:parameters/*"]>
-	${getModifiers(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>);
+	${getModifiersFrom(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>);
 </#macro>

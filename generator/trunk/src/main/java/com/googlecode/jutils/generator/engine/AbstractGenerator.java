@@ -36,6 +36,10 @@ import com.googlecode.jutils.collection.MapUtil;
 import com.googlecode.jutils.generator.config.GeneratorConfig;
 import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import com.googlecode.jutils.generator.formatter.Formatter;
+import com.googlecode.jutils.generator.templater.GetClassNameMethod;
+import com.googlecode.jutils.generator.templater.GetModifiersMethod;
+import com.googlecode.jutils.generator.templater.GetTypeMethod;
+import com.googlecode.jutils.generator.templater.IsPrimitiveMethod;
 import com.googlecode.jutils.io.IoUtil;
 import com.googlecode.jutils.templater.exception.TemplaterServiceException;
 import com.googlecode.jutils.templater.service.TemplaterService;
@@ -151,6 +155,9 @@ public abstract class AbstractGenerator implements Generator {
 			data.put("xml", model);
 			data.put("templateName", templateName);
 			data.putAll(config.getData());
+
+			addTemplateMethod(data);
+
 			try {
 				content = templaterService.getContent(templateName, data);
 			} catch (final TemplaterServiceException e) {
@@ -158,6 +165,15 @@ public abstract class AbstractGenerator implements Generator {
 			}
 		}
 		return content;
+	}
+
+	private void addTemplateMethod(Map<String, Object> data) {
+		if (data != null) {
+			data.put("getClassName", new GetClassNameMethod());
+			data.put("getModifiers", new GetModifiersMethod());
+			data.put("getType", new GetTypeMethod());
+			data.put("isPrimitive", new IsPrimitiveMethod());
+		}
 	}
 
 	private void writeToFile(File file, String content) throws IOException, FileNotFoundException {

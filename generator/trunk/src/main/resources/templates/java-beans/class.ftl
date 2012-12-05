@@ -9,16 +9,16 @@ import java.util.List;
 
 
 <@compress single_line=true>
-public ${util.getModifiers(class)} class ${className}
+public ${util.getModifiersFrom(class)} class ${className}
 <#if util.xml.existAttribute(class.@superClass)>
- extends ${util.java.getClassName(class.@superClass)}
+ extends ${getClassName(class.@superClass)}
 </#if>
 <#assign interfaces = xml["//b:class[@name=$className]//b:element"]>
 <#list interfaces as interface>
 <#if interface_index == 0>
  implements
 </#if>
-${util.java.getClassName(interface)}
+${getClassName(interface)}
 <#if interface_has_next>, </#if>
 </#list>
 {</@compress>

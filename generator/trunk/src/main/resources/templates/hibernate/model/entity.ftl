@@ -11,9 +11,9 @@ import java.util.List;
 
 <@compress single_line=true>
 @SuppressWarnings("serial")
-public ${util.getModifiers(entity)} class ${className}
+public ${util.getModifiersFrom(entity)} class ${className}
 <#if util.xml.existAttribute(entity.@superClass)>
- extends ${util.java.getClassName(entity.@superClass)}
+ extends ${getClassName(entity.@superClass)}
 <#else>
  extends AbstractHibernateDto<${util.getPrimaryKeyType(entity)}>
 </#if>
@@ -22,7 +22,7 @@ public ${util.getModifiers(entity)} class ${className}
 <#if interface_index == 0>
  implements
 </#if>
-${util.java.getClassName(interface)}
+${getClassName(interface)}
 <#if interface_has_next>, </#if>
 </#list>
 {</@compress>

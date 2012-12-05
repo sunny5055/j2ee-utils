@@ -1,24 +1,35 @@
 package com.googlecode.jutils.generator.config;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.springframework.core.io.Resource;
+
 import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.collection.MapUtil;
+import com.googlecode.jutils.generator.formatter.Formatter;
 
 public class GeneratorConfig {
 	private File baseOutputDirectory;
 	private Map<String, String> outputDirectories;
 	private Map<String, String> fileNamePatterns;
 	private Properties properties;
+	private Map<String, Formatter> formatters;
+	private List<Resource> schemas;
+	private Map<String, String> namespaceUris;
 
 	public GeneratorConfig() {
 		super();
 		this.outputDirectories = new HashMap<String, String>();
 		this.fileNamePatterns = new HashMap<String, String>();
 		this.properties = new Properties();
+		this.formatters = new HashMap<String, Formatter>();
+		this.schemas = new ArrayList<Resource>();
+		this.namespaceUris = new HashMap<String, String>();
 	}
 
 	public File getBaseOutputDirectory() {
@@ -125,5 +136,37 @@ public class GeneratorConfig {
 		}
 
 		return data;
+	}
+
+	public Map<String, Formatter> getFormatters() {
+		return formatters;
+	}
+
+	public void setFormatters(Map<String, Formatter> formatters) {
+		this.formatters = formatters;
+	}
+
+	public Formatter getFormatter(String key) {
+		Formatter formatter = null;
+		if (!StringUtil.isBlank(key)) {
+			formatter = formatters.get(key);
+		}
+		return formatter;
+	}
+
+	public List<Resource> getSchemas() {
+		return schemas;
+	}
+
+	public void setSchemas(List<Resource> schemas) {
+		this.schemas = schemas;
+	}
+
+	public Map<String, String> getNamespaceUris() {
+		return namespaceUris;
+	}
+
+	public void setNamespaceUris(Map<String, String> namespaceUris) {
+		this.namespaceUris = namespaceUris;
 	}
 }

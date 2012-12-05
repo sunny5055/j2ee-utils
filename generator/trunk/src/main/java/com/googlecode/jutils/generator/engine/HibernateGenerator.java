@@ -1,4 +1,4 @@
-package com.googlecode.jutils.generator.service.impl;
+package com.googlecode.jutils.generator.engine;
 
 import java.io.File;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 
 import freemarker.ext.dom.NodeModel;
 
-public class HibernateGeneratorService extends AbstractGeneratorService {
+public class HibernateGenerator extends AbstractGenerator {
 	private static final String DEFAULT_FILE_NAME_PATTERN = "%1s.java";
 
 	private static final String ENTITY_TYPE = "class";
@@ -22,23 +22,15 @@ public class HibernateGeneratorService extends AbstractGeneratorService {
 	private static final String EMBEDDED_ID_TEMPLATE_FILE = "hibernate/model/embeddedId.ftl";
 
 	@Override
-	protected Map<String, String> getNamespaceUris() {
-		final Map<String, String> namespaceUris = new HashMap<String, String>();
-		namespaceUris.put("p", "http://code.google.com/p/j2ee-utils/schema/hibernate");
-
-		return namespaceUris;
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	protected void generate(Document xmlDocument, NodeModel model) throws GeneratorServiceException {
 		if (xmlDocument != null && model != null) {
-			final List<Node> entities = xmlDocument.selectNodes("//p:entity");
+			final List<Node> entities = xmlDocument.selectNodes("//h:entity");
 			if (!CollectionUtil.isEmpty(entities)) {
 				for (final Node node : entities) {
 					generateEntity(node, model);
 
-					final Node embeddedId = node.selectSingleNode("p:embedded-id");
+					final Node embeddedId = node.selectSingleNode("h:embedded-id");
 					if (embeddedId != null) {
 						generateEmbeddedId(embeddedId, model);
 					}
@@ -97,7 +89,7 @@ public class HibernateGeneratorService extends AbstractGeneratorService {
 
 	private void generateEmbeddedId(Node node, NodeModel model) throws GeneratorServiceException {
 		if (node != null && model != null) {
-			final String className = node.valueOf("ancestor::p:entity/@name");
+			final String className = node.valueOf("ancestor::h:entity/@name");
 			final String packageName = node.valueOf("ancestor::p:package/@name");
 
 			final Map<String, Object> data = new HashMap<String, Object>();

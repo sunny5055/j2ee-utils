@@ -1,23 +1,23 @@
-<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/hibernate"}>
+<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","h":"http://code.google.com/p/j2ee-utils/schema/hibernate"}>
 <#import "../../common/xml.ftl" as xml>
 <#import "../../common/java.ftl" as java>
 
 
 <#function getPrimaryKey class>
-	<#if class["p:id"]?is_node>
-		<#local primaryKey = class["p:id"]>
+	<#if class["h:id"]?is_node>
+		<#local primaryKey = class["h:id"]>
 	<#else>
-		<#local primaryKey = class["p:embedded-id"]>
+		<#local primaryKey = class["h:embedded-id"]>
 	</#if>
 	<#return primaryKey>
 </#function>
 
 <#function getPrimaryKeyType class>
 	<#local primaryKeyType= "">
-	<#if class["p:id"]?is_node>
-		<#local primaryKeyType = java.getType(class["p:id/@type"])>
+	<#if class["h:id"]?is_node>
+		<#local primaryKeyType = java.getType(class["h:id/@type"])>
 	<#else>
-		<#local primaryKeyType = java.getType(class["p:embedded-id/@targetEntity"])>
+		<#local primaryKeyType = java.getType(class["h:embedded-id/@targetEntity"])>
 	</#if>
 	<#return primaryKeyType>
 </#function>
@@ -37,10 +37,10 @@
 
 <#function getReturnType operation>
 	<#local returnType= "">
-	<#if operation["p:return/p:type"]?is_node>
-		<#local returnType = java.getType(operation["p:return/p:type/@type"])>
+	<#if operation["h:return/h:type"]?is_node>
+		<#local returnType = java.getType(operation["h:return/h:type/@type"])>
 	<#else>
-		<#local typeList = operation["p:return/p:type-list"]>
+		<#local typeList = operation["h:return/h:type-list"]>
 		<#local returnType = java.getType(typeList.@type, xml.getAttribute(typeList.@value))>
 	</#if>
 	<#return returnType>
@@ -253,23 +253,23 @@
 </#macro>
 
 <#macro constructor className constructor>
-	<#assign parameters = constructor["p:parameters/*"]>
+	<#assign parameters = constructor["h:parameters/*"]>
 	<#local visibility= xml.getAttribute(constructor.@visibility, "public")>
 	${visibility} ${className}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
 	<#compress>
-	<#if constructor["p:content"]?is_node>
-		${constructor["p:content"]}
+	<#if constructor["h:content"]?is_node>
+		${constructor["h:content"]}
 	</#if>
 	</#compress>
 	}
 </#macro>
 
 <#macro operation operation>
-	<#assign parameters = operation["p:parameters/*"]>
+	<#assign parameters = operation["h:parameters/*"]>
 	<#local visibility= xml.getAttribute(operation.@visibility, "public")>
 	${visibility} ${getModifiers(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
-	<#if operation["p:content"]?is_node>
-		${operation["p:content"]}
+	<#if operation["h:content"]?is_node>
+		${operation["h:content"]}
 	<#else>
 		//TODO to complete
 	</#if>
@@ -278,6 +278,6 @@
 
 
 <#macro interfaceOperation operation>
-	<#assign parameters = operation["p:parameters/*"]>
+	<#assign parameters = operation["h:parameters/*"]>
 	${getModifiers(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>);
 </#macro>

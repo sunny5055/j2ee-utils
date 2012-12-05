@@ -1,6 +1,6 @@
-<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/hibernate"}>
+<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","h":"http://code.google.com/p/j2ee-utils/schema/hibernate"}>
 <#import "common.ftl" as util>
-<#assign entity = xml["//p:entity[@name=$className]"]>
+<#assign entity = xml["//h:entity[@name=$className]"]>
 <#assign primaryKey = util.getPrimaryKey(entity)>
 <#if packageName??>
 package ${packageName};
@@ -17,7 +17,7 @@ public ${util.getModifiers(entity)} class ${className}
 <#else>
  extends AbstractHibernateDto<${util.getPrimaryKeyType(entity)}>
 </#if>
-<#assign interfaces = xml["//p:entity[@name=$className]//p:interface"]>
+<#assign interfaces = xml["//h:entity[@name=$className]//h:interface"]>
 <#list interfaces as interface>
 <#if interface_index == 0>
  implements
@@ -28,22 +28,22 @@ ${util.java.getClassName(interface)}
 {</@compress>
 ${util.getHibernateAnnotation(entity, primaryKey)}
 <@util.getProperty property=primaryKey/>
-<#assign columns = xml["//p:entity[@name=$className]/p:properties/p:column"]>
+<#assign columns = xml["//h:entity[@name=$className]/h:properties/h:column"]>
 <#list columns as column>
 ${util.getHibernateAnnotation(entity, column)}
 <@util.getProperty property=column/>
 </#list>
-<#assign manyToOnes = xml["//p:entity[@name=$className]/p:properties/p:many-to-one"]>
+<#assign manyToOnes = xml["//h:entity[@name=$className]/h:properties/h:many-to-one"]>
 <#list manyToOnes as manyToOne>
 ${util.getHibernateAnnotation(entity, manyToOne)}
 <@util.getProperty property=manyToOne/>
 </#list>
-<#assign oneToManys = xml["//p:entity[@name=$className]/p:properties/p:one-to-many"]>
+<#assign oneToManys = xml["//h:entity[@name=$className]/h:properties/h:one-to-many"]>
 <#list oneToManys as oneToMany>
 ${util.getHibernateAnnotation(entity, oneToMany)}
 <@util.getProperty property=oneToMany/>
 </#list>
-<#assign manyToManys = xml["//p:entity[@name=$className]/p:properties/p:many-to-many"]>
+<#assign manyToManys = xml["//h:entity[@name=$className]/h:properties/h:many-to-many"]>
 <#list manyToManys as manyToMany>
 ${util.getHibernateAnnotation(entity, manyToMany)}
 <@util.getProperty property=manyToMany/>
@@ -59,7 +59,7 @@ ${util.getHibernateAnnotation(entity, manyToMany)}
 		</#list>
   	}
 
-<#assign constructors = xml["//p:entity[@name=$className]//p:constructor"]>
+<#assign constructors = xml["//h:entity[@name=$className]//h:constructor"]>
 <#list constructors as constructor>
 	<@util.constructor className=className constructor=constructor/>
 </#list>
@@ -104,7 +104,7 @@ ${util.getHibernateAnnotation(entity, manyToMany)}
   <@util.remove property=manyToMany/>
 </#list>
 
-<#assign operations = xml["//p:entity[@name=$className]//p:operation"]>
+<#assign operations = xml["//h:entity[@name=$className]//h:operation"]>
 <#list operations as operation>
   <@util.operation operation=operation/>
 </#list>

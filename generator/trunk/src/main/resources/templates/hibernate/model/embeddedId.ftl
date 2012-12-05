@@ -1,6 +1,6 @@
-<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/hibernate"}>
+<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","h":"http://code.google.com/p/j2ee-utils/schema/hibernate"}>
 <#import "common.ftl" as util>
-<#assign entity = xml["//p:entity[@name=$className]"]>
+<#assign entity = xml["//h:entity[@name=$className]"]>
 <#assign primaryKey = util.getPrimaryKey(entity)>
 <#if packageName??>
 package ${packageName};
@@ -10,7 +10,7 @@ package ${packageName};
 @Embeddable
 @SuppressWarnings("serial")
 public class ${util.getPrimaryKeyType(entity)} implements Serializable {
-<#assign columns = primaryKey["p:properties/p:column"]>
+<#assign columns = primaryKey["h:properties/h:column"]>
 <#list columns as column>
 ${util.getHibernateAnnotation(entity, column)}
 <@util.getProperty property=column/>

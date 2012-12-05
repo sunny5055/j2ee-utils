@@ -1,4 +1,4 @@
-package com.googlecode.jutils.generator.service.impl;
+package com.googlecode.jutils.generator.engine;
 
 import java.io.File;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 
 import freemarker.ext.dom.NodeModel;
 
-public class JavaBeansGeneratorService extends AbstractGeneratorService {
+public class JavaBeansGenerator extends AbstractGenerator {
 	private static final String DEFAULT_FILE_NAME_PATTERN = "%1s.java";
 
 	private static final String CLASS_TYPE = "class";
@@ -24,25 +24,17 @@ public class JavaBeansGeneratorService extends AbstractGeneratorService {
 	private static final String INTERFACE_TEMPLATE_FILE = "java-beans/interface.ftl";
 
 	@Override
-	protected Map<String, String> getNamespaceUris() {
-		final Map<String, String> namespaceUris = new HashMap<String, String>();
-		namespaceUris.put("p", "http://code.google.com/p/j2ee-utils/schema/java-beans");
-
-		return namespaceUris;
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	protected void generate(Document xmlDocument, NodeModel model) throws GeneratorServiceException {
 		if (xmlDocument != null && model != null) {
-			final List<Node> classes = xmlDocument.selectNodes("//p:class");
+			final List<Node> classes = xmlDocument.selectNodes("//b:class");
 			if (!CollectionUtil.isEmpty(classes)) {
 				for (final Node node : classes) {
 					generateClass(node, model);
 				}
 			}
 
-			final List<Node> interfaces = xmlDocument.selectNodes("//p:interfaces/p:interface");
+			final List<Node> interfaces = xmlDocument.selectNodes("//b:interface");
 			if (!CollectionUtil.isEmpty(interfaces)) {
 				for (final Node node : interfaces) {
 					generateInterface(node, model);

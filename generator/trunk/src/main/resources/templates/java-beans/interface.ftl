@@ -15,7 +15,7 @@ public interface ${interfaceName}
 <#if interface_index == 0>
  extends
 </#if>
-${util.java.getClassName(interface)}
+${getClassName(interface)}
 <#if interface_has_next>, </#if>
 </#list>
 {</@compress>

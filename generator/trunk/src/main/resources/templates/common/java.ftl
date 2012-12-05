@@ -1,33 +1,3 @@
-<#function getClassName type>
-  <#local className = "">
-  <#if type?index_of(".") gt 0>
-    <#local className = "${type?substring(type?last_index_of('.')+1)}">
-  <#else>
-    <#local className = "${type}">
-  </#if>
-  <#return className>
-</#function>
-
-<#function getType type value="" key="">
-  <#local fullType= "">
-
-  <#local typeClassName= getClassName(type)>
-  <#if value != "">
-    <#local valueClassName = getClassName(value)>
-    <#if typeClassName="array">
-      <#local fullType = valueClassName + "[]">
-    <#elseif key != "">
-      <#local keyClassName = getClassName(key)>
-      <#local fullType = typeClassName + "<" + keyClassName + ", " + valueClassName + ">">
-    <#else>
-      <#local fullType = typeClassName + "<" + valueClassName + ">">
-    </#if>
-  <#else>
-    <#local fullType = typeClassName>
-  </#if>
-  <#return fullType>
-</#function>
-
 <#function resolveDefaults type value="" key="">
 	<#local defaults= "">
 
@@ -85,45 +55,6 @@
   		<#local checkNotNull = "${name} != null">
 	</#if>
 	<#return checkNotNull>
-</#function>
-
-
-<#function isPrimitive type>
-	<#local primitive= "false">
-	<#if type == "byte" || type == "short"
-		|| type == "int" || type == "long"
-		|| type == "float" || type == "double"
-		|| type == "char" || type == "boolean">
-		<#local primitive= "true">
-	</#if>
-	<#return primitive>
-</#function>
-
-
-<#function getModifiers abstract static final>
-	<#local modifiers= "">
-	<#if abstract == "true">
-		<#if modifiers?length gt 0>
-			<#local modifiers = modifiers + " abstract">
-		<#else>
-			<#local modifiers = "abstract">
-		</#if>
-	</#if>
-	<#if static == "true">
-		<#if modifiers?length gt 0>
-			<#local modifiers = modifiers + " static">
-		<#else>
-			<#local modifiers = "static">
-		</#if>
-	</#if>
-	<#if final == "true">
-		<#if modifiers?length gt 0>
-			<#local modifiers = modifiers + " final">
-		<#else>
-			<#local modifiers = "final">
-		</#if>
-	</#if>
-	<#return modifiers>
 </#function>
 
 

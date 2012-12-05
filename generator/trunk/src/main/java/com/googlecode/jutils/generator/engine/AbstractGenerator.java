@@ -1,17 +1,13 @@
-package com.googlecode.jutils.generator.service.impl;
+package com.googlecode.jutils.generator.engine;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.io.StringReader;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.XMLConstants;
@@ -35,29 +31,27 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.collection.MapUtil;
 import com.googlecode.jutils.generator.config.GeneratorConfig;
 import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import com.googlecode.jutils.generator.formatter.Formatter;
-import com.googlecode.jutils.generator.service.GeneratorService;
 import com.googlecode.jutils.io.IoUtil;
 import com.googlecode.jutils.templater.exception.TemplaterServiceException;
 import com.googlecode.jutils.templater.service.TemplaterService;
 
 import freemarker.ext.dom.NodeModel;
 
-public abstract class AbstractGeneratorService implements GeneratorService {
-	protected static final Logger LOGGER = Logger.getLogger(AbstractGeneratorService.class);
+public abstract class AbstractGenerator implements Generator {
+	protected static final Logger LOGGER = Logger.getLogger(AbstractGenerator.class);
+
 	protected GeneratorConfig config;
-	protected Map<String, Formatter> formatters;
-	protected Resource schema;
 
 	@Autowired
 	protected TemplaterService templaterService;
 
-	public AbstractGeneratorService() {
+	public AbstractGenerator() {
 		super();
-		this.formatters = new HashMap<String, Formatter>();
 	}
 
 	public GeneratorConfig getConfig() {
@@ -68,25 +62,6 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 		this.config = config;
 	}
 
-	public Map<String, Formatter> getFormatters() {
-		return formatters;
-	}
-
-	public void setFormatters(Map<String, Formatter> formatters) {
-		this.formatters = formatters;
-	}
-
-	public Resource getSchema() {
-		return schema;
-	}
-
-	public void setSchema(Resource schema) {
-		this.schema = schema;
-	}
-
-	/**
-	 * {@inheritedDoc}
-	 */
 	@Override
 	public void generate(String xmlContent) throws GeneratorServiceException {
 		if (!StringUtil.isBlank(xmlContent)) {
@@ -108,72 +83,11 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 		}
 	}
 
-	/**
-	 * {@inheritedDoc}
-	 */
-	@Override
-	public void generate(File xmlFile) throws GeneratorServiceException {
-		if (xmlFile != null) {
-			Reader reader = null;
-			try {
-				reader = new BufferedReader(new FileReader(xmlFile));
-				generate(reader);
-			} catch (final FileNotFoundException e) {
-				throw new GeneratorServiceException(e);
-			} catch (final Exception e) {
-				throw new GeneratorServiceException(e);
-			} finally {
-				if (reader != null) {
-					try {
-						reader.close();
-					} catch (final IOException e) {
-						throw new GeneratorServiceException(e);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * {@inheritedDoc}
-	 */
-	@Override
-	public void generate(InputStream inputStream) throws GeneratorServiceException {
-		if (inputStream != null) {
-			Reader reader = null;
-			try {
-				reader = new InputStreamReader(inputStream);
-				generate(reader);
-			} catch (final Exception e) {
-				throw new GeneratorServiceException(e);
-			}
-		}
-	}
-
-	/**
-	 * {@inheritedDoc}
-	 */
-	@Override
-	public void generate(Reader reader) throws GeneratorServiceException {
-		if (reader != null) {
-			String xmlContent = null;
-			try {
-				xmlContent = IoUtil.toString(reader);
-			} catch (final IOException e) {
-				throw new GeneratorServiceException(e);
-			}
-
-			generate(xmlContent);
-		}
-	}
-
 	protected abstract void generate(Document xmlDocument, NodeModel model) throws GeneratorServiceException;
 
 	protected abstract String getPathToElement(String fileType, Node node);
 
 	protected abstract String getOutputFileName(String fileType, Node node);
-
-	protected abstract Map<String, String> getNamespaceUris();
 
 	protected File getOutputDirectory(String fileType, Node node) {
 		File outputDirectory = null;
@@ -231,10 +145,62 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 		}
 	}
 
+	private String getContent(String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
+		String content = null;
+		if (!StringUtil.isBlank(templateName) && data != null && model != null) {
+			data.put("xml", model);
+			data.put("templateName", templateName);
+			data.putAll(config.getData());
+			try {
+				content = templaterService.getContent(templateName, data);
+			} catch (final TemplaterServiceException e) {
+				throw new GeneratorServiceException(e);
+			}
+		}
+		return content;
+	}
+
+	private void writeToFile(File file, String content) throws IOException, FileNotFoundException {
+		if (file != null && !StringUtil.isBlank(content)) {
+			final File parent = file.getParentFile();
+			if (!parent.exists()) {
+				FileUtils.forceMkdir(parent);
+			}
+
+			OutputStream outputStream = null;
+			try {
+				outputStream = new FileOutputStream(file);
+				IoUtil.write(content, outputStream);
+			} finally {
+				if (outputStream != null) {
+					outputStream.close();
+				}
+			}
+
+			formatFile(file);
+		}
+	}
+
+	private void formatFile(File file) throws IOException {
+		if (file != null && config != null) {
+			final String extension = FilenameUtils.getExtension(file.getName());
+			if (!MapUtil.isEmpty(config.getFormatters())) {
+				final Formatter formatter = config.getFormatter(extension);
+				if (formatter != null) {
+					formatter.format(file);
+				}
+			}
+		}
+	}
+
 	private void validate(String xmlContent) throws SAXException, IOException {
-		if (!StringUtil.isBlank(xmlContent) && schema != null) {
+		if (!StringUtil.isBlank(xmlContent) && config != null && !CollectionUtil.isEmpty(config.getSchemas())) {
 			final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			final Schema xmlSchema = factory.newSchema(new StreamSource(schema.getFile()));
+			final List<StreamSource> sources = new ArrayList<StreamSource>();
+			for (final Resource schema : config.getSchemas()) {
+				sources.add(new StreamSource(schema.getFile()));
+			}
+			final Schema xmlSchema = factory.newSchema(sources.toArray(new StreamSource[0]));
 
 			final Validator validator = xmlSchema.newValidator();
 			final StringReader reader = new StringReader(xmlContent);
@@ -248,8 +214,8 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 
 	private Document getXmlDocument(String xmlContent) throws GeneratorServiceException {
 		Document document = null;
-		if (!StringUtil.isBlank(xmlContent)) {
-			final Map<String, String> namespaceUris = getNamespaceUris();
+		if (!StringUtil.isBlank(xmlContent) && config != null) {
+			final Map<String, String> namespaceUris = config.getNamespaceUris();
 			if (!MapUtil.isEmpty(namespaceUris)) {
 				final DocumentFactory factory = new DocumentFactory();
 				factory.setXPathNamespaceURIs(namespaceUris);
@@ -290,53 +256,4 @@ public abstract class AbstractGeneratorService implements GeneratorService {
 		}
 		return xmlModel;
 	}
-
-	private String getContent(String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
-		String content = null;
-		if (!StringUtil.isBlank(templateName) && data != null && model != null) {
-			data.put("xml", model);
-			data.put("templateName", templateName);
-			data.putAll(config.getData());
-			try {
-				content = templaterService.getContent(templateName, data);
-			} catch (final TemplaterServiceException e) {
-				throw new GeneratorServiceException(e);
-			}
-		}
-		return content;
-	}
-
-	private void writeToFile(File file, String content) throws IOException, FileNotFoundException {
-		if (file != null && !StringUtil.isBlank(content)) {
-			final File parent = file.getParentFile();
-			if (!parent.exists()) {
-				FileUtils.forceMkdir(parent);
-			}
-
-			OutputStream outputStream = null;
-			try {
-				outputStream = new FileOutputStream(file);
-				IoUtil.write(content, outputStream);
-			} finally {
-				if (outputStream != null) {
-					outputStream.close();
-				}
-			}
-
-			formatFile(file);
-		}
-	}
-
-	private void formatFile(File file) throws IOException {
-		if (file != null) {
-			final String extension = FilenameUtils.getExtension(file.getName());
-			if (!MapUtil.isEmpty(formatters)) {
-				final Formatter formatter = formatters.get(extension);
-				if (formatter != null) {
-					formatter.format(file);
-				}
-			}
-		}
-	}
-
 }

@@ -1,4 +1,4 @@
-<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/java-beans"}>
+<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","b":"http://code.google.com/p/j2ee-utils/schema/java-beans"}>
 <#import "../common/xml.ftl" as xml>
 <#import "../common/java.ftl" as java>
 
@@ -16,10 +16,10 @@
 
 <#function getReturnType operation>
 	<#local returnType= "">
-	<#if operation["p:return/p:type"]?is_node>
-		<#local returnType = java.getType(operation["p:return/p:type/@type"])>
+	<#if operation["b:return/b:type"]?is_node>
+		<#local returnType = java.getType(operation["b:return/b:type/@type"])>
 	<#else>
-		<#local typeList = operation["p:return/p:type-list"]>
+		<#local typeList = operation["b:return/b:type-list"]>
 		<#local returnType = java.getType(typeList.@type, xml.getAttribute(typeList.@value))>
 	</#if>
 	<#return returnType>
@@ -101,23 +101,23 @@
 </#macro>
 
 <#macro constructor className constructor>
-	<#assign parameters = constructor["p:parameters/*"]>
+	<#assign parameters = constructor["b:parameters/*"]>
 	<#local visibility= xml.getAttribute(constructor.@visibility, "public")>
 	${visibility} ${className}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
 	<#compress>
-	<#if constructor["p:content"]?is_node>
-		${constructor["p:content"]}
+	<#if constructor["b:content"]?is_node>
+		${constructor["b:content"]}
 	</#if>
 	</#compress>
 	}
 </#macro>
 
 <#macro operation operation>
-	<#assign parameters = operation["p:parameters/*"]>
+	<#assign parameters = operation["b:parameters/*"]>
 	<#local visibility= xml.getAttribute(operation.@visibility, "public")>
 	${visibility} ${getModifiers(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
-	<#if operation["p:content"]?is_node>
-		${operation["p:content"]}
+	<#if operation["b:content"]?is_node>
+		${operation["b:content"]}
 	<#else>
 		//TODO to complete
 	</#if>
@@ -126,6 +126,6 @@
 
 
 <#macro interfaceOperation operation>
-	<#assign parameters = operation["p:parameters/*"]>
+	<#assign parameters = operation["b:parameters/*"]>
 	${getModifiers(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>);
 </#macro>

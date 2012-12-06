@@ -1,4 +1,4 @@
-package com.googlecode.jutils.generator.templater;
+package com.googlecode.jutils.generator.freemarker.method;
 
 import java.util.List;
 

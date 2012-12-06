@@ -1,4 +1,4 @@
-package com.googlecode.jutils.generator.templater;
+package com.googlecode.jutils.generator.freemarker.method;
 
 import java.util.List;
 
@@ -17,7 +17,9 @@ public class IsPrimitiveMethod implements TemplateMethodModel {
 	@SuppressWarnings("rawtypes")
 	public TemplateModel exec(List args) throws TemplateModelException {
 		TemplateModel value = null;
-		if (!CollectionUtil.isEmpty(args)) {
+		if (CollectionUtil.isEmpty(args) || args.size() > 1) {
+			throw new TemplateModelException("The function needs one parameter.");
+		} else {
 			final String type = (String) args.get(0);
 			if (!StringUtil.isBlank(type)) {
 				final String className = ClassUtil.getShortClassName(type);

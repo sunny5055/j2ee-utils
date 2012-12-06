@@ -14,13 +14,9 @@ public ${util.getModifiersFrom(class)} class ${className}
  extends ${getClassName(class.@superClass)}
 </#if>
 <#assign interfaces = xml["//b:class[@name=$className]//b:element"]>
-<#list interfaces as interface>
-<#if interface_index == 0>
- implements
+<#if interfaces?size gt 0>
+ implements <@myList list=interfaces var="interface">${getClassName(interface)}</@myList>
 </#if>
-${getClassName(interface)}
-<#if interface_has_next>, </#if>
-</#list>
 {</@compress>
 <#assign properties = xml["//b:class[@name=$className]//b:property"]>
 <#list properties as property>

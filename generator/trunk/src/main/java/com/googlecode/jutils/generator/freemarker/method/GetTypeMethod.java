@@ -1,4 +1,4 @@
-package com.googlecode.jutils.generator.templater;
+package com.googlecode.jutils.generator.freemarker.method;
 
 import java.util.List;
 
@@ -17,7 +17,9 @@ public class GetTypeMethod implements TemplateMethodModel {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TemplateModel exec(List args) throws TemplateModelException {
 		TemplateModel result = null;
-		if (!CollectionUtil.isEmpty(args)) {
+		if (CollectionUtil.isEmpty(args)) {
+			throw new TemplateModelException("The function needs at least one parameter.");
+		} else {
 			final String type = (String) CollectionUtil.get(args, 0);
 			final String value = (String) CollectionUtil.get(args, 1);
 			final String key = (String) CollectionUtil.get(args, 2);

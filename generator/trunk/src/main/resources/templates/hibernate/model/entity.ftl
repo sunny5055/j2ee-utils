@@ -18,13 +18,9 @@ public ${util.getModifiersFrom(entity)} class ${className}
  extends AbstractHibernateDto<${util.getPrimaryKeyType(entity)}>
 </#if>
 <#assign interfaces = xml["//h:entity[@name=$className]//h:interface"]>
-<#list interfaces as interface>
-<#if interface_index == 0>
- implements
+<#if interfaces?size gt 0>
+ implements <@myList list=interfaces var="interface">${getClassName(interface)}</@myList>
 </#if>
-${getClassName(interface)}
-<#if interface_has_next>, </#if>
-</#list>
 {</@compress>
 ${util.getHibernateAnnotation(entity, primaryKey)}
 <@util.getProperty property=primaryKey/>

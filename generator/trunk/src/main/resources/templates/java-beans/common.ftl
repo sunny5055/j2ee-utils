@@ -2,14 +2,11 @@
 <#import "../common/xml.ftl" as xml>
 <#import "../common/java.ftl" as java>
 
+
 <#function getParametersDeclaration parameters>
-	<#local parametersDeclaration= "">
-	<#list parameters as parameter>
-		<#local parametersDeclaration = parametersDeclaration + getType(parameter.@type, xml.getAttribute(parameter.@value)) +" "+ parameter.@name>
-		<#if parameter_has_next>
-			<#local parametersDeclaration = parametersDeclaration + ", ">
-		</#if>
-	</#list>
+	<@myList list=parameters var="parameter" assignTo="parametersDeclaration">
+	${getType(parameter.@type, xml.getAttribute(parameter.@value))} ${parameter.@name}
+	</@myList>
 	<#return parametersDeclaration>
 </#function>
 

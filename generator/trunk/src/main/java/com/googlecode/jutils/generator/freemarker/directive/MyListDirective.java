@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.Map;
 
 import freemarker.core.Environment;
+import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
@@ -15,6 +17,8 @@ import freemarker.template.TemplateSequenceModel;
 public class MyListDirective implements TemplateDirectiveModel {
 	private static final String PARAM_NAME_LIST = "list";
 	private static final String PARAM_NAME_VAR = "var";
+	private static final String PARAM_NAME_LIST_INDEX = "_index";
+	private static final String PARAM_NAME_LIST_HAS_NEXT = "_has_next";
 	private static final String PARAM_NAME_SEPARATOR = "separator";
 	private static final String PARAM_NAME_ASSIGN_TO = "assignTo";
 	private static final String DEFAULT_SEPARATOR = ", ";
@@ -32,6 +36,14 @@ public class MyListDirective implements TemplateDirectiveModel {
 			final TemplateModel element = list.get(i);
 
 			env.setVariable(var.getAsString(), element);
+			env.setVariable(var.getAsString() + PARAM_NAME_LIST_INDEX, new SimpleNumber(i));
+			TemplateBooleanModel hasNext = null;
+			if (i + 1 < list.size()) {
+				hasNext = TemplateBooleanModel.TRUE;
+			} else {
+				hasNext = TemplateBooleanModel.FALSE;
+			}
+			env.setVariable(var.getAsString() + PARAM_NAME_LIST_HAS_NEXT, hasNext);
 
 			builder.append(DirectiveUtil.renderBody(body));
 			if (i + 1 < list.size()) {
@@ -43,6 +55,8 @@ public class MyListDirective implements TemplateDirectiveModel {
 			}
 
 			env.setVariable(var.getAsString(), null);
+			env.setVariable(var.getAsString() + PARAM_NAME_LIST_INDEX, null);
+			env.setVariable(var.getAsString() + PARAM_NAME_LIST_HAS_NEXT, null);
 		}
 
 		if (assignTo != null) {

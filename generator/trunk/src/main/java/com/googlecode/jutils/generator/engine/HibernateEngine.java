@@ -14,7 +14,7 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 
 import freemarker.ext.dom.NodeModel;
 
-public class HibernateGenerator extends AbstractGenerator {
+public class HibernateEngine extends AbstractEngine {
 	private static final String DEFAULT_FILE_NAME_PATTERN = "%1s.java";
 
 	private static final String ENTITY_TYPE = "class";

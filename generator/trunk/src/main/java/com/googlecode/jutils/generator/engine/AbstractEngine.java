@@ -35,7 +35,10 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import com.googlecode.jutils.generator.formatter.Formatter;
 import com.googlecode.jutils.generator.freemarker.directive.MyListDirective;
 import com.googlecode.jutils.generator.freemarker.method.GetClassNameMethod;
+import com.googlecode.jutils.generator.freemarker.method.GetFqdnMethod;
+import com.googlecode.jutils.generator.freemarker.method.GetImportsMethod;
 import com.googlecode.jutils.generator.freemarker.method.GetModifiersMethod;
+import com.googlecode.jutils.generator.freemarker.method.GetPackageMethod;
 import com.googlecode.jutils.generator.freemarker.method.GetTypeMethod;
 import com.googlecode.jutils.generator.freemarker.method.IsPrimitiveMethod;
 import com.googlecode.jutils.generator.util.XmlUtil;
@@ -168,7 +171,10 @@ public abstract class AbstractEngine implements Engine {
 
 	private void addFreemarkerExt(Map<String, Object> data) {
 		if (data != null) {
+			data.put("getImports", new GetImportsMethod());
+			data.put("getPackage", new GetPackageMethod());
 			data.put("getClassName", new GetClassNameMethod());
+			data.put("getFqdn", new GetFqdnMethod());
 			data.put("getModifiers", new GetModifiersMethod());
 			data.put("getType", new GetTypeMethod());
 			data.put("isPrimitive", new IsPrimitiveMethod());

@@ -28,9 +28,14 @@ public class DirectiveUtil {
 	public static <T> T getParameter(Map params, String key, Class<T> clazz) throws TemplateModelException {
 		T value = null;
 		if (!StringUtil.isBlank(key) && clazz != null) {
-			value = (T) params.get(key);
-			if (value != null && !clazz.isInstance(value)) {
-				throw new TemplateModelException("The \"" + key + "\" parameter must be a " + clazz.getSimpleName());
+			final Object tmpValue = params.get(key);
+
+			if (tmpValue != null) {
+				if (!clazz.isInstance(tmpValue)) {
+					throw new TemplateModelException("The \"" + key + "\" parameter must be a " + clazz.getSimpleName());
+				} else {
+					value = (T) tmpValue;
+				}
 			}
 		}
 		return value;

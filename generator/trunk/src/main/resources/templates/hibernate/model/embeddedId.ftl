@@ -2,15 +2,28 @@
 <#import "common.ftl" as util>
 <#assign entity = xml["//h:entity[@name=$className]"]>
 <#assign primaryKey = util.getPrimaryKey(entity)>
+<#assign columns = primaryKey["h:properties/h:column"]>
 <#if packageName??>
 package ${packageName};
 </#if>
 
 
+<#assign imports = [] />
+<#assign imports = imports + [ "java.io.Serializable" ] />
+<#assign imports = imports + [ "javax.persistence.Embeddable" ] />
+
+<#if columns?size gt 0>
+	<#assign imports = imports + [ "javax.persistence.Column" ] />
+	<#list columns as column>
+  		<#assign imports = imports + util.getTypes(column) />
+	</#list>
+</#if>
+
+${getImports(packageName, imports)}
+
 @Embeddable
 @SuppressWarnings("serial")
 public class ${util.getPrimaryKeyType(entity)} implements Serializable {
-<#assign columns = primaryKey["h:properties/h:column"]>
 <#list columns as column>
 ${util.getHibernateAnnotation(entity, column)}
 <@util.getProperty property=column/>

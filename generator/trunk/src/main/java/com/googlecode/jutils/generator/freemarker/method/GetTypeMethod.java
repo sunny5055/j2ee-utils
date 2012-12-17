@@ -14,15 +14,13 @@ import freemarker.template.TemplateModelException;
 public class GetTypeMethod implements TemplateMethodModel {
 
 	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	public TemplateModel exec(List args) throws TemplateModelException {
 		TemplateModel result = null;
-		if (CollectionUtil.isEmpty(args)) {
-			throw new TemplateModelException("The function needs at least one parameter.");
-		} else {
-			final String type = (String) CollectionUtil.get(args, 0);
-			final String value = (String) CollectionUtil.get(args, 1);
-			final String key = (String) CollectionUtil.get(args, 2);
+		if (!CollectionUtil.isEmpty(args)) {
+			final String type = MethodUtil.getRequiredParameter(args, 0, String.class);
+			final String value = MethodUtil.getParameter(args, 1, String.class);
+			final String key = MethodUtil.getParameter(args, 2, String.class);
 
 			if (!StringUtil.isBlank(type)) {
 				String fullType = null;

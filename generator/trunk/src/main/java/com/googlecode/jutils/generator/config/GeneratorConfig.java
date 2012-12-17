@@ -20,7 +20,6 @@ public class GeneratorConfig {
 	private Properties properties;
 	private Map<String, Formatter> formatters;
 	private List<Resource> schemas;
-	private Map<String, String> namespaceUris;
 
 	public GeneratorConfig() {
 		super();
@@ -29,7 +28,6 @@ public class GeneratorConfig {
 		this.properties = new Properties();
 		this.formatters = new HashMap<String, Formatter>();
 		this.schemas = new ArrayList<Resource>();
-		this.namespaceUris = new HashMap<String, String>();
 	}
 
 	public File getBaseOutputDirectory() {
@@ -160,13 +158,5 @@ public class GeneratorConfig {
 
 	public void setSchemas(List<Resource> schemas) {
 		this.schemas = schemas;
-	}
-
-	public Map<String, String> getNamespaceUris() {
-		return namespaceUris;
-	}
-
-	public void setNamespaceUris(Map<String, String> namespaceUris) {
-		this.namespaceUris = namespaceUris;
 	}
 }

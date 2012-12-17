@@ -7,15 +7,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -24,7 +22,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.xml.sax.InputSource;
@@ -41,21 +38,22 @@ import com.googlecode.jutils.generator.freemarker.method.GetClassNameMethod;
 import com.googlecode.jutils.generator.freemarker.method.GetModifiersMethod;
 import com.googlecode.jutils.generator.freemarker.method.GetTypeMethod;
 import com.googlecode.jutils.generator.freemarker.method.IsPrimitiveMethod;
+import com.googlecode.jutils.generator.util.XmlUtil;
 import com.googlecode.jutils.io.IoUtil;
 import com.googlecode.jutils.templater.exception.TemplaterServiceException;
 import com.googlecode.jutils.templater.service.TemplaterService;
 
 import freemarker.ext.dom.NodeModel;
 
-public abstract class AbstractGenerator implements Generator {
-	protected static final Logger LOGGER = Logger.getLogger(AbstractGenerator.class);
+public abstract class AbstractEngine implements Engine {
+	protected static final Logger LOGGER = Logger.getLogger(AbstractEngine.class);
 
 	protected GeneratorConfig config;
 
 	@Autowired
 	protected TemplaterService templaterService;
 
-	public AbstractGenerator() {
+	public AbstractEngine() {
 		super();
 	}
 
@@ -213,41 +211,51 @@ public abstract class AbstractGenerator implements Generator {
 
 	private void validate(String xmlContent) throws SAXException, IOException {
 		if (!StringUtil.isBlank(xmlContent) && config != null && !CollectionUtil.isEmpty(config.getSchemas())) {
-			final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			final List<StreamSource> sources = new ArrayList<StreamSource>();
+			final List<Source> sources = new ArrayList<Source>();
 			for (final Resource schema : config.getSchemas()) {
 				sources.add(new StreamSource(schema.getFile()));
 			}
-			final Schema xmlSchema = factory.newSchema(sources.toArray(new StreamSource[0]));
 
-			final Validator validator = xmlSchema.newValidator();
-			final StringReader reader = new StringReader(xmlContent);
-			try {
-				validator.validate(new StreamSource(reader));
-			} finally {
-				reader.close();
+			XmlUtil.validate(xmlContent, sources);
+		}
+	}
+
+	private Map<String, String> getNamespaceUris() throws GeneratorServiceException {
+		Map<String, String> namespaceUris = null;
+		if (config != null && !CollectionUtil.isEmpty(config.getSchemas())) {
+			namespaceUris = new HashMap<String, String>();
+
+			for (final Resource schema : config.getSchemas()) {
+				Map<String, String> declaredNamespaces = null;
+				try {
+					declaredNamespaces = XmlUtil.getDeclaredNamespaces(schema.getFile());
+				} catch (final DocumentException e) {
+					throw new GeneratorServiceException(e);
+				} catch (final IOException e) {
+					throw new GeneratorServiceException(e);
+				}
+
+				if (!MapUtil.isEmpty(declaredNamespaces)) {
+					namespaceUris.putAll(declaredNamespaces);
+				}
 			}
 		}
+		return namespaceUris;
 	}
 
 	private Document getXmlDocument(String xmlContent) throws GeneratorServiceException {
 		Document document = null;
 		if (!StringUtil.isBlank(xmlContent) && config != null) {
-			final Map<String, String> namespaceUris = config.getNamespaceUris();
+			final Map<String, String> namespaceUris = getNamespaceUris();
 			if (!MapUtil.isEmpty(namespaceUris)) {
 				final DocumentFactory factory = new DocumentFactory();
 				factory.setXPathNamespaceURIs(namespaceUris);
 			}
 
-			final StringReader reader = new StringReader(xmlContent);
-			SAXReader saxReader = null;
 			try {
-				saxReader = new SAXReader();
-				document = saxReader.read(reader);
+				document = XmlUtil.getXmlDocument(xmlContent);
 			} catch (final DocumentException e) {
 				throw new GeneratorServiceException(e);
-			} finally {
-				reader.close();
 			}
 		}
 		return document;

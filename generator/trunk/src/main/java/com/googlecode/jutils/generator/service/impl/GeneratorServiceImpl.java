@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.collection.CollectionUtil;
-import com.googlecode.jutils.generator.engine.Generator;
+import com.googlecode.jutils.generator.engine.Engine;
 import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import com.googlecode.jutils.generator.service.GeneratorService;
 import com.googlecode.jutils.io.IoUtil;
@@ -27,11 +27,11 @@ public class GeneratorServiceImpl implements GeneratorService {
 	protected static final Logger LOGGER = Logger.getLogger(GeneratorServiceImpl.class);
 
 	@Autowired
-	private List<Generator> engines;
+	private List<Engine> engines;
 
 	public GeneratorServiceImpl() {
 		super();
-		this.engines = new ArrayList<Generator>();
+		this.engines = new ArrayList<Engine>();
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 	@Override
 	public void generate(String xmlContent) throws GeneratorServiceException {
 		if (!StringUtil.isBlank(xmlContent) && !CollectionUtil.isEmpty(engines)) {
-			for (final Generator engine : engines) {
+			for (final Engine engine : engines) {
 				engine.generate(xmlContent);
 			}
 		}

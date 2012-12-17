@@ -16,12 +16,10 @@ public class GetModifiersMethod implements TemplateMethodModel {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TemplateModel exec(List args) throws TemplateModelException {
 		TemplateModel value = null;
-		if (CollectionUtil.isEmpty(args)) {
-			throw new TemplateModelException("The function needs at least one parameter.");
-		} else {
-			final String abstractValue = (String) CollectionUtil.get(args, 0);
-			final String staticValue = (String) CollectionUtil.get(args, 1);
-			final String finalValue = (String) CollectionUtil.get(args, 2);
+		if (!CollectionUtil.isEmpty(args)) {
+			final String abstractValue = MethodUtil.getRequiredParameter(args, 0, String.class);
+			final String staticValue = MethodUtil.getRequiredParameter(args, 1, String.class);
+			final String finalValue = MethodUtil.getRequiredParameter(args, 2, String.class);
 
 			String modifiers = "";
 			if (StringUtil.equalsIgnoreCase(abstractValue, "true")) {

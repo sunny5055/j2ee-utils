@@ -11,7 +11,7 @@ import freemarker.template.TemplateMethodModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
-public class GetClassNameMethod implements TemplateMethodModel {
+public class GetPackageMethod implements TemplateMethodModel {
 
 	@Override
 	@SuppressWarnings("rawtypes")
@@ -19,9 +19,10 @@ public class GetClassNameMethod implements TemplateMethodModel {
 		SimpleScalar value = null;
 		if (!CollectionUtil.isEmpty(args)) {
 			final String type = MethodUtil.getRequiredParameter(args, 0, String.class);
+
 			if (!StringUtil.isBlank(type)) {
-				final String className = ClassUtil.getShortClassName(type);
-				value = new SimpleScalar(className);
+				final String packageName = ClassUtil.getPackageName(type);
+				value = new SimpleScalar(packageName);
 			}
 		}
 		return value;

@@ -1,32 +1,59 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","b":"http://code.google.com/p/j2ee-utils/schema/java-beans"}>
 <#import "common.ftl" as util>
 <#assign class = xml["//b:class[@name=$className]"]>
+<#assign interfaces = xml["//b:class[@name=$className]//b:element"]>
+<#assign properties = xml["//b:class[@name=$className]//b:property"]>
+<#assign listProperties = xml["//b:class[@name=$className]//b:property-list"]>
+<#assign mapProperties = xml["//b:class[@name=$className]//b:property-map"]>
+<#assign constructors = xml["//b:class[@name=$className]//b:constructor"]>
+<#assign operations = xml["//b:class[@name=$className]//b:operation"]>
+
 <#if packageName??>
 package ${packageName};
 </#if>
 
-import java.util.List;
+<#assign imports = [] />
+<#if util.xml.existAttribute(class.@superClass)>
+	<#assign imports = imports + [ getFqdn(class.@superClass) ] />
+</#if>
+<#if interfaces?size gt 0>
+	<#list interfaces as interface>
+		<#assign imports = imports + [ getFqdn(interface) ] />
+	</#list>
+</#if>
+<#list properties as property>
+  	<#assign imports = imports + util.getTypes(property) />
+</#list>
+<#list listProperties as property>
+	<#assign imports = imports + util.getTypes(property) />
+</#list>
+<#list mapProperties as property>
+	<#assign imports = imports + util.getTypes(property) />
+</#list>
+<#list constructors as constructor>
+	<#assign imports = imports + util.getTypes(constructor) />
+</#list>
+<#list operations as operation>
+  <#assign imports = imports + util.getTypes(operation) />
+</#list>
 
+${getImports(packageName, imports)}
 
 <@compress single_line=true>
 public ${util.getModifiersFrom(class)} class ${className}
 <#if util.xml.existAttribute(class.@superClass)>
  extends ${getClassName(class.@superClass)}
 </#if>
-<#assign interfaces = xml["//b:class[@name=$className]//b:element"]>
 <#if interfaces?size gt 0>
  implements <@myList list=interfaces var="interface">${getClassName(interface)}</@myList>
 </#if>
 {</@compress>
-<#assign properties = xml["//b:class[@name=$className]//b:property"]>
 <#list properties as property>
 <@util.getProperty property=property/>
 </#list>
-<#assign listProperties = xml["//b:class[@name=$className]//b:property-list"]>
 <#list listProperties as property>
 <@util.getProperty property=property/>
 </#list>
-<#assign mapProperties = xml["//b:class[@name=$className]//b:property-map"]>
 <#list mapProperties as property>
 <@util.getProperty property=property/>
 </#list>
@@ -41,7 +68,6 @@ public ${util.getModifiersFrom(class)} class ${className}
 		</#list>
   	}
 
-<#assign constructors = xml["//b:class[@name=$className]//b:constructor"]>
 <#list constructors as constructor>
 	<@util.constructor className=className constructor=constructor/>
 </#list>
@@ -72,7 +98,6 @@ public ${util.getModifiersFrom(class)} class ${className}
   <@util.remove property=property/>
 </#list>
 
-<#assign operations = xml["//b:class[@name=$className]//b:operation"]>
 <#list operations as operation>
   <@util.operation operation=operation/>
 </#list>

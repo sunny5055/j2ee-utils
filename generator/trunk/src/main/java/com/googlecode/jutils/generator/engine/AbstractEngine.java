@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -53,12 +54,18 @@ public abstract class AbstractEngine implements Engine {
 	protected static final Logger LOGGER = Logger.getLogger(AbstractEngine.class);
 
 	protected GeneratorConfig config;
+	protected Map<String, Object> defaults;
 
 	@Autowired
 	protected TemplaterService templaterService;
 
 	public AbstractEngine() {
 		super();
+		this.defaults = new HashMap<String, Object>();
+	}
+
+	@PostConstruct
+	protected void init() {
 	}
 
 	public GeneratorConfig getConfig() {
@@ -90,22 +97,49 @@ public abstract class AbstractEngine implements Engine {
 		}
 	}
 
+	protected String resolveKey(String key) {
+		String value = null;
+		if (!StringUtil.isBlank(key)) {
+			value = (String) config.getProperty(key);
+			if (StringUtil.isBlank(value)) {
+				value = (String) defaults.get(key);
+			}
+		}
+		return value;
+	}
+
 	protected abstract void generate(Document xmlDocument, NodeModel model) throws GeneratorServiceException;
 
-	protected abstract String getPathToElement(String fileType, Node node);
+	protected abstract String getPathToElement(String fileKey, Node node);
 
-	protected abstract String getOutputFileName(String fileType, Node node);
+	protected abstract String getOutputFileName(String fileKey, String fileType, Node node) throws GeneratorServiceException;
 
-	protected File getOutputDirectory(String fileType, Node node) {
+	protected String getFileNamePattern(String fileKey, String fileType) throws GeneratorServiceException {
+		String fileNamePattern = null;
+		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileType)) {
+			if (config.hasFileNamePattern(fileKey)) {
+				fileNamePattern = config.getFileNamePattern(fileKey);
+			} else if (config.hasFileNamePattern(fileType)) {
+				fileNamePattern = config.getFileNamePattern(fileType);
+			}
+
+			if (StringUtil.isBlank(fileNamePattern)) {
+				throw new GeneratorServiceException("Unable to find filePattern for [fileKey=" + fileKey + ", fileType=" + fileType + "]");
+			}
+		}
+		return fileNamePattern;
+	}
+
+	protected File getOutputDirectory(String fileKey, String fileType, Node node) {
 		File outputDirectory = null;
-		if (!StringUtil.isBlank(fileType)) {
+		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileType) && node != null) {
 			if (config.hasOutputDirectory(fileType)) {
 				outputDirectory = new File(config.getBaseOutputDirectory(), config.getOutputDirectory(fileType));
 			} else {
 				outputDirectory = config.getBaseOutputDirectory();
 			}
 
-			final String pathToElement = getPathToElement(fileType, node);
+			final String pathToElement = getPathToElement(fileKey, node);
 			if (!StringUtil.isBlank(pathToElement)) {
 				outputDirectory = new File(outputDirectory, pathToElement);
 			}
@@ -113,11 +147,11 @@ public abstract class AbstractEngine implements Engine {
 		return outputDirectory;
 	}
 
-	protected File getOutputFile(String fileType, Node node) {
+	protected File getOutputFile(String fileKey, String fileType, Node node) throws GeneratorServiceException {
 		File outputFile = null;
-		if (!StringUtil.isBlank(fileType) && node != null) {
-			final File outputDirectory = getOutputDirectory(fileType, node);
-			final String outputFileName = getOutputFileName(fileType, node);
+		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileType) && node != null) {
+			final File outputDirectory = getOutputDirectory(fileKey, fileType, node);
+			final String outputFileName = getOutputFileName(fileKey, fileType, node);
 			if (outputDirectory != null && !StringUtil.isBlank(outputFileName)) {
 				outputFile = new File(outputDirectory, outputFileName);
 			}
@@ -125,11 +159,11 @@ public abstract class AbstractEngine implements Engine {
 		return outputFile;
 	}
 
-	protected void generate(String fileType, Node node, String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
-		if (!StringUtil.isBlank(fileType) && node != null && !StringUtil.isBlank(templateName) && !MapUtil.isEmpty(data) && model != null) {
+	protected void generate(String fileKey, String fileType, Node node, String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
+		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileType) && node != null && !StringUtil.isBlank(templateName) && !MapUtil.isEmpty(data) && model != null) {
 			File file = null;
-			final File outputDirectory = getOutputDirectory(fileType, node);
-			final String outputFileName = getOutputFileName(fileType, node);
+			final File outputDirectory = getOutputDirectory(fileKey, fileType, node);
+			final String outputFileName = getOutputFileName(fileKey, fileType, node);
 
 			if (outputDirectory != null && !StringUtil.isBlank(outputFileName)) {
 				data.put("outputDirectory", outputDirectory);

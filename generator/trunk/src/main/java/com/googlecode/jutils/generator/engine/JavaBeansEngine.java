@@ -15,12 +15,12 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import freemarker.ext.dom.NodeModel;
 
 public class JavaBeansEngine extends AbstractEngine {
-	private static final String DEFAULT_FILE_NAME_PATTERN = "%1s.java";
+	private static final String JAVA_FILE_TYPE = "java";
+	private static final String CLASS_KEY = "class";
+	private static final String INTERFACE_KEY = "interface";
 
-	private static final String CLASS_TYPE = "class";
 	private static final String CLASS_TEMPLATE_FILE = "java-beans/class.ftl";
 
-	private static final String INTERFACE_TYPE = "interface";
 	private static final String INTERFACE_TEMPLATE_FILE = "java-beans/interface.ftl";
 
 	@Override
@@ -44,28 +44,32 @@ public class JavaBeansEngine extends AbstractEngine {
 	}
 
 	@Override
-	protected String getPathToElement(String fileType, Node node) {
+	protected String getPathToElement(String fileKey, Node node) {
 		String pathToElement = null;
-		if (!StringUtil.isBlank(fileType) && node != null) {
-			final String packageName = node.valueOf("ancestor::p:package/@name");
-			if (!StringUtil.isBlank(packageName)) {
-				pathToElement = packageName.replace(".", File.separator);
+		if (!StringUtil.isBlank(fileKey) && node != null) {
+			if (StringUtil.equals(fileKey, CLASS_KEY) || StringUtil.equals(fileKey, INTERFACE_KEY)) {
+				final String packageName = node.valueOf("ancestor::p:package/@name");
+				if (!StringUtil.isBlank(packageName)) {
+					pathToElement = packageName.replace(".", File.separator);
+				}
 			}
 		}
 		return pathToElement;
 	}
 
 	@Override
-	protected String getOutputFileName(String fileType, Node node) {
+	protected String getOutputFileName(String fileKey, String fileType, Node node) throws GeneratorServiceException {
 		String outputFileName = null;
-		if (!StringUtil.isBlank(fileType) && node != null) {
-			final String className = node.valueOf("@name");
-
-			String fileNamePattern = DEFAULT_FILE_NAME_PATTERN;
-			if (config.hasFileNamePattern(fileType)) {
-				fileNamePattern = config.getFileNamePattern(fileType);
+		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileType) && node != null) {
+			String className = null;
+			if (StringUtil.equals(fileKey, CLASS_KEY) || StringUtil.equals(fileKey, INTERFACE_KEY)) {
+				className = node.valueOf("@name");
 			}
-			outputFileName = String.format(fileNamePattern, className);
+
+			final String fileNamePattern = getFileNamePattern(fileKey, fileType);
+			if (!StringUtil.isBlank(fileNamePattern)) {
+				outputFileName = String.format(fileNamePattern, className);
+			}
 		}
 		return outputFileName;
 	}
@@ -79,7 +83,7 @@ public class JavaBeansEngine extends AbstractEngine {
 			data.put("packageName", packageName);
 			data.put("className", className);
 
-			generate(CLASS_TYPE, node, CLASS_TEMPLATE_FILE, data, model);
+			generate(CLASS_KEY, JAVA_FILE_TYPE, node, CLASS_TEMPLATE_FILE, data, model);
 		}
 	}
 
@@ -92,7 +96,7 @@ public class JavaBeansEngine extends AbstractEngine {
 			data.put("packageName", packageName);
 			data.put("interfaceName", interfaceName);
 
-			generate(INTERFACE_TYPE, node, INTERFACE_TEMPLATE_FILE, data, model);
+			generate(INTERFACE_KEY, JAVA_FILE_TYPE, node, INTERFACE_TEMPLATE_FILE, data, model);
 		}
 	}
 

@@ -16,59 +16,57 @@ package ${packageName};
 
 <#assign imports = [] />
 <#if util.xml.existAttribute(entity.@superClass)>
-	<#assign imports = imports + [ getFqdn(entity.@superClass) ] />
+	<@addTo assignTo="imports" element=getFqdn(entity.@superClass) />
 <#else>
-	<#assign imports = imports + [ "com.googlecode.jutils.dal.dto.AbstractHibernateDto" ] />
+	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dto.AbstractHibernateDto" />
 </#if>
-<#if interfaces?size gt 0>
-	<#list interfaces as interface>
-		<#assign imports = imports + [ getFqdn(interface) ] />
-	</#list>
-</#if>
+<#list interfaces as interface>
+	<@addTo assignTo="imports" element=getFqdn(interface) />
+</#list>
 
-<#assign imports = imports + [ "javax.persistence.Entity" ] />
-<#assign imports = imports + [ "javax.persistence.Column" ] />
+<@addTo assignTo="imports" element="javax.persistence.Entity" />
+<@addTo assignTo="imports" element="javax.persistence.Column" />
 
 <#if primaryKey?node_name = "id">
-	<#assign imports = imports + [ "javax.persistence.Id" ] />
-	<#assign imports = imports + [ "javax.persistence.GeneratedValue" ] />
-	<#assign imports = imports + [ "javax.persistence.GenerationType" ] />
+	<@addTo assignTo="imports" element="javax.persistence.Id" />
+	<@addTo assignTo="imports" element="javax.persistence.GeneratedValue" />
+	<@addTo assignTo="imports" element="javax.persistence.GenerationType" />
 <#else>
-	<#assign imports = imports + [ "javax.persistence.EmbeddedId" ] />
+	<@addTo assignTo="imports" element="javax.persistence.EmbeddedId" />
 </#if>
 
 <#list columns as column>
-  	<#assign imports = imports + util.getTypes(column) />
+  	<@addTo assignTo="imports" element=util.getImportsFor(column) />
 </#list>
 <#if manyToOnes?size gt 0>
-	<#assign imports = imports + [ "javax.persistence.ManyToOne" ] />
+	<@addTo assignTo="imports" element="javax.persistence.ManyToOne" />
 	<#list manyToOnes as manyToOne>
-		<#assign imports = imports + util.getTypes(manyToOne) />
+		<@addTo assignTo="imports" element=util.getImportsFor(manyToOne) />
 	</#list>
 </#if>
 <#if oneToManys?size gt 0>
-	<#assign imports = imports + [ "javax.persistence.OneToMany" ] />
+	<@addTo assignTo="imports" element="javax.persistence.OneToMany" />
 	<#list oneToManys as oneToMany>
-		<#assign imports = imports + util.getTypes(oneToMany) />
+		<@addTo assignTo="imports" element=util.getImportsFor(oneToMany) />
 	</#list>
 </#if>
 <#if manyToManys?size gt 0>
-	<#assign imports = imports + [ "javax.persistence.ManyToMany" ] />
-	<#assign imports = imports + [ "javax.persistence.JoinTable" ] />
+	<@addTo assignTo="imports" element="javax.persistence.ManyToMany" />
+	<@addTo assignTo="imports" element="javax.persistence.JoinTable" />
 	<#list manyToManys as manyToMany>
-		<#assign imports = imports + util.getTypes(manyToMany) />
+		<@addTo assignTo="imports" element=util.getImportsFor(manyToMany) />
 	</#list>
 </#if>
 <#if manyToOnes?size gt 0 || oneToManys?size gt 0 || manyToManys?size gt 0>
-	<#assign imports = imports + [ "javax.persistence.CascadeType" ] />
-	<#assign imports = imports + [ "javax.persistence.JoinColumn" ] />
-	<#assign imports = imports + [ "javax.persistence.FetchType" ] />
+	<@addTo assignTo="imports" element="javax.persistence.CascadeType" />
+	<@addTo assignTo="imports" element="javax.persistence.JoinColumn" />
+	<@addTo assignTo="imports" element="javax.persistence.FetchType" />
 </#if>
 <#list constructors as constructor>
-	<#assign imports = imports + util.getTypes(constructor) />
+	<@addTo assignTo="imports" element=util.getImportsFor(constructor) />
 </#list>
 <#list operations as operation>
-  <#assign imports = imports + util.getTypes(operation) />
+  <@addTo assignTo="imports" element=util.getImportsFor(operation) />
 </#list>
 
 ${getImports(packageName, imports)}

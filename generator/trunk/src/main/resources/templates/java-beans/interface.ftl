@@ -11,16 +11,14 @@ package ${packageName};
 
 
 <#assign imports = [] />
-<#if interfaces?size gt 0>
-	<#list interfaces as int>
-		<#assign imports = imports + [ getFqdn(int) ] />
-	</#list>
-</#if>
+<#list interfaces as int>
+	<@addTo assignTo="imports" element=getFqdn(int) />
+</#list>
 <#list properties as property>
-  	<#assign imports = imports + util.getTypes(property) />
+  	<@addTo assignTo="imports" element=util.getImportsFor(property) />
 </#list>
 <#list operations as operation>
-  <#assign imports = imports + util.getTypes(operation) />
+  <@addTo assignTo="imports" element=util.getImportsFor(operation) />
 </#list>
 
 ${getImports(packageName, imports)}

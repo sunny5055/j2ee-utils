@@ -9,13 +9,13 @@ package ${packageName};
 
 
 <#assign imports = [] />
-<#assign imports = imports + [ "java.io.Serializable" ] />
-<#assign imports = imports + [ "javax.persistence.Embeddable" ] />
+<@addTo assignTo="imports" element="java.io.Serializable" />
+<@addTo assignTo="imports" element="javax.persistence.Embeddable" />
 
 <#if columns?size gt 0>
-	<#assign imports = imports + [ "javax.persistence.Column" ] />
+	<@addTo assignTo="imports" element="javax.persistence.Column" />
 	<#list columns as column>
-  		<#assign imports = imports + util.getTypes(column) />
+  		<@addTo assignTo="imports" element=util.getImportsFor(column) />
 	</#list>
 </#if>
 

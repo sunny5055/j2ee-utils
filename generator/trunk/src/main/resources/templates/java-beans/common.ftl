@@ -2,38 +2,38 @@
 <#import "../common/xml.ftl" as xml>
 <#import "../common/java.ftl" as java>
 
-<#function getTypes node>
-	<#assign types = [] />
+<#function getImportsFor node>
+	<#assign imports = [] />
 	<#if node?node_name = "property" || node?node_name = "type" || node?node_name = "parameter">
-  		<#assign types = types + [ node.@type ] />
+  		<@addTo assignTo="imports" element=node.@type />
 	<#elseif node?node_name = "property-list" || node?node_name = "type-list" || node?node_name = "parameter-list">
-  		<#assign types = types + [ node.@type ] />
-  		<#assign types = types + [ xml.getAttribute(node.@value) ] />
+  		<@addTo assignTo="imports" element=node.@type />
+  		<@addTo assignTo="imports" element=xml.getAttribute(node.@value) />
 	<#elseif node?node_name = "property-map" || node?node_name = "type-map" || node?node_name = "parameter-map">
-		<#assign types = types + [ node.@type ] />
-  		<#assign types = types + [ xml.getAttribute(node.@value) ] />
-  		<#assign types = types + [ xml.getAttribute(node.@key) ] />
+		<@addTo assignTo="imports" element=node.@type />
+  		<@addTo assignTo="imports" element=xml.getAttribute(node.@value) />
+  		<@addTo assignTo="imports" element=xml.getAttribute(node.@key) />
 	<#elseif node?node_name = "constructor">
 		<#assign parameters = node["b:parameters/*"]>
 		<#list parameters as parameter>
-			<#assign types = types +  getTypes(parameter) />
+			<@addTo assignTo="imports" element=getImportsFor(parameter) />
 		</#list>
 	<#elseif node?node_name = "operation">
 		<#if node["b:return/b:type"]?is_node>
-			<#assign types = types + getTypes(node["b:return/b:type"]) />
+			<@addTo assignTo="imports" element=getImportsFor(node["b:return/b:type"]) />
 		<#elseif node["b:return/b:type-list"]?is_node>
-			<#assign types = types + getTypes(node["b:return/b:type-list"]) />
+			<@addTo assignTo="imports" element=getImportsFor(node["b:return/b:type-list"]) />
 		<#else>
-			<#assign types = types + getTypes(node["b:return/b:type-map"]) />
+			<@addTo assignTo="imports" element=getImportsFor(node["b:return/b:type-map"]) />
 		</#if>
 
 		<#assign parameters = node["b:parameters/*"]>
 		<#list parameters as parameter>
-			<#assign types = types + getTypes(parameter) />
+			<@addTo assignTo="imports" element=getImportsFor(parameter) />
 		</#list>
 	</#if>
 
-	<#return types>
+	<#return imports>
 </#function>
 
 <#function getParametersDeclaration parameters>

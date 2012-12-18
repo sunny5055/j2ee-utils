@@ -14,27 +14,25 @@ package ${packageName};
 
 <#assign imports = [] />
 <#if util.xml.existAttribute(class.@superClass)>
-	<#assign imports = imports + [ getFqdn(class.@superClass) ] />
+	<@addTo assignTo="imports" element=getFqdn(class.@superClass) />
 </#if>
-<#if interfaces?size gt 0>
-	<#list interfaces as interface>
-		<#assign imports = imports + [ getFqdn(interface) ] />
-	</#list>
-</#if>
+<#list interfaces as interface>
+	<@addTo assignTo="imports" element=getFqdn(interface) />
+</#list>
 <#list properties as property>
-  	<#assign imports = imports + util.getTypes(property) />
+  	<@addTo assignTo="imports" element=util.getImportsFor(property) />
 </#list>
 <#list listProperties as property>
-	<#assign imports = imports + util.getTypes(property) />
+	<@addTo assignTo="imports" element=util.getImportsFor(property) />
 </#list>
 <#list mapProperties as property>
-	<#assign imports = imports + util.getTypes(property) />
+	<@addTo assignTo="imports" element=util.getImportsFor(property) />
 </#list>
 <#list constructors as constructor>
-	<#assign imports = imports + util.getTypes(constructor) />
+	<@addTo assignTo="imports" element=util.getImportsFor(constructor) />
 </#list>
 <#list operations as operation>
-  <#assign imports = imports + util.getTypes(operation) />
+  <@addTo assignTo="imports" element=util.getImportsFor(operation) />
 </#list>
 
 ${getImports(packageName, imports)}

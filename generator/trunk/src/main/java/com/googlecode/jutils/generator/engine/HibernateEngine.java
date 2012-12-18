@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
@@ -53,7 +54,7 @@ public class HibernateEngine extends AbstractEngine {
 
 					generateDao(node, model);
 
-					// generateService(node, model);
+					generateService(node, model);
 				}
 			}
 		}
@@ -133,6 +134,7 @@ public class HibernateEngine extends AbstractEngine {
 	private void generateDao(Node node, NodeModel model) throws GeneratorServiceException {
 		if (node != null && model != null) {
 			final String className = node.valueOf("@name");
+			final String daoName = getClassName(DAO_KEY, JAVA_FILE_TYPE, node);
 			final String packageName = node.valueOf("ancestor::p:package/@name");
 			final String daoPackageName = getPackageName(packageName, DAO_PACKAGE_PROP);
 
@@ -140,6 +142,7 @@ public class HibernateEngine extends AbstractEngine {
 			data.put("packageName", packageName);
 			data.put("daoPackageName", daoPackageName);
 			data.put("className", className);
+			data.put("daoName", daoName);
 
 			generate(DAO_KEY, JAVA_FILE_TYPE, node, DAO_TEMPLATE_FILE, data, model);
 		}
@@ -148,6 +151,8 @@ public class HibernateEngine extends AbstractEngine {
 	private void generateService(Node node, NodeModel model) throws GeneratorServiceException {
 		if (node != null && model != null) {
 			final String className = node.valueOf("@name");
+			final String daoName = getClassName(DAO_KEY, JAVA_FILE_TYPE, node);
+			final String serviceName = getClassName(SERVICE_KEY, JAVA_FILE_TYPE, node);
 			final String packageName = node.valueOf("ancestor::p:package/@name");
 			final String daoPackageName = getPackageName(packageName, DAO_PACKAGE_PROP);
 			final String servicePackageName = getPackageName(packageName, SERVICE_PACKAGE_PROP);
@@ -157,6 +162,8 @@ public class HibernateEngine extends AbstractEngine {
 			data.put("daoPackageName", daoPackageName);
 			data.put("servicePackageName", servicePackageName);
 			data.put("className", className);
+			data.put("daoName", daoName);
+			data.put("serviceName", serviceName);
 
 			generate(SERVICE_KEY, JAVA_FILE_TYPE, node, SERVICE_TEMPLATE_FILE, data, model);
 		}
@@ -174,5 +181,14 @@ public class HibernateEngine extends AbstractEngine {
 			}
 		}
 		return packageName;
+	}
+
+	protected String getClassName(String fileKey, String fileType, Node node) throws GeneratorServiceException {
+		String outputFileName = null;
+		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileType) && node != null) {
+			outputFileName = getOutputFileName(fileKey, fileType, node);
+			outputFileName = FilenameUtils.getBaseName(outputFileName);
+		}
+		return outputFileName;
 	}
 }

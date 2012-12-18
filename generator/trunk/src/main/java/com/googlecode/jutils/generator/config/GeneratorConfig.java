@@ -106,6 +106,14 @@ public class GeneratorConfig {
 		this.properties = properties;
 	}
 
+	public Object getProperty(String key) {
+		Object value = null;
+		if (!StringUtil.isBlank(key)) {
+			value = properties.get(key);
+		}
+		return value;
+	}
+
 	public void addProperty(String key, Object value) {
 		if (!StringUtil.isBlank(key) && value != null) {
 			properties.put(key, value);

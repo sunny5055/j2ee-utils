@@ -19,7 +19,7 @@ package ${packageName};
 	</#list>
 </#if>
 
-${getImports(packageName, imports)}
+${getImports(false, packageName, imports)}
 
 @Embeddable
 @SuppressWarnings("serial")

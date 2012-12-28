@@ -53,6 +53,7 @@
   <#return primaryKey>
 </#function>
 
+
 <#function getPrimaryKeyType class>
   <#local primaryKeyType= "">
   <#if class["h:id"]?is_node>
@@ -61,6 +62,13 @@
     <#local primaryKeyType = getType(class["h:embedded-id/@targetEntity"])>
   </#if>
   <#return primaryKeyType>
+</#function>
+
+
+<#function getEntity xml name>
+	<#local entity = "">
+	<@xPath xml=xml expression="//h:entity[@name='${name}']" assignTo=entity />
+  	<#return entity>
 </#function>
 
 

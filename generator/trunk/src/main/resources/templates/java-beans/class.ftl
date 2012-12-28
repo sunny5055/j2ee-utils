@@ -35,7 +35,7 @@ package ${packageName};
   <@addTo assignTo="imports" element=util.getImportsFor(operation) />
 </#list>
 
-${getImports(packageName, imports)}
+${getImports(false, packageName, imports)}
 
 <@compress single_line=true>
 public ${util.getModifiersFrom(class)} class ${className}

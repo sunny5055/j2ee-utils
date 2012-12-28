@@ -11,6 +11,7 @@ import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.core.ClassUtil;
 
 import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
@@ -29,11 +30,12 @@ public class GetImportsMethod implements TemplateMethodModelEx {
 	public Object exec(List args) throws TemplateModelException {
 		final StringBuilder buffer = new StringBuilder();
 		if (!CollectionUtil.isEmpty(args)) {
-			final SimpleScalar currentPackage = MethodUtil.getRequiredParameter(args, 0, SimpleScalar.class);
-			final TemplateSequenceModel list = MethodUtil.getRequiredParameter(args, 1, TemplateSequenceModel.class);
+			final TemplateBooleanModel isInterface = MethodUtil.getRequiredParameter(args, 0, TemplateBooleanModel.class);
+			final SimpleScalar currentPackage = MethodUtil.getRequiredParameter(args, 1, SimpleScalar.class);
+			final TemplateSequenceModel list = MethodUtil.getRequiredParameter(args, 2, TemplateSequenceModel.class);
 			final List<String> types = getAsStringList(list);
 
-			final Set<String> filteredTypes = getFilteredTypes(currentPackage.getAsString(), types);
+			final Set<String> filteredTypes = getFilteredTypes(isInterface.getAsBoolean(), currentPackage.getAsString(), types);
 			if (!CollectionUtil.isEmpty(filteredTypes)) {
 				for (final String type : filteredTypes) {
 					buffer.append("import " + type + ";\n");
@@ -60,7 +62,7 @@ public class GetImportsMethod implements TemplateMethodModelEx {
 		return types;
 	}
 
-	private Set<String> getFilteredTypes(String currentPackage, List<String> types) {
+	private Set<String> getFilteredTypes(boolean isInterface, String currentPackage, List<String> types) {
 		Set<String> filteredTypes = null;
 		if (!CollectionUtil.isEmpty(types)) {
 			filteredTypes = new HashSet<String>();
@@ -73,12 +75,14 @@ public class GetImportsMethod implements TemplateMethodModelEx {
 						filteredTypes.add(fqdn);
 					}
 
-					if (ArrayUtil.contains(fqdn, ARRAY_LIST_TYPES)) {
-						filteredTypes.add("java.util.ArrayList");
-					} else if (ArrayUtil.contains(fqdn, HASH_SET_TYPES)) {
-						filteredTypes.add("java.util.HashSet");
-					} else if (ArrayUtil.contains(fqdn, HASH_MAP_TYPES)) {
-						filteredTypes.add("java.util.HashMap");
+					if (!isInterface) {
+						if (ArrayUtil.contains(fqdn, ARRAY_LIST_TYPES)) {
+							filteredTypes.add("java.util.ArrayList");
+						} else if (ArrayUtil.contains(fqdn, HASH_SET_TYPES)) {
+							filteredTypes.add("java.util.HashSet");
+						} else if (ArrayUtil.contains(fqdn, HASH_MAP_TYPES)) {
+							filteredTypes.add("java.util.HashMap");
+						}
 					}
 				}
 			}

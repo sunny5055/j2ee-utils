@@ -59,10 +59,14 @@
 
 
 <#macro getInterfaceProperty type name value>
+  <#local varName = name/>
+  <#if !(varName?matches("[A-Z_0-9]+"))>
+  	<#local varName = toUnderscoreCase(varName)/>
+  </#if>
   <#if type == "String">
-  ${type} ${name} =  "${value}";
+  ${type} ${varName} =  "${value}";
   <#else>
-  ${type} ${name} =  ${value};
+  ${type} ${varName} =  ${value};
   </#if>
 </#macro>
 
@@ -138,11 +142,11 @@
 </#macro>
 
 
-<#macro interfaceOperation modifiers returnType methodName parameters="">
+<#macro interfaceOperation returnType methodName modifiers="" parameters="">
   ${modifiers} ${returnType} ${methodName}(<@compress single_line=true>${parameters}</@compress>);
 </#macro>
 
-<#macro operation visibility modifiers returnType methodName parameters="" content="">
+<#macro operation visibility returnType methodName modifiers="" parameters="" content="">
   ${visibility} ${modifiers} ${returnType} ${methodName}(<@compress single_line=true>${parameters}</@compress>) {
   <#compress>
   <#if content != "">

@@ -8,38 +8,34 @@
 <#assign oneToManys = xml["//h:entity[@name=$className]/h:properties/h:one-to-many"]>
 <#assign manyToManys = xml["//h:entity[@name=$className]/h:properties/h:many-to-many"]>
 
-<#if servicePackageName??>
-package ${servicePackageName};
+<#if serviceImplPackageName??>
+package ${serviceImplPackageName};
 </#if>
 
 <#assign imports = [] />
-<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.GenericService" />
+<@addTo assignTo="imports" element="org.springframework.beans.factory.annotation.Autowired" />
+<@addTo assignTo="imports" element="org.springframework.stereotype.Service" />
+<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.AbstractGenericService" />
 <@addTo assignTo="imports" element="${packageName}.${entity.@name}" />
+<@addTo assignTo="imports" element="${daoPackageName}.${daoName}" />
+<@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
+
 <#if primaryKey?node_name == "embedded-id">
 	<@addTo assignTo="imports" element="${packageName}.${primaryKey.@targetEntity}" />
-	<@addTo assignTo="imports" element="java.util.List" />
 </#if>
-<#if manyToOnes?size gt 0 || oneToManys?size gt 0 || manyToManys?size gt 0>
-	<@addTo assignTo="imports" element="java.util.List" />
-</#if>
+
+<@addTo assignTo="imports" element="java.util.List" />
 
 ${getImports(true, servicePackageName, imports)}
 
 
-public interface ${serviceName} extends GenericService<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
+@Service
+public class ${serviceImplName} extends AbstractGenericService<${util.getPrimaryKeyType(entity)}, ${entity.@name}, ${daoName}> implements ${serviceName} {
 
-<@util.getMethodName doc=xml entity=entity property=primaryKey/>
-<#list columns as column>
-<@util.getMethodName doc=xml entity=entity property=column/>
-</#list>
-<#list manyToOnes as manyToOne>
-<@util.getMethodName doc=xml entity=entity property=manyToOne/>
-</#list>
-<#list oneToManys as oneToMany>
-<@util.getMethodName doc=xml entity=entity property=oneToMany/>
-</#list>
-<#list manyToManys as manyToMany>
-<@util.getMethodName doc=xml entity=entity property=manyToMany/>
-</#list>
+    @Autowired
+    @Override
+    public void setDao(${daoName} dao) {
+        this.dao = dao;
+    }
 }
 

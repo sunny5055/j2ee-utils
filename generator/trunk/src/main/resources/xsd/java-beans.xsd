@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xsd:schema version="1.0"
 	xmlns:b="http://code.google.com/p/j2ee-utils/schema/java-beans"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://code.google.com/p/j2ee-utils/schema/java-beans"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://code.google.com/p/j2ee-utils/schema/java-beans"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 
-	<xsd:include schemaLocation="commons-java.xsd"/>
+	<xsd:include schemaLocation="commons-java.xsd" />
 
 	<xsd:element name="interface">
 		<xsd:complexType>
@@ -21,7 +20,8 @@
 				<xsd:element name="properties" minOccurs="0">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="static-property" type="b:static-property" />
+							<xsd:element name="static-property" type="b:static-property"
+								minOccurs="0" maxOccurs="unbounded" />
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>

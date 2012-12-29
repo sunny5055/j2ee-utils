@@ -65,13 +65,6 @@
 </#function>
 
 
-<#function getEntity xml name>
-	<#local entity = "">
-	<@xPath xml=xml expression="//h:entity[@name='${name}']" assignTo=entity />
-  	<#return entity>
-</#function>
-
-
 <#function getParametersDeclaration parameters>
   <@myList list=parameters var="parameter" assignTo="parametersDeclaration">
   ${getType(parameter.@type, xml.getAttribute(parameter.@value))} ${parameter.@name}

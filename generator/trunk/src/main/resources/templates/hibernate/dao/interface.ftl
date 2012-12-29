@@ -19,21 +19,6 @@ package ${daoPackageName};
 	<@addTo assignTo="imports" element="${packageName}.${primaryKey.@targetEntity}" />
 	<@addTo assignTo="imports" element="java.util.List" />
 </#if>
-<#if manyToOnes?size gt 0>
-	<#list manyToOnes as manyToOne>
-		<@addTo assignTo="imports" element=util.getImportsFor(manyToOne) />
-	</#list>
-</#if>
-<#if oneToManys?size gt 0>
-	<#list oneToManys as oneToMany>
-		<@addTo assignTo="imports" element=util.getImportsFor(oneToMany) />
-	</#list>
-</#if>
-<#if manyToManys?size gt 0>
-	<#list manyToManys as manyToMany>
-		<@addTo assignTo="imports" element=util.getImportsFor(manyToMany) />
-	</#list>
-</#if>
 <#if manyToOnes?size gt 0 || oneToManys?size gt 0 || manyToManys?size gt 0>
 	<@addTo assignTo="imports" element="java.util.List" />
 </#if>
@@ -55,17 +40,17 @@ public interface ${daoName} extends GenericDao<${util.getPrimaryKeyType(entity)}
 <@util.getQueryName entity=entity property=manyToMany/>
 </#list>
 
-<@util.getMethodName entity=entity property=primaryKey/>
+<@util.getMethodName doc=xml entity=entity property=primaryKey/>
 <#list columns as column>
-<@util.getMethodName entity=entity property=column/>
+<@util.getMethodName doc=xml entity=entity property=column/>
 </#list>
 <#list manyToOnes as manyToOne>
-<@util.getMethodName entity=entity property=manyToOne/>
+<@util.getMethodName doc=xml entity=entity property=manyToOne/>
 </#list>
 <#list oneToManys as oneToMany>
-<@util.getMethodName entity=entity property=oneToMany/>
+<@util.getMethodName doc=xml entity=entity property=oneToMany/>
 </#list>
 <#list manyToManys as manyToMany>
-<@util.getMethodName entity=entity property=manyToMany/>
+<@util.getMethodName doc=xml entity=entity property=manyToMany/>
 </#list>
 }

@@ -68,22 +68,18 @@
 
 <#macro getInterfaceProperty property>
   <#local type = getType(property.@type)>
-  <#if type == "String">
-  ${type} ${property.@name} =  "${property.@value}";
-  <#else>
-  ${type} ${property.@name} =  ${property.@value};
-  </#if>
+  <@java.getInterfaceProperty type=type name=property.@name value=property.@value />
 </#macro>
 
 
 <#macro getProperty property>
   <#local visibility= xml.getAttribute(property.@visibility, "private")>
-  ${visibility} ${getType(property.@type, xml.getAttribute(property.@value), xml.getAttribute(property.@key))} ${property.@name};
+  <@java.getProperty visibility=visibility type=getType(property.@type, xml.getAttribute(property.@value), xml.getAttribute(property.@key)) name=property.@name />
 </#macro>
 
 
 <#macro initProperties property>
-  this.${property.@name} = ${java.resolveDefaults(property.@type, xml.getAttribute(property.@value), xml.getAttribute(property.@key))};
+  <@java.initProperties type=property.@type name=property.@name value=xml.getAttribute(property.@value) key=xml.getAttribute(property.@key) />
 </#macro>
 
 
@@ -97,71 +93,52 @@
 </#macro>
 
 
-<#macro add property>
-  <#local name = "${property.@name?substring(0, property.@name?length-1)}">
+<#macro addMethod property>
   <#if property?node_name = "property-list">
-    <#local value= "${getClassName(property.@value)}">
-    public void add${name?cap_first}(${value} ${name}) {
-      if (${java.checkNotNull(value, name)}) {
-        this.${property.@name}.add(${name});
-      }
-    }
+    <#local type= "${getClassName(property.@value)}">
+    <@java.addListMethod type=type name=property.@name />
   <#elseif property?node_name = "property-map">
-    <#local key= "${getClassName(property.@key)}">
-    <#local value= "${getClassName(property.@value)}">
-    public void add${name?cap_first}(${key} key, ${value} ${name}) {
-      if(${java.checkNotNull(key, "key")} && ${java.checkNotNull(value, name)}) {
-        this.${property.@name}.put(key, ${name});
-      }
-    }
+    <#local keyType= "${getClassName(property.@key)}">
+    <#local valueType= "${getClassName(property.@value)}">
+	<@java.addMapMethod name=property.@name keyType=keyType valueType=valueType />
   </#if>
 </#macro>
 
-<#macro remove property>
-  <#local name = "${property.@name?substring(0, property.@name?length-1)}">
+<#macro removeMethod property>
   <#if property?node_name = "property-list">
-    <#local value= "${getClassName(property.@value)}">
-    public void remove${name?cap_first}(${value} ${name}) {
-      if (${java.checkNotNull(value, name)}) {
-        this.${property.@name}.remove(${name});
-      }
-    }
+    <#local type= "${getClassName(property.@value)}">
+    <@java.removeListMethod type=type name=property.@name />
   <#elseif property?node_name = "property-map">
-    <#local key= "${getClassName(property.@key)}">
-    public void remove${name?cap_first}(${key} key) {
-      if (${java.checkNotNull(key, "key")}) {
-        this.${property.@name}.remove(key);
-      }
-    }
+    <#local keyType= "${getClassName(property.@key)}">
+    <@java.removeMapMethod name=property.@name keyType=keyType />
   </#if>
 </#macro>
 
 <#macro constructor className constructor>
   <#assign parameters = constructor["b:parameters/*"]>
   <#local visibility= xml.getAttribute(constructor.@visibility, "public")>
-  ${visibility} ${className}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
-  <#compress>
   <#if constructor["b:content"]?is_node>
-    ${constructor["b:content"]}
-  </#if>
-  </#compress>
-  }
-</#macro>
-
-<#macro operation operation>
-  <#assign parameters = operation["b:parameters/*"]>
-  <#local visibility= xml.getAttribute(operation.@visibility, "public")>
-  ${visibility} ${getModifiersFrom(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
-  <#if operation["b:content"]?is_node>
-    ${operation["b:content"]}
+    <@java.constructor visibility=visibility className=className parameters=getParametersDeclaration(parameters) content=constructor["b:content"] />
   <#else>
-    //TODO to complete
+	<@java.constructor visibility=visibility className=className parameters=getParametersDeclaration(parameters) />
   </#if>
-  }
 </#macro>
 
 
 <#macro interfaceOperation operation>
   <#assign parameters = operation["b:parameters/*"]>
-  ${getModifiersFrom(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>);
+  <@java.interfaceOperation modifiers=getModifiersFrom(operation) returnType=getReturnType(operation) methodName=operation.@name parameters=getParametersDeclaration(parameters) />
 </#macro>
+
+
+<#macro operation operation>
+  <#assign parameters = operation["b:parameters/*"]>
+  <#local visibility= xml.getAttribute(operation.@visibility, "public")>
+  <#if operation["b:content"]?is_node>
+    <@java.operation visibility=visibility modifiers=getModifiersFrom(operation) returnType=getReturnType(operation) methodName=operation.@name parameters=getParametersDeclaration(parameters) content=operation["b:content"] />
+  <#else>
+    <@java.operation visibility=visibility modifiers=getModifiersFrom(operation) returnType=getReturnType(operation) methodName=operation.@name parameters=getParametersDeclaration(parameters) />
+  </#if>
+</#macro>
+
+

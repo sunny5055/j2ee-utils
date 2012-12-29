@@ -58,15 +58,102 @@
 </#function>
 
 
-<#macro getter type name>
-	public ${type} get${name?cap_first}() {
+<#macro getInterfaceProperty type name value>
+  <#if type == "String">
+  ${type} ${name} =  "${value}";
+  <#else>
+  ${type} ${name} =  ${value};
+  </#if>
+</#macro>
+
+
+<#macro getProperty visibility type name>
+  ${visibility} ${type} ${name};
+</#macro>
+
+
+<#macro initProperties type name value="" key="">
+  this.${name} = ${resolveDefaults(type, value, key)};
+</#macro>
+
+
+<#macro getter type name methodName="get${name?cap_first}">
+	public ${type} ${methodName}() {
 		return ${name};
 	}
 </#macro>
 
 
-<#macro setter type name>
-	public void set${name?cap_first}(${type} ${name}) {
+<#macro setter type name methodName="set${name?cap_first}" argName=name>
+	public void ${methodName}(${type} ${name}) {
 		this.${name} = ${name};
 	}
 </#macro>
+
+
+<#macro addListMethod type name methodName="add${name?substring(0, name?length-1)?cap_first}" argName=name?substring(0, name?length-1)>
+    public void ${methodName}(${type} ${argName}) {
+      if (${checkNotNull(type, argName)}) {
+        this.${name}.add(${argName});
+      }
+    }
+</#macro>
+
+
+<#macro addMapMethod name keyType valueType keyName="key" valueName=name?substring(0, name?length-1) methodName="add${name?substring(0, name?length-1)?cap_first}">
+    public void ${methodName}(${keyType} ${keyName}, ${valueType} ${valueName}) {
+      if(${checkNotNull(keyType, keyName)} && ${checkNotNull(valueType, valueName)}) {
+        this.${name}.put(${keyName}, ${valueName});
+      }
+    }
+</#macro>
+
+
+<#macro removeListMethod type name methodName="remove${name?substring(0, name?length-1)?cap_first}" argName=name?substring(0, name?length-1)>
+    public void ${methodName}(${type} ${argName}) {
+      if (${checkNotNull(type, argName)}) {
+        this.${name}.remove(${argName});
+      }
+    }
+</#macro>
+
+
+<#macro removeMapMethod name keyType keyName="key" methodName="remove${name?substring(0, name?length-1)?cap_first}">
+    public void ${methodName}(${keyType} ${keyName}) {
+      if(${checkNotNull(keyType, keyName)}) {
+        this.${name}.remove(${keyName});
+      }
+    }
+</#macro>
+
+
+<#macro constructor visibility className parameters="" content="">
+  ${visibility} ${className}(<@compress single_line=true>${parameters}</@compress>) {
+  <#compress>
+  <#if content != "">
+    ${content}
+  </#if>
+  </#compress>
+  }
+</#macro>
+
+
+<#macro interfaceOperation modifiers returnType methodName parameters="">
+  ${modifiers} ${returnType} ${methodName}(<@compress single_line=true>${parameters}</@compress>);
+</#macro>
+
+<#macro operation visibility modifiers returnType methodName parameters="" content="">
+  ${visibility} ${modifiers} ${returnType} ${methodName}(<@compress single_line=true>${parameters}</@compress>) {
+  <#compress>
+  <#if content != "">
+    ${content}
+  <#else>
+  	//TODO to complete
+  </#if>
+  </#compress>
+  
+  }
+</#macro>
+
+
+

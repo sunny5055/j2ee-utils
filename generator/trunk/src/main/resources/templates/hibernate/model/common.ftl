@@ -51,26 +51,24 @@
 <#macro getProperty property>
   <#local visibility= xml.getAttribute(property.@visibility, "private")>
   <#if property?node_name = "id">
-    ${visibility} ${getType(property.@type)} ${property.@name};
+    <@java.getProperty visibility=visibility type=getType(property.@type) name=property.@name />
   <#elseif property?node_name = "embedded-id">
-    ${visibility} ${getType(property.@targetEntity)} ${property.@name};
+    <@java.getProperty visibility=visibility type=getType(property.@targetEntity) name=property.@name />
   <#elseif property?node_name = "column">
-    ${visibility} ${getType(property.@type)} ${property.@name};
+    <@java.getProperty visibility=visibility type=getType(property.@type) name=property.@name />
   <#elseif property?node_name = "many-to-one">
-    ${visibility} ${getType(xml.getAttribute(property.@targetEntity))} ${property.@name};
+    <@java.getProperty visibility=visibility type=getType(property.@targetEntity) name=property.@name />
   <#elseif property?node_name = "one-to-many">
-    ${visibility} ${getType(property.@listType, xml.getAttribute(property.@targetEntity))} ${property.@name};
+    <@java.getProperty visibility=visibility type=getType(property.@listType, xml.getAttribute(property.@targetEntity)) name=property.@name />
   <#elseif property?node_name = "many-to-many">
-    ${visibility} ${getType(property.@listType, xml.getAttribute(property.@targetEntity))} ${property.@name};
+    <@java.getProperty visibility=visibility type=getType(property.@listType, xml.getAttribute(property.@targetEntity)) name=property.@name />
   </#if>
 </#macro>
 
 
 <#macro initProperties property>
-  <#if property?node_name = "one-to-many">
-    this.${property.@name} = ${java.resolveDefaults(property.@listType, xml.getAttribute(property.@targetEntity))};
-  <#elseif property?node_name = "many-to-many">
-    this.${property.@name} = ${java.resolveDefaults(property.@listType, xml.getAttribute(property.@targetEntity))};
+  <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
+  	<@java.initProperties type=property.@listType name=property.@name value=xml.getAttribute(property.@targetEntity) />
   </#if>
 </#macro>
 
@@ -82,9 +80,7 @@
     <#local type = getType(property.@targetEntity)>
   </#if>
   @Override
-  public ${type} getPrimaryKey() {
-    return ${property.@name};
-  }
+  <@java.getter type=type name=property.@name methodName="getPrimaryKey" />
 </#macro>
 
 <#macro setterPrimaryKey property>
@@ -94,9 +90,7 @@
     <#local type = getType(property.@targetEntity)>
   </#if>
   @Override
-  public void setPrimaryKey(${type} primaryKey) {
-    this.${property.@name} = primaryKey;
-  }
+  <@java.setter type=type name=property.@name methodName="setPrimaryKey" argName="primaryKey"/>
 </#macro>
 
 <#macro getter property>
@@ -133,54 +127,44 @@
 </#macro>
 
 
-<#macro add property>
+<#macro addMethod property>
   <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
-    <#local value= "${getClassName(property.@targetEntity)}">
-    public void add${value?cap_first}(${value} ${value?uncap_first}) {
-      if (${java.checkNotNull(value, value?uncap_first)}) {
-        this.${property.@name}.add(${value?uncap_first});
-      }
-    }
+    <#local type = "${getClassName(property.@targetEntity)}">
+    <@java.addListMethod type=type name=property.@name />
   </#if>
 </#macro>
 
-<#macro remove property>
+<#macro removeMethod property>
   <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
-    <#local value= "${getClassName(property.@targetEntity)}">
-    public void remove${value?cap_first}(${value} ${value?uncap_first}) {
-      if (${java.checkNotNull(value, value?uncap_first)}) {
-        this.${property.@name}.remove(${value?uncap_first});
-      }
-    }
+    <#local type = "${getClassName(property.@targetEntity)}">
+    <@java.removeListMethod type=type name=property.@name />
   </#if>
 </#macro>
 
 <#macro constructor className constructor>
   <#assign parameters = constructor["h:parameters/*"]>
   <#local visibility= xml.getAttribute(constructor.@visibility, "public")>
-  ${visibility} ${className}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
-  <#compress>
   <#if constructor["h:content"]?is_node>
-    ${constructor["h:content"]}
-  </#if>
-  </#compress>
-  }
-</#macro>
-
-<#macro operation operation>
-  <#assign parameters = operation["h:parameters/*"]>
-  <#local visibility= xml.getAttribute(operation.@visibility, "public")>
-  ${visibility} ${getModifiersFrom(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>) {
-  <#if operation["h:content"]?is_node>
-    ${operation["h:content"]}
+    <@java.constructor visibility=visibility className=className parameters=getParametersDeclaration(parameters) content=constructor["h:content"] />
   <#else>
-    //TODO to complete
+	<@java.constructor visibility=visibility className=className parameters=getParametersDeclaration(parameters) />
   </#if>
-  }
 </#macro>
 
 
 <#macro interfaceOperation operation>
   <#assign parameters = operation["h:parameters/*"]>
-  ${getModifiersFrom(operation)} ${getReturnType(operation)} ${operation.@name}(<@compress single_line=true>${getParametersDeclaration(parameters)}</@compress>);
+  <@java.interfaceOperation modifiers=getModifiersFrom(operation) returnType=getReturnType(operation) methodName=operation.@name parameters=getParametersDeclaration(parameters) />
 </#macro>
+
+
+<#macro operation operation>
+  <#assign parameters = operation["h:parameters/*"]>
+  <#local visibility= xml.getAttribute(operation.@visibility, "public")>
+  <#if operation["h:content"]?is_node>
+    <@java.operation visibility=visibility modifiers=getModifiersFrom(operation) returnType=getReturnType(operation) methodName=operation.@name parameters=getParametersDeclaration(parameters) content=operation["h:content"] />
+  <#else>
+    <@java.operation visibility=visibility modifiers=getModifiersFrom(operation) returnType=getReturnType(operation) methodName=operation.@name parameters=getParametersDeclaration(parameters) />
+  </#if>
+</#macro>
+

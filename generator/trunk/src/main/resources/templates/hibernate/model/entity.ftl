@@ -143,9 +143,9 @@ ${util.getHibernateAnnotation(entity, manyToMany)}
 
   <@util.setter property=oneToMany/>
 
-  <@util.add property=oneToMany/>
+  <@util.addMethod property=oneToMany/>
 
-  <@util.remove property=oneToMany/>
+  <@util.removeMethod property=oneToMany/>
 </#list>
 
 <#list manyToManys as manyToMany>
@@ -153,9 +153,9 @@ ${util.getHibernateAnnotation(entity, manyToMany)}
 
   <@util.setter property=manyToMany/>
 
-  <@util.add property=manyToMany/>
+  <@util.addMethod property=manyToMany/>
 
-  <@util.remove property=manyToMany/>
+  <@util.removeMethod property=manyToMany/>
 </#list>
 
 <#list operations as operation>

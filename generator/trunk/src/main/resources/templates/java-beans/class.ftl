@@ -37,6 +37,9 @@ package ${packageName};
 
 ${getImports(false, packageName, imports)}
 
+<#if interfaces?size gt 0 && (interfaces?seq_contains("Serializable") || interfaces?seq_contains("java.io.Serializable"))>
+@SuppressWarnings("serial")
+</#if>
 <@compress single_line=true>
 public ${util.getModifiersFrom(class)} class ${className}
 <#if util.xml.existAttribute(class.@superClass)>
@@ -81,9 +84,9 @@ public ${util.getModifiersFrom(class)} class ${className}
 
   <@util.setter property=property/>
 
-  <@util.add property=property/>
+  <@util.addMethod property=property/>
 
-  <@util.remove property=property/>
+  <@util.removeMethod property=property/>
 </#list>
 
 <#list mapProperties as property>
@@ -91,9 +94,9 @@ public ${util.getModifiersFrom(class)} class ${className}
 
   <@util.setter property=property/>
 
-  <@util.add property=property/>
+  <@util.addMethod property=property/>
 
-  <@util.remove property=property/>
+  <@util.removeMethod property=property/>
 </#list>
 
 <#list operations as operation>

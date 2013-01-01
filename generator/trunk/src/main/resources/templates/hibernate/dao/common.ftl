@@ -1,7 +1,7 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","h":"http://code.google.com/p/j2ee-utils/schema/hibernate"}>
 <#include "../common.ftl">
 
-<#macro getQueryName entity property>
+<#macro getInterfaceQueryName entity property>
   <#if property?node_name = "embedded-id">
   	<#assign columns = property["h:properties/h:column"]>
   	<#list columns as column>
@@ -25,7 +25,8 @@
   </#if>
 </#macro>
 
-<#macro getMethodName doc entity property>
+
+<#macro getInterfaceMethod doc entity property>
   <#if property?node_name = "embedded-id">
   	<#assign columns = property["h:properties/h:column"]>
   	<#list columns as column>
@@ -51,3 +52,61 @@
 	<@java.interfaceOperation returnType="List<${entity.@name}>" methodName="findAllFor${property.@name?cap_first}" parameters="${argType} ${argName}" />
   </#if>
 </#macro>
+
+
+<#macro getMethod doc daoName entity property>
+  <#if property?node_name = "embedded-id">
+  	<#assign columns = property["h:properties/h:column"]>
+  	<#list columns as column>
+  	@Override
+  	<@java.operation visibility="public" returnType="Integer" methodName="countFor${column.@name?cap_first}" parameters="${getType(column.@type)} ${column.@name}">
+		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), ${java.getConstant(daoName, "countFor" + column.@name?cap_first)}, 
+                new String[] { "${column.@name}" }, ${column.@name});
+  	</@java.operation>
+  	
+  	@Override
+	<@java.operation visibility="public" returnType="List<${entity.@name}>" methodName="findAllFor${column.@name?cap_first}" parameters="${getType(column.@type)} ${column.@name}">
+		return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), ${java.getConstant(daoName, "findAllFor" + column.@name?cap_first)},
+                new String[] { "${column.@name}" }, ${column.@name});
+	</@java.operation>
+	
+	</#list>
+  <#elseif property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
+  	@Override
+  	<@java.operation visibility="public" returnType="Integer" methodName="countBy${property.@name?cap_first}" parameters="${getType(property.@type)} ${property.@name}">
+  		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), ${java.getConstant(daoName, "countBy" + property.@name?cap_first)},
+                new String[] { "${property.@name}" }, ${property.@name});
+  	</@java.operation>
+	
+	@Override	
+	<@java.operation visibility="public" returnType="${entity.@name}" methodName="findBy${property.@name?cap_first}" parameters="${getType(property.@type)} ${property.@name}">
+		return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), ${java.getConstant(daoName, "findBy" + property.@name?cap_first)},
+                new String[] { "${property.@name}" }, ${property.@name});
+	</@java.operation>
+  <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
+	  <#local argType = getType(property.@targetEntity)>
+	  <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
+	  	<#local argName = property.@name?substring(0, property.@name?length-1)>
+	  <#else>
+	  	<#local argName = property.@name>
+	  </#if>
+	  <@xPath xml=doc expression="//h:entity[@name='${getType(property.@targetEntity)}']" assignTo="targetEntity" />
+	  <#if targetEntity??>
+		<#local argType = getPrimaryKeyType(targetEntity)>	
+		<#local argName = "${argName}Id">
+	  </#if>
+	  
+	@Override
+  	<@java.operation visibility="public" returnType="Integer" methodName="countFor${property.@name?cap_first}" parameters="${argType} ${argName}">
+  		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), ${java.getConstant(daoName, "countFor" + argName?cap_first)},
+                new String[] { "${argName}" }, ${argName});
+  	</@java.operation>
+	
+	@Override
+	<@java.operation visibility="public" returnType="List<${entity.@name}>" methodName="findAllFor${property.@name?cap_first}" parameters="${argType} ${argName}">
+		return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), ${java.getConstant(daoName, "findAllFor" + argName?cap_first)},
+                new String[] { "${argName}" }, ${argName});
+	</@java.operation>
+  </#if>
+</#macro>
+

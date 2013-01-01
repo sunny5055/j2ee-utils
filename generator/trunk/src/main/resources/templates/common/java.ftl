@@ -58,6 +58,15 @@
 </#function>
 
 
+<#function getConstant class name>
+	<#local varName = name/>
+	<#if !(varName?matches("[A-Z_0-9]+"))>
+  		<#local varName = toUnderscoreCase(varName)/>
+  	</#if>
+  	<#return "${class}.${varName}">
+</#function>
+
+
 <#macro getInterfaceProperty type name value>
   <#local varName = name/>
   <#if !(varName?matches("[A-Z_0-9]+"))>
@@ -136,6 +145,13 @@
   <#compress>
   <#if content != "">
     ${content}
+  <#else>
+  	<#local content><#nested/></#local>
+  	<#if content != "">
+    	${content}
+  	<#else>
+  		//TODO to complete
+	</#if>  		
   </#if>
   </#compress>
   }
@@ -152,10 +168,14 @@
   <#if content != "">
     ${content}
   <#else>
-  	//TODO to complete
+  	<#local content><#nested/></#local>
+  	<#if content != "">
+    	${content}
+  	<#else>
+  		//TODO to complete
+	</#if>  		
   </#if>
   </#compress>
-  
   }
 </#macro>
 

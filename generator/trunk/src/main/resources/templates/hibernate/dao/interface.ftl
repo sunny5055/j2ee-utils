@@ -26,31 +26,31 @@ package ${daoPackageName};
 ${getImports(true, daoPackageName, imports)}
 
 public interface ${daoName} extends GenericDao<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
-<@util.getQueryName entity=entity property=primaryKey/>
+<@util.getInterfaceQueryName entity=entity property=primaryKey/>
 <#list columns as column>
-<@util.getQueryName entity=entity property=column/>
+<@util.getInterfaceQueryName entity=entity property=column/>
 </#list>
 <#list manyToOnes as manyToOne>
-<@util.getQueryName entity=entity property=manyToOne/>
+<@util.getInterfaceQueryName entity=entity property=manyToOne/>
 </#list>
 <#list oneToManys as oneToMany>
-<@util.getQueryName entity=entity property=oneToMany/>
+<@util.getInterfaceQueryName entity=entity property=oneToMany/>
 </#list>
 <#list manyToManys as manyToMany>
-<@util.getQueryName entity=entity property=manyToMany/>
+<@util.getInterfaceQueryName entity=entity property=manyToMany/>
 </#list>
 
-<@util.getMethodName doc=xml entity=entity property=primaryKey/>
+<@util.getInterfaceMethod doc=xml entity=entity property=primaryKey/>
 <#list columns as column>
-<@util.getMethodName doc=xml entity=entity property=column/>
+<@util.getInterfaceMethod doc=xml entity=entity property=column/>
 </#list>
 <#list manyToOnes as manyToOne>
-<@util.getMethodName doc=xml entity=entity property=manyToOne/>
+<@util.getInterfaceMethod doc=xml entity=entity property=manyToOne/>
 </#list>
 <#list oneToManys as oneToMany>
-<@util.getMethodName doc=xml entity=entity property=oneToMany/>
+<@util.getInterfaceMethod doc=xml entity=entity property=oneToMany/>
 </#list>
 <#list manyToManys as manyToMany>
-<@util.getMethodName doc=xml entity=entity property=manyToMany/>
+<@util.getInterfaceMethod doc=xml entity=entity property=manyToMany/>
 </#list>
 }

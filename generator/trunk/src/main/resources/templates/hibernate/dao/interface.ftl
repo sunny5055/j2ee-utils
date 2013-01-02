@@ -3,6 +3,7 @@
 <#assign entity = xml["//h:entity[@name=$className]"]>
 <#assign interfaces = xml["//h:entity[@name=$className]//h:interface"]>
 <#assign primaryKey = util.getPrimaryKey(entity)>
+<#assign allProperties = xml["//h:entity[@name=$className]/h:properties/*"]>
 <#assign columns = xml["//h:entity[@name=$className]/h:properties/h:column"]>
 <#assign manyToOnes = xml["//h:entity[@name=$className]/h:properties/h:many-to-one"]>
 <#assign oneToManys = xml["//h:entity[@name=$className]/h:properties/h:one-to-many"]>
@@ -23,21 +24,21 @@ package ${daoPackageName};
 	<@addTo assignTo="imports" element="java.util.List" />
 </#if>
 
-${getImports(true, daoPackageName, imports)}
+${getImports(false, daoPackageName, imports)}
 
 public interface ${daoName} extends GenericDao<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
-<@util.getInterfaceQueryName entity=entity property=primaryKey/>
+<@util.getInterfaceQueryName doc=xml entity=entity property=primaryKey/>
 <#list columns as column>
-<@util.getInterfaceQueryName entity=entity property=column/>
+<@util.getInterfaceQueryName doc=xml entity=entity property=column/>
 </#list>
 <#list manyToOnes as manyToOne>
-<@util.getInterfaceQueryName entity=entity property=manyToOne/>
+<@util.getInterfaceQueryName doc=xml entity=entity property=manyToOne/>
 </#list>
 <#list oneToManys as oneToMany>
-<@util.getInterfaceQueryName entity=entity property=oneToMany/>
+<@util.getInterfaceQueryName doc=xml entity=entity property=oneToMany/>
 </#list>
 <#list manyToManys as manyToMany>
-<@util.getInterfaceQueryName entity=entity property=manyToMany/>
+<@util.getInterfaceQueryName doc=xml entity=entity property=manyToMany/>
 </#list>
 
 <@util.getInterfaceMethod doc=xml entity=entity property=primaryKey/>

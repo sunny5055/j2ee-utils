@@ -44,22 +44,22 @@
 </#function>
 
 
-<#function getPrimaryKey class>
-  <#if class["h:id"]?is_node>
-    <#local primaryKey = class["h:id"]>
+<#function getPrimaryKey entity>
+  <#if entity["h:id"]?is_node>
+    <#local primaryKey = entity["h:id"]>
   <#else>
-    <#local primaryKey = class["h:embedded-id"]>
+    <#local primaryKey = entity["h:embedded-id"]>
   </#if>
   <#return primaryKey>
 </#function>
 
 
-<#function getPrimaryKeyType class>
+<#function getPrimaryKeyType entity>
   <#local primaryKeyType= "">
-  <#if class["h:id"]?is_node>
-    <#local primaryKeyType = getType(class["h:id/@type"])>
+  <#if entity["h:id"]?is_node>
+    <#local primaryKeyType = getType(entity["h:id/@type"])>
   <#else>
-    <#local primaryKeyType = getType(class["h:embedded-id/@targetEntity"])>
+    <#local primaryKeyType = getType(entity["h:embedded-id/@targetEntity"])>
   </#if>
   <#return primaryKeyType>
 </#function>
@@ -105,33 +105,71 @@
   <#return columnName>
 </#function>
 
-<#function getJoinColumnName class property>
+<#function getJoinColumnName entity property>
   <#local joinColumnName= "">
   <#if property?node_name = "many-to-one" || property?node_name = "many-to-many">
-    <#local prefix = "${class.@name?substring(0,2)?lower_case+getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
-    <#local joinColumnName= "${toUnderscoreCase(prefix+'_'+class.@name?lower_case+'_id')}">
+    <#local prefix = "${entity.@name?substring(0,2)?lower_case+getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
+    <#local joinColumnName= "${toUnderscoreCase(prefix+'_'+entity.@name?lower_case+'_id')}">
   </#if>
   <#return joinColumnName>
 </#function>
 
-<#function getInverseJoinColumnName class property>
+<#function getInverseJoinColumnName entity property>
   <#local inverseJoinColumnName= "">
   <#if property?node_name = "many-to-one" || property?node_name = "many-to-many">
-    <#local prefix = "${class.@name?substring(0,2)?lower_case+getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
+    <#local prefix = "${entity.@name?substring(0,2)?lower_case+getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
     <#local inverseJoinColumnName= "${toUnderscoreCase(prefix+'_'+getClassName(property.@targetEntity)?lower_case+'_id')}">
   </#if>
   <#return inverseJoinColumnName>
 </#function>
 
-<#function getJoinTableName class property>
+<#function getJoinTableName entity property>
   <#local joinTableName= "">
   <#if property?node_name = "many-to-one" || property?node_name = "many-to-many">
     <#if xml.existAttribute(property.@joinTable)>
       <#local joinTableName= "${property.@joinTable}">
     <#else>
-      <#local prefix = "${class.@name?substring(0,2)?lower_case+getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
-      <#local joinTableName= "${toUnderscoreCase(prefix+'_'+class.@name?lower_case+'_'+getClassName(property.@targetEntity)?lower_case)}">
+      <#local prefix = "${entity.@name?substring(0,2)?lower_case+getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
+      <#local joinTableName= "${toUnderscoreCase(prefix+'_'+entity.@name?lower_case+'_'+getClassName(property.@targetEntity)?lower_case)}">
     </#if>
   </#if>
   <#return joinTableName>
+</#function>
+
+
+<#function getCountQueryConstant propertyName singleResult daoName="">
+	<#return java.getConstant(getCountQueryName(propertyName?cap_first, singleResult), daoName) />
+</#function>
+
+
+<#function getFindQueryConstant propertyName singleResult daoName="">
+	<#return java.getConstant(getFindQueryName(propertyName?cap_first, singleResult), daoName) />
+</#function>
+
+
+<#function getCountQueryName propertyName singleResult entityName="">
+	<#local queryName= "">
+    <#if singleResult == false>
+    	<#local queryName= "countFor${propertyName?cap_first}" />
+    <#else>
+    	<#local queryName= "countBy${propertyName?cap_first}" />
+    </#if>
+    <#if entityName?length gt 0>
+  		<#local queryName = "${entityName?uncap_first}.${queryName}" />
+  	</#if>
+    <#return queryName />
+</#function>
+
+
+<#function getFindQueryName propertyName singleResult entityName="">
+	<#local queryName= "">
+    <#if singleResult == false>
+    	<#local queryName= "findAllFor${propertyName?cap_first}" />
+    <#else>
+    	<#local queryName= "findBy${propertyName?cap_first}" />
+    </#if>
+    <#if entityName?length gt 0>
+  		<#local queryName = "${entityName?uncap_first}.${queryName}" />
+  	</#if>
+    <#return queryName />
 </#function>

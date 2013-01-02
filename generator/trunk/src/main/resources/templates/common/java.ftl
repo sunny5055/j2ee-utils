@@ -151,7 +151,7 @@
     	${content}
   	<#else>
   		//TODO to complete
-	</#if>  		
+	</#if>
   </#if>
   </#compress>
   }
@@ -173,9 +173,10 @@
     	${content}
   	<#else>
   		//TODO to complete
-	</#if>  		
+	</#if>
   </#if>
   </#compress>
+
   }
 </#macro>
 

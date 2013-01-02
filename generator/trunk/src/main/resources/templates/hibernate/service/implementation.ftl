@@ -22,11 +22,19 @@ package ${serviceImplPackageName};
 
 <#if primaryKey?node_name == "embedded-id">
 	<@addTo assignTo="imports" element="${packageName}.${primaryKey.@targetEntity}" />
+	<@addTo assignTo="imports" element="java.util.List" />
+	<@addTo assignTo="imports" element=" com.googlecode.jutils.StringUtil" />
 </#if>
 
-<@addTo assignTo="imports" element="java.util.List" />
+<#if xml["//h:entity[@name=$className]//*[@unique='true']"]?size gt 0>
+	<@addTo assignTo="imports" element=" com.googlecode.jutils.StringUtil" />
+</#if>
+<#if manyToOnes?size gt 0 || oneToManys?size gt 0 || manyToManys?size gt 0>
+	<@addTo assignTo="imports" element="java.util.List" />
+	<@addTo assignTo="imports" element=" com.googlecode.jutils.StringUtil" />
+</#if>
 
-${getImports(true, servicePackageName, imports)}
+${getImports(false, serviceImplPackageName, imports)}
 
 
 @Service
@@ -37,5 +45,19 @@ public class ${serviceImplName} extends AbstractGenericService<${util.getPrimary
     public void setDao(${daoName} dao) {
         this.dao = dao;
     }
+
+	<@util.getMethod doc=xml entity=entity property=primaryKey/>
+	<#list columns as column>
+	<@util.getMethod doc=xml entity=entity property=column/>
+	</#list>
+	<#list manyToOnes as manyToOne>
+	<@util.getMethod doc=xml entity=entity property=manyToOne/>
+	</#list>
+	<#list oneToManys as oneToMany>
+	<@util.getMethod doc=xml entity=entity property=oneToMany/>
+	</#list>
+	<#list manyToManys as manyToMany>
+	<@util.getMethod doc=xml entity=entity property=manyToMany/>
+	</#list>
 }
 

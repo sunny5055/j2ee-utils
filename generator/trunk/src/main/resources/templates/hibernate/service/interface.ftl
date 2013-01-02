@@ -23,23 +23,23 @@ package ${servicePackageName};
 	<@addTo assignTo="imports" element="java.util.List" />
 </#if>
 
-${getImports(true, servicePackageName, imports)}
+${getImports(false, servicePackageName, imports)}
 
 
 public interface ${serviceName} extends GenericService<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
 
-<@util.getMethodName doc=xml entity=entity property=primaryKey/>
+<@util.getInterfaceMethod doc=xml entity=entity property=primaryKey/>
 <#list columns as column>
-<@util.getMethodName doc=xml entity=entity property=column/>
+<@util.getInterfaceMethod doc=xml entity=entity property=column/>
 </#list>
 <#list manyToOnes as manyToOne>
-<@util.getMethodName doc=xml entity=entity property=manyToOne/>
+<@util.getInterfaceMethod doc=xml entity=entity property=manyToOne/>
 </#list>
 <#list oneToManys as oneToMany>
-<@util.getMethodName doc=xml entity=entity property=oneToMany/>
+<@util.getInterfaceMethod doc=xml entity=entity property=oneToMany/>
 </#list>
 <#list manyToManys as manyToMany>
-<@util.getMethodName doc=xml entity=entity property=manyToMany/>
+<@util.getInterfaceMethod doc=xml entity=entity property=manyToMany/>
 </#list>
 }
 

@@ -132,10 +132,14 @@ public class HibernateEngine extends AbstractEngine {
 		if (node != null && model != null) {
 			final String packageName = node.valueOf("ancestor::p:package/@name");
 			final String className = node.valueOf("@name");
+			final String daoPackageName = getPackageName(packageName, DAO_PACKAGE_PROP);
+			final String daoName = getClassName(DAO_KEY, JAVA_FILE_TYPE, node);
 
 			final Map<String, Object> data = new HashMap<String, Object>();
 			data.put("packageName", packageName);
 			data.put("className", className);
+			data.put("daoPackageName", daoPackageName);
+			data.put("daoName", daoName);
 
 			generate(ENTITY_KEY, JAVA_FILE_TYPE, node, ENTITY_TEMPLATE_FILE, data, model);
 		}

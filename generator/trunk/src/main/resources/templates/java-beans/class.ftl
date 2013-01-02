@@ -35,7 +35,7 @@ package ${packageName};
   <@addTo assignTo="imports" element=util.getImportsFor(operation) />
 </#list>
 
-${getImports(false, packageName, imports)}
+${getImports(true, packageName, imports)}
 
 <#if interfaces?size gt 0 && (interfaces?seq_contains("Serializable") || interfaces?seq_contains("java.io.Serializable"))>
 @SuppressWarnings("serial")

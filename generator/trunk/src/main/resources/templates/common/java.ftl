@@ -58,20 +58,23 @@
 </#function>
 
 
-<#function getConstant class name>
+<#function getConstant name class="">
+	<#local constant = ""/>
 	<#local varName = name/>
 	<#if !(varName?matches("[A-Z_0-9]+"))>
   		<#local varName = toUnderscoreCase(varName)/>
   	</#if>
-  	<#return "${class}.${varName}">
+  	<#if class?length gt 0>
+  		<#local constant = "${class}.${varName}" />
+  	<#else>
+  		<#local constant = "${varName}" />
+  	</#if>
+  	<#return constant>
 </#function>
 
 
 <#macro getInterfaceProperty type name value>
-  <#local varName = name/>
-  <#if !(varName?matches("[A-Z_0-9]+"))>
-  	<#local varName = toUnderscoreCase(varName)/>
-  </#if>
+  <#local varName = getConstant(name) />
   <#if type == "String">
   ${type} ${varName} =  "${value}";
   <#else>

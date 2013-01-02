@@ -7,6 +7,7 @@
 <#assign manyToOnes = xml["//h:entity[@name=$className]/h:properties/h:many-to-one"]>
 <#assign oneToManys = xml["//h:entity[@name=$className]/h:properties/h:one-to-many"]>
 <#assign manyToManys = xml["//h:entity[@name=$className]/h:properties/h:many-to-many"]>
+<#assign uniqueColumns = xml["//h:entity[@name=$className]/h:properties/h:column[@unique='true']"] />
 <#assign constructors = xml["//h:entity[@name=$className]//h:constructor"]>
 <#assign operations = xml["//h:entity[@name=$className]//h:operation"]>
 
@@ -69,12 +70,19 @@ package ${packageName};
   <@addTo assignTo="imports" element=util.getImportsFor(operation) />
 </#list>
 
-${getImports(false, packageName, imports)}
+<#if util.hasNamedQuery(xml, entity) == "true">
+	<@addTo assignTo="imports" element="${daoPackageName}.${daoName}" />
+	<@addTo assignTo="imports" element="javax.persistence.NamedQueries" />
+	<@addTo assignTo="imports" element="javax.persistence.NamedQuery" />
+</#if>
+
+${getImports(true, packageName, imports)}
 
 
-<@compress single_line=true>
 @Entity(name="${entity.@tableName}")
+<@util.getNamedQueries doc=xml daoName=daoName entity=entity/>
 @SuppressWarnings("serial")
+<@compress single_line=true>
 public ${util.getModifiersFrom(entity)} class ${className}
 <#if util.xml.existAttribute(entity.@superClass)>
  extends ${getClassName(entity.@superClass)}

@@ -21,7 +21,7 @@ package ${packageName};
   <@addTo assignTo="imports" element=util.getImportsFor(operation) />
 </#list>
 
-${getImports(true, packageName, imports)}
+${getImports(false, packageName, imports)}
 
 <@compress single_line=true>
 public interface ${interfaceName}

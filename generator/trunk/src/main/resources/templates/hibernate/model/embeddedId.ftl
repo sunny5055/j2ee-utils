@@ -1,10 +1,10 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","h":"http://code.google.com/p/j2ee-utils/schema/hibernate"}>
 <#import "common.ftl" as util>
 <#assign entity = xml["//h:entity[@name=$className]"]>
-<#assign primaryKey = util.getPrimaryKey(entity)>
-<#assign columns = primaryKey["h:properties/h:column"]>
-<#if packageName??>
-package ${packageName};
+<#assign embeddedId = xml["//h:embedded-id[@targetEntity=$embeddedIdName]"]>
+<#assign columns = embeddedId["h:properties/h:column"]>
+<#if embeddedIdPackageName??>
+package ${embeddedIdPackageName};
 </#if>
 
 
@@ -19,17 +19,17 @@ package ${packageName};
 	</#list>
 </#if>
 
-${getImports(true, packageName, imports)}
+${getImports(true, embeddedIdPackageName, imports)}
 
 @Embeddable
 @SuppressWarnings("serial")
-public class ${util.getPrimaryKeyType(entity)} implements Serializable {
+public class ${embeddedIdName} implements Serializable {
 <#list columns as column>
 ${util.getHibernateAnnotation(entity, column)}
 <@util.getProperty property=column/>
 </#list>
 
-	public ${util.getPrimaryKeyType(entity)}() {
+	public ${embeddedIdName}() {
 		super();
   	}
 

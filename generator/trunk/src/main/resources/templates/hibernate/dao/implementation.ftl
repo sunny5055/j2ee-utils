@@ -22,7 +22,7 @@ package ${daoImplPackageName};
 <@addTo assignTo="imports" element="${daoPackageName}.${daoName}" />
 
 <#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${packageName}.${primaryKey.@targetEntity}" />
+	<@addTo assignTo="imports" element="${embeddedIdPackageName}.${embeddedIdName}" />
 	<@addTo assignTo="imports" element="java.util.List" />
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.util.QueryUtil" />
 </#if>

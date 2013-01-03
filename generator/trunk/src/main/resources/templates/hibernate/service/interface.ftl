@@ -16,7 +16,7 @@ package ${servicePackageName};
 <@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.GenericService" />
 <@addTo assignTo="imports" element="${packageName}.${entity.@name}" />
 <#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${packageName}.${primaryKey.@targetEntity}" />
+	<@addTo assignTo="imports" element="${embeddedIdPackageName}.${embeddedIdName}" />
 	<@addTo assignTo="imports" element="java.util.List" />
 </#if>
 <#if manyToOnes?size gt 0 || oneToManys?size gt 0 || manyToManys?size gt 0>

@@ -34,6 +34,7 @@ package ${packageName};
 	<@addTo assignTo="imports" element="javax.persistence.GenerationType" />
 <#else>
 	<@addTo assignTo="imports" element="javax.persistence.EmbeddedId" />
+	<@addTo assignTo="imports" element="${embeddedIdPackageName}.${embeddedIdName}" />
 </#if>
 
 <#list columns as column>

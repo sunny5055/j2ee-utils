@@ -15,13 +15,8 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import freemarker.ext.dom.NodeModel;
 
 public class JavaBeansEngine extends AbstractEngine {
-	private static final String JAVA_FILE_TYPE = "java";
-	private static final String CLASS_KEY = "class";
-	private static final String INTERFACE_KEY = "interface";
-
-	private static final String CLASS_TEMPLATE_FILE = "java-beans/class.ftl";
-
-	private static final String INTERFACE_TEMPLATE_FILE = "java-beans/interface.ftl";
+	public static final String CLASS_KEY = "class";
+	public static final String INTERFACE_KEY = "interface";
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -58,15 +53,15 @@ public class JavaBeansEngine extends AbstractEngine {
 	}
 
 	@Override
-	protected String getOutputFileName(String fileKey, String fileType, Node node) throws GeneratorServiceException {
+	protected String getOutputFileName(String fileExtension, String fileKey, Node node) throws GeneratorServiceException {
 		String outputFileName = null;
-		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileType) && node != null) {
+		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileExtension) && node != null) {
 			String className = null;
 			if (StringUtil.equals(fileKey, CLASS_KEY) || StringUtil.equals(fileKey, INTERFACE_KEY)) {
 				className = node.valueOf("@name");
 			}
 
-			final String fileNamePattern = getFileNamePattern(fileKey, fileType);
+			final String fileNamePattern = getFileNamePattern(fileExtension, fileKey);
 			if (!StringUtil.isBlank(fileNamePattern)) {
 				outputFileName = String.format(fileNamePattern, className);
 			}
@@ -83,7 +78,8 @@ public class JavaBeansEngine extends AbstractEngine {
 			data.put("packageName", packageName);
 			data.put("className", className);
 
-			generate(CLASS_KEY, JAVA_FILE_TYPE, node, CLASS_TEMPLATE_FILE, data, model);
+			final File outputFile = getOutputFile("java", CLASS_KEY, node);
+			generate(outputFile, "java-beans/class.ftl", data, model);
 		}
 	}
 
@@ -96,7 +92,8 @@ public class JavaBeansEngine extends AbstractEngine {
 			data.put("packageName", packageName);
 			data.put("interfaceName", interfaceName);
 
-			generate(INTERFACE_KEY, JAVA_FILE_TYPE, node, INTERFACE_TEMPLATE_FILE, data, model);
+			final File outputFile = getOutputFile("java", INTERFACE_KEY, node);
+			generate(outputFile, "java-beans/interface.ftl", data, model);
 		}
 	}
 

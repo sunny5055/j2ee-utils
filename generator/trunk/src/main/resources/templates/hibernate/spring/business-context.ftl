@@ -1,0 +1,62 @@
+<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","h":"http://code.google.com/p/j2ee-utils/schema/hibernate"}>
+<#import "common.ftl" as util>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+	<#list basePackages as basePackage>
+	<context:component-scan base-package="${basePackage}" />
+	</#list>
+	<context:annotation-config />
+
+	<context:property-placeholder location="classpath:spring/database.properties" />
+
+	<import resource="classpath:spring/jdbc-context.xml" />
+	<import resource="classpath:spring/hibernate-context.xml" />
+
+	<aop:config>
+		<aop:pointcut id="servicePointcut"
+			expression="
+			<#list basePackages as basePackage>
+			execution(* ${basePackage}..*Service*.*(..))
+			<#if basePackage_has_next>or</#if>
+			</#list>
+			" />
+		<aop:pointcut id="daoPointcut" expression="
+			<#list basePackages as basePackage>
+			execution(* ${basePackage}..*Dao*.*(..))
+			<#if basePackage_has_next>or</#if>
+			</#list>
+			" />
+
+		<aop:advisor advice-ref="serviceTxAdvice" pointcut-ref="servicePointcut" />
+		<aop:advisor advice-ref="daoTxAdvice" pointcut-ref="daoPointcut" />
+	</aop:config>
+
+	<tx:advice id="serviceTxAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="find*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="count*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="exist*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	<tx:advice id="daoTxAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" propagation="MANDATORY" />
+			<tx:method name="find*" read-only="true" propagation="MANDATORY" />
+			<tx:method name="count*" read-only="true" propagation="MANDATORY" />
+			<tx:method name="exist*" read-only="true" propagation="MANDATORY" />
+			<tx:method name="*" propagation="MANDATORY" />
+		</tx:attributes>
+	</tx:advice>
+</beans>

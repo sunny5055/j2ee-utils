@@ -21,7 +21,7 @@ package ${serviceImplPackageName};
 <@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
 
 <#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${packageName}.${primaryKey.@targetEntity}" />
+	<@addTo assignTo="imports" element="${embeddedIdPackageName}.${embeddedIdName}" />
 	<@addTo assignTo="imports" element="java.util.List" />
 	<@addTo assignTo="imports" element=" com.googlecode.jutils.StringUtil" />
 </#if>

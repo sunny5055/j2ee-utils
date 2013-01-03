@@ -69,6 +69,21 @@ public abstract class AbstractEngine implements Engine {
 	protected void init() {
 	}
 
+	@SuppressWarnings("unchecked")
+	protected void addDefaultFileNamePattern(String key, String fileNamePattern) {
+		if (!StringUtil.isBlank(key) && !StringUtil.isBlank(fileNamePattern)) {
+			Map<String, String> fileNamePatterns = null;
+
+			if (defaults.containsKey("fileNamePatterns")) {
+				fileNamePatterns = (Map<String, String>) defaults.get("fileNamePatterns");
+			} else {
+				fileNamePatterns = new HashMap<String, String>();
+			}
+			fileNamePatterns.put(key, fileNamePattern);
+			this.defaults.put("fileNamePatterns", fileNamePatterns);
+		}
+	}
+
 	public GeneratorConfig getConfig() {
 		return config;
 	}
@@ -113,29 +128,46 @@ public abstract class AbstractEngine implements Engine {
 
 	protected abstract String getPathToElement(String fileKey, Node node);
 
-	protected abstract String getOutputFileName(String fileKey, String fileType, Node node) throws GeneratorServiceException;
+	protected abstract String getOutputFileName(String fileExtension, String fileKey, Node node) throws GeneratorServiceException;
 
-	protected String getFileNamePattern(String fileKey, String fileType) throws GeneratorServiceException {
+	protected String getFileNamePattern(String fileExtension, String fileKey) throws GeneratorServiceException {
 		String fileNamePattern = null;
-		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileType)) {
-			if (config.hasFileNamePattern(fileKey)) {
-				fileNamePattern = config.getFileNamePattern(fileKey);
-			} else if (config.hasFileNamePattern(fileType)) {
-				fileNamePattern = config.getFileNamePattern(fileType);
+		if (!StringUtil.isBlank(fileExtension) && !StringUtil.isBlank(fileKey)) {
+			fileNamePattern = getFileNamePattern(fileKey);
+			if (StringUtil.isBlank(fileNamePattern)) {
+				fileNamePattern = getFileNamePattern(fileExtension);
 			}
 
 			if (StringUtil.isBlank(fileNamePattern)) {
-				throw new GeneratorServiceException("Unable to find filePattern for [fileKey=" + fileKey + ", fileType=" + fileType + "]");
+				fileNamePattern = "%1s." + fileExtension;
 			}
 		}
 		return fileNamePattern;
 	}
 
-	protected File getOutputDirectory(String fileKey, String fileType, Node node) {
+	@SuppressWarnings("unchecked")
+	private String getFileNamePattern(String key) {
+		String fileNamePattern = null;
+		if (!StringUtil.isBlank(key)) {
+			if (config.hasFileNamePattern(key)) {
+				fileNamePattern = config.getFileNamePattern(key);
+			} else if (defaults.containsKey("fileNamePatterns")) {
+				final Map<String, String> fileNamePatterns = (Map<String, String>) defaults.get("fileNamePatterns");
+				if (!MapUtil.isEmpty(fileNamePatterns) && fileNamePatterns.containsKey(key)) {
+					fileNamePattern = fileNamePatterns.get(key);
+				}
+			}
+		}
+		return fileNamePattern;
+	}
+
+	protected File getOutputDirectory(String fileExtension, String fileKey, Node node) {
 		File outputDirectory = null;
-		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileType) && node != null) {
-			if (config.hasOutputDirectory(fileType)) {
-				outputDirectory = new File(config.getBaseOutputDirectory(), config.getOutputDirectory(fileType));
+		if (!StringUtil.isBlank(fileExtension) && !StringUtil.isBlank(fileKey)) {
+			if (config.hasOutputDirectory(fileExtension)) {
+				outputDirectory = new File(config.getBaseOutputDirectory(), config.getOutputDirectory(fileExtension));
+			} else if (config.hasOutputDirectory("*")) {
+				outputDirectory = new File(config.getBaseOutputDirectory(), config.getOutputDirectory("*"));
 			} else {
 				outputDirectory = config.getBaseOutputDirectory();
 			}
@@ -148,11 +180,11 @@ public abstract class AbstractEngine implements Engine {
 		return outputDirectory;
 	}
 
-	protected File getOutputFile(String fileKey, String fileType, Node node) throws GeneratorServiceException {
+	protected File getOutputFile(String fileExtension, String fileKey, Node node) throws GeneratorServiceException {
 		File outputFile = null;
-		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileType) && node != null) {
-			final File outputDirectory = getOutputDirectory(fileKey, fileType, node);
-			final String outputFileName = getOutputFileName(fileKey, fileType, node);
+		if (!StringUtil.isBlank(fileExtension) && !StringUtil.isBlank(fileKey)) {
+			final File outputDirectory = getOutputDirectory(fileExtension, fileKey, node);
+			final String outputFileName = getOutputFileName(fileExtension, fileKey, node);
 			if (outputDirectory != null && !StringUtil.isBlank(outputFileName)) {
 				outputFile = new File(outputDirectory, outputFileName);
 			}
@@ -160,28 +192,16 @@ public abstract class AbstractEngine implements Engine {
 		return outputFile;
 	}
 
-	protected void generate(String fileKey, String fileType, Node node, String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
-		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileType) && node != null && !StringUtil.isBlank(templateName) && !MapUtil.isEmpty(data) && model != null) {
-			File file = null;
-			final File outputDirectory = getOutputDirectory(fileKey, fileType, node);
-			final String outputFileName = getOutputFileName(fileKey, fileType, node);
-
-			if (outputDirectory != null && !StringUtil.isBlank(outputFileName)) {
-				data.put("outputDirectory", outputDirectory);
-				data.put("outputFileName", outputFileName);
-				file = new File(outputDirectory, outputFileName);
-
-				if (file != null) {
-					final String content = getContent(templateName, data, model);
-					if (!StringUtil.isBlank(content)) {
-						try {
-							writeToFile(file, content);
-						} catch (final FileNotFoundException e) {
-							throw new GeneratorServiceException(e);
-						} catch (final IOException e) {
-							throw new GeneratorServiceException(e);
-						}
-					}
+	protected void generate(File outputFile, String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
+		if (outputFile != null && !StringUtil.isBlank(templateName) && data != null && model != null) {
+			final String content = getContent(templateName, data, model);
+			if (!StringUtil.isBlank(content)) {
+				try {
+					writeToFile(outputFile, content);
+				} catch (final FileNotFoundException e) {
+					throw new GeneratorServiceException(e);
+				} catch (final IOException e) {
+					throw new GeneratorServiceException(e);
 				}
 			}
 		}

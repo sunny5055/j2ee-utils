@@ -28,7 +28,7 @@ public abstract class AbstractJavaEngine extends AbstractEngine {
 		this.defaultProperties.put("path.test_java", "src/test/java");
 		this.defaultProperties.put("path.test_resources", "src/test/resources");
 
-		this.defaultFormatters.put("java", new JavaFormatter());
+		this.defaultFormatters.add(new JavaFormatter());
 	}
 
 	@Override

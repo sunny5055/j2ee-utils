@@ -61,6 +61,8 @@ public class HibernateEngine extends AbstractJavaEngine {
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_HIBERNATE_KEY, "hibernate-context.xml");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_JDBC_KEY, "jdbc-context.xml");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_CONFIG_KEY, "database.properties");
+
+		this.defaultProperties.put(getEngineKey() + ".database", "postgresql");
 	}
 
 	@Override
@@ -210,6 +212,11 @@ public class HibernateEngine extends AbstractJavaEngine {
 				}
 			}
 			data.put("basePackages", basePackages);
+
+			final String database = resolveKey(getEngineKey() + ".database");
+			if (!StringUtil.isBlank(database)) {
+				data.put("database", database.toLowerCase());
+			}
 
 			final String daoFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + DAO_KEY);
 			if (!StringUtil.isBlank(daoFileName)) {

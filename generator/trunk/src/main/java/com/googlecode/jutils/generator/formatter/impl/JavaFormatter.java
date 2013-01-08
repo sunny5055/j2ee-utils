@@ -1,15 +1,14 @@
 package com.googlecode.jutils.generator.formatter.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.apache.commons.io.FilenameUtils;
-
-import com.googlecode.jutils.generator.formatter.Formatter;
+import com.googlecode.jutils.generator.formatter.exception.FormatterException;
 
 import de.hunsicker.jalopy.Jalopy;
 
-public class JavaFormatter implements Formatter {
+public class JavaFormatter extends AbstractFormatter {
 	private File jalopyConvention;
 
 	public JavaFormatter() {
@@ -25,24 +24,27 @@ public class JavaFormatter implements Formatter {
 	}
 
 	@Override
-	public boolean accept(File file) {
-		boolean accept = false;
-		if (file != null) {
-			accept = FilenameUtils.isExtension(file.getName(), "java");
+	public void format(File file) throws FormatterException {
+		if (accept(file)) {
+			final Jalopy jalopy = new Jalopy();
+			try {
+				if (jalopyConvention != null) {
+					Jalopy.setConvention(jalopyConvention);
+				}
+				jalopy.setInput(file);
+				jalopy.setOutput(file);
+				jalopy.format();
+			} catch (final FileNotFoundException e) {
+				throw new FormatterException(e.getMessage());
+			} catch (final IOException e) {
+				throw new FormatterException(e.getMessage());
+			}
 		}
-		return accept;
 	}
 
 	@Override
-	public void format(File file) throws IOException {
-		if (accept(file)) {
-			final Jalopy jalopy = new Jalopy();
-			if (jalopyConvention != null) {
-				Jalopy.setConvention(jalopyConvention);
-			}
-			jalopy.setInput(file);
-			jalopy.setOutput(file);
-			jalopy.format();
-		}
+	protected String[] getExtensions() {
+		return new String[] { "java" };
 	}
+
 }

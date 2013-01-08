@@ -35,6 +35,8 @@ import com.googlecode.jutils.collection.MapUtil;
 import com.googlecode.jutils.generator.config.GeneratorConfig;
 import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import com.googlecode.jutils.generator.formatter.Formatter;
+import com.googlecode.jutils.generator.formatter.exception.FormatterException;
+import com.googlecode.jutils.generator.formatter.impl.XmlFormatter;
 import com.googlecode.jutils.generator.freemarker.directive.AddToDirective;
 import com.googlecode.jutils.generator.freemarker.directive.MyListDirective;
 import com.googlecode.jutils.generator.freemarker.directive.XPathDirective;
@@ -53,7 +55,7 @@ public abstract class AbstractEngine implements Engine {
 
 	protected GeneratorConfig config;
 	protected Map<String, String> defaultProperties;
-	protected Map<String, Formatter> defaultFormatters;
+	protected List<Formatter> defaultFormatters;
 
 	@Autowired
 	protected TemplaterService templaterService;
@@ -61,11 +63,12 @@ public abstract class AbstractEngine implements Engine {
 	public AbstractEngine() {
 		super();
 		this.defaultProperties = new HashMap<String, String>();
-		this.defaultFormatters = new HashMap<String, Formatter>();
+		this.defaultFormatters = new ArrayList<Formatter>();
 	}
 
 	@PostConstruct
 	protected void init() {
+		this.defaultFormatters.add(new XmlFormatter());
 	}
 
 	public GeneratorConfig getConfig() {
@@ -188,6 +191,8 @@ public abstract class AbstractEngine implements Engine {
 					throw new GeneratorServiceException(e);
 				} catch (final IOException e) {
 					throw new GeneratorServiceException(e);
+				} catch (final FormatterException e) {
+					throw new GeneratorServiceException(e);
 				}
 			}
 		}
@@ -219,7 +224,7 @@ public abstract class AbstractEngine implements Engine {
 		return content;
 	}
 
-	private void writeToFile(File file, String content) throws IOException, FileNotFoundException {
+	private void writeToFile(File file, String content) throws IOException, FileNotFoundException, FormatterException {
 		if (file != null && !StringUtil.isBlank(content)) {
 			final File parent = file.getParentFile();
 			if (!parent.exists()) {
@@ -240,14 +245,12 @@ public abstract class AbstractEngine implements Engine {
 		}
 	}
 
-	private void formatFile(File file) throws IOException {
-		if (file != null && config != null) {
+	private void formatFile(File file) throws IOException, FormatterException {
+		if (file != null) {
 			final String extension = FilenameUtils.getExtension(file.getName());
-			if (!MapUtil.isEmpty(config.getFormatters())) {
-				final Formatter formatter = getFormatter(extension);
-				if (formatter != null) {
-					formatter.format(file);
-				}
+			final Formatter formatter = getFormatter(extension);
+			if (formatter != null) {
+				formatter.format(file);
 			}
 		}
 	}
@@ -255,10 +258,16 @@ public abstract class AbstractEngine implements Engine {
 	private Formatter getFormatter(String key) {
 		Formatter formatter = null;
 		if (!StringUtil.isBlank(key)) {
-			if (config.hasFormatter(key)) {
-				formatter = config.getFormatter(key);
-			} else if (defaultFormatters.containsKey(key)) {
-				formatter = defaultFormatters.get(key);
+			formatter = config.getFormatter(key);
+			if (formatter == null) {
+				if (!CollectionUtil.isEmpty(defaultFormatters)) {
+					for (final Formatter f : defaultFormatters) {
+						if (f.accept(key)) {
+							formatter = f;
+							break;
+						}
+					}
+				}
 			}
 		}
 		return formatter;

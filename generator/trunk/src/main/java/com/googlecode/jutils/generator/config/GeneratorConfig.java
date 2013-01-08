@@ -9,19 +9,20 @@ import java.util.Map;
 import org.springframework.core.io.Resource;
 
 import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.collection.MapUtil;
 import com.googlecode.jutils.generator.formatter.Formatter;
 
 public class GeneratorConfig {
 	private File baseOutputDirectory;
 	private Map<String, String> properties;
-	private Map<String, Formatter> formatters;
+	private List<Formatter> formatters;
 	private List<Resource> schemas;
 
 	public GeneratorConfig() {
 		super();
 		this.properties = new HashMap<String, String>();
-		this.formatters = new HashMap<String, Formatter>();
+		this.formatters = new ArrayList<Formatter>();
 		this.schemas = new ArrayList<Resource>();
 	}
 
@@ -76,33 +77,38 @@ public class GeneratorConfig {
 		return data;
 	}
 
-	public Map<String, Formatter> getFormatters() {
+	public List<Formatter> getFormatters() {
 		return formatters;
 	}
 
-	public void setFormatters(Map<String, Formatter> formatters) {
+	public void setFormatters(List<Formatter> formatters) {
 		this.formatters = formatters;
 	}
 
 	public Formatter getFormatter(String key) {
 		Formatter formatter = null;
 		if (!StringUtil.isBlank(key)) {
-			formatter = formatters.get(key);
+			for (final Formatter f : formatters) {
+				if (f.accept(key)) {
+					formatter = f;
+					break;
+				}
+			}
 		}
 		return formatter;
 	}
 
 	public boolean hasFormatter(String key) {
 		boolean formatter = false;
-		if (!MapUtil.isEmpty(formatters) && !StringUtil.isBlank(key)) {
-			formatter = formatters.containsKey(key);
+		if (!CollectionUtil.isEmpty(formatters) && !StringUtil.isBlank(key)) {
+			formatter = getFormatter(key) != null;
 		}
 		return formatter;
 	}
 
-	public void addFormatter(String key, Formatter formatter) {
-		if (!StringUtil.isBlank(key) && formatter != null) {
-			formatters.put(key, formatter);
+	public void addFormatter(Formatter formatter) {
+		if (formatter != null) {
+			formatters.add(formatter);
 		}
 	}
 

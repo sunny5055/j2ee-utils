@@ -1,10 +1,13 @@
 package com.googlecode.jutils.generator.formatter;
 
 import java.io.File;
-import java.io.IOException;
+
+import com.googlecode.jutils.generator.formatter.exception.FormatterException;
 
 public interface Formatter {
 	boolean accept(File file);
 
-	void format(File file) throws IOException;
+	boolean accept(String extension);
+
+	void format(File file) throws FormatterException;
 }

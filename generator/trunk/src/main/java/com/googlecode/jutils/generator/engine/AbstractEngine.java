@@ -29,6 +29,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.collection.MapUtil;
 import com.googlecode.jutils.generator.config.GeneratorConfig;
@@ -37,13 +38,7 @@ import com.googlecode.jutils.generator.formatter.Formatter;
 import com.googlecode.jutils.generator.freemarker.directive.AddToDirective;
 import com.googlecode.jutils.generator.freemarker.directive.MyListDirective;
 import com.googlecode.jutils.generator.freemarker.directive.XPathDirective;
-import com.googlecode.jutils.generator.freemarker.method.GetClassNameMethod;
-import com.googlecode.jutils.generator.freemarker.method.GetFqdnMethod;
-import com.googlecode.jutils.generator.freemarker.method.GetImportsMethod;
-import com.googlecode.jutils.generator.freemarker.method.GetModifiersMethod;
-import com.googlecode.jutils.generator.freemarker.method.GetPackageMethod;
-import com.googlecode.jutils.generator.freemarker.method.GetTypeMethod;
-import com.googlecode.jutils.generator.freemarker.method.IsPrimitiveMethod;
+import com.googlecode.jutils.generator.util.PropertyUtil;
 import com.googlecode.jutils.generator.util.XmlUtil;
 import com.googlecode.jutils.io.IoUtil;
 import com.googlecode.jutils.templater.exception.TemplaterServiceException;
@@ -53,35 +48,24 @@ import freemarker.ext.dom.NodeModel;
 
 public abstract class AbstractEngine implements Engine {
 	protected static final Logger LOGGER = Logger.getLogger(AbstractEngine.class);
+	protected static final String FILE_PATH = "file_path";
+	protected static final String FILE_NAME_PATTERN = "file_name_pattern";
 
 	protected GeneratorConfig config;
-	protected Map<String, Object> defaults;
+	protected Map<String, String> defaultProperties;
+	protected Map<String, Formatter> defaultFormatters;
 
 	@Autowired
 	protected TemplaterService templaterService;
 
 	public AbstractEngine() {
 		super();
-		this.defaults = new HashMap<String, Object>();
+		this.defaultProperties = new HashMap<String, String>();
+		this.defaultFormatters = new HashMap<String, Formatter>();
 	}
 
 	@PostConstruct
 	protected void init() {
-	}
-
-	@SuppressWarnings("unchecked")
-	protected void addDefaultFileNamePattern(String key, String fileNamePattern) {
-		if (!StringUtil.isBlank(key) && !StringUtil.isBlank(fileNamePattern)) {
-			Map<String, String> fileNamePatterns = null;
-
-			if (defaults.containsKey("fileNamePatterns")) {
-				fileNamePatterns = (Map<String, String>) defaults.get("fileNamePatterns");
-			} else {
-				fileNamePatterns = new HashMap<String, String>();
-			}
-			fileNamePatterns.put(key, fileNamePattern);
-			this.defaults.put("fileNamePatterns", fileNamePatterns);
-		}
 	}
 
 	public GeneratorConfig getConfig() {
@@ -90,6 +74,23 @@ public abstract class AbstractEngine implements Engine {
 
 	public void setConfig(GeneratorConfig config) {
 		this.config = config;
+	}
+
+	@Override
+	public String printHelp() {
+		final StringBuilder buffer = new StringBuilder();
+		if (!MapUtil.isEmpty(defaultProperties)) {
+			for (final Map.Entry<String, String> entry : defaultProperties.entrySet()) {
+				final String value = PropertyUtil.resolve(defaultProperties, entry.getKey());
+				buffer.append(entry.getKey() + " = ");
+				if (StringUtil.equalsIgnoreCase(entry.getValue(), value)) {
+					buffer.append(entry.getValue() + "\n");
+				} else {
+					buffer.append(entry.getValue() + " [" + value + "]\n");
+				}
+			}
+		}
+		return buffer.toString();
 	}
 
 	@Override
@@ -116,63 +117,48 @@ public abstract class AbstractEngine implements Engine {
 	protected String resolveKey(String key) {
 		String value = null;
 		if (!StringUtil.isBlank(key)) {
-			value = (String) config.getProperty(key);
-			if (StringUtil.isBlank(value)) {
-				value = (String) defaults.get(key);
-			}
+			final Map<String, String> properties = new HashMap<String, String>();
+			properties.putAll(defaultProperties);
+			properties.putAll(config.getProperties());
+
+			value = PropertyUtil.resolve(properties, key);
 		}
 		return value;
 	}
 
+	protected abstract String getEngineKey();
+
 	protected abstract void generate(Document xmlDocument, NodeModel model) throws GeneratorServiceException;
 
-	protected abstract String getPathToElement(String fileKey, Node node);
+	protected abstract String getPathToElement(String key, Node node);
 
-	protected abstract String getOutputFileName(String fileExtension, String fileKey, Node node) throws GeneratorServiceException;
+	protected abstract String getOutputFileName(String key, Node node) throws GeneratorServiceException;
 
-	protected String getFileNamePattern(String fileExtension, String fileKey) throws GeneratorServiceException {
-		String fileNamePattern = null;
-		if (!StringUtil.isBlank(fileExtension) && !StringUtil.isBlank(fileKey)) {
-			fileNamePattern = getFileNamePattern(fileKey);
-			if (StringUtil.isBlank(fileNamePattern)) {
-				fileNamePattern = getFileNamePattern(fileExtension);
-			}
-
-			if (StringUtil.isBlank(fileNamePattern)) {
-				fileNamePattern = "%1s." + fileExtension;
-			}
-		}
-		return fileNamePattern;
-	}
-
-	@SuppressWarnings("unchecked")
-	private String getFileNamePattern(String key) {
-		String fileNamePattern = null;
+	protected String getOutputFileName(String key, Object... values) throws GeneratorServiceException {
+		String outputFileName = null;
 		if (!StringUtil.isBlank(key)) {
-			if (config.hasFileNamePattern(key)) {
-				fileNamePattern = config.getFileNamePattern(key);
-			} else if (defaults.containsKey("fileNamePatterns")) {
-				final Map<String, String> fileNamePatterns = (Map<String, String>) defaults.get("fileNamePatterns");
-				if (!MapUtil.isEmpty(fileNamePatterns) && fileNamePatterns.containsKey(key)) {
-					fileNamePattern = fileNamePatterns.get(key);
-				}
+			final String fileNamePattern = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + key);
+			if (!StringUtil.isBlank(fileNamePattern) && !ArrayUtil.isEmpty(values)) {
+				outputFileName = String.format(fileNamePattern, values);
+			} else {
+				outputFileName = fileNamePattern;
 			}
 		}
-		return fileNamePattern;
+		return outputFileName;
 	}
 
-	protected File getOutputDirectory(String fileExtension, String fileKey, Node node) {
+	protected File getOutputDirectory(String key, Node node) {
 		File outputDirectory = null;
-		if (!StringUtil.isBlank(fileExtension) && !StringUtil.isBlank(fileKey)) {
-			if (config.hasOutputDirectory(fileExtension)) {
-				outputDirectory = new File(config.getBaseOutputDirectory(), config.getOutputDirectory(fileExtension));
-			} else if (config.hasOutputDirectory("*")) {
-				outputDirectory = new File(config.getBaseOutputDirectory(), config.getOutputDirectory("*"));
+		if (!StringUtil.isBlank(key)) {
+			final String pathKey = getEngineKey() + "." + FILE_PATH + "." + key;
+			final String value = resolveKey(pathKey);
+			if (!StringUtil.isBlank(value)) {
+				outputDirectory = new File(config.getBaseOutputDirectory(), value);
 			} else {
 				outputDirectory = config.getBaseOutputDirectory();
 			}
 
-			final String pathToElement = getPathToElement(fileKey, node);
+			final String pathToElement = getPathToElement(key, node);
 			if (!StringUtil.isBlank(pathToElement)) {
 				outputDirectory = new File(outputDirectory, pathToElement);
 			}
@@ -180,11 +166,11 @@ public abstract class AbstractEngine implements Engine {
 		return outputDirectory;
 	}
 
-	protected File getOutputFile(String fileExtension, String fileKey, Node node) throws GeneratorServiceException {
+	protected File getOutputFile(String key, Node node) throws GeneratorServiceException {
 		File outputFile = null;
-		if (!StringUtil.isBlank(fileExtension) && !StringUtil.isBlank(fileKey)) {
-			final File outputDirectory = getOutputDirectory(fileExtension, fileKey, node);
-			final String outputFileName = getOutputFileName(fileExtension, fileKey, node);
+		if (!StringUtil.isBlank(key)) {
+			final File outputDirectory = getOutputDirectory(key, node);
+			final String outputFileName = getOutputFileName(key, node);
 			if (outputDirectory != null && !StringUtil.isBlank(outputFileName)) {
 				outputFile = new File(outputDirectory, outputFileName);
 			}
@@ -207,6 +193,14 @@ public abstract class AbstractEngine implements Engine {
 		}
 	}
 
+	protected void addFreemarkerExt(Map<String, Object> data) {
+		if (data != null) {
+			data.put("addTo", new AddToDirective());
+			data.put("myList", new MyListDirective());
+			data.put("xPath", new XPathDirective());
+		}
+	}
+
 	private String getContent(String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
 		String content = null;
 		if (!StringUtil.isBlank(templateName) && data != null && model != null) {
@@ -223,22 +217,6 @@ public abstract class AbstractEngine implements Engine {
 			}
 		}
 		return content;
-	}
-
-	private void addFreemarkerExt(Map<String, Object> data) {
-		if (data != null) {
-			data.put("getImports", new GetImportsMethod());
-			data.put("getPackage", new GetPackageMethod());
-			data.put("getClassName", new GetClassNameMethod());
-			data.put("getFqdn", new GetFqdnMethod());
-			data.put("getModifiers", new GetModifiersMethod());
-			data.put("getType", new GetTypeMethod());
-			data.put("isPrimitive", new IsPrimitiveMethod());
-
-			data.put("addTo", new AddToDirective());
-			data.put("myList", new MyListDirective());
-			data.put("xPath", new XPathDirective());
-		}
 	}
 
 	private void writeToFile(File file, String content) throws IOException, FileNotFoundException {
@@ -266,12 +244,24 @@ public abstract class AbstractEngine implements Engine {
 		if (file != null && config != null) {
 			final String extension = FilenameUtils.getExtension(file.getName());
 			if (!MapUtil.isEmpty(config.getFormatters())) {
-				final Formatter formatter = config.getFormatter(extension);
+				final Formatter formatter = getFormatter(extension);
 				if (formatter != null) {
 					formatter.format(file);
 				}
 			}
 		}
+	}
+
+	private Formatter getFormatter(String key) {
+		Formatter formatter = null;
+		if (!StringUtil.isBlank(key)) {
+			if (config.hasFormatter(key)) {
+				formatter = config.getFormatter(key);
+			} else if (defaultFormatters.containsKey(key)) {
+				formatter = defaultFormatters.get(key);
+			}
+		}
+		return formatter;
 	}
 
 	private void validate(String xmlContent) throws SAXException, IOException {

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.springframework.core.io.Resource;
 
@@ -15,17 +14,13 @@ import com.googlecode.jutils.generator.formatter.Formatter;
 
 public class GeneratorConfig {
 	private File baseOutputDirectory;
-	private Map<String, String> outputDirectories;
-	private Map<String, String> fileNamePatterns;
-	private Properties properties;
+	private Map<String, String> properties;
 	private Map<String, Formatter> formatters;
 	private List<Resource> schemas;
 
 	public GeneratorConfig() {
 		super();
-		this.outputDirectories = new HashMap<String, String>();
-		this.fileNamePatterns = new HashMap<String, String>();
-		this.properties = new Properties();
+		this.properties = new HashMap<String, String>();
 		this.formatters = new HashMap<String, Formatter>();
 		this.schemas = new ArrayList<Resource>();
 	}
@@ -38,83 +33,31 @@ public class GeneratorConfig {
 		this.baseOutputDirectory = baseOutputDirectory;
 	}
 
-	public Map<String, String> getOutputDirectories() {
-		return outputDirectories;
-	}
-
-	public void setOutputDirectories(Map<String, String> outputDirectories) {
-		this.outputDirectories = outputDirectories;
-	}
-
-	public String getOutputDirectory(String key) {
-		String outputDirectory = null;
-		if (!StringUtil.isBlank(key)) {
-			outputDirectory = outputDirectories.get(key);
-		}
-		return outputDirectory;
-	}
-
-	public boolean hasOutputDirectory(String key) {
-		boolean outputDirectory = false;
-		if (!StringUtil.isBlank(key)) {
-			outputDirectory = outputDirectories.containsKey(key);
-		}
-		return outputDirectory;
-	}
-
-	public void addOutputDirectory(String key, String outputDirectory) {
-		if (!StringUtil.isBlank(key) && outputDirectory != null) {
-			outputDirectories.put(key, outputDirectory);
-		}
-	}
-
-	public Map<String, String> getFileNamePatterns() {
-		return fileNamePatterns;
-	}
-
-	public void setFileNamePatterns(Map<String, String> fileNamePatterns) {
-		this.fileNamePatterns = fileNamePatterns;
-	}
-
-	public String getFileNamePattern(String key) {
-		String fileNamePattern = null;
-		if (!StringUtil.isBlank(key)) {
-			fileNamePattern = fileNamePatterns.get(key);
-		}
-		return fileNamePattern;
-	}
-
-	public boolean hasFileNamePattern(String key) {
-		boolean fileNamePattern = false;
-		if (!StringUtil.isBlank(key)) {
-			fileNamePattern = fileNamePatterns.containsKey(key);
-		}
-		return fileNamePattern;
-	}
-
-	public void addFileNamePattern(String key, String fileNamePattern) {
-		if (!StringUtil.isBlank(key) && !StringUtil.isBlank(fileNamePattern)) {
-			fileNamePatterns.put(key, fileNamePattern);
-		}
-	}
-
-	public Properties getProperties() {
+	public Map<String, String> getProperties() {
 		return properties;
 	}
 
-	public void setProperties(Properties properties) {
+	public void setProperties(Map<String, String> properties) {
 		this.properties = properties;
 	}
 
-	public Object getProperty(String key) {
-		Object value = null;
+	public String getProperty(String key) {
+		String value = null;
 		if (!StringUtil.isBlank(key)) {
 			value = properties.get(key);
 		}
 		return value;
 	}
 
-	public void addProperty(String key, Object value) {
+	public boolean hasProperty(String key) {
+		boolean property = false;
+		if (!MapUtil.isEmpty(properties) && !StringUtil.isBlank(key)) {
+			property = properties.containsKey(key);
+		}
+		return property;
+	}
+
+	public void addProperty(String key, String value) {
 		if (!StringUtil.isBlank(key) && value != null) {
 			properties.put(key, value);
 		}
@@ -125,20 +68,9 @@ public class GeneratorConfig {
 		if (baseOutputDirectory != null) {
 			data.put("baseOutputDirectory", baseOutputDirectory);
 		}
-		if (!MapUtil.isEmpty(outputDirectories)) {
-			data.put("outputDirectories", outputDirectories);
-		}
-		if (!MapUtil.isEmpty(fileNamePatterns)) {
-			data.put("fileNamePatterns", fileNamePatterns);
-		}
 
-		if (properties != null) {
-			for (final Map.Entry<Object, Object> property : properties.entrySet()) {
-				final String key = property.getKey().toString();
-				final Object value = property.getValue();
-
-				data.put(key, value);
-			}
+		if (!MapUtil.isEmpty(properties)) {
+			data.put("properties", properties);
 		}
 
 		return data;
@@ -158,6 +90,20 @@ public class GeneratorConfig {
 			formatter = formatters.get(key);
 		}
 		return formatter;
+	}
+
+	public boolean hasFormatter(String key) {
+		boolean formatter = false;
+		if (!MapUtil.isEmpty(formatters) && !StringUtil.isBlank(key)) {
+			formatter = formatters.containsKey(key);
+		}
+		return formatter;
+	}
+
+	public void addFormatter(String key, Formatter formatter) {
+		if (!StringUtil.isBlank(key) && formatter != null) {
+			formatters.put(key, formatter);
+		}
 	}
 
 	public List<Resource> getSchemas() {

@@ -26,13 +26,13 @@
 		<aop:pointcut id="servicePointcut"
 			expression="
 			<#list basePackages as basePackage>
-			execution(* ${basePackage}..*Service*.*(..))
+			execution(* ${basePackage}..${serviceName}*.*(..))
 			<#if basePackage_has_next>or</#if>
 			</#list>
 			" />
 		<aop:pointcut id="daoPointcut" expression="
 			<#list basePackages as basePackage>
-			execution(* ${basePackage}..*Dao*.*(..))
+			execution(* ${basePackage}..${daoName}*.*(..))
 			<#if basePackage_has_next>or</#if>
 			</#list>
 			" />

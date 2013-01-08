@@ -14,9 +14,25 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 
 import freemarker.ext.dom.NodeModel;
 
-public class JavaBeansEngine extends AbstractEngine {
-	public static final String CLASS_KEY = "class";
-	public static final String INTERFACE_KEY = "interface";
+public class JavaBeansEngine extends AbstractJavaEngine {
+	private static final String CLASS_KEY = "class";
+	private static final String INTERFACE_KEY = "interface";
+
+	@Override
+	protected void init() {
+		super.init();
+
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + CLASS_KEY, "{path.java}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + INTERFACE_KEY, "{path.java}");
+
+		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + CLASS_KEY, "%1s.java");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + INTERFACE_KEY, "%1s.java");
+	}
+
+	@Override
+	protected String getEngineKey() {
+		return "java_engine";
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -39,10 +55,10 @@ public class JavaBeansEngine extends AbstractEngine {
 	}
 
 	@Override
-	protected String getPathToElement(String fileKey, Node node) {
+	protected String getPathToElement(String key, Node node) {
 		String pathToElement = null;
-		if (!StringUtil.isBlank(fileKey) && node != null) {
-			if (StringUtil.equals(fileKey, CLASS_KEY) || StringUtil.equals(fileKey, INTERFACE_KEY)) {
+		if (!StringUtil.isBlank(key) && node != null) {
+			if (StringUtil.equals(key, CLASS_KEY) || StringUtil.equals(key, INTERFACE_KEY)) {
 				final String packageName = node.valueOf("ancestor::p:package/@name");
 				if (!StringUtil.isBlank(packageName)) {
 					pathToElement = packageName.replace(".", File.separator);
@@ -53,18 +69,15 @@ public class JavaBeansEngine extends AbstractEngine {
 	}
 
 	@Override
-	protected String getOutputFileName(String fileExtension, String fileKey, Node node) throws GeneratorServiceException {
+	protected String getOutputFileName(String key, Node node) throws GeneratorServiceException {
 		String outputFileName = null;
-		if (!StringUtil.isBlank(fileKey) && !StringUtil.isBlank(fileExtension) && node != null) {
+		if (!StringUtil.isBlank(key) && node != null) {
 			String className = null;
-			if (StringUtil.equals(fileKey, CLASS_KEY) || StringUtil.equals(fileKey, INTERFACE_KEY)) {
+			if (StringUtil.equals(key, CLASS_KEY) || StringUtil.equals(key, INTERFACE_KEY)) {
 				className = node.valueOf("@name");
 			}
 
-			final String fileNamePattern = getFileNamePattern(fileExtension, fileKey);
-			if (!StringUtil.isBlank(fileNamePattern)) {
-				outputFileName = String.format(fileNamePattern, className);
-			}
+			outputFileName = getOutputFileName(key, className);
 		}
 		return outputFileName;
 	}
@@ -78,7 +91,7 @@ public class JavaBeansEngine extends AbstractEngine {
 			data.put("packageName", packageName);
 			data.put("className", className);
 
-			final File outputFile = getOutputFile("java", CLASS_KEY, node);
+			final File outputFile = getOutputFile(CLASS_KEY, node);
 			generate(outputFile, "java-beans/class.ftl", data, model);
 		}
 	}
@@ -92,7 +105,7 @@ public class JavaBeansEngine extends AbstractEngine {
 			data.put("packageName", packageName);
 			data.put("interfaceName", interfaceName);
 
-			final File outputFile = getOutputFile("java", INTERFACE_KEY, node);
+			final File outputFile = getOutputFile(INTERFACE_KEY, node);
 			generate(outputFile, "java-beans/interface.ftl", data, model);
 		}
 	}

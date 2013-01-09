@@ -8,7 +8,7 @@
 <#assign oneToManys = xml["//h:entity[@name=$className]/h:properties/h:one-to-many"]>
 <#assign manyToManys = xml["//h:entity[@name=$className]/h:properties/h:many-to-many"]>
 
-<#if serviceImplPackageName??>
+<#if serviceImplPackageName?? && serviceImplPackageName?length gt 0>
 package ${serviceImplPackageName};
 </#if>
 

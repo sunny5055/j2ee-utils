@@ -3,7 +3,7 @@
 <#assign entity = xml["//h:entity[@name=$className]"]>
 <#assign embeddedId = xml["//h:embedded-id[@targetEntity=$embeddedIdName]"]>
 <#assign columns = embeddedId["h:properties/h:column"]>
-<#if embeddedIdPackageName??>
+<#if embeddedIdPackageName?? && embeddedIdPackageName?length gt 0>
 package ${embeddedIdPackageName};
 </#if>
 

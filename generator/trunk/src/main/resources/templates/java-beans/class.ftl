@@ -8,7 +8,7 @@
 <#assign constructors = xml["//b:class[@name=$className]//b:constructor"]>
 <#assign operations = xml["//b:class[@name=$className]//b:operation"]>
 
-<#if packageName??>
+<#if packageName?? && packageName?length gt 0>
 package ${packageName};
 </#if>
 

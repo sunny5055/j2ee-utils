@@ -9,7 +9,7 @@
 <#assign oneToManys = xml["//h:entity[@name=$className]/h:properties/h:one-to-many"]>
 <#assign manyToManys = xml["//h:entity[@name=$className]/h:properties/h:many-to-many"]>
 
-<#if daoPackageName??>
+<#if daoPackageName?? && daoPackageName?length gt 0>
 package ${daoPackageName};
 </#if>
 

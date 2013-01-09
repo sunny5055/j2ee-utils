@@ -17,46 +17,9 @@
 	</#list>
 	<context:annotation-config />
 
-	<context:property-placeholder location="classpath:spring/database.properties" />
+	<context:property-placeholder location="classpath:${springConfigFile}" />
 
-	<import resource="classpath:spring/jdbc-context.xml" />
-	<import resource="classpath:spring/hibernate-context.xml" />
-
-	<aop:config>
-		<aop:pointcut id="servicePointcut"
-			expression="
-			<#list basePackages as basePackage>
-			execution(* ${basePackage}..${serviceName}*.*(..))
-			<#if basePackage_has_next>or</#if>
-			</#list>
-			" />
-		<aop:pointcut id="daoPointcut" expression="
-			<#list basePackages as basePackage>
-			execution(* ${basePackage}..${daoName}*.*(..))
-			<#if basePackage_has_next>or</#if>
-			</#list>
-			" />
-
-		<aop:advisor advice-ref="serviceTxAdvice" pointcut-ref="servicePointcut" />
-		<aop:advisor advice-ref="daoTxAdvice" pointcut-ref="daoPointcut" />
-	</aop:config>
-
-	<tx:advice id="serviceTxAdvice" transaction-manager="transactionManager">
-		<tx:attributes>
-			<tx:method name="get*" read-only="true" propagation="REQUIRED" />
-			<tx:method name="find*" read-only="true" propagation="REQUIRED" />
-			<tx:method name="count*" read-only="true" propagation="REQUIRED" />
-			<tx:method name="exist*" read-only="true" propagation="REQUIRED" />
-			<tx:method name="*" propagation="REQUIRED" />
-		</tx:attributes>
-	</tx:advice>
-	<tx:advice id="daoTxAdvice" transaction-manager="transactionManager">
-		<tx:attributes>
-			<tx:method name="get*" read-only="true" propagation="MANDATORY" />
-			<tx:method name="find*" read-only="true" propagation="MANDATORY" />
-			<tx:method name="count*" read-only="true" propagation="MANDATORY" />
-			<tx:method name="exist*" read-only="true" propagation="MANDATORY" />
-			<tx:method name="*" propagation="MANDATORY" />
-		</tx:attributes>
-	</tx:advice>
+	<import resource="classpath:${springJdbcFile}" />
+	<import resource="classpath:${springHibernateFile}" />
+	<import resource="classpath:${springTxFile}" />
 </beans>

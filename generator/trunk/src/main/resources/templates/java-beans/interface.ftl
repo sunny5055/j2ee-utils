@@ -5,7 +5,7 @@
 <#assign properties = xml["//b:interface[@name=$interfaceName]//b:static-property"]>
 <#assign operations = xml["//b:interface[@name=$interfaceName]//b:operation"]>
 
-<#if packageName??>
+<#if packageName?? && packageName?length gt 0>
 package ${packageName};
 </#if>
 

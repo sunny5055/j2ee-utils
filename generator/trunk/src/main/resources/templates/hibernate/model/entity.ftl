@@ -11,7 +11,7 @@
 <#assign constructors = xml["//h:entity[@name=$className]//h:constructor"]>
 <#assign operations = xml["//h:entity[@name=$className]//h:operation"]>
 
-<#if packageName??>
+<#if packageName?? && packageName?length gt 0>
 package ${packageName};
 </#if>
 

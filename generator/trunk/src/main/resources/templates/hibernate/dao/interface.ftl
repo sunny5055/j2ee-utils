@@ -14,7 +14,11 @@ package ${daoPackageName};
 </#if>
 
 <#assign imports = [] />
-<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dao.GenericDao" />
+<#if util.xml.getAttribute(entity.@readOnly) == "true">
+	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dao.GenericReadDao" />
+<#else>
+	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dao.GenericDao" />
+</#if>
 <@addTo assignTo="imports" element="${packageName}.${entity.@name}" />
 <#if primaryKey?node_name == "embedded-id">
 	<@addTo assignTo="imports" element="${embeddedIdPackageName}.${embeddedIdName}" />
@@ -26,7 +30,14 @@ package ${daoPackageName};
 
 ${getImports(false, daoPackageName, imports)}
 
-public interface ${daoName} extends GenericDao<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
+<@compress single_line=true>
+public interface ${daoName} extends
+<#if util.xml.getAttribute(entity.@readOnly) == "true">
+	GenericReadDao<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
+<#else>
+	GenericDao<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
+</#if>
+</@compress>
 <@util.getInterfaceQueryName doc=xml entity=entity property=primaryKey/>
 <#list columns as column>
 <@util.getInterfaceQueryName doc=xml entity=entity property=column/>

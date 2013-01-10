@@ -14,7 +14,11 @@ package ${daoImplPackageName};
 
 <#assign imports = [] />
 <@addTo assignTo="imports" element="org.springframework.stereotype.Repository" />
-<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dao.AbstractGenericDaoHibernate" />
+<#if util.xml.getAttribute(entity.@readOnly) == "true">
+	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dao.AbstractGenericReadDaoHibernate" />
+<#else>
+	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dao.AbstractGenericDaoHibernate" />
+</#if>
 <@addTo assignTo="imports" element="com.googlecode.jutils.dal.Search" />
 <@addTo assignTo="imports" element="com.googlecode.jutils.dal.SearchCriteria" />
 <@addTo assignTo="imports" element="com.googlecode.jutils.dal.SortOrder" />
@@ -40,7 +44,15 @@ package ${daoImplPackageName};
 ${getImports(false, daoImplPackageName, imports)}
 
 @Repository
-public class ${daoImplName} extends AbstractGenericDaoHibernate<${util.getPrimaryKeyType(entity)}, ${entity.@name}> implements ${daoName} {
+<@compress single_line=true>
+public class ${daoImplName} extends
+<#if util.xml.getAttribute(entity.@readOnly) == "true">
+	AbstractGenericReadDaoHibernate<${util.getPrimaryKeyType(entity)}, ${entity.@name}>
+<#else>
+	AbstractGenericDaoHibernate<${util.getPrimaryKeyType(entity)}, ${entity.@name}>
+</#if>
+ implements ${daoName} {
+</@compress>
 
     public ${daoImplName}() {
         super(${entity.@name}.class);

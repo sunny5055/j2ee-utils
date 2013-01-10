@@ -55,6 +55,8 @@
 				use="required" />
 			<xsd:attribute name="abstract" type="xsd:boolean" use="optional"
 				default="false" />
+			<xsd:attribute name="readOnly" type="xsd:boolean" use="optional"
+				default="false" />
 			<xsd:attribute name="superClass" type="xsd:string" use="optional" />
 		</xsd:complexType>
 	</xsd:element>

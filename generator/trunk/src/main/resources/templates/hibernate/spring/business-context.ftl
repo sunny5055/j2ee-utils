@@ -17,7 +17,7 @@
 	</#list>
 	<context:annotation-config />
 
-	<context:property-placeholder location="classpath:${springConfigFile}" />
+	<context:property-placeholder location="classpath:${springDatabaseFile}" />
 
 	<import resource="classpath:${springJdbcFile}" />
 	<import resource="classpath:${springHibernateFile}" />

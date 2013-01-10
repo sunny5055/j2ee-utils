@@ -28,7 +28,9 @@ public class HibernateEngine extends AbstractJavaEngine {
 	private static final String SPRING_JDBC_KEY = "spring_jdbc";
 	private static final String SPRING_HIBERNATE_KEY = "spring_hibernate";
 	private static final String SPRING_TX_KEY = "spring_tx";
-	private static final String SPRING_CONFIG_KEY = "spring_config";
+	private static final String SPRING_DATABASE_KEY = "spring_database";
+	private static final String SPRING_TEST_BUSINESS_KEY = "spring_test_business";
+	private static final String SPRING_TEST_DATABASE_KEY = "spring_test_database";
 
 	@Override
 	protected void init() {
@@ -44,7 +46,9 @@ public class HibernateEngine extends AbstractJavaEngine {
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_JDBC_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_HIBERNATE_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TX_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_CONFIG_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_DATABASE_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_BUSINESS_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/spring");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_DATABASE_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/spring");
 
 		this.defaultProperties.put(getEngineKey() + "." + ENTITY_KEY + ".package", ".model");
 		this.defaultProperties.put(getEngineKey() + "." + EMBEDDED_ID_KEY + ".package", ".model");
@@ -63,7 +67,9 @@ public class HibernateEngine extends AbstractJavaEngine {
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_JDBC_KEY, "jdbc-context.xml");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_HIBERNATE_KEY, "hibernate-context.xml");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TX_KEY, "tx-context.xml");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_CONFIG_KEY, "database.properties");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_DATABASE_KEY, "database.properties");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_BUSINESS_KEY, "test-context.xml");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_DATABASE_KEY, "test-database.properties");
 
 		this.defaultProperties.put(getEngineKey() + ".database", "postgresql");
 	}
@@ -255,10 +261,20 @@ public class HibernateEngine extends AbstractJavaEngine {
 			final String springTxFile = getClassPathResource(springTxFilePath, springTxFileName);
 			data.put("springTxFile", springTxFile);
 
-			final String springConfigFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_CONFIG_KEY);
-			final String springConfigFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_CONFIG_KEY);
-			final String springConfigFile = getClassPathResource(springConfigFilePath, springConfigFileName);
-			data.put("springConfigFile", springConfigFile);
+			final String springDatabaseFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_DATABASE_KEY);
+			final String springDatabaseFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_DATABASE_KEY);
+			final String springDatabaseFile = getClassPathResource(springDatabaseFilePath, springDatabaseFileName);
+			data.put("springDatabaseFile", springDatabaseFile);
+
+			final String springTestBusinessFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_BUSINESS_KEY);
+			final String springTestBusinessFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_BUSINESS_KEY);
+			final String springTestBusinessFile = getClassPathResource(springTestBusinessFilePath, springTestBusinessFileName);
+			data.put("springTestBusinessFile", springTestBusinessFile);
+
+			final String springTestDatabaseFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_DATABASE_KEY);
+			final String springTestDatabaseFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_DATABASE_KEY);
+			final String springTestDatabaseFile = getClassPathResource(springTestDatabaseFilePath, springTestDatabaseFileName);
+			data.put("springTestDatabaseFile", springTestDatabaseFile);
 
 			File outputFile = null;
 			outputFile = getOutputFile(SPRING_BUSINESS_KEY, null);
@@ -273,8 +289,14 @@ public class HibernateEngine extends AbstractJavaEngine {
 			outputFile = getOutputFile(SPRING_TX_KEY, null);
 			generate(outputFile, "hibernate/spring/tx-context.ftl", data, model);
 
-			outputFile = getOutputFile(SPRING_CONFIG_KEY, null);
+			outputFile = getOutputFile(SPRING_DATABASE_KEY, null);
 			generate(outputFile, "hibernate/spring/database.ftl", data, model);
+
+			outputFile = getOutputFile(SPRING_TEST_BUSINESS_KEY, null);
+			generate(outputFile, "hibernate/spring/test-context.ftl", data, model);
+
+			outputFile = getOutputFile(SPRING_TEST_DATABASE_KEY, null);
+			generate(outputFile, "hibernate/spring/test-database.ftl", data, model);
 		}
 	}
 

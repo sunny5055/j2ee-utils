@@ -168,8 +168,8 @@
 
             search.setCountQuery("select count(*) " + buffer.toString());
 
-            buffer.append("order by ");
             if (searchCriteria.hasSorts()) {
+            	buffer.append("order by ");
                 int index = 0;
                 for (final Map.Entry<String, SortOrder> entry : searchCriteria.getSorts().entrySet()) {
                     if (index != 0) {

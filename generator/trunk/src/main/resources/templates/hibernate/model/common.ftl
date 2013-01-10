@@ -88,8 +88,8 @@
       			<#local namedQuery= namedQuery + ", " />
       		</#if>
 
-        	<#local namedQuery= namedQuery + "@NamedQuery(name = " + getCountQueryConstant(column.@name, false, daoName) + ", query = \"select count(*) from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${column.@name} = :${column.@name}\")," />
-        	<#local namedQuery= namedQuery + "@NamedQuery(name = " + getFindQueryConstant(column.@name, false, daoName) + ", query = \"from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${column.@name} = :${column.@name}\")" />
+        	<#local namedQuery= namedQuery + "@NamedQuery(name = " + getCountQueryConstant(column.@name, false, daoName) + ", query = \"select count(*) from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${column.@name} = :${column.@name}\")," />
+        	<#local namedQuery= namedQuery + "@NamedQuery(name = " + getFindQueryConstant(column.@name, false, daoName) + ", query = \"from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${column.@name} = :${column.@name}\")" />
     	</#list>
     <#elseif property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
         <#local namedQuery= namedQuery + "@NamedQuery(name = " + getCountQueryConstant(property.@name, true, daoName) + ", query = \"select count(*) from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name} = :${property.@name}\"), " />

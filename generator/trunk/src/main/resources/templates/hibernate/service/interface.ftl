@@ -13,7 +13,11 @@ package ${servicePackageName};
 </#if>
 
 <#assign imports = [] />
-<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.GenericService" />
+<#if util.xml.getAttribute(entity.@readOnly) == "true">
+	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.GenericReadService" />
+<#else>
+	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.GenericService" />
+</#if>
 <@addTo assignTo="imports" element="${packageName}.${entity.@name}" />
 <#if primaryKey?node_name == "embedded-id">
 	<@addTo assignTo="imports" element="${embeddedIdPackageName}.${embeddedIdName}" />
@@ -26,7 +30,14 @@ package ${servicePackageName};
 ${getImports(false, servicePackageName, imports)}
 
 
-public interface ${serviceName} extends GenericService<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
+<@compress single_line=true>
+public interface ${serviceName} extends
+<#if util.xml.getAttribute(entity.@readOnly) == "true">
+	GenericReadService<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
+<#else>
+	GenericService<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
+</#if>
+</@compress>
 
 <@util.getInterfaceMethod doc=xml entity=entity property=primaryKey/>
 <#list columns as column>

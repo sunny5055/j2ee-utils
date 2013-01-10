@@ -26,6 +26,7 @@ package ${packageName};
 </#list>
 
 <@addTo assignTo="imports" element="javax.persistence.Entity" />
+<@addTo assignTo="imports" element="javax.persistence.Table" />
 <@addTo assignTo="imports" element="javax.persistence.Column" />
 
 <#if primaryKey?node_name = "id">
@@ -80,7 +81,8 @@ package ${packageName};
 ${getImports(true, packageName, imports)}
 
 
-@Entity(name="${entity.@tableName}")
+@Entity
+@Table(name="${entity.@tableName}")
 <@util.getNamedQueries doc=xml daoName=daoName entity=entity/>
 @SuppressWarnings("serial")
 <@compress single_line=true>

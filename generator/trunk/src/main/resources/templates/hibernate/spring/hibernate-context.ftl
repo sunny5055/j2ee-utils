@@ -32,11 +32,11 @@
 			<property name="packagesToScan" value="${basePackages[0]}" />
 		<#else>
 			<property name="packagesToScan">
-			<array>
+			<list>
 			<#list basePackages as basePackage>
 			<value>${basePackage}</value>
 			</#list>
-			</array>
+			</list>
 			</property>
 		</#if>
 	</bean>

@@ -15,7 +15,13 @@ package ${serviceImplPackageName};
 <#assign imports = [] />
 <@addTo assignTo="imports" element="org.springframework.beans.factory.annotation.Autowired" />
 <@addTo assignTo="imports" element="org.springframework.stereotype.Service" />
-<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.AbstractGenericService" />
+
+<#if util.xml.getAttribute(entity.@readOnly) == "true">
+	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.AbstractGenericReadService" />
+<#else>
+	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.AbstractGenericService" />
+</#if>
+
 <@addTo assignTo="imports" element="${packageName}.${entity.@name}" />
 <@addTo assignTo="imports" element="${daoPackageName}.${daoName}" />
 <@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
@@ -38,7 +44,15 @@ ${getImports(false, serviceImplPackageName, imports)}
 
 
 @Service
-public class ${serviceImplName} extends AbstractGenericService<${util.getPrimaryKeyType(entity)}, ${entity.@name}, ${daoName}> implements ${serviceName} {
+<@compress single_line=true>
+public class ${serviceImplName} extends
+<#if util.xml.getAttribute(entity.@readOnly) == "true">
+	AbstractGenericReadService<${util.getPrimaryKeyType(entity)}, ${entity.@name}, ${daoName}>
+<#else>
+	AbstractGenericService<${util.getPrimaryKeyType(entity)}, ${entity.@name}, ${daoName}>
+</#if>
+ implements ${serviceName} {
+</@compress>
 
     @Autowired
     @Override

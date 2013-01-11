@@ -89,7 +89,7 @@
 
 
 <#macro initProperties type name value="" key="">
-  this.${name} = ${resolveDefaults(type, value, key)};
+	<@assign name=name value=resolveDefaults(type, value, key) />
 </#macro>
 
 
@@ -101,9 +101,14 @@
 
 
 <#macro setter type name methodName="set${name?cap_first}" argName=name>
-	public void ${methodName}(${type} ${name}) {
-		this.${name} = ${name};
+	public void ${methodName}(${type} ${argName}) {
+		<@assign name=name value=argName />
 	}
+</#macro>
+
+
+<#macro assign name value>
+	this.${name} = ${value};
 </#macro>
 
 

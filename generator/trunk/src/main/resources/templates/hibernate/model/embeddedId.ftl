@@ -33,6 +33,13 @@ ${util.getHibernateAnnotation(entity, column)}
 		super();
   	}
 
+	public ${embeddedIdName}(${util.getParametersDeclaration(columns)}) {
+		this();
+		<#list columns as column>
+			<@util.java.assign name=column.@name value=column.@name />
+		</#list>
+  	}
+
 <#list columns as column>
   <@util.getter property=column/>
 

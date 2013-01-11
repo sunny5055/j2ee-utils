@@ -117,6 +117,10 @@ ${util.getHibernateAnnotation(entity, manyToMany)}
 
 	public ${className}() {
 		super();
+		<#if primaryKey?node_name = "embedded-id">
+		this.${primaryKey.@name} = new ${embeddedIdName}();
+		<#else>
+		</#if>
 		<#list oneToManys as oneToMany>
 			<@util.initProperties property=oneToMany/>
 		</#list>

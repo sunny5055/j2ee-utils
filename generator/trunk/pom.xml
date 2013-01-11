@@ -38,6 +38,12 @@
 			<groupId>jalopy</groupId>
 			<artifactId>jalopy</artifactId>
 			<version>1.5rc3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 </project>

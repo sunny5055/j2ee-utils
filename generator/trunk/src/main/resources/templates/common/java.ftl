@@ -36,6 +36,55 @@
 	<#return defaults>
 </#function>
 
+<#function convertFromString type varName>
+	<#local converted= "">
+
+	<#local typeClassName= getClassName(type)>
+	<#if typeClassName == "String">
+  		<#local converted = varName>
+	<#elseif typeClassName == "Double"  || type == "double">
+		<#local converted = "Double.valueOf(${varName})">
+	<#elseif typeClassName == "Float" || type == "float">
+  		<#local converted = "Float.valueOf(${varName})">
+    <#elseif typeClassName == "Integer" || type == "int">
+    	<#local converted = "Integer.valueOf(${varName})">
+    <#elseif typeClassName == "Long" || type == "long">
+    	<#local converted = "Long.valueOf(${varName})">
+    <#elseif typeClassName == "Byte" || type == "byte">
+    	<#local converted = "Byte.valueOf(${varName})">
+    <#elseif typeClassName == "Short" || type == "short">
+  		<#local converted = "Short.valueOf(${varName})">
+    <#elseif typeClassName == "Date">
+  		<#local converted = "DateUtil.parseDate(${varName}, \"dd/MM/yyyy\")">
+  	<#elseif typeClassName == "Boolean" || type == "boolean">
+  		<#local converted = "BooleanUtil.toBoolean(${varName})">
+	</#if>
+	<#return converted>
+</#function>
+
+<#function getRandomValue type length="10">
+	<#local randomValue= "">
+
+	<#local typeClassName= getClassName(type)>
+	<#if typeClassName == "String">
+  		<#local randomValue = "RandomStringUtils.randomAlphabetic(${length})">
+	<#elseif typeClassName == "Double"  || type == "double">
+		<#local randomValue = "new Random().nextDouble()">
+	<#elseif typeClassName == "Float" || type == "float">
+  		<#local randomValue = "new Random().nextFloat()">
+    <#elseif typeClassName == "Integer" || type == "int">
+    	<#if length == "">
+    		<#local randomValue = "new Random().nextInt(1000)">
+    	<#else>
+    		<#local randomValue = "new Random().nextInt(${length})">
+    	</#if>
+    <#elseif typeClassName == "Long" || type == "long">
+    	<#local randomValue = "new Random().nextLong()">
+  	<#elseif typeClassName == "Boolean" || type == "boolean">
+  		<#local randomValue = "new Random().nextBoolean()">
+	</#if>
+	<#return randomValue>
+</#function>
 
 <#function checkNotNull type name>
 	<#local checkNotNull= "">

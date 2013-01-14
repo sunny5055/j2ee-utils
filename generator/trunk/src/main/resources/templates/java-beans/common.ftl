@@ -1,6 +1,7 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","b":"http://code.google.com/p/j2ee-utils/schema/java-beans"}>
 <#import "../common/xml.ftl" as xml>
 <#import "../common/java.ftl" as java>
+<#import "../common/directives.ftl" as dir>
 
 <#function getImportsFor node>
   <#assign imports = [] />

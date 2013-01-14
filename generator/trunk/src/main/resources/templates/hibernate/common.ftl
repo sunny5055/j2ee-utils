@@ -1,6 +1,7 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","h":"http://code.google.com/p/j2ee-utils/schema/hibernate"}>
 <#import "../common/xml.ftl" as xml>
 <#import "../common/java.ftl" as java>
+<#import "../common/directives.ftl" as dir>
 
 
 <#function getImportsFor node>

@@ -224,9 +224,15 @@ public class HibernateEngine extends AbstractJavaEngine {
 	private void generateTestService(Node node, NodeModel model) throws GeneratorServiceException {
 		if (node != null && model != null) {
 			final Map<String, Object> data = getData(node);
+			addSpringFiles(data);
+
+			final String xmlDatasetFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + TEST_XML_DATASET_KEY);
+			final String xmlDatasetFileName = getOutputFileName(TEST_XML_DATASET_KEY, node);
+			final String xmlDatasetFile = getClassPathResource(xmlDatasetFilePath, xmlDatasetFileName);
+			data.put("xmlDatasetFile", xmlDatasetFile);
 
 			final File outputFile = getOutputFile(TEST_SERVICE_KEY, node);
-			generate(outputFile, "hibernate/test/class.ftl", data, model);
+			generate(outputFile, "hibernate/test/class/class.ftl", data, model);
 		}
 	}
 
@@ -235,7 +241,7 @@ public class HibernateEngine extends AbstractJavaEngine {
 			final Map<String, Object> data = getData(node);
 
 			final File outputFile = getOutputFile(TEST_XML_DATASET_KEY, node);
-			generate(outputFile, "hibernate/test/xml-dataset.ftl", data, model);
+			generate(outputFile, "hibernate/test/xml/xml-dataset.ftl", data, model);
 		}
 	}
 
@@ -275,40 +281,7 @@ public class HibernateEngine extends AbstractJavaEngine {
 				data.put("serviceName", serviceName);
 			}
 
-			final String springBusinessFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_BUSINESS_KEY);
-			final String springBusinessFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_BUSINESS_KEY);
-			final String springBusinessFile = getClassPathResource(springBusinessFilePath, springBusinessFileName);
-			data.put("springBusinessFile", springBusinessFile);
-
-			final String springJdbcFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_JDBC_KEY);
-			final String springJdbcFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_JDBC_KEY);
-			final String springJdbcFile = getClassPathResource(springJdbcFilePath, springJdbcFileName);
-			data.put("springJdbcFile", springJdbcFile);
-
-			final String springHibernateFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_HIBERNATE_KEY);
-			final String springHibernateFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_HIBERNATE_KEY);
-			final String springHibernateFile = getClassPathResource(springHibernateFilePath, springHibernateFileName);
-			data.put("springHibernateFile", springHibernateFile);
-
-			final String springTxFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_TX_KEY);
-			final String springTxFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TX_KEY);
-			final String springTxFile = getClassPathResource(springTxFilePath, springTxFileName);
-			data.put("springTxFile", springTxFile);
-
-			final String springDatabaseFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_DATABASE_KEY);
-			final String springDatabaseFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_DATABASE_KEY);
-			final String springDatabaseFile = getClassPathResource(springDatabaseFilePath, springDatabaseFileName);
-			data.put("springDatabaseFile", springDatabaseFile);
-
-			final String springTestBusinessFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_BUSINESS_KEY);
-			final String springTestBusinessFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_BUSINESS_KEY);
-			final String springTestBusinessFile = getClassPathResource(springTestBusinessFilePath, springTestBusinessFileName);
-			data.put("springTestBusinessFile", springTestBusinessFile);
-
-			final String springTestDatabaseFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_DATABASE_KEY);
-			final String springTestDatabaseFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_DATABASE_KEY);
-			final String springTestDatabaseFile = getClassPathResource(springTestDatabaseFilePath, springTestDatabaseFileName);
-			data.put("springTestDatabaseFile", springTestDatabaseFile);
+			addSpringFiles(data);
 
 			File outputFile = null;
 			outputFile = getOutputFile(SPRING_BUSINESS_KEY, null);
@@ -334,6 +307,43 @@ public class HibernateEngine extends AbstractJavaEngine {
 		}
 	}
 
+	private void addSpringFiles(final Map<String, Object> data) {
+		final String springBusinessFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_BUSINESS_KEY);
+		final String springBusinessFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_BUSINESS_KEY);
+		final String springBusinessFile = getClassPathResource(springBusinessFilePath, springBusinessFileName);
+		data.put("springBusinessFile", springBusinessFile);
+
+		final String springJdbcFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_JDBC_KEY);
+		final String springJdbcFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_JDBC_KEY);
+		final String springJdbcFile = getClassPathResource(springJdbcFilePath, springJdbcFileName);
+		data.put("springJdbcFile", springJdbcFile);
+
+		final String springHibernateFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_HIBERNATE_KEY);
+		final String springHibernateFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_HIBERNATE_KEY);
+		final String springHibernateFile = getClassPathResource(springHibernateFilePath, springHibernateFileName);
+		data.put("springHibernateFile", springHibernateFile);
+
+		final String springTxFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_TX_KEY);
+		final String springTxFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TX_KEY);
+		final String springTxFile = getClassPathResource(springTxFilePath, springTxFileName);
+		data.put("springTxFile", springTxFile);
+
+		final String springDatabaseFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_DATABASE_KEY);
+		final String springDatabaseFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_DATABASE_KEY);
+		final String springDatabaseFile = getClassPathResource(springDatabaseFilePath, springDatabaseFileName);
+		data.put("springDatabaseFile", springDatabaseFile);
+
+		final String springTestBusinessFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_BUSINESS_KEY);
+		final String springTestBusinessFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_BUSINESS_KEY);
+		final String springTestBusinessFile = getClassPathResource(springTestBusinessFilePath, springTestBusinessFileName);
+		data.put("springTestBusinessFile", springTestBusinessFile);
+
+		final String springTestDatabaseFilePath = resolveKey(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_DATABASE_KEY);
+		final String springTestDatabaseFileName = resolveKey(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_DATABASE_KEY);
+		final String springTestDatabaseFile = getClassPathResource(springTestDatabaseFilePath, springTestDatabaseFileName);
+		data.put("springTestDatabaseFile", springTestDatabaseFile);
+	}
+
 	private Map<String, Object> getData(Node node) throws GeneratorServiceException {
 		final Map<String, Object> data = new HashMap<String, Object>();
 		if (node != null) {
@@ -348,6 +358,7 @@ public class HibernateEngine extends AbstractJavaEngine {
 			final String serviceName = getClassName(SERVICE_KEY, node);
 			final String serviceImplPackageName = getPackageName(packageName, SERVICE_IMPL_KEY);
 			final String serviceImplName = getClassName(SERVICE_IMPL_KEY, node);
+			final String testServiceName = getClassName(TEST_SERVICE_KEY, node);
 
 			data.put("packageName", packageName);
 			data.put("className", className);
@@ -369,6 +380,7 @@ public class HibernateEngine extends AbstractJavaEngine {
 			data.put("serviceName", serviceName);
 			data.put("serviceImplPackageName", serviceImplPackageName);
 			data.put("serviceImplName", serviceImplName);
+			data.put("testServiceName", testServiceName);
 		}
 		return data;
 	}

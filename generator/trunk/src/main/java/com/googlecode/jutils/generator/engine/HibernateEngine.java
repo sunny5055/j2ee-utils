@@ -24,6 +24,8 @@ public class HibernateEngine extends AbstractJavaEngine {
 	private static final String DAO_IMPL_KEY = "dao_impl";
 	private static final String SERVICE_KEY = "service";
 	private static final String SERVICE_IMPL_KEY = "service_impl";
+	private static final String TEST_SERVICE_KEY = "test_service";
+	private static final String TEST_XML_DATASET_KEY = "test_xml_dataset";
 	private static final String SPRING_BUSINESS_KEY = "spring_business";
 	private static final String SPRING_JDBC_KEY = "spring_jdbc";
 	private static final String SPRING_HIBERNATE_KEY = "spring_hibernate";
@@ -42,6 +44,8 @@ public class HibernateEngine extends AbstractJavaEngine {
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + DAO_IMPL_KEY, "{" + JAVA_PATH_KEY + "}");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SERVICE_KEY, "{" + JAVA_PATH_KEY + "}");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SERVICE_IMPL_KEY, "{" + JAVA_PATH_KEY + "}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + TEST_SERVICE_KEY, "{" + TEST_JAVA_PATH_KEY + "}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + TEST_XML_DATASET_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/dataset");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_BUSINESS_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_JDBC_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_HIBERNATE_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
@@ -63,6 +67,8 @@ public class HibernateEngine extends AbstractJavaEngine {
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + DAO_IMPL_KEY, "%1sDaoImpl.java");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SERVICE_KEY, "%1sService.java");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SERVICE_IMPL_KEY, "%1sServiceImpl.java");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + TEST_SERVICE_KEY, "%1sServiceTest.java");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + TEST_XML_DATASET_KEY, "%1sServiceTest.xml");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_BUSINESS_KEY, "business-context.xml");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_JDBC_KEY, "jdbc-context.xml");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_HIBERNATE_KEY, "hibernate-context.xml");
@@ -100,6 +106,10 @@ public class HibernateEngine extends AbstractJavaEngine {
 					generateService(node, model);
 
 					generateServiceImpl(node, model);
+
+					generateTestService(node, model);
+
+					generateTestDataset(node, model);
 				}
 
 				generateSpring(xmlDocument, model);
@@ -123,6 +133,12 @@ public class HibernateEngine extends AbstractJavaEngine {
 				if (!StringUtil.isBlank(packageName)) {
 					pathToElement = packageName.replace(".", File.separator);
 				}
+			} else if (StringUtil.equals(key, TEST_SERVICE_KEY) && node != null) {
+				final String nodePackageName = node.valueOf("ancestor::p:package/@name");
+				final String packageName = getPackageName(nodePackageName, SERVICE_KEY);
+				if (!StringUtil.isBlank(packageName)) {
+					pathToElement = packageName.replace(".", File.separator);
+				}
 			}
 		}
 		return pathToElement;
@@ -134,8 +150,8 @@ public class HibernateEngine extends AbstractJavaEngine {
 		if (!StringUtil.isBlank(key)) {
 			String value = null;
 			if ((StringUtil.equals(key, ENTITY_KEY) || StringUtil.equals(key, EMBEDDED_ID_KEY) || StringUtil.equals(key, DAO_KEY) || StringUtil.equals(key, DAO_IMPL_KEY)
-					|| StringUtil.equals(key, SERVICE_KEY) || StringUtil.equals(key, SERVICE_IMPL_KEY))
-					&& node != null) {
+					|| StringUtil.equals(key, SERVICE_KEY) || StringUtil.equals(key, SERVICE_IMPL_KEY) || StringUtil.equals(key, TEST_SERVICE_KEY) || StringUtil.equals(key,
+					TEST_XML_DATASET_KEY)) && node != null) {
 				if (StringUtil.equals(key, EMBEDDED_ID_KEY)) {
 					value = node.valueOf("h:embedded-id/@targetEntity");
 					if (!StringUtil.isBlank(value) && StringUtil.contains(value, ".")) {
@@ -202,6 +218,24 @@ public class HibernateEngine extends AbstractJavaEngine {
 
 			final File outputFile = getOutputFile(SERVICE_IMPL_KEY, node);
 			generate(outputFile, "hibernate/service/implementation.ftl", data, model);
+		}
+	}
+
+	private void generateTestService(Node node, NodeModel model) throws GeneratorServiceException {
+		if (node != null && model != null) {
+			final Map<String, Object> data = getData(node);
+
+			final File outputFile = getOutputFile(TEST_SERVICE_KEY, node);
+			generate(outputFile, "hibernate/test/class.ftl", data, model);
+		}
+	}
+
+	private void generateTestDataset(Node node, NodeModel model) throws GeneratorServiceException {
+		if (node != null && model != null) {
+			final Map<String, Object> data = getData(node);
+
+			final File outputFile = getOutputFile(TEST_XML_DATASET_KEY, node);
+			generate(outputFile, "hibernate/test/xml-dataset.ftl", data, model);
 		}
 	}
 

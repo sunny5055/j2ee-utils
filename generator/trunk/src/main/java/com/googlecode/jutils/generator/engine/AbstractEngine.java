@@ -37,9 +37,6 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import com.googlecode.jutils.generator.formatter.Formatter;
 import com.googlecode.jutils.generator.formatter.exception.FormatterException;
 import com.googlecode.jutils.generator.formatter.impl.XmlFormatter;
-import com.googlecode.jutils.generator.freemarker.directive.AddToDirective;
-import com.googlecode.jutils.generator.freemarker.directive.MyListDirective;
-import com.googlecode.jutils.generator.freemarker.directive.XPathDirective;
 import com.googlecode.jutils.generator.util.PropertyUtil;
 import com.googlecode.jutils.generator.util.XmlUtil;
 import com.googlecode.jutils.io.IoUtil;
@@ -200,9 +197,6 @@ public abstract class AbstractEngine implements Engine {
 
 	protected void addFreemarkerExt(Map<String, Object> data) {
 		if (data != null) {
-			data.put("addTo", new AddToDirective());
-			data.put("myList", new MyListDirective());
-			data.put("xPath", new XPathDirective());
 		}
 	}
 

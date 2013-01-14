@@ -9,6 +9,7 @@ import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.collection.ArrayUtil;
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.core.ClassUtil;
+import com.googlecode.jutils.templater.freemarker.template.method.MethodUtil;
 
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateBooleanModel;

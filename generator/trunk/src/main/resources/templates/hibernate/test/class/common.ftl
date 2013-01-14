@@ -1,7 +1,7 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","h":"http://code.google.com/p/j2ee-utils/schema/hibernate"}>
-<#include "../common.ftl">
+<#include "../../common.ftl">
 
-<#macro getMethod doc entity property>
+<#macro getTestMethod doc entity property>
   <#if property?node_name = "embedded-id">
   	<#assign columns = property["h:properties/h:column"]>
   	<#list columns as column>
@@ -258,3 +258,4 @@
   	  </@java.operation>
   </#if>
 </#macro>
+

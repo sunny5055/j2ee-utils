@@ -63,10 +63,10 @@ package ${servicePackageName};
 ${getImports(true, servicePackageName, imports)}
 
 
-@ContextConfiguration(locations = { "classpath:spring/test-context.xml" })
-@DatabaseSetup(value = "classpath:dataset/${serviceName}Test.xml")
+@ContextConfiguration(locations = { "classpath:${springTestBusinessFile}" })
+@DatabaseSetup(value = "classpath:${xmlDatasetFile}")
 <@compress single_line=true>
-public class ${serviceName}Test extends
+public class ${testServiceName} extends
 <#if util.xml.getAttribute(entity.@readOnly) == "true">
   AbstractGenericReadServiceTest<${util.getPrimaryKeyType(entity)}, ${entity.@name}, ${serviceName}>
 <#else>
@@ -74,7 +74,7 @@ public class ${serviceName}Test extends
 </#if>
  {
 </@compress>
-  public ${serviceName}Test() {
+  public ${testServiceName}() {
     super(${util.getPrimaryKeyType(entity)}.class, ${entity.@name}.class);
   }
 
@@ -94,18 +94,18 @@ public class ${serviceName}Test extends
     // TODO need to be completed
   }
 
-  <@util.getMethod doc=xml entity=entity property=primaryKey/>
+  <@util.getTestMethod doc=xml entity=entity property=primaryKey/>
   <#list columns as column>
-  <@util.getMethod doc=xml entity=entity property=column/>
+  <@util.getTestMethod doc=xml entity=entity property=column/>
   </#list>
   <#list manyToOnes as manyToOne>
-  <@util.getMethod doc=xml entity=entity property=manyToOne/>
+  <@util.getTestMethod doc=xml entity=entity property=manyToOne/>
   </#list>
   <#list oneToManys as oneToMany>
-  <@util.getMethod doc=xml entity=entity property=oneToMany/>
+  <@util.getTestMethod doc=xml entity=entity property=oneToMany/>
   </#list>
   <#list manyToManys as manyToMany>
-  <@util.getMethod doc=xml entity=entity property=manyToMany/>
+  <@util.getTestMethod doc=xml entity=entity property=manyToMany/>
   </#list>
 
   @Override

@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>jee-utils</groupId>
 			<artifactId>freemarker-templater</artifactId>
-			<version>1.0.3-SNAPSHOT</version>
+			<version>1.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>jalopy</groupId>

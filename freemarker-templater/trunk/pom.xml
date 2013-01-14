@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>freemarker-templater</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<name>freemarker-templater</name>
 
 	<parent>
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>jee-utils</groupId>
 			<artifactId>templater</artifactId>
-			<version>2.0.1</version>
+			<version>2.0.2</version>
 		</dependency>
 
 		<dependency>

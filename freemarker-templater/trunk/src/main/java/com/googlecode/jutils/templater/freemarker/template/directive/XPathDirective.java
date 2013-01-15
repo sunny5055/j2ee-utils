@@ -73,10 +73,16 @@ public class XPathDirective implements TemplateDirectiveModel {
 
 					env.setVariable(assignTo.getAsString(), new SimpleSequence(nodeModels));
 				}
+			} else {
+				env.setVariable(assignTo.getAsString(), null);
 			}
 		} else {
 			final String value = getValue(xmlDocument, expression.getAsString());
-			env.setVariable(assignTo.getAsString(), new SimpleScalar(value));
+			if (value != null) {
+				env.setVariable(assignTo.getAsString(), new SimpleScalar(value));
+			} else {
+				env.setVariable(assignTo.getAsString(), null);
+			}
 		}
 	}
 

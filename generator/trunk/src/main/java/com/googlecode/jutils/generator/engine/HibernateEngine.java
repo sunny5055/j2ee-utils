@@ -33,6 +33,7 @@ public class HibernateEngine extends AbstractJavaEngine {
 	private static final String SPRING_DATABASE_KEY = "spring_database";
 	private static final String SPRING_TEST_BUSINESS_KEY = "spring_test_business";
 	private static final String SPRING_TEST_DATABASE_KEY = "spring_test_database";
+	private static final String INSERT_SQL_KEY = "insert_sql";
 
 	@Override
 	protected void init() {
@@ -53,6 +54,7 @@ public class HibernateEngine extends AbstractJavaEngine {
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_DATABASE_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_BUSINESS_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_DATABASE_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/spring");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + INSERT_SQL_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/sql");
 
 		this.defaultProperties.put(getEngineKey() + "." + ENTITY_KEY + ".package", ".model");
 		this.defaultProperties.put(getEngineKey() + "." + EMBEDDED_ID_KEY + ".package", ".model");
@@ -76,6 +78,7 @@ public class HibernateEngine extends AbstractJavaEngine {
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_DATABASE_KEY, "database.properties");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_BUSINESS_KEY, "test-context.xml");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_DATABASE_KEY, "test-database.properties");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + INSERT_SQL_KEY, "insert_entities.sql");
 
 		this.defaultProperties.put(getEngineKey() + ".database", "postgresql");
 	}
@@ -113,6 +116,8 @@ public class HibernateEngine extends AbstractJavaEngine {
 				}
 
 				generateSpring(xmlDocument, model);
+
+				generateSql(xmlDocument, model);
 			}
 		}
 	}
@@ -304,6 +309,20 @@ public class HibernateEngine extends AbstractJavaEngine {
 
 			outputFile = getOutputFile(SPRING_TEST_DATABASE_KEY, null);
 			generate(outputFile, "hibernate/spring/test-database.ftl", data, model);
+		}
+	}
+
+	private void generateSql(Document xmlDocument, NodeModel model) throws GeneratorServiceException {
+		if (xmlDocument != null && model != null) {
+			final Map<String, Object> data = new HashMap<String, Object>();
+
+			final String database = resolveKey(getEngineKey() + ".database");
+			if (!StringUtil.isBlank(database)) {
+				data.put("database", database.toLowerCase());
+			}
+
+			final File outputFile = getOutputFile(INSERT_SQL_KEY, null);
+			generate(outputFile, "hibernate/sql/insert.ftl", data, model);
 		}
 	}
 

@@ -3,6 +3,7 @@ package com.googlecode.jutils.xslt.configuration;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -269,7 +270,18 @@ public class XsltConfiguration {
 		}
 
 		if (uriResolverClass != null) {
-			final URIResolver uriResolver = ClassUtil.instantiateClass(uriResolverClass);
+			URIResolver uriResolver = null;
+			try {
+				uriResolver = ClassUtil.instantiateClass(uriResolverClass);
+			} catch (final IllegalArgumentException e) {
+				throw new XsltServiceException(e);
+			} catch (final InstantiationException e) {
+				throw new XsltServiceException(e);
+			} catch (final IllegalAccessException e) {
+				throw new XsltServiceException(e);
+			} catch (final InvocationTargetException e) {
+				throw new XsltServiceException(e);
+			}
 			if (uriResolver != null) {
 				factory.setURIResolver(uriResolver);
 			}

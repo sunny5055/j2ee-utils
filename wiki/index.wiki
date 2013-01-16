@@ -26,6 +26,12 @@ Obtain the source code of all dependencies
 mvn dependency:sources
 }}}
 
+Perform a release without a repository
+{{{
+mvn release:prepare
+mvn release:perform -Dgoals=install
+}}}
+
 ==Cyclic dependencies==
 
 Most of the project are linked and must be invoked follwing a specific order, in order to avoid potentials dependencies' problems. <br/>

@@ -49,7 +49,7 @@ goto :EOF
 
 :release
 SET DIR=%~1/trunk
-call mvn -f %DIR%/pom.xml clean release:prepare
+call mvn -f %DIR%/pom.xml clean --batch-mode release:prepare
 call mvn -f %DIR%/pom.xml release:perform -Dgoals=install
 echo Exit Code = %ERRORLEVEL%
 if not "%ERRORLEVEL%" == "0" exit /b

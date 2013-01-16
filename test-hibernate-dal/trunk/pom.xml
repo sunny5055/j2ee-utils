@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>test-hibernate-dal</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.1</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<name>test-hibernate-dal</name>
 
 	<parent>
@@ -12,9 +12,9 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/test-hibernate-dal/tags/1.0.1</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/test-hibernate-dal/tags/1.0.1</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/test-hibernate-dal/tags/1.0.1</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/test-hibernate-dal/trunk/</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/test-hibernate-dal/trunk/</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/test-hibernate-dal/trunk/</url>
 	</scm>
 
 	<dependencies>

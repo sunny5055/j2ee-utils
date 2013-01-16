@@ -14,7 +14,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -40,6 +39,7 @@ import com.googlecode.jutils.generator.formatter.impl.XmlFormatter;
 import com.googlecode.jutils.generator.util.PropertyUtil;
 import com.googlecode.jutils.generator.util.XmlUtil;
 import com.googlecode.jutils.io.IoUtil;
+import com.googlecode.jutils.spring.ResourceUtil;
 import com.googlecode.jutils.templater.exception.TemplaterServiceException;
 import com.googlecode.jutils.templater.service.TemplaterService;
 
@@ -271,7 +271,10 @@ public abstract class AbstractEngine implements Engine {
 		if (!StringUtil.isBlank(xmlContent) && config != null && !CollectionUtil.isEmpty(config.getSchemas())) {
 			final List<Source> sources = new ArrayList<Source>();
 			for (final Resource schema : config.getSchemas()) {
-				sources.add(new StreamSource(schema.getFile()));
+				final String schemaContent = ResourceUtil.getContent(schema);
+				if (!StringUtil.isBlank(schemaContent)) {
+					sources.add(XmlUtil.getSource(schemaContent));
+				}
 			}
 
 			XmlUtil.validate(xmlContent, sources);
@@ -286,7 +289,10 @@ public abstract class AbstractEngine implements Engine {
 			for (final Resource schema : config.getSchemas()) {
 				Map<String, String> declaredNamespaces = null;
 				try {
-					declaredNamespaces = XmlUtil.getDeclaredNamespaces(schema.getFile());
+					final String schemaContent = ResourceUtil.getContent(schema);
+					if (!StringUtil.isBlank(schemaContent)) {
+						declaredNamespaces = XmlUtil.getDeclaredNamespaces(schemaContent);
+					}
 				} catch (final DocumentException e) {
 					throw new GeneratorServiceException(e);
 				} catch (final IOException e) {

@@ -108,4 +108,12 @@ public class XmlUtil {
 		}
 		return document;
 	}
+
+	public static Source getSource(String content) {
+		Source source = null;
+		if (!StringUtil.isBlank(content)) {
+			source = new StreamSource(new StringReader(content));
+		}
+		return source;
+	}
 }

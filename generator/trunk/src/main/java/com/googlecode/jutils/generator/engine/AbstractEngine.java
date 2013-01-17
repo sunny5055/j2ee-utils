@@ -13,7 +13,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -269,15 +268,7 @@ public abstract class AbstractEngine implements Engine {
 
 	private void validate(String xmlContent) throws SAXException, IOException {
 		if (!StringUtil.isBlank(xmlContent) && config != null && !CollectionUtil.isEmpty(config.getSchemas())) {
-			final List<Source> sources = new ArrayList<Source>();
-			for (final Resource schema : config.getSchemas()) {
-				final String schemaContent = ResourceUtil.getContent(schema);
-				if (!StringUtil.isBlank(schemaContent)) {
-					sources.add(XmlUtil.getSource(schemaContent));
-				}
-			}
-
-			XmlUtil.validate(xmlContent, sources);
+			XmlUtil.validate(xmlContent, config.getSchemas());
 		}
 	}
 

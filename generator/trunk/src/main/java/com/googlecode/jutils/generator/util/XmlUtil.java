@@ -3,6 +3,7 @@ package com.googlecode.jutils.generator.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,24 +19,21 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Namespace;
 import org.dom4j.io.SAXReader;
+import org.springframework.core.io.Resource;
 import org.xml.sax.SAXException;
 
 import com.googlecode.jutils.StringUtil;
-import com.googlecode.jutils.collection.ArrayUtil;
 import com.googlecode.jutils.collection.CollectionUtil;
+import com.googlecode.jutils.spring.ResourceUtil;
 
 public class XmlUtil {
 
-	public static void validate(String xmlContent, List<Source> schemas) throws SAXException, IOException {
-		if (!StringUtil.isBlank(xmlContent) && !CollectionUtil.isEmpty(schemas)) {
-			validate(xmlContent, schemas.toArray(new Source[0]));
-		}
-	}
-
-	public static void validate(String xmlContent, Source... schemas) throws SAXException, IOException {
-		if (!StringUtil.isBlank(xmlContent) && !ArrayUtil.isEmpty(schemas)) {
+	public static void validate(String xmlContent, List<Resource> resources) throws SAXException, IOException {
+		if (!StringUtil.isBlank(xmlContent) && !CollectionUtil.isEmpty(resources)) {
 			final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			factory.setResourceResolver(new MyResolver(resources));
 
+			final Source[] schemas = toSource(resources);
 			final Schema xmlSchema = factory.newSchema(schemas);
 
 			final Validator validator = xmlSchema.newValidator();
@@ -109,11 +107,27 @@ public class XmlUtil {
 		return document;
 	}
 
-	public static Source getSource(String content) {
-		Source source = null;
-		if (!StringUtil.isBlank(content)) {
-			source = new StreamSource(new StringReader(content));
+	// public static Source getSource(String content) {
+	// Source source = null;
+	// if (!StringUtil.isBlank(content)) {
+	// source = new StreamSource(new StringReader(content));
+	// }
+	// return source;
+	// }
+
+	private static Source[] toSource(List<Resource> resources) throws IOException {
+		Source[] result = null;
+		if (!CollectionUtil.isEmpty(resources)) {
+			final List<Source> sources = new ArrayList<Source>();
+			for (final Resource schema : resources) {
+				final String schemaContent = ResourceUtil.getContent(schema);
+				if (!StringUtil.isBlank(schemaContent)) {
+					sources.add(new StreamSource(new StringReader(schemaContent)));
+				}
+			}
+
+			result = sources.toArray(new Source[0]);
 		}
-		return source;
+		return result;
 	}
 }

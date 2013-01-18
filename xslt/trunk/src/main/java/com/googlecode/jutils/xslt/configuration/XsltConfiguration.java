@@ -1,7 +1,5 @@
 package com.googlecode.jutils.xslt.configuration;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -11,19 +9,16 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.URIResolver;
 
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.core.io.ClassPathResource;
-
 import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.collection.MapUtil;
 import com.googlecode.jutils.core.ClassUtil;
+import com.googlecode.jutils.spring.ResourceUtil;
 import com.googlecode.jutils.xslt.exception.XsltServiceException;
 
 /**
  * The Class XsltConfiguration.
  */
 public class XsltConfiguration {
-	private Map<String, XslTemplate> templates;
 	private String xmlLoaderPath;
 	private String xslLoaderPath;
 	private Map<String, Object> attributes;
@@ -35,51 +30,8 @@ public class XsltConfiguration {
 	 */
 	public XsltConfiguration() {
 		super();
-		this.templates = new HashMap<String, XslTemplate>();
 		this.attributes = new HashMap<String, Object>();
 		this.features = new HashMap<String, Boolean>();
-	}
-
-	/**
-	 * Getter : return the templates.
-	 * 
-	 * @return the templates
-	 */
-	public Map<String, XslTemplate> getTemplates() {
-		return templates;
-	}
-
-	/**
-	 * Sets the templates.
-	 * 
-	 * @param templates
-	 *            the templates
-	 */
-	public void setTemplates(Map<String, XslTemplate> templates) {
-		this.templates = templates;
-	}
-
-	/**
-	 * Getter : return the template.
-	 * 
-	 * @param uri
-	 *            the uri
-	 * @return the template
-	 */
-	public XslTemplate getTemplate(String uri) {
-		return this.templates.get(uri);
-	}
-
-	/**
-	 * Adds the template.
-	 * 
-	 * @param uri
-	 *            the uri
-	 * @param template
-	 *            the template
-	 */
-	public void addTemplate(String uri, XslTemplate template) {
-		this.templates.put(uri, template);
 	}
 
 	/**
@@ -178,70 +130,49 @@ public class XsltConfiguration {
 	}
 
 	/**
-	 * Getter : return the xml file.
+	 * Gets the xml content.
 	 * 
 	 * @param xmlFileName
 	 *            the xml file name
-	 * @return the xml file
+	 * @return the xml content
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public File getXmlFile(String xmlFileName) throws IOException {
-		File xmlFile = null;
+	public String getXmlContent(String xmlFileName) throws IOException {
+		String xmlContent = null;
 		if (!StringUtil.isBlank(xmlFileName)) {
-			xmlFile = resolveFile(xmlLoaderPath, xmlFileName);
+			String fullXmlName = null;
+			if (!StringUtil.startsWith(xmlFileName, "classpath")) {
+				fullXmlName = xmlLoaderPath + "/" + xmlFileName;
+			} else {
+				fullXmlName = xmlFileName;
+			}
+			xmlContent = ResourceUtil.getContent(fullXmlName);
 		}
-		return xmlFile;
+		return xmlContent;
 	}
 
 	/**
-	 * Getter : return the xsl file.
+	 * Gets the xsl content.
 	 * 
-	 * @param xslFileName
-	 *            the xsl file name
-	 * @return the xsl file
+	 * @param xmlFileName
+	 *            the xml file name
+	 * @return the xsl content
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public File getXslFile(String xslFileName) throws IOException {
-		File xslFile = null;
-		if (!StringUtil.isBlank(xslFileName)) {
-			xslFile = resolveFile(xslLoaderPath, xslFileName);
-		}
-		return xslFile;
-	}
-
-	/**
-	 * Resolve file.
-	 * 
-	 * @param rootPath
-	 *            the root path
-	 * @param fileName
-	 *            the file name
-	 * @return the file
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 */
-	private File resolveFile(String rootPath, String fileName) throws IOException, FileNotFoundException {
-		File file = null;
-		if (!StringUtil.isBlank(fileName)) {
-			String fullFileName = null;
-			if (!StringUtil.isBlank(rootPath)) {
-				fullFileName = FilenameUtils.concat(rootPath, fileName);
+	public String getXslContent(String xmlFileName) throws IOException {
+		String xmlContent = null;
+		if (!StringUtil.isBlank(xmlFileName)) {
+			String fullXmlName = null;
+			if (!StringUtil.startsWith(xmlFileName, "classpath")) {
+				fullXmlName = xslLoaderPath + "/" + xmlFileName;
 			} else {
-				fullFileName = fileName;
+				fullXmlName = xmlFileName;
 			}
-
-			final ClassPathResource classPathResource = new ClassPathResource(fullFileName);
-			if (classPathResource.exists()) {
-				file = classPathResource.getFile();
-			} else {
-				throw new FileNotFoundException(fullFileName + " not found");
-			}
+			xmlContent = ResourceUtil.getContent(fullXmlName);
 		}
-		return file;
+		return xmlContent;
 	}
 
 	/**

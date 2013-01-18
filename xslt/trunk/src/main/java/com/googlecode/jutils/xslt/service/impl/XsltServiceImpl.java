@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.Document;
 import org.dom4j.io.DocumentSource;
@@ -28,7 +30,6 @@ import org.springframework.stereotype.Service;
 
 import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.collection.MapUtil;
-import com.googlecode.jutils.xslt.configuration.XslTemplate;
 import com.googlecode.jutils.xslt.configuration.XsltConfiguration;
 import com.googlecode.jutils.xslt.exception.XsltServiceException;
 import com.googlecode.jutils.xslt.service.XsltService;
@@ -64,13 +65,13 @@ public class XsltServiceImpl implements XsltService {
 	public String transform(String xmlFileName, String xslFileName, Map<String, Object> parameters) throws XsltServiceException {
 		String result = null;
 		if (!StringUtil.isBlank(xmlFileName) && !StringUtil.isBlank(xslFileName)) {
-			File xslFile = null;
+			String xmlContent = null;
 			try {
-				xslFile = configuration.getXslFile(xslFileName);
+				xmlContent = configuration.getXmlContent(xmlFileName);
 			} catch (final IOException e) {
 				throw new XsltServiceException(e);
 			}
-			result = transform(xmlFileName, xslFile, parameters);
+			result = transformFromString(xmlContent, xslFileName, parameters);
 		}
 		return result;
 	}
@@ -90,13 +91,13 @@ public class XsltServiceImpl implements XsltService {
 	public String transform(String xmlFileName, File xslFile, Map<String, Object> parameters) throws XsltServiceException {
 		String result = null;
 		if (!StringUtil.isBlank(xmlFileName) && xslFile != null) {
-			File xmlFile = null;
+			String xmlContent = null;
 			try {
-				xmlFile = configuration.getXmlFile(xmlFileName);
+				xmlContent = configuration.getXmlContent(xmlFileName);
 			} catch (final IOException e) {
 				throw new XsltServiceException(e);
 			}
-			result = transform(xmlFile, xslFile, parameters);
+			result = transformFromString(xmlContent, xslFile, parameters);
 		}
 		return result;
 	}
@@ -276,13 +277,13 @@ public class XsltServiceImpl implements XsltService {
 	public String transform(Reader xmlReader, String xslFileName, Map<String, Object> parameters) throws XsltServiceException {
 		String result = null;
 		if (xmlReader != null && !StringUtil.isBlank(xslFileName)) {
-			File xslFile = null;
+			String xslContent = null;
 			try {
-				xslFile = configuration.getXslFile(xslFileName);
+				xslContent = configuration.getXslContent(xslFileName);
 			} catch (final IOException e) {
 				throw new XsltServiceException(e);
 			}
-			result = transform(xmlReader, xslFile, parameters);
+			result = doTransform(new StreamSource(xmlReader), xslContent, parameters);
 		}
 		return result;
 	}
@@ -302,7 +303,13 @@ public class XsltServiceImpl implements XsltService {
 	public String transform(Reader xmlReader, File xslFile, Map<String, Object> parameters) throws XsltServiceException {
 		String result = null;
 		if (xmlReader != null && xslFile != null) {
-			result = doTransform(new StreamSource(xmlReader), xslFile, parameters);
+			String xslContent = null;
+			try {
+				xslContent = FileUtils.readFileToString(xslFile);
+			} catch (final IOException e) {
+				throw new XsltServiceException(e);
+			}
+			result = doTransform(new StreamSource(xmlReader), xslContent, parameters);
 		}
 		return result;
 	}
@@ -322,13 +329,14 @@ public class XsltServiceImpl implements XsltService {
 	public String transform(Document xmlDocument, String xslFileName, Map<String, Object> parameters) throws XsltServiceException {
 		String result = null;
 		if (xmlDocument != null && !StringUtil.isBlank(xslFileName)) {
-			File xslFile = null;
+			String xslContent = null;
 			try {
-				xslFile = configuration.getXslFile(xslFileName);
+				xslContent = configuration.getXslContent(xslFileName);
 			} catch (final IOException e) {
 				throw new XsltServiceException(e);
 			}
-			result = transform(xmlDocument, xslFile, parameters);
+
+			result = doTransform(new DocumentSource(xmlDocument), xslContent, parameters);
 		}
 		return result;
 	}
@@ -348,7 +356,14 @@ public class XsltServiceImpl implements XsltService {
 	public String transform(Document xmlDocument, File xslFile, Map<String, Object> parameters) throws XsltServiceException {
 		String result = null;
 		if (xmlDocument != null && xslFile != null) {
-			result = doTransform(new DocumentSource(xmlDocument), xslFile, parameters);
+			String xslContent = null;
+			try {
+				xslContent = FileUtils.readFileToString(xslFile);
+			} catch (final IOException e) {
+				throw new XsltServiceException(e);
+			}
+
+			result = doTransform(new DocumentSource(xmlDocument), xslContent, parameters);
 		}
 		return result;
 	}
@@ -358,18 +373,18 @@ public class XsltServiceImpl implements XsltService {
 	 * 
 	 * @param xmlSource
 	 *            the xml source
-	 * @param xslFile
-	 *            the xsl file
+	 * @param xslContent
+	 *            the xsl content
 	 * @param parameters
 	 *            the parameters
 	 * @return the string
 	 * @throws XsltServiceException
 	 *             the xslt service exception
 	 */
-	protected String doTransform(Source xmlSource, File xslFile, Map<String, Object> parameters) throws XsltServiceException {
+	protected String doTransform(Source xmlSource, String xslContent, Map<String, Object> parameters) throws XsltServiceException {
 		String result = null;
-		if (xmlSource != null && xslFile != null) {
-			final Transformer transformer = getTransformer(xslFile);
+		if (xmlSource != null && !StringUtil.isBlank(xslContent)) {
+			final Transformer transformer = getTransformer(xslContent);
 			if (transformer != null) {
 				if (!MapUtil.isEmpty(parameters)) {
 					for (final Map.Entry<String, Object> entry : parameters.entrySet()) {
@@ -390,31 +405,26 @@ public class XsltServiceImpl implements XsltService {
 	}
 
 	/**
-	 * Getter : return the transformer.
+	 * Gets the transformer.
 	 * 
-	 * @param xslFile
-	 *            the xsl file
+	 * @param xslContent
+	 *            the xsl content
 	 * @return the transformer
 	 * @throws XsltServiceException
 	 *             the xslt service exception
 	 */
-	protected Transformer getTransformer(File xslFile) throws XsltServiceException {
+	protected Transformer getTransformer(String xslContent) throws XsltServiceException {
 		Transformer transformer = null;
-		if (xslFile != null) {
+		if (!StringUtil.isBlank(xslContent)) {
 			Templates templates = null;
-			final XslTemplate template = configuration.getTemplate(xslFile.getAbsolutePath());
-			if (template != null && template.getLastModified() == xslFile.lastModified()) {
-				templates = template.getTemplates();
-			} else {
-				final TransformerFactory factory = configuration.getTransformerFactory();
-				try {
-					templates = factory.newTemplates(new StreamSource(xslFile));
-					configuration.addTemplate(xslFile.getAbsolutePath(), new XslTemplate(templates, xslFile.lastModified()));
-				} catch (final TransformerConfigurationException e) {
-					throw new XsltServiceException(e);
-				}
 
+			final TransformerFactory factory = configuration.getTransformerFactory();
+			try {
+				templates = factory.newTemplates(new StreamSource(new StringReader(xslContent)));
+			} catch (final TransformerConfigurationException e) {
+				throw new XsltServiceException(e);
 			}
+
 			if (templates != null) {
 				try {
 					transformer = templates.newTransformer();

@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>xslt</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.3</version>
+	<version>1.0.4-SNAPSHOT</version>
 	<name>xslt</name>
 
 	<parent>
@@ -12,9 +12,9 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/xslt/tags/1.0.3</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/xslt/tags/1.0.3</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/xslt/tags/1.0.3</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/xslt/trunk/</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/xslt/trunk/</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/xslt/trunk/</url>
 	</scm>
 
 	<dependencies>

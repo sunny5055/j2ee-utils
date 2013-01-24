@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.FilenameUtils;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
@@ -370,14 +369,14 @@ public class HibernateEngine extends AbstractJavaEngine {
 			final String className = node.valueOf("@name");
 
 			final String daoPackageName = getPackageName(packageName, DAO_KEY);
-			final String daoName = getClassName(DAO_KEY, node);
+			final String daoName = getFileNameWithoutExtension(DAO_KEY, node);
 			final String daoImplPackageName = getPackageName(packageName, DAO_IMPL_KEY);
-			final String daoImplName = getClassName(DAO_IMPL_KEY, node);
+			final String daoImplName = getFileNameWithoutExtension(DAO_IMPL_KEY, node);
 			final String servicePackageName = getPackageName(packageName, SERVICE_KEY);
-			final String serviceName = getClassName(SERVICE_KEY, node);
+			final String serviceName = getFileNameWithoutExtension(SERVICE_KEY, node);
 			final String serviceImplPackageName = getPackageName(packageName, SERVICE_IMPL_KEY);
-			final String serviceImplName = getClassName(SERVICE_IMPL_KEY, node);
-			final String testServiceName = getClassName(TEST_SERVICE_KEY, node);
+			final String serviceImplName = getFileNameWithoutExtension(SERVICE_IMPL_KEY, node);
+			final String testServiceName = getFileNameWithoutExtension(TEST_SERVICE_KEY, node);
 
 			data.put("packageName", packageName);
 			data.put("className", className);
@@ -385,7 +384,7 @@ public class HibernateEngine extends AbstractJavaEngine {
 			final Node embeddedId = node.selectSingleNode("h:embedded-id");
 			if (embeddedId != null) {
 				final String embeddedIdPackageName = getPackageName(packageName, EMBEDDED_ID_KEY);
-				final String embeddedIdName = getClassName(EMBEDDED_ID_KEY, node);
+				final String embeddedIdName = getFileNameWithoutExtension(EMBEDDED_ID_KEY, node);
 
 				data.put("embeddedIdPackageName", embeddedIdPackageName);
 				data.put("embeddedIdName", embeddedIdName);
@@ -427,14 +426,5 @@ public class HibernateEngine extends AbstractJavaEngine {
 			}
 		}
 		return basePackageName;
-	}
-
-	private String getClassName(String key, Node node) throws GeneratorServiceException {
-		String outputFileName = null;
-		if (!StringUtil.isBlank(key) && node != null) {
-			outputFileName = getOutputFileName(key, node);
-			outputFileName = FilenameUtils.getBaseName(outputFileName);
-		}
-		return outputFileName;
 	}
 }

@@ -12,7 +12,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -35,12 +41,14 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import com.googlecode.jutils.generator.formatter.Formatter;
 import com.googlecode.jutils.generator.formatter.exception.FormatterException;
 import com.googlecode.jutils.generator.formatter.impl.XmlFormatter;
+import com.googlecode.jutils.generator.util.MyResolver;
 import com.googlecode.jutils.generator.util.PropertyUtil;
-import com.googlecode.jutils.generator.util.XmlUtil;
 import com.googlecode.jutils.io.IoUtil;
 import com.googlecode.jutils.spring.ResourceUtil;
 import com.googlecode.jutils.templater.exception.TemplaterServiceException;
 import com.googlecode.jutils.templater.service.TemplaterService;
+import com.googlecode.jutils.xml.XmlUtil;
+import com.googlecode.jutils.xslt.service.XsltService;
 
 import freemarker.ext.dom.NodeModel;
 
@@ -55,6 +63,9 @@ public abstract class AbstractEngine implements Engine {
 
 	@Autowired
 	protected TemplaterService templaterService;
+
+	@Autowired
+	protected XsltService xsltService;
 
 	public AbstractEngine() {
 		super();
@@ -217,7 +228,7 @@ public abstract class AbstractEngine implements Engine {
 		return content;
 	}
 
-	private void writeToFile(File file, String content) throws IOException, FileNotFoundException, FormatterException {
+	protected void writeToFile(File file, String content) throws IOException, FileNotFoundException, FormatterException {
 		if (file != null && !StringUtil.isBlank(content)) {
 			final File parent = file.getParentFile();
 			if (!parent.exists()) {
@@ -268,7 +279,26 @@ public abstract class AbstractEngine implements Engine {
 
 	private void validate(String xmlContent) throws SAXException, IOException {
 		if (!StringUtil.isBlank(xmlContent) && config != null && !CollectionUtil.isEmpty(config.getSchemas())) {
-			XmlUtil.validate(xmlContent, config.getSchemas());
+			final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			factory.setResourceResolver(new MyResolver(config.getSchemas()));
+
+			final List<Source> sources = new ArrayList<Source>();
+			for (final Resource schema : config.getSchemas()) {
+				final String schemaContent = ResourceUtil.getContent(schema);
+				if (!StringUtil.isBlank(schemaContent)) {
+					sources.add(new StreamSource(new StringReader(schemaContent)));
+				}
+			}
+
+			final Schema xmlSchema = factory.newSchema(sources.toArray(new Source[0]));
+
+			final Validator validator = xmlSchema.newValidator();
+			final StringReader reader = new StringReader(xmlContent);
+			try {
+				validator.validate(new StreamSource(reader));
+			} finally {
+				reader.close();
+			}
 		}
 	}
 
@@ -316,7 +346,7 @@ public abstract class AbstractEngine implements Engine {
 		return document;
 	}
 
-	private NodeModel getModel(String xmlContent) throws GeneratorServiceException {
+	protected NodeModel getModel(String xmlContent) throws GeneratorServiceException {
 		NodeModel xmlModel = null;
 		if (!StringUtil.isBlank(xmlContent)) {
 			final StringReader reader = new StringReader(xmlContent);
@@ -336,5 +366,14 @@ public abstract class AbstractEngine implements Engine {
 			}
 		}
 		return xmlModel;
+	}
+
+	protected String getFileNameWithoutExtension(String key, Node node) throws GeneratorServiceException {
+		String outputFileName = null;
+		if (!StringUtil.isBlank(key) && node != null) {
+			outputFileName = getOutputFileName(key, node);
+			outputFileName = FilenameUtils.getBaseName(outputFileName);
+		}
+		return outputFileName;
 	}
 }

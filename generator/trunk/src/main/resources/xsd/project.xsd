@@ -8,7 +8,7 @@
 		<xsd:complexType>
 			<xsd:sequence>
 				<xsd:element name="configuration" type="p:configuration" />
-				<xsd:element name="packages">
+				<xsd:element name="packages" minOccurs="0">
 					<xsd:complexType>
 						<xsd:sequence>
 							<xsd:element name="package" type="p:package"
@@ -16,6 +16,7 @@
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>
+				<xsd:element name="views" type="p:views" minOccurs="0" />
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
@@ -35,6 +36,13 @@
 				processContents="strict" minOccurs="0" maxOccurs="unbounded" />
 		</xsd:sequence>
 		<xsd:attribute name="name" type="xsd:string" use="required" />
+	</xsd:complexType>
+
+	<xsd:complexType name="views">
+		<xsd:sequence>
+			<xsd:any namespace="http://code.google.com/p/j2ee-utils/schema/gui"
+				processContents="strict" minOccurs="1" maxOccurs="unbounded" />
+		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>
 

@@ -1,7 +1,6 @@
 package com.googlecode.jutils.templater.freemarker.template.directive;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +20,10 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Node;
 import org.dom4j.io.DOMReader;
 import org.dom4j.io.DOMWriter;
-import org.dom4j.io.SAXReader;
 
 import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.collection.CollectionUtil;
+import com.googlecode.jutils.xml.XmlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.dom.NodeModel;
@@ -161,7 +160,7 @@ public class XPathDirective implements TemplateDirectiveModel {
 
 					final String xml = writer.toString();
 					try {
-						document = getXmlDocument(xml);
+						document = XmlUtil.getXmlDocument(xml);
 					} catch (final DocumentException e) {
 						throw new TemplateModelException(e.getMessage());
 					}
@@ -196,29 +195,5 @@ public class XPathDirective implements TemplateDirectiveModel {
 			}
 		}
 		return nodeModel;
-	}
-
-	/**
-	 * Gets the xml document.
-	 * 
-	 * @param xmlContent
-	 *            the xml content
-	 * @return the xml document
-	 * @throws DocumentException
-	 *             the document exception
-	 */
-	private Document getXmlDocument(String xmlContent) throws DocumentException {
-		Document document = null;
-		if (!StringUtil.isBlank(xmlContent)) {
-			final StringReader reader = new StringReader(xmlContent);
-			SAXReader saxReader = null;
-			try {
-				saxReader = new SAXReader();
-				document = saxReader.read(reader);
-			} finally {
-				reader.close();
-			}
-		}
-		return document;
 	}
 }

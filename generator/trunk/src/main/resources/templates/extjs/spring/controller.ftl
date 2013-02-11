@@ -1,88 +1,98 @@
-package com.agipi.test.jboss.controller;
+<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","h":"http://code.google.com/p/j2ee-utils/schema/hibernate","g":"http://code.google.com/p/j2ee-utils/schema/gui"}>
+<#import "common.ftl" as util>
+<#assign varName = className?uncap_first />
+
+<#if controllerPackageName?? && controllerPackageName?length gt 0>
+package ${controllerPackageName};
+</#if>
+
+
+<#assign imports = [] />
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+<@addTo assignTo="imports" element="org.springframework.beans.factory.annotation.Autowired" />
+<@addTo assignTo="imports" element="org.springframework.stereotype.Controller" />
+<@addTo assignTo="imports" element="org.springframework.web.bind.annotation.RequestBody" />
+<@addTo assignTo="imports" element="org.springframework.web.bind.annotation.RequestMapping" />
+<@addTo assignTo="imports" element="org.springframework.web.bind.annotation.RequestMethod" />
+<@addTo assignTo="imports" element="org.springframework.web.bind.annotation.ResponseBody" />
 
-import com.agipi.test.jboss.model.User;
-import com.agipi.test.jboss.service.UserService;
+<@addTo assignTo="imports" element="${packageName}.${className}" />
+<@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
+
+${getImports(false, controllerPackageName, imports)}
 
 @Controller
-@RequestMapping(value = "/user")
-public class UserController {
+@RequestMapping(value = "/${varName}")
+public class ${controllerName} {
 	@Autowired
-	private UserService userService;
+	private ${serviceName} service;
 
-	@RequestMapping(value = "view.action")
+	@RequestMapping(value = "view.action", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Map<String, Object> view() {
 		final Map<String, Object> model = new HashMap<String, Object>();
 
-		List<User> users = null;
+		List<${className}> ${varName}s = null;
 		try {
-			users = userService.findAll();
-			model.put("total", users.size());
-			model.put("data", users);
+			${varName}s = service.findAll();
+			model.put("total", ${varName}s.size());
+			model.put("data", ${varName}s);
 			model.put("success", true);
 		} catch (final Exception e) {
 			model.put("success", false);
-			model.put("errorMsg", "Unable to retrieve users : " + e.getMessage());
+			model.put("errorMsg", "Unable to retrieve ${varName}s : " + e.getMessage());
 		}
 
 		return model;
 	}
 
-	@RequestMapping(value = "create.action", method = { RequestMethod.POST })
+	@RequestMapping(value = "create.action", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public Map<String, Object> create(@RequestBody User user) {
+	public Map<String, Object> create(@RequestBody ${className} ${varName}) {
 		final Map<String, Object> model = new HashMap<String, Object>();
 
 		try {
-			userService.create(user);
-			model.put("data", user);
+			service.create(${varName});
+			model.put("data", ${varName});
 			model.put("success", true);
 		} catch (final Exception e) {
 			model.put("success", false);
-			model.put("errorMsg", "Unable to create the user : " + e.getMessage());
+			model.put("errorMsg", "Unable to create the ${varName} : " + e.getMessage());
 		}
 		return model;
 	}
 
-	@RequestMapping(value = "update.action", method = { RequestMethod.POST })
+	@RequestMapping(value = "update.action", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public Map<String, Object> update(@RequestBody User user) {
+	public Map<String, Object> update(@RequestBody ${className} ${varName}) {
 		final Map<String, Object> model = new HashMap<String, Object>();
 
 		try {
-			userService.update(user);
+			service.update(${varName});
 			model.put("success", true);
 		} catch (final Exception e) {
 			model.put("success", false);
-			model.put("errorMsg", "Unable to update the user : " + e.getMessage());
+			model.put("errorMsg", "Unable to update the ${varName} : " + e.getMessage());
 		}
 		return model;
 	}
 
-	@RequestMapping(value = "delete.action", method = { RequestMethod.POST })
+	@RequestMapping(value = "delete.action", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public Map<String, Object> delete(@RequestBody User user) {
+	public Map<String, Object> delete(@RequestBody ${className} ${varName}) {
 		final Map<String, Object> model = new HashMap<String, Object>();
 
 		try {
-			userService.delete(user);
+			service.delete(${varName});
 			model.put("success", true);
 		} catch (final Exception e) {
 			model.put("success", false);
-			model.put("errorMsg", "Unable to delete the user : " + e.getMessage());
+			model.put("errorMsg", "Unable to delete the ${varName} : " + e.getMessage());
 		}
 		return model;
 	}
-
 }

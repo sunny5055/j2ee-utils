@@ -12,10 +12,10 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/spring-util/tags/1.0.1</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/spring-util/tags/1.0.1
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/spring-util/tags/1.0.1</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/spring-util/tags/1.0.1
         </developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/spring-util/tags/1.0.1</url>
+		<url>https://j2ee-utils.googlecode.com/svn/main/spring-util/tags/1.0.1</url>
 	</scm>
 
 	<properties>

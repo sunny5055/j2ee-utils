@@ -12,9 +12,9 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/mail-sender/tags/2.0.0</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/mail-sender/tags/2.0.0</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/mail-sender/tags/2.0.0</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/mail-sender/tags/2.0.0</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/mail-sender/tags/2.0.0</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/main/mail-sender/tags/2.0.0</url>
 	</scm>
 
 	<dependencies>

@@ -12,9 +12,9 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/commons-dal/tags/1.0.4</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/commons-dal/tags/1.0.4</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/commons-dal/tags/1.0.4</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/commons-dal/tags/1.0.4</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/commons-dal/tags/1.0.4</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/main/commons-dal/tags/1.0.4</url>
 	</scm>
 
 	<dependencies>

@@ -12,10 +12,10 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/spring-util/trunk/</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/spring-util/trunk/
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/spring-util/trunk/</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/spring-util/trunk/
         </developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/spring-util/trunk/</url>
+		<url>https://j2ee-utils.googlecode.com/svn/main/spring-util/trunk/</url>
 	</scm>
 
 	<properties>

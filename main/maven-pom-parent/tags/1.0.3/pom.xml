@@ -7,9 +7,9 @@
 	<name>MavenPomParent</name>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/maven-pom-parent/tags/1.0.3</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/maven-pom-parent/tags/1.0.3</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/maven-pom-parent/tags/1.0.3</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/maven-pom-parent/tags/1.0.3</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/maven-pom-parent/tags/1.0.3</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/main/maven-pom-parent/tags/1.0.3</url>
 	</scm>
 
 	<properties>

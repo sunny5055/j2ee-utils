@@ -12,10 +12,10 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/hibernate-dal/tags/2.1.0</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/hibernate-dal/tags/2.1.0
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/hibernate-dal/tags/2.1.0</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/hibernate-dal/tags/2.1.0
         </developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/hibernate-dal/tags/2.1.0</url>
+		<url>https://j2ee-utils.googlecode.com/svn/main/hibernate-dal/tags/2.1.0</url>
 	</scm>
 
 	<properties>

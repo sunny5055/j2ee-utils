@@ -1,9 +1,7 @@
 package com.googlecode.jutils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -386,9 +384,7 @@ public final class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * Parses the given input text into a String list without duplicates. For
-	 * use with default separators, please check for
-	 * {@link WebKeys#INPUT_SEPARATORS}.
+	 * Parses the given input text into a String list without duplicates.
 	 * 
 	 * @param inputText
 	 *            the input text
@@ -421,9 +417,7 @@ public final class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * Parses the given input text into an Integer list without duplicates. For
-	 * use with default separators, please check for
-	 * {@link WebKeys#INPUT_SEPARATORS}.
+	 * Parses the given input text into an Integer list without duplicates.
 	 * 
 	 * @param inputText
 	 *            the input text
@@ -453,57 +447,6 @@ public final class StringUtil extends StringUtils {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Parses the into map.
-	 * 
-	 * @param inputText
-	 *            the input text
-	 * @param listSeparator
-	 *            the list separator
-	 * @param keyValueSeparator
-	 *            the key value separator
-	 * @return the map
-	 */
-	public static Map<String, String> parseIntoMap(String inputText, String listSeparator, String keyValueSeparator) {
-		final Map<String, String> result = new HashMap<String, String>();
-		if (!StringUtil.isBlank(inputText) && !StringUtil.isBlank(listSeparator) && !StringUtil.isBlank(keyValueSeparator)) {
-			final List<String> keyValues = parseIntoList(inputText, listSeparator);
-			if (!CollectionUtil.isEmpty(keyValues)) {
-				for (final String keyValue : keyValues) {
-					final List<String> chunks = parseIntoList(keyValue, keyValueSeparator);
-					if (!CollectionUtil.isEmpty(chunks) && chunks.size() == 2) {
-						final String key = chunks.get(0);
-						final String value = chunks.get(1);
-						result.put(key, value);
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * To string.
-	 * 
-	 * @param objects
-	 *            the objects
-	 * @return the string
-	 */
-	public static String toString(Object... objects) {
-		String toString = null;
-		if (!ArrayUtil.isEmpty(objects)) {
-			final StringBuilder builder = new StringBuilder();
-			for (int i = 0; i < objects.length; i++) {
-				builder.append(toString(objects[i]));
-				if (i + 1 < objects.length) {
-					builder.append(";");
-				}
-			}
-			toString = builder.toString();
-		}
-		return toString;
 	}
 
 	/**

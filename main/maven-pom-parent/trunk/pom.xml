@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>jee-utils</groupId>
 	<artifactId>maven-pom-parent</artifactId>
@@ -14,8 +15,17 @@
 
 	<properties>
 		<encoding>UTF-8</encoding>
-		<sourceLevel>1.6</sourceLevel>
-		<targetJDK>1.6</targetJDK>
+		<java-version>1.6</java-version>
+
+		<!-- Plugins -->
+		<maven-compiler-plugin-version>3.0</maven-compiler-plugin-version>
+		<maven-site-plugin-version>3.2</maven-site-plugin-version>
+		<maven-eclipse-plugin-version>2.9</maven-eclipse-plugin-version>
+		<maven-javadoc-plugin-version>2.9</maven-javadoc-plugin-version>
+		<maven-release-plugin-version>2.4</maven-release-plugin-version>
+
+		<!-- Version of test dependencies -->
+		<junit-version>4.11</junit-version>
 	</properties>
 
 	<developers>
@@ -56,18 +66,18 @@
 				<!-- Source compilation configuration -->
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.0</version>
+					<version>${maven-compiler-plugin-version}</version>
 					<configuration>
 						<encoding>${encoding}</encoding>
-						<source>${sourceLevel}</source>
-						<target>${targetJDK}</target>
+						<source>${java-version}</source>
+						<target>${java-version}</target>
 					</configuration>
 				</plugin>
 
 				<!-- Maven site plugin configuration -->
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.2</version>
+					<version>${maven-site-plugin-version}</version>
 					<configuration>
 						<outputEncoding>${encoding}</outputEncoding>
 						<inputEncoding>${encoding}</inputEncoding>
@@ -75,7 +85,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-eclipse-plugin</artifactId>
-					<version>2.9</version>
+					<version>${maven-eclipse-plugin-version}</version>
 					<configuration>
 						<projectNameTemplate>[artifactId]-[version]</projectNameTemplate>
 						<wtpmanifest>true</wtpmanifest>
@@ -87,18 +97,8 @@
 					</configuration>
 				</plugin>
 				<plugin>
-					<artifactId>maven-idea-plugin</artifactId>
-					<version>2.2</version>
-					<configuration>
-						<downloadSources>true</downloadSources>
-						<downloadJavadocs>true</downloadJavadocs>
-						<dependenciesAsLibraries>true</dependenciesAsLibraries>
-						<useFullNames>false</useFullNames>
-					</configuration>
-				</plugin>
-				<plugin>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.4</version>
+					<version>${maven-release-plugin-version}</version>
 					<configuration>
 						<!-- executed before a release -->
 						<preparationGoals>clean verify</preparationGoals>
@@ -114,15 +114,25 @@
 			<!-- Maven javadoc plugin configuration -->
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
+				<version>${maven-javadoc-plugin-version}</version>
 				<configuration>
 					<encoding>${encoding}</encoding>
 					<docencoding>${encoding}</docencoding>
 					<charset>${encoding}</charset>
-					<minmemory>128m</minmemory>
-					<maxmemory>512m</maxmemory>
 				</configuration>
 			</plugin>
 		</plugins>
 	</reporting>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Testing -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit-version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>

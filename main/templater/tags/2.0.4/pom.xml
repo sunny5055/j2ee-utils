@@ -12,9 +12,9 @@
     </parent>
 
     <scm>
-        <connection>scm:svn:https://j2ee-utils.googlecode.com/svn/templater/tags/2.0.4</connection>
-        <developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/templater/tags/2.0.4</developerConnection>
-        <url>https://j2ee-utils.googlecode.com/svn/templater/tags/2.0.4</url>
+        <connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/templater/tags/2.0.4</connection>
+        <developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/templater/tags/2.0.4</developerConnection>
+        <url>https://j2ee-utils.googlecode.com/svn/main/templater/tags/2.0.4</url>
     </scm>
 
     <dependencies>

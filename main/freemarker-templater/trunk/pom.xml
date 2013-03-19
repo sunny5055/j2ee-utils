@@ -12,9 +12,9 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/freemarker-templater/trunk/</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/freemarker-templater/trunk/</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/freemarker-templater/trunk/</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/freemarker-templater/trunk/</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/freemarker-templater/trunk/</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/main/freemarker-templater/trunk/</url>
 	</scm>
 
 	<dependencies>

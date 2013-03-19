@@ -12,9 +12,9 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/velocity-templater/trunk/</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/velocity-templater/trunk/</developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/velocity-templater/trunk/</url>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/velocity-templater/trunk/</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/velocity-templater/trunk/</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/main/velocity-templater/trunk/</url>
 	</scm>
 
 	<dependencies>

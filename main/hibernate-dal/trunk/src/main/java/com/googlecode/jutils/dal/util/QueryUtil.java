@@ -499,7 +499,7 @@ public class QueryUtil {
 	 * @throws HibernateException
 	 *             the hibernate exception
 	 */
-	private static void applyParametersToQuery(Query query, Object... values) throws HibernateException {
+	public static void applyParametersToQuery(Query query, Object... values) throws HibernateException {
 		if (query != null) {
 			if (!ArrayUtil.isEmpty(values)) {
 				for (int i = 0; i < values.length; i++) {
@@ -521,7 +521,7 @@ public class QueryUtil {
 	 * @throws HibernateException
 	 *             the hibernate exception
 	 */
-	private static void applyNamedParametersToQuery(Query query, String[] paramNames, Object... values) throws HibernateException {
+	public static void applyNamedParametersToQuery(Query query, String[] paramNames, Object... values) throws HibernateException {
 		if (query != null) {
 			if (!ArrayUtil.isEmpty(paramNames) && !ArrayUtil.isEmpty(values)) {
 				for (int i = 0; i < values.length; i++) {
@@ -543,7 +543,7 @@ public class QueryUtil {
 	 * @throws HibernateException
 	 *             the hibernate exception
 	 */
-	private static void applyNamedParameterToQuery(Query query, String paramName, Object value) throws HibernateException {
+	public static void applyNamedParameterToQuery(Query query, String paramName, Object value) throws HibernateException {
 		if (value instanceof Collection<?>) {
 			query.setParameterList(paramName, (Collection<?>) value);
 		} else if (value instanceof Object[]) {

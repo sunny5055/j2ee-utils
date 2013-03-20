@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>jee-utils</groupId>
 		<artifactId>maven-pom-parent</artifactId>
-		<version>1.0.3</version>
+		<version>1.0.4</version>
 	</parent>
 
 	<scm>
@@ -21,23 +21,13 @@
 		<dependency>
 			<groupId>jee-utils</groupId>
 			<artifactId>templater</artifactId>
-			<version>2.0.4</version>
+			<version>2.0.5</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
 			<version>2.3.19</version>
-		</dependency>
-		<dependency>
-			<groupId>jee-utils</groupId>
-			<artifactId>xml-util</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>jaxen</groupId>
-			<artifactId>jaxen</artifactId>
-			<version>1.1.4</version>
 		</dependency>
 	</dependencies>
 </project>

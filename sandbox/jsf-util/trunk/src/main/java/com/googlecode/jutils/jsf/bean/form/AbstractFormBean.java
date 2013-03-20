@@ -12,7 +12,6 @@ import org.primefaces.context.RequestContext;
 
 import com.googlecode.jutils.BooleanUtil;
 import com.googlecode.jutils.StringUtil;
-import com.googlecode.jutils.dal.Result;
 import com.googlecode.jutils.dal.dto.Dto;
 import com.googlecode.jutils.dal.service.GenericService;
 import com.googlecode.jutils.dal.util.HibernateUtil;
@@ -136,19 +135,22 @@ public abstract class AbstractFormBean<PK extends Serializable, E extends Dto<PK
 			if (prepareUpdate()) {
 				E hibernateEntity = this.getService().get(entity.getPrimaryKey());
 				if (hibernateEntity != null) {
-					Result<E> result = new Result<E>();
+					E result = null;
 					try {
 						hibernateEntity = HibernateUtil.copyEntity(entity, hibernateEntity, getFormProperties());
 						result = this.getService().update(hibernateEntity);
 					} catch (final IllegalAccessException e) {
-						result.setValid(false);
-						result.addErrorMessage("error_update_failed");
+						if (LOGGER.isDebugEnabled()) {
+							LOGGER.debug(e.getMessage(), e);
+						}
 					} catch (final InvocationTargetException e) {
-						result.setValid(false);
-						result.addErrorMessage("error_update_failed");
+						if (LOGGER.isDebugEnabled()) {
+							LOGGER.debug(e.getMessage(), e);
+						}
 					} catch (final NoSuchMethodException e) {
-						result.setValid(false);
-						result.addErrorMessage("error_update_failed");
+						if (LOGGER.isDebugEnabled()) {
+							LOGGER.debug(e.getMessage(), e);
+						}
 					}
 
 					handleUpdate(result);
@@ -166,9 +168,9 @@ public abstract class AbstractFormBean<PK extends Serializable, E extends Dto<PK
 	 * @param result
 	 *            the result
 	 */
-	protected void handleUpdate(final Result<E> result) {
-		if (result != null && result.isValid()) {
-			entity = result.getValue();
+	protected void handleUpdate(final E result) {
+		if (result != null) {
+			entity = result;
 			reInit();
 
 			RequestContextUtil.addCallbackParam(AbstractCreateFormBean.IS_VALID, true);
@@ -199,14 +201,10 @@ public abstract class AbstractFormBean<PK extends Serializable, E extends Dto<PK
 		} else {
 			final PK primaryKey = getPrimaryKeyToDelete();
 			if (primaryKey != null) {
-				Result<Integer> result = null;
+				Integer result = null;
 				if (this.getService().isRemovable(primaryKey)) {
 					result = this.getService().deleteByPrimaryKey(primaryKey);
 					handleDelete(result);
-				} else {
-					result = new Result<Integer>();
-					result.setValid(false);
-					result.addErrorMessage("error_delete_failed");
 				}
 			}
 		}
@@ -218,8 +216,8 @@ public abstract class AbstractFormBean<PK extends Serializable, E extends Dto<PK
 	 * @param result
 	 *            the result
 	 */
-	protected void handleDelete(final Result<Integer> result) {
-		if (result != null && result.isValid()) {
+	protected void handleDelete(final Integer result) {
+		if (result != null) {
 			final RequestContext requestContext = RequestContext.getCurrentInstance();
 			if (requestContext != null) {
 				requestContext.addCallbackParam(AbstractCreateFormBean.IS_VALID, true);

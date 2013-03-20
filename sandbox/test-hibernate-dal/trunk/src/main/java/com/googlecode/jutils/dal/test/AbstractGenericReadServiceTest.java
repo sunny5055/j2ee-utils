@@ -2,20 +2,18 @@ package com.googlecode.jutils.dal.test;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.Table;
 
-import junit.framework.Assert;
-
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.core.io.ClassRelativeResourceLoader;
@@ -109,26 +107,7 @@ public abstract class AbstractGenericReadServiceTest<PK extends Serializable, E 
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void testGetObjects() {
-		final List<PK> allPrimaryKeys = getAllPrimaryKeys();
-		List<E> entities = null;
-
-		entities = service.getObjects(primaryKeys.toArray((PK[]) Array.newInstance(pkClass, 0)));
-		Assert.assertNotNull(entities);
-		Assert.assertEquals(primaryKeys.size(), entities.size());
-
-		entities = service.getObjects(fakePrimaryKeys.toArray((PK[]) Array.newInstance(pkClass, 0)));
-		Assert.assertNotNull(entities);
-		Assert.assertEquals(0, entities.size());
-
-		entities = service.getObjects(allPrimaryKeys.toArray((PK[]) Array.newInstance(pkClass, 0)));
-		Assert.assertNotNull(entities);
-		Assert.assertEquals(primaryKeys.size(), entities.size());
-	}
-
-	@Test
-	public void testGetObjectsWithIdList() {
 		final List<PK> allPrimaryKeys = getAllPrimaryKeys();
 		List<E> entities = null;
 

@@ -4,12 +4,10 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.googlecode.jutils.core.ClassUtil;
-import com.googlecode.jutils.dal.Result;
 import com.googlecode.jutils.dal.dto.Dto;
 import com.googlecode.jutils.dal.service.GenericService;
 
@@ -23,10 +21,8 @@ public abstract class AbstractGenericServiceTest<PK extends Serializable, E exte
 	public void testCreate() {
 		final E entity = createEntity();
 
-		final Result<E> result = service.create(entity);
+		final E result = service.create(entity);
 		Assert.assertNotNull(result);
-		Assert.assertEquals(true, result.isValid());
-		Assert.assertNotNull(result.getValue());
 
 		final E hibernateEntity = service.get(entity.getPrimaryKey());
 		Assert.assertNotNull(hibernateEntity);
@@ -42,10 +38,8 @@ public abstract class AbstractGenericServiceTest<PK extends Serializable, E exte
 		final E entity = service.get(primaryKey);
 		updateEntity(entity);
 
-		final Result<E> result = service.update(entity);
+		final E result = service.update(entity);
 		Assert.assertNotNull(result);
-		Assert.assertEquals(true, result.isValid());
-		Assert.assertNotNull(result.getValue());
 
 		final E hibernateEntity = service.get(primaryKey);
 		Assert.assertNotNull(entity);
@@ -58,11 +52,10 @@ public abstract class AbstractGenericServiceTest<PK extends Serializable, E exte
 		final PK fakePrimaryKey = fakePrimaryKeys.get(0);
 		E entity = service.get(primaryKey);
 
-		Result<Integer> result = null;
+		Integer result = null;
 		result = service.delete(entity);
 		Assert.assertNotNull(result);
-		Assert.assertEquals(true, result.isValid());
-		Assert.assertEquals((Integer) 1, result.getValue());
+		Assert.assertEquals((Integer) 1, result);
 
 		entity = service.get(primaryKey);
 		Assert.assertNull(entity);
@@ -70,65 +63,13 @@ public abstract class AbstractGenericServiceTest<PK extends Serializable, E exte
 		entity = null;
 		result = service.delete(entity);
 		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 0, result.getValue());
+		Assert.assertEquals((Integer) 0, result);
 
 		entity = instantiateEntity();
 		entity.setPrimaryKey(fakePrimaryKey);
 		result = service.delete(entity);
 		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 0, result.getValue());
-	}
-
-	@Test
-	@SuppressWarnings("unchecked")
-	public void testDeleteWithArray() {
-		final PK primaryKey = primaryKeys.get(0);
-		final PK primaryKey2 = primaryKeys.get(1);
-		final PK primaryKey3 = primaryKeys.get(2);
-
-		final PK fakePrimaryKey = fakePrimaryKeys.get(0);
-		final PK fakePrimaryKey2 = fakePrimaryKeys.get(1);
-		E entity = service.get(primaryKey);
-		E entity2 = service.get(primaryKey2);
-
-		Result<Integer> result = null;
-		result = service.delete(entity, entity2);
-		Assert.assertNotNull(result);
-		Assert.assertEquals(true, result.isValid());
-		Assert.assertEquals((Integer) 2, result.getValue());
-
-		entity = service.get(primaryKey);
-		Assert.assertNull(entity);
-
-		entity2 = service.get(primaryKey2);
-		Assert.assertNull(entity);
-
-		entity = service.get(primaryKey);
-		entity2 = service.get(primaryKey3);
-
-		result = service.delete(entity, entity2);
-		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 1, result.getValue());
-
-		entity = null;
-		entity2 = null;
-		result = service.delete(entity, entity2);
-		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 0, result.getValue());
-
-		entity = instantiateEntity();
-		entity.setPrimaryKey(fakePrimaryKey);
-
-		entity2 = instantiateEntity();
-		entity2.setPrimaryKey(fakePrimaryKey2);
-		result = service.delete(entity, entity2);
-		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 0, result.getValue());
+		Assert.assertEquals((Integer) 0, result);
 	}
 
 	@Test
@@ -143,11 +84,10 @@ public abstract class AbstractGenericServiceTest<PK extends Serializable, E exte
 		E entity = service.get(primaryKey);
 		E entity2 = service.get(primaryKey2);
 
-		Result<Integer> result = null;
+		Integer result = null;
 		result = service.delete(Arrays.asList(entity, entity2));
 		Assert.assertNotNull(result);
-		Assert.assertEquals(true, result.isValid());
-		Assert.assertEquals((Integer) 2, result.getValue());
+		Assert.assertEquals((Integer) 2, result);
 
 		entity = service.get(primaryKey);
 		Assert.assertNull(entity);
@@ -160,15 +100,13 @@ public abstract class AbstractGenericServiceTest<PK extends Serializable, E exte
 
 		result = service.delete(Arrays.asList(entity, entity2));
 		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 1, result.getValue());
+		Assert.assertEquals((Integer) 1, result);
 
 		entity = null;
 		entity2 = null;
 		result = service.delete(Arrays.asList(entity, entity2));
 		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 0, result.getValue());
+		Assert.assertEquals((Integer) 0, result);
 
 		entity = instantiateEntity();
 		entity.setPrimaryKey(fakePrimaryKey);
@@ -177,8 +115,7 @@ public abstract class AbstractGenericServiceTest<PK extends Serializable, E exte
 		entity2.setPrimaryKey(fakePrimaryKey2);
 		result = service.delete(Arrays.asList(entity, entity2));
 		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 0, result.getValue());
+		Assert.assertEquals((Integer) 0, result);
 	}
 
 	@Test
@@ -187,24 +124,21 @@ public abstract class AbstractGenericServiceTest<PK extends Serializable, E exte
 		final PK fakePrimaryKey = fakePrimaryKeys.get(0);
 		E entity = null;
 
-		Result<Integer> result = null;
+		Integer result = null;
 		result = service.deleteByPrimaryKey(primaryKey);
 		Assert.assertNotNull(result);
-		Assert.assertEquals(true, result.isValid());
-		Assert.assertEquals((Integer) 1, result.getValue());
+		Assert.assertEquals((Integer) 1, result);
 
 		entity = service.get(primaryKey);
 		Assert.assertNull(entity);
 
 		result = service.deleteByPrimaryKey((PK) null);
 		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 0, result.getValue());
+		Assert.assertEquals((Integer) 0, result);
 
 		result = service.deleteByPrimaryKey(fakePrimaryKey);
 		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 0, result.getValue());
+		Assert.assertEquals((Integer) 0, result);
 	}
 
 	@Test
@@ -218,53 +152,10 @@ public abstract class AbstractGenericServiceTest<PK extends Serializable, E exte
 		E entity = null;
 		E entity2 = null;
 
-		Result<Integer> result = null;
-		result = service.deleteByPrimaryKeys(primaryKey, primaryKey2);
-		Assert.assertNotNull(result);
-		Assert.assertEquals(true, result.isValid());
-		Assert.assertEquals((Integer) 2, result.getValue());
-
-		entity = service.get(primaryKey);
-		Assert.assertNull(entity);
-
-		entity2 = service.get(primaryKey2);
-		Assert.assertNull(entity2);
-
-		result = service.deleteByPrimaryKeys(primaryKey, primaryKey3);
-		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 1, result.getValue());
-
-		entity = service.get(primaryKey3);
-		Assert.assertNull(entity);
-
-		result = service.deleteByPrimaryKeys(null, null);
-		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 0, result.getValue());
-
-		result = service.deleteByPrimaryKeys(fakePrimaryKey, fakePrimaryKey2);
-		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 0, result.getValue());
-	}
-
-	@Test
-	@SuppressWarnings("unchecked")
-	public void testDeleteByPrimaryKeysWithIdList() {
-		final PK primaryKey = primaryKeys.get(0);
-		final PK primaryKey2 = primaryKeys.get(1);
-		final PK primaryKey3 = primaryKeys.get(2);
-		final PK fakePrimaryKey = fakePrimaryKeys.get(0);
-		final PK fakePrimaryKey2 = fakePrimaryKeys.get(1);
-		E entity = null;
-		E entity2 = null;
-
-		Result<Integer> result = null;
+		Integer result = null;
 		result = service.deleteByPrimaryKeys(Arrays.asList(primaryKey, primaryKey2));
 		Assert.assertNotNull(result);
-		Assert.assertEquals(true, result.isValid());
-		Assert.assertEquals((Integer) 2, result.getValue());
+		Assert.assertEquals((Integer) 2, result);
 
 		entity = service.get(primaryKey);
 		Assert.assertNull(entity);
@@ -274,30 +165,26 @@ public abstract class AbstractGenericServiceTest<PK extends Serializable, E exte
 
 		result = service.deleteByPrimaryKeys(Arrays.asList(primaryKey, primaryKey3));
 		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 1, result.getValue());
+		Assert.assertEquals((Integer) 1, result);
 
 		entity = service.get(primaryKey3);
 		Assert.assertNull(entity);
 
 		result = service.deleteByPrimaryKeys(Arrays.asList((PK) null, (PK) null));
 		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 0, result.getValue());
+		Assert.assertEquals((Integer) 0, result);
 
 		result = service.deleteByPrimaryKeys(Arrays.asList(fakePrimaryKey, fakePrimaryKey2));
 		Assert.assertNotNull(result);
-		Assert.assertEquals(false, result.isValid());
-		Assert.assertEquals((Integer) 0, result.getValue());
+		Assert.assertEquals((Integer) 0, result);
 	}
 
 	@Test
 	public void testDeleteAll() {
-		Result<Integer> result = null;
+		Integer result = null;
 		result = service.deleteAll();
 		Assert.assertNotNull(result);
-		Assert.assertEquals(true, result.isValid());
-		Assert.assertEquals((Integer) primaryKeys.size(), result.getValue());
+		Assert.assertEquals((Integer) primaryKeys.size(), result);
 
 		final int count = service.count();
 		Assert.assertEquals(0, count);

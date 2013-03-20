@@ -9,7 +9,6 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 
-import com.googlecode.jutils.dal.Result;
 import com.googlecode.jutils.dal.dto.Dto;
 import com.googlecode.jutils.dal.service.GenericService;
 import com.googlecode.jutils.jsf.util.FacesUtils;
@@ -135,7 +134,7 @@ public abstract class AbstractCreateFormBean<PK extends Serializable, E extends 
 	public void create(ActionEvent event) {
 		if (entity != null) {
 			if (prepareCreate()) {
-				final Result<E> result = this.getService().create(entity);
+				final E result = this.getService().create(entity);
 				handleCreate(result);
 			}
 		}
@@ -147,9 +146,9 @@ public abstract class AbstractCreateFormBean<PK extends Serializable, E extends 
 	 * @param result
 	 *            the result
 	 */
-	protected void handleCreate(final Result<E> result) {
-		if (result != null && result.isValid()) {
-			entity = result.getValue();
+	protected void handleCreate(E result) {
+		if (result != null) {
+			entity = result;
 			reInit();
 
 			RequestContextUtil.addCallbackParam(IS_VALID, true);

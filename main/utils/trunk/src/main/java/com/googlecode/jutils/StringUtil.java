@@ -450,6 +450,21 @@ public final class StringUtil extends StringUtils {
 	}
 
 	/**
+	 * To string.
+	 * 
+	 * @param object
+	 *            the object
+	 * @return the string
+	 */
+	public static String toString(Object object) {
+		String toString = null;
+		if (object != null) {
+			toString = object.toString();
+		}
+		return toString;
+	}
+
+	/**
 	 * Escape regex.
 	 * 
 	 * @param str

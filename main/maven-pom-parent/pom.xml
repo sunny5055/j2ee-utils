@@ -1,0 +1,433 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>jee-utils</groupId>
+	<artifactId>maven-pom-parent</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0.0</version>
+	<name>MavenPomParent</name>
+
+	<scm>
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/maven-pom-parent</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/maven-pom-parent</developerConnection>
+		<url>https://j2ee-utils.googlecode.com/svn/main/maven-pom-parent</url>
+	</scm>
+
+	<properties>
+		<encoding>UTF-8</encoding>
+		<java-version>1.6</java-version>
+
+		<!-- Plugins -->
+		<maven-compiler-plugin-version>3.0</maven-compiler-plugin-version>
+		<maven-site-plugin-version>3.2</maven-site-plugin-version>
+		<maven-eclipse-plugin-version>2.9</maven-eclipse-plugin-version>
+		<maven-javadoc-plugin-version>2.9</maven-javadoc-plugin-version>
+		<maven-release-plugin-version>2.4</maven-release-plugin-version>
+
+
+		<!-- Version of dependencies -->
+		<!-- j2ee-utils -->
+		<utils-version>1.0.0</utils-version>
+		<spring-util-version>1.0.0</spring-util-version>
+		<templater-version>1.0.0</templater-version>
+		<freemarker-templater-version>1.0.0</freemarker-templater-version>
+		<velocity-templater-version>1.0.0</velocity-templater-version>
+		<mail-sender-version>1.0.0</mail-sender-version>
+		<commons-dal-version>1.0.0</commons-dal-version>
+		<jpa-dal-version>1.0.0</jpa-dal-version>
+		<i18n-jpa-version>1.0.0</i18n-jpa-version>
+		<mail-jpa-version>1.0.0</mail-jpa-version>
+
+		<!-- Common Apache -->
+		<commons-lang3-version>3.1</commons-lang3-version>
+		<commons-collections-version>3.2.1</commons-collections-version>
+		<commons-beanutils-version>1.8.3</commons-beanutils-version>
+		<commons-configuration-version>1.9</commons-configuration-version>
+		<commons-io-version>2.4</commons-io-version>
+		<commons-dbcp-version>1.4</commons-dbcp-version>
+
+		<!-- Xml -->
+		<dom4j-version>1.6.1</dom4j-version>
+		<jaxen-version>1.1.4</jaxen-version>
+
+		<!-- Logger -->
+		<log4j-version>1.2.17</log4j-version>
+		<slf4j-version>1.7.2</slf4j-version>
+
+		<!-- Spring Framework -->
+		<spring-version>3.2.2.RELEASE</spring-version>
+		<aspectjtools-version>1.7.2</aspectjtools-version>
+
+		<!-- Templater -->
+		<velocity-version>1.7</velocity-version>
+		<freemarker-version>2.3.19</freemarker-version>
+
+		<!-- JavaMail -->
+		<javax-mail-version>1.4.6</javax-mail-version>
+
+		<!-- Hibernate -->
+		<hibernate-version>4.1.10.Final</hibernate-version>
+		<cglib-version>2.2.2</cglib-version>
+
+		<!-- Version of test dependencies -->
+		<junit-version>4.11</junit-version>
+	</properties>
+
+	<developers>
+		<developer>
+			<id>jschaal</id>
+			<name>Jeremy SCHAAL</name>
+			<email>jeremy.schaal@gmail.com</email>
+			<organization>jeremy.schaal@gmail.com</organization>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
+	<repositories>
+		<repository>
+			<id>java.net.m2</id>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
+		<repository>
+			<id>repository.jboss.org</id>
+			<url>http://repository.jboss.org/maven2</url>
+		</repository>
+		<repository>
+			<id>jboss-public-repository-group</id>
+			<name>JBoss Public Maven Repository Group</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+		</repository>
+		<repository>
+			<id>prime-repo</id>
+			<name>Prime Technology Maven Repository</name>
+			<url>http://repository.primefaces.org</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- Source compilation configuration -->
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin-version}</version>
+					<configuration>
+						<encoding>${encoding}</encoding>
+						<source>${java-version}</source>
+						<target>${java-version}</target>
+					</configuration>
+				</plugin>
+
+				<!-- Maven site plugin configuration -->
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${maven-site-plugin-version}</version>
+					<configuration>
+						<outputEncoding>${encoding}</outputEncoding>
+						<inputEncoding>${encoding}</inputEncoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>${maven-eclipse-plugin-version}</version>
+					<configuration>
+						<projectNameTemplate>[artifactId]-[version]</projectNameTemplate>
+						<wtpmanifest>true</wtpmanifest>
+						<wtpapplicationxml>true</wtpapplicationxml>
+						<wtpversion>2.0</wtpversion>
+						<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
+						<downloadSources>true</downloadSources>
+						<downloadJavadocs>true</downloadJavadocs>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>${maven-release-plugin-version}</version>
+					<configuration>
+						<!-- executed before a release -->
+						<preparationGoals>clean verify</preparationGoals>
+						<tagNameFormat>@{project.version}</tagNameFormat>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<reporting>
+		<plugins>
+			<!-- Maven javadoc plugin configuration -->
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin-version}</version>
+				<configuration>
+					<encoding>${encoding}</encoding>
+					<docencoding>${encoding}</docencoding>
+					<charset>${encoding}</charset>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- j2ee-utils -->
+			<dependency>
+				<groupId>jee-utils</groupId>
+				<artifactId>utils</artifactId>
+				<version>${utils-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jee-utils</groupId>
+				<artifactId>spring-util</artifactId>
+				<version>${spring-util-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jee-utils</groupId>
+				<artifactId>templater</artifactId>
+				<version>${templater-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jee-utils</groupId>
+				<artifactId>freemarker-templater</artifactId>
+				<version>${freemarker-templater-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jee-utils</groupId>
+				<artifactId>velocity-templater</artifactId>
+				<version>${velocity-templater-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jee-utils</groupId>
+				<artifactId>mail-sender</artifactId>
+				<version>${mail-sender-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jee-utils</groupId>
+				<artifactId>commons-dal</artifactId>
+				<version>${commons-dal-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jee-utils</groupId>
+				<artifactId>jpa-dal</artifactId>
+				<version>${jpa-dal-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jee-utils</groupId>
+				<artifactId>i18n-jpa</artifactId>
+				<version>${i18n-jpa-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jee-utils</groupId>
+				<artifactId>mail-jpa</artifactId>
+				<version>${mail-jpa-version}</version>
+			</dependency>
+
+			<!-- Common Apache -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang3-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-collections</groupId>
+				<artifactId>commons-collections</artifactId>
+				<version>${commons-collections-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>${commons-beanutils-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-configuration</groupId>
+				<artifactId>commons-configuration</artifactId>
+				<version>${commons-configuration-version}</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>commons-lang</artifactId>
+						<groupId>commons-lang</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-dbcp</groupId>
+				<artifactId>commons-dbcp</artifactId>
+				<version>${commons-dbcp-version}</version>
+			</dependency>
+
+			<!-- Xml -->
+			<dependency>
+				<groupId>dom4j</groupId>
+				<artifactId>dom4j</artifactId>
+				<version>${dom4j-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jaxen</groupId>
+				<artifactId>jaxen</artifactId>
+				<version>${jaxen-version}</version>
+			</dependency>
+
+			<!-- Logger -->
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${log4j-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+				<version>${slf4j-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jul-to-slf4j</artifactId>
+				<version>${slf4j-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4j-version}</version>
+			</dependency>
+
+			<!-- Spring -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context-support</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jdbc</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aop</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-tx</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-oxm</artifactId>
+				<version>${spring-version}</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>commons-lang</artifactId>
+						<groupId>commons-lang</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-expression</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjtools</artifactId>
+				<version>${aspectjtools-version}</version>
+			</dependency>
+
+			<!-- Templater -->
+			<dependency>
+				<groupId>org.apache.velocity</groupId>
+				<artifactId>velocity</artifactId>
+				<version>${velocity-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.freemarker</groupId>
+				<artifactId>freemarker</artifactId>
+				<version>${freemarker-version}</version>
+			</dependency>
+
+			<!-- JavaMail -->
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>${javax-mail-version}</version>
+			</dependency>
+
+			<!-- Hibernate -->
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>${hibernate-version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-collections</groupId>
+						<artifactId>commons-collections</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-c3p0</artifactId>
+				<version>${hibernate-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib</artifactId>
+				<version>${cglib-version}</version>
+			</dependency>
+
+			<!-- Testing -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit-version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

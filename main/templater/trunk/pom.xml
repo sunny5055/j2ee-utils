@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>templater</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>templater</name>
 
     <parent>
@@ -12,9 +12,9 @@
     </parent>
 
     <scm>
-        <connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/templater/tags/1.0.0</connection>
-        <developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/templater/tags/1.0.0</developerConnection>
-        <url>https://j2ee-utils.googlecode.com/svn/main/templater/tags/1.0.0</url>
+        <connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/templater/trunk/</connection>
+        <developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/templater/trunk/</developerConnection>
+        <url>https://j2ee-utils.googlecode.com/svn/main/templater/trunk/</url>
     </scm>
 
     <dependencies>

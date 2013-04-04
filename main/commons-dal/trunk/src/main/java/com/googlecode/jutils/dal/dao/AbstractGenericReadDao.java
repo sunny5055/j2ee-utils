@@ -24,6 +24,7 @@ import com.googlecode.jutils.dal.dto.Dto;
  */
 public abstract class AbstractGenericReadDao<PK extends Serializable, E extends Dto<PK>> implements GenericReadDao<PK, E> {
 	protected static final Logger LOGGER = Logger.getLogger(AbstractGenericReadDao.class);
+	protected Class<PK> pkClass;
 	protected Class<E> entityClass;
 
 	/**
@@ -38,6 +39,7 @@ public abstract class AbstractGenericReadDao<PK extends Serializable, E extends 
 		final ParameterizedType parameterizedType = (ParameterizedType) type;
 		final Type[] typeArguments = parameterizedType.getActualTypeArguments();
 		if (!ArrayUtil.isEmpty(typeArguments) && typeArguments.length == 2) {
+			pkClass = (Class<PK>) typeArguments[0];
 			entityClass = (Class<E>) typeArguments[1];
 		}
 	}

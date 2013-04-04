@@ -1,12 +1,15 @@
 package com.googlecode.jutils.dal.dao;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.googlecode.jutils.BooleanUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
 import com.googlecode.jutils.dal.Search;
 import com.googlecode.jutils.dal.SearchCriteria;
 import com.googlecode.jutils.dal.dto.Dto;
@@ -29,8 +32,14 @@ public abstract class AbstractGenericReadDao<PK extends Serializable, E extends 
 	 * @param type
 	 *            the type
 	 */
-	public AbstractGenericReadDao(Class<E> type) {
-		this.entityClass = type;
+	@SuppressWarnings("unchecked")
+	public AbstractGenericReadDao() {
+		final Type type = getClass().getGenericSuperclass();
+		final ParameterizedType parameterizedType = (ParameterizedType) type;
+		final Type[] typeArguments = parameterizedType.getActualTypeArguments();
+		if (!ArrayUtil.isEmpty(typeArguments) && typeArguments.length == 2) {
+			entityClass = (Class<E>) typeArguments[1];
+		}
 	}
 
 	/**

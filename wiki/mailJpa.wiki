@@ -1,17 +1,17 @@
-#summary Hibernate i18n.
-=i18n-hibernate=
+#summary Jpa mail.
+=mail-jpa=
 
 ==Getting started==
 
-There are several parts in the `i18n-hibernate` configuration. The first one, is the definition of an `application-context.xml` config file :
+There are several parts in the `mail-jpa` configuration :
 <ol> 
-	<li>You need to set up a proper connection to your database, using Hibernate : </li>
+	<li>You need to set up a proper connection to your database, using Jpa : </li>
 		<ul>
 			<li> The first bean you must declare is a `ComboPooledDataSource` object type. It handles a connection pool to your database.</li>
 			<li> The second bean is a `LocalSessionFactoryBean` type of bean. It handles a JDBC connection to your database and manage the persisted objects. It reads into a `hibernate.properties``file. </li>
-			<li> The thid bean is a `HibernateTransactionManager` type of bean. It uses the `sessionFactory` and handles all the database transactions </li>
+			<li> The third bean is a `HibernateTransactionManager` type of bean. It uses the `sessionFactory` and handles all the database transactions </li>
 		</ul>
-	<li> You need to define a configuration using Spring's AOP, in order to manage the Hibernate transactions : </li>
+	<li> You need to define a configuration using Spring's AOP, in order to manage the Jpa transactions : </li>
 		<ul>
 			<li> Fist of all, you must define pointcuts for every of your DAOs and Services classes. All the methods contained in those classes, have to be handled by a transaction. </li>
 			<li> You must define a `<tx:advice>` tag for your Services. Every method that begins with `get`, `find`, `exist` or `count` are read-only methods and implies that a transaction as already been opened. </li>
@@ -74,7 +74,7 @@ There are several parts in the `i18n-hibernate` configuration. The first one, is
 	</bean>
 
 	<aop:config>
-		<!-- Pointcut utilisé pour les transactions -->
+		<!-- Pointcut utilisï¿½ pour les transactions -->
 		<aop:pointcut id="servicePointcut"
 			expression="execution(* com.google..*Service*.*(..))" />
 		<aop:pointcut id="daoPointcut" expression="execution(* com.google..*Dao*.*(..))" />
@@ -105,14 +105,14 @@ There are several parts in the `i18n-hibernate` configuration. The first one, is
 }}}
 
 After you've finished the Spring configuration, you must now define a `database.properties`, which is used by the `application-context.xml` file.
-Here is an example of a `PostgreSQL` connection with `Hibernate` abd `c3po`.
+Here is an example of a `PostgreSQL` connection with `Jpa` abd `c3po`.
 
 {{{
 # Jdbc
 jdbc.driverClassName=org.postgresql.Driver
 jdbc.maxActive=100
 jdbc.maxWait=1000
-jdbc.url=jdbc:postgresql://localhost:5432/i18n-hibernate
+jdbc.url=jdbc:postgresql://localhost:5432/mail-jpa
 jdbc.username=postgres
 jdbc.password=postgres
 
@@ -159,24 +159,19 @@ Finally, you must define a log4j.xml file that handles all the logging functions
 Use the component as follows :
 
 {{{
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         final ApplicationContext context = new ClassPathXmlApplicationContext("spring/application-context.xml");
-        final LabelService labelService = context.getBean(LabelService.class);
-
-        LabelId labelId = new LabelId();
-        labelId.setKey("test");
-        labelId.setLanguage("US");
-
-        Label label = new Label();
-        label.setPrimaryKey(labelId);
-        label.setValue("This is a test !");
-
-        labelService.create(label);
-
-        final String currentDirectoryPath = new File(".").getCanonicalPath();
-
-        OutputStream outputStream = new FileOutputStream(currentDirectoryPath
-                + "/src/test/resources/bundle/text_US.properties");
-        labelService.exportBundle(outputStream, "US");
+        final MailService mailService = context.getBean(MailService.class);
+        
+        Mail mail = new Mail();
+        
+        mail.setName("testMail");
+        mail.setFrom("john.doe@gmail.com");
+        mail.setReplyTo("john.doe@gmail.com");
+        mail.setSubject("Test");
+        mail.setText("This is a test !");
+        mail.setHtmlMessage(false);
+        
+        mailService.create(mail);
     }
 }}}	

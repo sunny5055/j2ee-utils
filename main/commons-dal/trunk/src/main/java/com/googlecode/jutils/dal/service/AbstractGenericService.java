@@ -26,14 +26,10 @@ public abstract class AbstractGenericService<PK extends Serializable, E extends 
 	 */
 	@Override
 	public E create(E dto) {
-		E result = null;
 		if (dto != null) {
-			final PK pk = this.dao.create(dto);
-			if (pk != null) {
-				result = this.get(pk);
-			}
+			this.dao.create(dto);
 		}
-		return result;
+		return dto;
 	}
 
 	/**
@@ -41,14 +37,10 @@ public abstract class AbstractGenericService<PK extends Serializable, E extends 
 	 */
 	@Override
 	public E update(E dto) {
-		E result = null;
 		if (dto != null) {
-			final Integer updated = this.dao.update(dto);
-			if (updated != 0) {
-				result = this.get(dto.getPrimaryKey());
-			}
+			this.dao.update(dto);
 		}
-		return result;
+		return dto;
 	}
 
 	/**

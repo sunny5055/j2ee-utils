@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 import javax.persistence.metamodel.SingularAttribute;
@@ -58,7 +61,11 @@ public abstract class AbstractGenericJpaReadDao<PK extends Serializable, E exten
 	public List<E> getObjects(final Collection<PK> pks) {
 		List<E> dtos = null;
 		if (!CollectionUtil.isEmpty(pks)) {
-			dtos = QueryUtil.findByNamedParam(this.entityManager, "from " + entityClass.getName() + " where " + getIdName() + " in (:pks)", new String[] { "pks" }, pks);
+			final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+			final CriteriaQuery<E> query = builder.createQuery(entityClass);
+			final Root<E> from = query.from(entityClass);
+			query.select(from).where(from.get(getIdName()).in(pks));
+			dtos = entityManager.createQuery(query).getResultList();
 		}
 		return dtos;
 	}
@@ -68,7 +75,15 @@ public abstract class AbstractGenericJpaReadDao<PK extends Serializable, E exten
 	 */
 	@Override
 	public List<E> findAll() {
-		return QueryUtil.find(this.entityManager, "from " + entityClass.getName());
+		List<E> dtos = null;
+
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<E> query = builder.createQuery(entityClass);
+		final Root<E> from = query.from(entityClass);
+		query.select(from);
+		dtos = entityManager.createQuery(query).getResultList();
+
+		return dtos;
 	}
 
 	/**
@@ -128,7 +143,15 @@ public abstract class AbstractGenericJpaReadDao<PK extends Serializable, E exten
 	 */
 	@Override
 	public Integer count() {
-		return QueryUtil.getNumber(this.entityManager, "select count(*) from " + entityClass.getName());
+		Integer count = 0;
+
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<Long> query = builder.createQuery(Long.class);
+		final Root<E> from = query.from(entityClass);
+		query.select(builder.count(from));
+		count = entityManager.createQuery(query).getSingleResult().intValue();
+
+		return count;
 	}
 
 	/**
@@ -138,8 +161,15 @@ public abstract class AbstractGenericJpaReadDao<PK extends Serializable, E exten
 	public boolean existPk(final PK pk) {
 		boolean exist = false;
 		if (pk != null) {
-			final Integer count = QueryUtil.getNumberByNamedParam(this.entityManager, "select count(*) from " + entityClass.getName() + " where " + getIdName() + " = :pk",
-					new String[] { "pk" }, pk);
+			Integer count = 0;
+
+			final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+			final CriteriaQuery<Long> query = builder.createQuery(Long.class);
+			final Root<E> from = query.from(entityClass);
+			query.select(builder.count(from));
+			query.where(builder.equal(from.get(getIdName()), pk));
+			count = entityManager.createQuery(query).getSingleResult().intValue();
+
 			exist = count != 0;
 		}
 		return exist;

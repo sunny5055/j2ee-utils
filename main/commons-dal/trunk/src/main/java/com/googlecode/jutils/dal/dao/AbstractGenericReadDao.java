@@ -6,7 +6,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.googlecode.jutils.BooleanUtil;
 import com.googlecode.jutils.collection.ArrayUtil;
@@ -23,7 +24,7 @@ import com.googlecode.jutils.dal.dto.Dto;
  *            the element type
  */
 public abstract class AbstractGenericReadDao<PK extends Serializable, E extends Dto<PK>> implements GenericReadDao<PK, E> {
-	protected static final Logger LOGGER = Logger.getLogger(AbstractGenericReadDao.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractGenericReadDao.class);
 	protected Class<PK> pkClass;
 	protected Class<E> entityClass;
 

@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.dal.SearchCriteria;
@@ -23,10 +24,7 @@ import com.googlecode.jutils.dal.dto.Dto;
  *            the generic type
  */
 public abstract class AbstractGenericReadService<PK extends Serializable, E extends Dto<PK>, DAO extends GenericReadDao<PK, E>> implements GenericReadService<PK, E> {
-	/**
-	 * Logger
-	 */
-	protected static final Logger LOGGER = Logger.getLogger(AbstractGenericReadService.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractGenericReadService.class);
 	protected DAO dao;
 
 	/**

@@ -3,10 +3,14 @@ package com.googlecode.jutils.templater.engine;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The Class AbstractTemplaterEngine.
  */
 public abstract class AbstractTemplaterEngine implements TemplaterEngine {
+	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractTemplaterEngine.class);
 	protected Map<String, Object> defaultData;
 
 	/**

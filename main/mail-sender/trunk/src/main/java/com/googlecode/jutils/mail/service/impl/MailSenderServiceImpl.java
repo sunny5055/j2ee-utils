@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -23,6 +25,8 @@ import com.googlecode.jutils.mail.service.MailSenderService;
  */
 @Service
 public class MailSenderServiceImpl implements MailSenderService {
+	protected static final Logger LOGGER = LoggerFactory.getLogger(MailSenderServiceImpl.class);
+
 	@Autowired
 	private JavaMailSender mailSender;
 

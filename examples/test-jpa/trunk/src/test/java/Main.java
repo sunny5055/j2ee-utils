@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -16,8 +19,28 @@ public class Main {
 	private static void test() {
 		final UserService userService = context.getBean(UserService.class);
 		if (userService != null) {
-			User user = createUser("Jérémy", "SCHAAL");
+			Integer count = null;
+			List<User> users = null;
+			User user = null;
+
+			count = userService.deleteAll();
+			System.out.println("deleteAll : " + count);
+
+			user = createUser("Jérémy", "SCHAAL");
 			user = userService.create(user);
+			System.out.println("create : " + user);
+
+			count = userService.count();
+			System.out.println("count : " + count);
+
+			users = userService.getObjects(Arrays.asList(1, 2));
+			System.out.println("getObjects : " + users.size());
+
+			users = userService.findAll();
+			System.out.println("findAll : " + users.size());
+
+			final boolean exist = userService.existPk(1);
+			System.out.println("existPk : " + exist);
 		}
 	}
 

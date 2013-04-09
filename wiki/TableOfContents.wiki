@@ -13,7 +13,7 @@
   * [jsfArchetype jsf-archetype]
   * [jsfUtil jsf-util]
   * [mailJpa mail-jpa]
-  * [parameterHibernate parameter-hibernate]
+  * [parameterJpa parameter-jpa]
   * [userManagement user-management]
   * [sftpUtil sftp-util]
   * [oxm]

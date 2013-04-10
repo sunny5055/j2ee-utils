@@ -23,12 +23,12 @@ public class XmlFormatter extends AbstractFormatter {
 			try {
 				final String document = XmlUtil.formatDocument(file);
 				FileUtils.writeStringToFile(file, document);
-			} catch (final SAXException e) {
-				throw new FormatterException(e.getMessage());
-			} catch (final ParserConfigurationException e) {
-				throw new FormatterException(e.getMessage());
 			} catch (final IOException e) {
-				throw new FormatterException(e.getMessage());
+				throw new FormatterException(e);
+			} catch (final ParserConfigurationException e) {
+				throw new FormatterException(e);
+			} catch (final SAXException e) {
+				throw new FormatterException(e);
 			}
 		}
 	}

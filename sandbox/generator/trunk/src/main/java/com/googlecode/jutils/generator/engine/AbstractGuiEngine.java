@@ -69,7 +69,7 @@ public abstract class AbstractGuiEngine extends AbstractJavaEngine {
 	private String getXmlContent(Document xmlDocument) throws GeneratorServiceException {
 		String xmlContent = null;
 		if (xmlDocument != null) {
-			if (XPathUtil.getIntegerValue(xmlDocument, "count(//h:entity)") > 0) {
+			if (XPathUtil.getIntegerValue(xmlDocument, "count(//j:entity)") > 0) {
 				try {
 					xmlContent = xsltService.transform(xmlDocument, "gui.xsl");
 				} catch (final XsltServiceException e) {

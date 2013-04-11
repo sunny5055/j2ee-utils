@@ -3,74 +3,74 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:jutils="http://code.google.com/p/j2ee-utils/xslt" xmlns:p="http://code.google.com/p/j2ee-utils/schema/project"
 	xmlns:b="http://code.google.com/p/j2ee-utils/schema/java-beans"
-	xmlns:h="http://code.google.com/p/j2ee-utils/schema/hibernate" xmlns:g="http://code.google.com/p/j2ee-utils/schema/gui">
+	xmlns:j="http://code.google.com/p/j2ee-utils/schema/jpa" xmlns:g="http://code.google.com/p/j2ee-utils/schema/gui">
 	<xsl:output method="xml" indent="yes" />
 
 	<xsl:template match="/">
 		<p:project xmlns:p="http://code.google.com/p/j2ee-utils/schema/project"
 			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:b="http://code.google.com/p/j2ee-utils/schema/java-beans"
-			xmlns:h="http://code.google.com/p/j2ee-utils/schema/hibernate"
+			xmlns:j="http://code.google.com/p/j2ee-utils/schema/jpa"
 			xmlns:g="http://code.google.com/p/j2ee-utils/schema/gui"
-			xsi:schemaLocation="http://code.google.com/p/j2ee-utils/schema/project http://code.google.com/p/j2ee-utils/schema/project.xsd http://code.google.com/p/j2ee-utils/schema/java-beans http://code.google.com/p/j2ee-utils/schema/java-beans.xsd http://code.google.com/p/j2ee-utils/schema/hibernate http://code.google.com/p/j2ee-utils/schema/hibernate.xsd http://code.google.com/p/j2ee-utils/schema/gui http://code.google.com/p/j2ee-utils/schema/gui.xsd ">
+			xsi:schemaLocation="http://code.google.com/p/j2ee-utils/schema/project http://code.google.com/p/j2ee-utils/schema/project.xsd http://code.google.com/p/j2ee-utils/schema/java-beans http://code.google.com/p/j2ee-utils/schema/java-beans.xsd http://code.google.com/p/j2ee-utils/schema/jpa http://code.google.com/p/j2ee-utils/schema/jpa.xsd http://code.google.com/p/j2ee-utils/schema/gui http://code.google.com/p/j2ee-utils/schema/gui.xsd ">
 			<p:configuration>
 				<p:projectName>
 					<xsl:value-of select="//p:projectName" />
 				</p:projectName>
 			</p:configuration>
 
-			<xsl:if test="count(//h:entity) gt 0">
+			<xsl:if test="count(//j:entity) gt 0">
 				<p:views>
-					<xsl:apply-templates select="//h:entity" mode="form" />
+					<xsl:apply-templates select="//j:entity" mode="form" />
 
-					<xsl:apply-templates select="//h:entity" mode="datatable" />
+					<xsl:apply-templates select="//j:entity" mode="datatable" />
 				</p:views>
 			</xsl:if>
 		</p:project>
 	</xsl:template>
 
-	<xsl:template match="h:entity" mode="form">
+	<xsl:template match="j:entity" mode="form">
 		<xsl:variable name="package" select="./ancestor::p:package[1]/@name" />
 		<xsl:variable name="entityName" select="./@name" />
 
 		<g:form entity="{$package}.{$entityName}" name="{$entityName}">
 			<g:fields>
-				<xsl:apply-templates select="./h:id" mode="form" />
-				<xsl:apply-templates select="./h:embedded-id"
+				<xsl:apply-templates select="./j:id" mode="form" />
+				<xsl:apply-templates select="./j:embedded-id"
 					mode="form" />
-				<xsl:apply-templates select="./h:properties/h:column"
+				<xsl:apply-templates select="./j:properties/j:column"
 					mode="form" />
-				<xsl:apply-templates select="./h:properties/h:many-to-one"
+				<xsl:apply-templates select="./j:properties/j:many-to-one"
 					mode="form" />
 			</g:fields>
 		</g:form>
 	</xsl:template>
 
-	<xsl:template match="h:entity" mode="datatable">
+	<xsl:template match="j:entity" mode="datatable">
 		<xsl:variable name="package" select="./ancestor::p:package[1]/@name" />
 		<xsl:variable name="entityName" select="./@name" />
 
 		<g:datatable entity="{$package}.{$entityName}" name="{$entityName}">
 			<g:columns>
-				<xsl:apply-templates select="./h:id" mode="datatable" />
-				<xsl:apply-templates select="./h:embedded-id"
+				<xsl:apply-templates select="./j:id" mode="datatable" />
+				<xsl:apply-templates select="./j:embedded-id"
 					mode="datatable" />
-				<xsl:apply-templates select="./h:properties/h:column"
+				<xsl:apply-templates select="./j:properties/j:column"
 					mode="datatable" />
-				<xsl:apply-templates select="./h:properties/h:many-to-one"
+				<xsl:apply-templates select="./j:properties/j:many-to-one"
 					mode="datatable" />
 			</g:columns>
 			<g:filters>
-				<xsl:apply-templates select="./h:embedded-id"
+				<xsl:apply-templates select="./j:embedded-id"
 					mode="filter" />
-				<xsl:apply-templates select="./h:properties/h:column"
+				<xsl:apply-templates select="./j:properties/j:column"
 					mode="filter" />
-				<xsl:apply-templates select="./h:properties/h:many-to-one"
+				<xsl:apply-templates select="./j:properties/j:many-to-one"
 					mode="filter" />
 			</g:filters>
 		</g:datatable>
 	</xsl:template>
 
-	<xsl:template match="h:id" mode="form">
+	<xsl:template match="j:id" mode="form">
 		<xsl:variable name="name" select="@name" />
 		<xsl:variable name="label"
 			select="jutils:uppercaseFirstCharacter(@name)" />
@@ -90,7 +90,7 @@
 	</xsl:template>
 
 
-	<xsl:template match="h:id" mode="datatable">
+	<xsl:template match="j:id" mode="datatable">
 		<xsl:variable name="name" select="@name" />
 		<xsl:variable name="headerText"
 			select="jutils:uppercaseFirstCharacter(@name)" />
@@ -105,9 +105,9 @@
 		</g:column>
 	</xsl:template>
 
-	<xsl:template match="h:embedded-id" mode="form">
+	<xsl:template match="j:embedded-id" mode="form">
 		<xsl:variable name="propName" select="@name" />
-		<xsl:for-each select="./h:properties/h:column">
+		<xsl:for-each select="./j:properties/j:column">
 			<xsl:variable name="name" select="@name" />
 			<xsl:variable name="label"
 				select="jutils:uppercaseFirstCharacter(@name)" />
@@ -126,9 +126,9 @@
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template match="h:embedded-id" mode="datatable">
+	<xsl:template match="j:embedded-id" mode="datatable">
 		<xsl:variable name="propName" select="@name" />
-		<xsl:for-each select="./h:properties/h:column">
+		<xsl:for-each select="./j:properties/j:column">
 			<xsl:variable name="name" select="@name" />
 			<xsl:variable name="headerText"
 				select="jutils:uppercaseFirstCharacter(@name)" />
@@ -144,9 +144,9 @@
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template match="h:embedded-id" mode="filter">
+	<xsl:template match="j:embedded-id" mode="filter">
 		<xsl:variable name="propName" select="@name" />
-		<xsl:for-each select="./h:properties/h:column">
+		<xsl:for-each select="./j:properties/j:column">
 			<xsl:variable name="name" select="@name" />
 			<xsl:variable name="label"
 				select="jutils:uppercaseFirstCharacter(@name)" />
@@ -162,7 +162,7 @@
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template match="h:column" mode="form">
+	<xsl:template match="j:column" mode="form">
 		<xsl:variable name="name" select="@name" />
 		<xsl:variable name="label"
 			select="jutils:uppercaseFirstCharacter(@name)" />
@@ -208,7 +208,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="h:column" mode="datatable">
+	<xsl:template match="j:column" mode="datatable">
 		<xsl:variable name="name" select="@name" />
 		<xsl:variable name="headerText"
 			select="jutils:uppercaseFirstCharacter(@name)" />
@@ -243,7 +243,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="h:column" mode="filter">
+	<xsl:template match="j:column" mode="filter">
 		<xsl:variable name="name" select="@name" />
 		<xsl:variable name="label"
 			select="jutils:uppercaseFirstCharacter(@name)" />
@@ -270,7 +270,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="h:many-to-one" mode="form">
+	<xsl:template match="j:many-to-one" mode="form">
 		<xsl:variable name="name" select="@name" />
 		<xsl:variable name="label"
 			select="jutils:uppercaseFirstCharacter(@name)" />
@@ -288,7 +288,7 @@
 		</g:select-one>
 	</xsl:template>
 
-	<xsl:template match="h:many-to-one" mode="datatable">
+	<xsl:template match="j:many-to-one" mode="datatable">
 		<xsl:variable name="name" select="@name" />
 		<xsl:variable name="headerText"
 			select="jutils:uppercaseFirstCharacter(@name)" />
@@ -303,7 +303,7 @@
 		</g:column>
 	</xsl:template>
 
-	<xsl:template match="h:many-to-one" mode="filter">
+	<xsl:template match="j:many-to-one" mode="filter">
 		<xsl:variable name="name" select="@name" />
 		<xsl:variable name="label"
 			select="jutils:uppercaseFirstCharacter(@name)" />

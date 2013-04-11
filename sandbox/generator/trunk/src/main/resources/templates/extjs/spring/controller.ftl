@@ -1,4 +1,4 @@
-<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","h":"http://code.google.com/p/j2ee-utils/schema/hibernate","g":"http://code.google.com/p/j2ee-utils/schema/gui"}>
+<#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa","g":"http://code.google.com/p/j2ee-utils/schema/gui"}>
 <#import "common.ftl" as util>
 <#assign varName = className?uncap_first />
 

@@ -30,6 +30,7 @@ public class JpaEngine extends AbstractJavaEngine {
 	private static final String SPRING_JPA_KEY = "spring_jpa";
 	private static final String SPRING_TX_KEY = "spring_tx";
 	private static final String SPRING_DATABASE_KEY = "spring_database";
+	private static final String JPA_PERSISTENCE_KEY = "jpa_persistence";
 	private static final String SPRING_TEST_BUSINESS_KEY = "spring_test_business";
 	private static final String SPRING_TEST_DATABASE_KEY = "spring_test_database";
 	private static final String INSERT_SQL_KEY = "insert_sql";
@@ -51,6 +52,7 @@ public class JpaEngine extends AbstractJavaEngine {
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_JPA_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TX_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_DATABASE_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + JPA_PERSISTENCE_KEY, "{" + RESOURCES_PATH_KEY + "}/META-INF");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_BUSINESS_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_DATABASE_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + INSERT_SQL_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/sql");
@@ -75,6 +77,7 @@ public class JpaEngine extends AbstractJavaEngine {
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_JPA_KEY, "jpa-context.xml");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TX_KEY, "tx-context.xml");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_DATABASE_KEY, "database.properties");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + JPA_PERSISTENCE_KEY, "persistence.xml");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_BUSINESS_KEY, "test-context.xml");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_DATABASE_KEY, "test-database.properties");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + INSERT_SQL_KEY, "insert_entities.sql");
@@ -113,6 +116,8 @@ public class JpaEngine extends AbstractJavaEngine {
 
 					generateTestDataset(node, model);
 				}
+
+				generateJpaFiles(xmlDocument, model);
 
 				generateSpring(xmlDocument, model);
 
@@ -246,6 +251,34 @@ public class JpaEngine extends AbstractJavaEngine {
 
 			final File outputFile = getOutputFile(TEST_XML_DATASET_KEY, node);
 			generate(outputFile, "jpa/test/xml/xml-dataset.ftl", data, model);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void generateJpaFiles(Document xmlDocument, NodeModel model) throws GeneratorServiceException {
+		if (xmlDocument != null && model != null) {
+			final Map<String, Object> data = new HashMap<String, Object>();
+			final Set<String> basePackages = new HashSet<String>();
+			final List<Node> entities = xmlDocument.selectNodes("//j:entity");
+			if (!CollectionUtil.isEmpty(entities)) {
+				for (final Node node : entities) {
+					final String nodePackageName = node.valueOf("ancestor::p:package/@name");
+					if (!StringUtil.isBlank(nodePackageName)) {
+						final String basePackageName = getBasePackageName(nodePackageName);
+						basePackages.add(basePackageName);
+					}
+				}
+			}
+			data.put("basePackages", basePackages);
+
+			final String database = resolveKey(getEngineKey() + ".database");
+			if (!StringUtil.isBlank(database)) {
+				data.put("database", database.toLowerCase());
+			}
+
+			File outputFile = null;
+			outputFile = getOutputFile(JPA_PERSISTENCE_KEY, null);
+			generate(outputFile, "jpa/persistence.ftl", data, model);
 		}
 	}
 

@@ -24,7 +24,7 @@ public class ExtJsEngine extends AbstractJavaEngine {
 	private static final String EXTJS_LIST_VIEW_KEY = "extjs_list_view";
 	private static final String SPRING_CONTROLLER_KEY = "spring_controller";
 
-	// copied from HibernateEngine
+	// copied from JpaEngine
 	private static final String ENTITY_KEY = "entity";
 	private static final String EMBEDDED_ID_KEY = "embedded_id";
 	private static final String DAO_KEY = "dao";
@@ -54,7 +54,7 @@ public class ExtJsEngine extends AbstractJavaEngine {
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + EXTJS_LIST_VIEW_KEY, "%1sList.js");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_CONTROLLER_KEY, "%1sController.java");
 
-		// copied from HibernateEngine
+		// copied from JpaEngine
 		this.defaultProperties.put(getEngineKey() + "." + ENTITY_KEY + ".package", ".model");
 		this.defaultProperties.put(getEngineKey() + "." + EMBEDDED_ID_KEY + ".package", ".model");
 		this.defaultProperties.put(getEngineKey() + "." + DAO_KEY + ".package", ".dao");
@@ -112,7 +112,7 @@ public class ExtJsEngine extends AbstractJavaEngine {
 	@SuppressWarnings("unchecked")
 	protected void generate(Document xmlDocument, NodeModel model) throws GeneratorServiceException {
 		if (xmlDocument != null && model != null) {
-			final List<Node> entities = xmlDocument.selectNodes("//h:entity");
+			final List<Node> entities = xmlDocument.selectNodes("//j:entity");
 			if (!CollectionUtil.isEmpty(entities)) {
 				for (final Node node : entities) {
 					generateModel(node, model);
@@ -220,7 +220,7 @@ public class ExtJsEngine extends AbstractJavaEngine {
 	private Map<String, Object> getData(Node node) throws GeneratorServiceException {
 		final Map<String, Object> data = new HashMap<String, Object>();
 		if (node != null) {
-			// copied from HibernateEngine
+			// copied from JpaEngine
 			final String packageName = node.valueOf("ancestor::p:package/@name");
 			final String className = node.valueOf("@name");
 
@@ -236,7 +236,7 @@ public class ExtJsEngine extends AbstractJavaEngine {
 			data.put("packageName", packageName);
 			data.put("className", className);
 
-			final Node embeddedId = node.selectSingleNode("h:embedded-id");
+			final Node embeddedId = node.selectSingleNode("j:embedded-id");
 			if (embeddedId != null) {
 				final String embeddedIdPackageName = getPackageName(packageName, EMBEDDED_ID_KEY);
 				final String embeddedIdName = getFileNameWithoutExtension(EMBEDDED_ID_KEY, node);
@@ -253,7 +253,7 @@ public class ExtJsEngine extends AbstractJavaEngine {
 			data.put("serviceName", serviceName);
 			data.put("serviceImplPackageName", serviceImplPackageName);
 			data.put("serviceImplName", serviceImplName);
-			// copied from HibernateEngine
+			// copied from JpaEngine
 
 			final String modelName = getFileNameWithoutExtension(EXTJS_MODEL_KEY, node);
 			final String extJsControllerName = getFileNameWithoutExtension(EXTJS_CONTROLLER_KEY, node);

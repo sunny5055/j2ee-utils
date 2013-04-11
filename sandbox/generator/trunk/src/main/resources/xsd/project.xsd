@@ -32,7 +32,7 @@
 		<xsd:sequence>
 			<xsd:any namespace="http://code.google.com/p/j2ee-utils/schema/java-beans"
 				processContents="strict" minOccurs="0" maxOccurs="unbounded" />
-			<xsd:any namespace="http://code.google.com/p/j2ee-utils/schema/hibernate"
+			<xsd:any namespace="http://code.google.com/p/j2ee-utils/schema/jpa"
 				processContents="strict" minOccurs="0" maxOccurs="unbounded" />
 		</xsd:sequence>
 		<xsd:attribute name="name" type="xsd:string" use="required" />

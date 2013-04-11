@@ -54,9 +54,6 @@ public class ${daoImplName} extends
  implements ${daoName} {
 </@compress>
 
-    public ${daoImplName}() {
-        super(${entity.@name}.class);
-    }
 
 	<@util.getMethod doc=xml daoName=daoName entity=entity property=primaryKey/>
 	<#list columns as column>

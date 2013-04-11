@@ -62,13 +62,13 @@
     <#list columns as column>
     @Override
     <@java.operation visibility="public" returnType="Integer" methodName=getCountQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}">
-    return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), ${getCountQueryConstant(column.@name, false, daoName)},
+    return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, ${getCountQueryConstant(column.@name, false, daoName)},
                 new String[] { "${column.@name}" }, ${column.@name});
     </@java.operation>
 
     @Override
   <@java.operation visibility="public" returnType="List<${entity.@name}>" methodName=getFindQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}">
-    return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), ${getFindQueryConstant(column.@name, false, daoName)},
+    return QueryUtil.findByNamedQueryAndNamedParam(entityManager, ${getFindQueryConstant(column.@name, false, daoName)},
                 new String[] { "${column.@name}" }, ${column.@name});
   </@java.operation>
 
@@ -76,13 +76,13 @@
   <#elseif property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
     @Override
     <@java.operation visibility="public" returnType="Integer" methodName=getCountQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}">
-      return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), ${getCountQueryConstant(property.@name, true, daoName)},
+      return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, ${getCountQueryConstant(property.@name, true, daoName)},
                 new String[] { "${property.@name}" }, ${property.@name});
     </@java.operation>
 
   @Override
   <@java.operation visibility="public" returnType="${entity.@name}" methodName=getFindQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}">
-    return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(),  ${getFindQueryConstant(property.@name, true, daoName)},
+    return QueryUtil.getByNamedQueryAndNamedParam(entityManager,  ${getFindQueryConstant(property.@name, true, daoName)},
                 new String[] { "${property.@name}" }, ${property.@name});
   </@java.operation>
   <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
@@ -100,13 +100,13 @@
 
   @Override
     <@java.operation visibility="public" returnType="Integer" methodName=getCountQueryName(propertyName, false) parameters="${argType} ${propertyName}">
-      return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), ${getCountQueryConstant(propertyName, false, daoName)},
+      return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, ${getCountQueryConstant(propertyName, false, daoName)},
                 new String[] { "${propertyName}" }, ${propertyName});
     </@java.operation>
 
   @Override
   <@java.operation visibility="public" returnType="List<${entity.@name}>" methodName=getFindQueryName(propertyName, false) parameters="${argType} ${propertyName}">
-    return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), ${getFindQueryConstant(propertyName, false, daoName)},
+    return QueryUtil.findByNamedQueryAndNamedParam(entityManager, ${getFindQueryConstant(propertyName, false, daoName)},
                 new String[] { "${propertyName}" }, ${propertyName});
   </@java.operation>
   </#if>

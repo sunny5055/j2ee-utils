@@ -51,7 +51,7 @@ package ${servicePackageName};
   <@addTo assignTo="imports" element="com.googlecode.jutils.dal.test.AbstractGenericServiceTest" />
 </#if>
 
-<@addTo assignTo="imports" element="junit.framework.Assert" />
+<@addTo assignTo="imports" element="org.junit.Assert" />
 
 <@addTo assignTo="imports" element="org.dom4j.Node" />
 <@addTo assignTo="imports" element="com.googlecode.jutils.StringUtil" />
@@ -63,8 +63,8 @@ package ${servicePackageName};
 ${getImports(true, servicePackageName, imports)}
 
 
-@ContextConfiguration(locations = { "classpatj:${springTestBusinessFile}" })
-@DatabaseSetup(value = "classpatj:${xmlDatasetFile}")
+@ContextConfiguration(locations = { "classpath:${springTestBusinessFile}" })
+@DatabaseSetup(value = "classpath:${xmlDatasetFile}")
 <@compress single_line=true>
 public class ${testServiceName} extends
 <#if util.xml.getAttribute(entity.@readOnly) == "true">

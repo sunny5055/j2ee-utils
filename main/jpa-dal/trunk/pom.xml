@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>jpa-dal</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.2</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<name>jpa-dal</name>
 
 	<parent>
@@ -12,10 +12,10 @@
 	</parent>
 
 	<scm>
-		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/jpa-dal/tags/1.0.2</connection>
-		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/jpa-dal/tags/1.0.2
+		<connection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/jpa-dal/trunk/</connection>
+		<developerConnection>scm:svn:https://j2ee-utils.googlecode.com/svn/main/jpa-dal/trunk/
         </developerConnection>
-		<url>https://j2ee-utils.googlecode.com/svn/main/jpa-dal/tags/1.0.2</url>
+		<url>https://j2ee-utils.googlecode.com/svn/main/jpa-dal/trunk/</url>
 	</scm>
 
 	<dependencies>

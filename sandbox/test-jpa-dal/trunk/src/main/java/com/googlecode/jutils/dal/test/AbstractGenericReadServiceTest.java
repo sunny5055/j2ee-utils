@@ -8,7 +8,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.persistence.Table;
 
-import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
@@ -16,6 +15,8 @@ import org.dom4j.io.SAXReader;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassRelativeResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -39,7 +40,7 @@ import com.googlecode.jutils.dal.service.GenericReadService;
 @TestExecutionListeners({ TransactionalTestExecutionListener.class, DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class })
 public abstract class AbstractGenericReadServiceTest<PK extends Serializable, E extends Dto<PK>, S extends GenericReadService<PK, E>> extends
 		AbstractTransactionalJUnit4SpringContextTests {
-	protected static final Logger LOGGER = Logger.getLogger(AbstractGenericReadServiceTest.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractGenericReadServiceTest.class);
 
 	protected Class<PK> pkClass;
 	protected Class<E> entityClass;

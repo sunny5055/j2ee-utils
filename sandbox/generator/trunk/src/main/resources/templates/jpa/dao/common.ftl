@@ -1,33 +1,6 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
 <#include "../common.ftl">
 
-<#macro getInterfaceQueryName doc entity property>
-  <#if property?node_name = "embedded-id">
-    <#assign columns = property["j:properties/j:column"]>
-    <#list columns as column>
-    <@java.getInterfaceProperty type="String" name=getCountQueryConstant(column.@name, false) value=getCountQueryName(column.@name, false, entity.@name) />
-    <@java.getInterfaceProperty type="String" name=getFindQueryConstant(column.@name, false) value=getFindQueryName(column.@name, false, entity.@name) />
-  </#list>
-  <#elseif property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
-    <@java.getInterfaceProperty type="String" name=getCountQueryConstant(property.@name, true) value=getCountQueryName(property.@name, true, entity.@name) />
-    <@java.getInterfaceProperty type="String" name=getFindQueryConstant(property.@name, true) value=getFindQueryName(property.@name, true, entity.@name) />
-  <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
-    <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
-    <#local propertyName = property.@name?substring(0, property.@name?length-1)>
-  <#else>
-    <#local propertyName = property.@name>
-  </#if>
-  <@xPath xml=doc expression="//j:entity[@name='${getType(property.@targetEntity)}']" assignTo="targetEntity" />
-  <#if targetEntity??>
-    <#local propertyName = "${propertyName}Id">
-  </#if>
-
-  <@java.getInterfaceProperty type="String" name=getCountQueryConstant(propertyName, false) value=getCountQueryName(propertyName, false, entity.@name) />
-  <@java.getInterfaceProperty type="String" name=getFindQueryConstant(propertyName, false) value=getFindQueryName(propertyName, false, entity.@name) />
-  </#if>
-</#macro>
-
-
 <#macro getInterfaceMethod doc entity property>
   <#if property?node_name = "embedded-id">
     <#assign columns = property["j:properties/j:column"]>
@@ -56,19 +29,19 @@
 </#macro>
 
 
-<#macro getMethod doc daoName entity property>
+<#macro getMethod doc entity property>
   <#if property?node_name = "embedded-id">
     <#assign columns = property["j:properties/j:column"]>
     <#list columns as column>
     @Override
     <@java.operation visibility="public" returnType="Integer" methodName=getCountQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}">
-    return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, ${getCountQueryConstant(column.@name, false, daoName)},
+    return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, "${getCountQueryName(column.@name, false, entity.@name)}",
                 new String[] { "${column.@name}" }, ${column.@name});
     </@java.operation>
 
     @Override
   <@java.operation visibility="public" returnType="List<${entity.@name}>" methodName=getFindQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}">
-    return QueryUtil.findByNamedQueryAndNamedParam(entityManager, ${getFindQueryConstant(column.@name, false, daoName)},
+    return QueryUtil.findByNamedQueryAndNamedParam(entityManager, "${getFindQueryName(column.@name, false, entity.@name)}",
                 new String[] { "${column.@name}" }, ${column.@name});
   </@java.operation>
 
@@ -76,13 +49,13 @@
   <#elseif property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
     @Override
     <@java.operation visibility="public" returnType="Integer" methodName=getCountQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}">
-      return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, ${getCountQueryConstant(property.@name, true, daoName)},
+      return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, "${getCountQueryName(property.@name, true, entity.@name)}",
                 new String[] { "${property.@name}" }, ${property.@name});
     </@java.operation>
 
   @Override
   <@java.operation visibility="public" returnType="${entity.@name}" methodName=getFindQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}">
-    return QueryUtil.getByNamedQueryAndNamedParam(entityManager,  ${getFindQueryConstant(property.@name, true, daoName)},
+    return QueryUtil.getByNamedQueryAndNamedParam(entityManager,  "${getFindQueryName(property.@name, true, entity.@name)}",
                 new String[] { "${property.@name}" }, ${property.@name});
   </@java.operation>
   <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
@@ -100,13 +73,13 @@
 
   @Override
     <@java.operation visibility="public" returnType="Integer" methodName=getCountQueryName(propertyName, false) parameters="${argType} ${propertyName}">
-      return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, ${getCountQueryConstant(propertyName, false, daoName)},
+      return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, "${getCountQueryName(propertyName, false, entity.@name)}",
                 new String[] { "${propertyName}" }, ${propertyName});
     </@java.operation>
 
   @Override
   <@java.operation visibility="public" returnType="List<${entity.@name}>" methodName=getFindQueryName(propertyName, false) parameters="${argType} ${propertyName}">
-    return QueryUtil.findByNamedQueryAndNamedParam(entityManager, ${getFindQueryConstant(propertyName, false, daoName)},
+    return QueryUtil.findByNamedQueryAndNamedParam(entityManager, "${getFindQueryName(propertyName, false, entity.@name)}",
                 new String[] { "${propertyName}" }, ${propertyName});
   </@java.operation>
   </#if>

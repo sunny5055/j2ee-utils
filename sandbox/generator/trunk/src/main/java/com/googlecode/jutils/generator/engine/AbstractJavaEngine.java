@@ -19,7 +19,7 @@ public abstract class AbstractJavaEngine extends AbstractEngine {
 	protected static final String CONFIG_PATH_KEY = "path.config";
 	protected static final String TEST_JAVA_PATH_KEY = "path.test_java";
 	protected static final String TEST_RESOURCES_PATH_KEY = "path.test_resources";
-	protected static final String MODULE_MODELE = "module_modele";
+	protected static final String MODULE_API = "module_api";
 	protected static final String MODULE_SERVICE = "module_service";
 	protected static final String MODULE_WEB = "module_web";
 
@@ -31,7 +31,7 @@ public abstract class AbstractJavaEngine extends AbstractEngine {
 	protected void init() {
 		super.init();
 
-		this.defaultProperties.put(MODULE_MODELE, "%1s-model");
+		this.defaultProperties.put(MODULE_API, "%1s-api");
 		this.defaultProperties.put(MODULE_SERVICE, "%1s-service");
 		this.defaultProperties.put(MODULE_WEB, "%1s-web");
 
@@ -67,12 +67,20 @@ public abstract class AbstractJavaEngine extends AbstractEngine {
 	protected String getClassPathResource(String path, String fileName) {
 		String classPathResource = null;
 		if (!StringUtil.isBlank(path)) {
+			final String moduleApiPath = resolveKey(MODULE_API);
+			final String moduleServicePath = resolveKey(MODULE_SERVICE);
+			final String moduleWebPath = resolveKey(MODULE_WEB);
+
 			final String javaPath = resolveKey(JAVA_PATH_KEY);
 			final String resourcesPath = resolveKey(RESOURCES_PATH_KEY);
 			final String testJavaPath = resolveKey(TEST_JAVA_PATH_KEY);
 			final String testResourcesPath = resolveKey(TEST_RESOURCES_PATH_KEY);
 
 			classPathResource = path;
+			classPathResource = StringUtil.remove(classPathResource, moduleApiPath);
+			classPathResource = StringUtil.remove(classPathResource, moduleServicePath);
+			classPathResource = StringUtil.remove(classPathResource, moduleWebPath);
+
 			classPathResource = StringUtil.remove(classPathResource, javaPath);
 			classPathResource = StringUtil.remove(classPathResource, resourcesPath);
 			classPathResource = StringUtil.remove(classPathResource, testJavaPath);

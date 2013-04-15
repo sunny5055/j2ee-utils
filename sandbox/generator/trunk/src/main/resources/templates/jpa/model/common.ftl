@@ -27,7 +27,7 @@
 </#function>
 
 
-<#macro getNamedQueries doc daoName entity>
+<#macro getNamedQueries doc entity>
 	<#if hasNamedQuery(doc, entity) == "true">
 		<#local primaryKey = getPrimaryKey(entity) />
 		<@xPath xml=doc expression="//j:entity[@name='${entity.@name}']/j:properties/j:column[@unique='true']" assignTo="uniqueColumns" />
@@ -37,14 +37,14 @@
 
 		<#local namedQueries = "" />
 		<#if primaryKey?node_name = "embedded-id">
-			<#local namedQueries = namedQueries + getNamedQuery(doc, daoName, entity, primaryKey) />
+			<#local namedQueries = namedQueries + getNamedQuery(doc, entity, primaryKey) />
 		</#if>
 		<#if uniqueColumns??>
 			<#list uniqueColumns as column>
 				<#if namedQueries?length gt 0>
 					<#local namedQueries = namedQueries + "," />
 				</#if>
-				<#local namedQueries = namedQueries + getNamedQuery(doc, daoName, entity, column) />
+				<#local namedQueries = namedQueries + getNamedQuery(doc, entity, column) />
 			</#list>
 		</#if>
 		<#if manyToOnes??>
@@ -52,7 +52,7 @@
 				<#if namedQueries?length gt 0>
 					<#local namedQueries = namedQueries + "," />
 				</#if>
-				<#local namedQueries = namedQueries + getNamedQuery(doc, daoName, entity, manyToOne) />
+				<#local namedQueries = namedQueries + getNamedQuery(doc, entity, manyToOne) />
 			</#list>
 		</#if>
 		<#if oneToManys??>
@@ -60,7 +60,7 @@
 				<#if namedQueries?length gt 0>
 					<#local namedQueries = namedQueries + "," />
 				</#if>
-				<#local namedQueries = namedQueries + getNamedQuery(doc, daoName, entity, oneToMany) />
+				<#local namedQueries = namedQueries + getNamedQuery(doc, entity, oneToMany) />
 			</#list>
 		</#if>
 		<#if manyToManys??>
@@ -68,7 +68,7 @@
 				<#if namedQueries?length gt 0>
 					<#local namedQueries = namedQueries + "," />
 				</#if>
-				<#local namedQueries = namedQueries + getNamedQuery(doc, daoName, entity, manyToMany) />
+				<#local namedQueries = namedQueries + getNamedQuery(doc, entity, manyToMany) />
 			</#list>
 		</#if>
 
@@ -78,7 +78,7 @@
 	</#if>
 </#macro>
 
-<#function getNamedQuery doc daoName entity property>
+<#function getNamedQuery doc entity property>
   <#local namedQuery= "">
   <#local columnPrefix = entity.@columnPrefix?lower_case />
     <#if property?node_name = "embedded-id">
@@ -88,12 +88,12 @@
       			<#local namedQuery= namedQuery + ", " />
       		</#if>
 
-        	<#local namedQuery= namedQuery + "@NamedQuery(name = " + getCountQueryConstant(column.@name, false, daoName) + ", query = \"select count(*) from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${column.@name} = :${column.@name}\")," />
-        	<#local namedQuery= namedQuery + "@NamedQuery(name = " + getFindQueryConstant(column.@name, false, daoName) + ", query = \"from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${column.@name} = :${column.@name}\")" />
+        	<#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getCountQueryName(column.@name, false, entity.@name) + "\", query = \"select count(*) from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${column.@name} = :${column.@name}\")," />
+        	<#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getFindQueryName(column.@name, false, entity.@name) + "\", query = \"from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${column.@name} = :${column.@name}\")" />
     	</#list>
     <#elseif property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
-        <#local namedQuery= namedQuery + "@NamedQuery(name = " + getCountQueryConstant(property.@name, true, daoName) + ", query = \"select count(*) from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name} = :${property.@name}\"), " />
-        <#local namedQuery= namedQuery + "@NamedQuery(name = " + getFindQueryConstant(property.@name, true, daoName) + ", query = \"from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name} = :${property.@name}\")" />
+        <#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getCountQueryName(property.@name, true, entity.@name) + "\", query = \"select count(*) from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name} = :${property.@name}\"), " />
+        <#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getFindQueryName(property.@name, true, entity.@name) + "\", query = \"from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name} = :${property.@name}\")" />
     <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
       <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
           <#local propertyName = property.@name?substring(0, property.@name?length-1)>
@@ -108,11 +108,11 @@
       </#if>
 
       <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
-    	  <#local namedQuery= namedQuery + "@NamedQuery(name = " + getCountQueryConstant(propertyName, false, daoName) + ", query = \"select count(*) from ${entity.@name} as ${columnPrefix} left join ${columnPrefix}.${property.@name} as ${targetColumnPrefix} where ${targetColumnPrefix}.${targetColumn.@name} = :${propertyName}\")," />
-	      <#local namedQuery= namedQuery + "@NamedQuery(name = " + getFindQueryConstant(propertyName, false, daoName) + ", query = \"from ${entity.@name} as ${columnPrefix} left join ${columnPrefix}.${property.@name} as ${targetColumnPrefix} where ${targetColumnPrefix}.${targetColumn.@name} = :${propertyName}\")" />
+    	  <#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getCountQueryName(propertyName, false, entity.@name) + "\", query = \"select count(*) from ${entity.@name} as ${columnPrefix} left join ${columnPrefix}.${property.@name} as ${targetColumnPrefix} where ${targetColumnPrefix}.${targetColumn.@name} = :${propertyName}\")," />
+	      <#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getFindQueryName(propertyName, false, entity.@name) + "\", query = \"from ${entity.@name} as ${columnPrefix} left join ${columnPrefix}.${property.@name} as ${targetColumnPrefix} where ${targetColumnPrefix}.${targetColumn.@name} = :${propertyName}\")" />
       <#else>
-	      <#local namedQuery= namedQuery + "@NamedQuery(name = " + getCountQueryConstant(propertyName, false, daoName) + ", query = \"select count(*) from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${targetColumn.@name} = :${propertyName}\")," />
-	      <#local namedQuery= namedQuery + "@NamedQuery(name = " + getFindQueryConstant(propertyName, false, daoName) + ", query = \"from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${targetColumn.@name} = :${propertyName}\")" />
+	      <#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getCountQueryName(propertyName, false, entity.@name) + "\", query = \"select count(*) from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${targetColumn.@name} = :${propertyName}\")," />
+	      <#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getFindQueryName(propertyName, false, entity.@name) + "\", query = \"from ${entity.@name} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${targetColumn.@name} = :${propertyName}\")" />
       </#if>
     </#if>
     <#return namedQuery />

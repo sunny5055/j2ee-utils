@@ -38,19 +38,6 @@ public interface ${daoName} extends
 	GenericDao<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
 </#if>
 </@compress>
-<@util.getInterfaceQueryName doc=xml entity=entity property=primaryKey/>
-<#list columns as column>
-<@util.getInterfaceQueryName doc=xml entity=entity property=column/>
-</#list>
-<#list manyToOnes as manyToOne>
-<@util.getInterfaceQueryName doc=xml entity=entity property=manyToOne/>
-</#list>
-<#list oneToManys as oneToMany>
-<@util.getInterfaceQueryName doc=xml entity=entity property=oneToMany/>
-</#list>
-<#list manyToManys as manyToMany>
-<@util.getInterfaceQueryName doc=xml entity=entity property=manyToMany/>
-</#list>
 
 <@util.getInterfaceMethod doc=xml entity=entity property=primaryKey/>
 <#list columns as column>

@@ -73,7 +73,6 @@ package ${packageName};
 </#list>
 
 <#if util.hasNamedQuery(xml, entity) == "true">
-	<@addTo assignTo="imports" element="${daoPackageName}.${daoName}" />
 	<@addTo assignTo="imports" element="javax.persistence.NamedQueries" />
 	<@addTo assignTo="imports" element="javax.persistence.NamedQuery" />
 </#if>
@@ -83,7 +82,7 @@ ${getImports(true, packageName, imports)}
 
 @Entity
 @Table(name="${entity.@tableName}")
-<@util.getNamedQueries doc=xml daoName=daoName entity=entity/>
+<@util.getNamedQueries doc=xml entity=entity/>
 @SuppressWarnings("serial")
 <@compress single_line=true>
 public ${util.getModifiersFrom(entity)} class ${className}

@@ -137,17 +137,6 @@
   <#return joinTableName>
 </#function>
 
-
-<#function getCountQueryConstant propertyName singleResult daoName="">
-	<#return java.getConstant(getCountQueryName(propertyName?cap_first, singleResult), daoName) />
-</#function>
-
-
-<#function getFindQueryConstant propertyName singleResult daoName="">
-	<#return java.getConstant(getFindQueryName(propertyName?cap_first, singleResult), daoName) />
-</#function>
-
-
 <#function getCountQueryName propertyName singleResult entityName="">
 	<#local queryName= "">
     <#if singleResult == false>

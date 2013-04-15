@@ -19,6 +19,9 @@ public abstract class AbstractJavaEngine extends AbstractEngine {
 	protected static final String CONFIG_PATH_KEY = "path.config";
 	protected static final String TEST_JAVA_PATH_KEY = "path.test_java";
 	protected static final String TEST_RESOURCES_PATH_KEY = "path.test_resources";
+	protected static final String MODULE_MODELE = "module_modele";
+	protected static final String MODULE_SERVICE = "module_service";
+	protected static final String MODULE_WEB = "module_web";
 
 	public AbstractJavaEngine() {
 		super();
@@ -27,6 +30,10 @@ public abstract class AbstractJavaEngine extends AbstractEngine {
 	@Override
 	protected void init() {
 		super.init();
+
+		this.defaultProperties.put(MODULE_MODELE, "%1s-model");
+		this.defaultProperties.put(MODULE_SERVICE, "%1s-service");
+		this.defaultProperties.put(MODULE_WEB, "%1s-web");
 
 		this.defaultProperties.put(JAVA_PATH_KEY, "src/main/java");
 		this.defaultProperties.put(RESOURCES_PATH_KEY, "src/main/resources");

@@ -39,23 +39,23 @@ public class JpaEngine extends AbstractJavaEngine {
 	protected void init() {
 		super.init();
 
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + ENTITY_KEY, "{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + EMBEDDED_ID_KEY, "{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + DAO_KEY, "{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + DAO_IMPL_KEY, "{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SERVICE_KEY, "{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SERVICE_IMPL_KEY, "{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + TEST_SERVICE_KEY, "{" + TEST_JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + TEST_XML_DATASET_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/dataset");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_BUSINESS_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_JDBC_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_JPA_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TX_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_DATABASE_KEY, "{" + RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + JPA_PERSISTENCE_KEY, "{" + RESOURCES_PATH_KEY + "}/META-INF");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_BUSINESS_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_DATABASE_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + INSERT_SQL_KEY, "{" + TEST_RESOURCES_PATH_KEY + "}/sql");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + ENTITY_KEY, "{" + MODULE_MODELE + "}/{" + JAVA_PATH_KEY + "}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + EMBEDDED_ID_KEY, "{" + MODULE_MODELE + "}/{" + JAVA_PATH_KEY + "}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + DAO_KEY, "{" + MODULE_SERVICE + "}/{" + JAVA_PATH_KEY + "}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + DAO_IMPL_KEY, "{" + MODULE_SERVICE + "}/{" + JAVA_PATH_KEY + "}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SERVICE_KEY, "{" + MODULE_MODELE + "}/{" + JAVA_PATH_KEY + "}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SERVICE_IMPL_KEY, "{" + MODULE_SERVICE + "}/{" + JAVA_PATH_KEY + "}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + TEST_SERVICE_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_JAVA_PATH_KEY + "}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + TEST_XML_DATASET_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_RESOURCES_PATH_KEY + "}/dataset");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_BUSINESS_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_JDBC_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_JPA_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TX_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_DATABASE_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + JPA_PERSISTENCE_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/META-INF");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_BUSINESS_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_RESOURCES_PATH_KEY + "}/spring");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_DATABASE_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_RESOURCES_PATH_KEY + "}/spring");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + INSERT_SQL_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_RESOURCES_PATH_KEY + "}/sql");
 
 		this.defaultProperties.put(getEngineKey() + "." + ENTITY_KEY + ".package", ".model");
 		this.defaultProperties.put(getEngineKey() + "." + EMBEDDED_ID_KEY + ".package", ".model");

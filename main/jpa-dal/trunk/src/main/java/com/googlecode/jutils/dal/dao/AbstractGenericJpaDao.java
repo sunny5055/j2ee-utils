@@ -2,6 +2,7 @@ package com.googlecode.jutils.dal.dao;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.dal.dto.Dto;
@@ -73,8 +74,14 @@ public abstract class AbstractGenericJpaDao<PK extends Serializable, E extends D
 	public Integer deleteByPrimaryKeys(Collection<PK> pks) {
 		Integer deleted = 0;
 		if (!CollectionUtil.isEmpty(pks)) {
-			for (final PK pk : pks) {
-				deleted += deleteByPrimaryKey(pk);
+			final List<E> entities = getObjects(pks);
+			if (!CollectionUtil.isEmpty(entities)) {
+				for (final E entity : entities) {
+					if (entity != null) {
+						entityManager.remove(entity);
+						deleted++;
+					}
+				}
 			}
 		}
 		return deleted;

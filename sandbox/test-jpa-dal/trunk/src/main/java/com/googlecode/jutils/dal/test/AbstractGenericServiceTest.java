@@ -179,17 +179,6 @@ public abstract class AbstractGenericServiceTest<PK extends Serializable, E exte
 		Assert.assertEquals((Integer) 0, result);
 	}
 
-	@Test
-	public void testDeleteAll() {
-		Integer result = null;
-		result = service.deleteAll();
-		Assert.assertNotNull(result);
-		Assert.assertEquals((Integer) primaryKeys.size(), result);
-
-		final int count = service.count();
-		Assert.assertEquals(0, count);
-	}
-
 	protected abstract E createEntity();
 
 	protected abstract void updateEntity(E entity);

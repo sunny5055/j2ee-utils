@@ -11,7 +11,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ import com.googlecode.jutils.io.IoUtil;
 
 @Service
 public class GeneratorServiceImpl implements GeneratorService {
-	protected static final Logger LOGGER = Logger.getLogger(GeneratorServiceImpl.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(GeneratorServiceImpl.class);
 
 	@Autowired
 	private List<Engine> engines;

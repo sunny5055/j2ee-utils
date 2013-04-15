@@ -22,11 +22,12 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.xml.sax.InputSource;
@@ -53,7 +54,7 @@ import com.googlecode.jutils.xslt.service.XsltService;
 import freemarker.ext.dom.NodeModel;
 
 public abstract class AbstractEngine implements Engine {
-	protected static final Logger LOGGER = Logger.getLogger(AbstractEngine.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractEngine.class);
 	protected static final String FILE_PATH = "file_path";
 	protected static final String FILE_NAME_PATTERN = "file_name_pattern";
 

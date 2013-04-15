@@ -3,7 +3,8 @@ package com.googlecode.jutils.generator.util;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
@@ -15,7 +16,7 @@ import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.spring.ResourceUtil;
 
 public class MyResolver implements LSResourceResolver {
-	protected static final Logger LOGGER = Logger.getLogger(MyResolver.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(MyResolver.class);
 	private List<Resource> resources;
 
 	public MyResolver(List<Resource> resources) {

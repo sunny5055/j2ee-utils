@@ -1,7 +1,9 @@
 package com.googlecode.jutils.dal.dao;
 
 import java.io.Serializable;
+import java.util.Collection;
 
+import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.dal.dto.Dto;
 
 /**
@@ -23,11 +25,7 @@ public abstract class AbstractGenericJpaDao<PK extends Serializable, E extends D
 	}
 
 	/**
-	 * Creates the.
-	 * 
-	 * @param dto
-	 *            the dto
-	 * @return the pk {@inheritedDoc}
+	 * {@inheritedDoc}
 	 */
 	@Override
 	public PK create(E dto) {
@@ -40,11 +38,7 @@ public abstract class AbstractGenericJpaDao<PK extends Serializable, E extends D
 	}
 
 	/**
-	 * Update.
-	 * 
-	 * @param dto
-	 *            the dto
-	 * @return the integer {@inheritedDoc}
+	 * {@inheritedDoc}
 	 */
 	@Override
 	public Integer update(E dto) {
@@ -57,34 +51,31 @@ public abstract class AbstractGenericJpaDao<PK extends Serializable, E extends D
 	}
 
 	/**
-	 * Delete.
-	 * 
-	 * @param dto
-	 *            the dto
-	 * @return the integer {@inheritedDoc}
+	 * {@inheritedDoc}
 	 */
 	@Override
-	public Integer delete(E dto) {
+	public Integer deleteByPrimaryKey(PK pk) {
 		Integer deleted = 0;
-		if (dto != null) {
-			deleted = deleteByPrimaryKey(dto.getPrimaryKey());
+		if (pk != null) {
+			final E entity = get(pk);
+			if (entity != null) {
+				entityManager.remove(entity);
+				deleted = 1;
+			}
 		}
 		return deleted;
 	}
 
 	/**
-	 * Delete by primary key.
-	 * 
-	 * @param pk
-	 *            the pk
-	 * @return the integer {@inheritedDoc}
+	 * {@inheritedDoc}
 	 */
 	@Override
-	public Integer deleteByPrimaryKey(final PK pk) {
+	public Integer deleteByPrimaryKeys(Collection<PK> pks) {
 		Integer deleted = 0;
-		if (pk != null) {
-			this.entityManager.remove(this.entityManager.getReference(entityClass, pk));
-			deleted = 1;
+		if (!CollectionUtil.isEmpty(pks)) {
+			for (final PK pk : pks) {
+				deleted += deleteByPrimaryKey(pk);
+			}
 		}
 		return deleted;
 	}

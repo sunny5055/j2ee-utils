@@ -23,9 +23,6 @@ public class Main {
 			List<User> users = null;
 			User user = null;
 
-			count = userService.deleteAll();
-			System.out.println("deleteAll : " + count);
-
 			user = createUser("Jérémy", "SCHAAL");
 			user = userService.create(user);
 			System.out.println("create : " + user);

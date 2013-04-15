@@ -9,6 +9,22 @@
 <#assign manyToManys = xml["//j:entity[@name=$className]/j:properties/j:many-to-many"]>
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
+<#if manyToOnes?size gt 0>
+<#list manyToOnes as manyToOne>
+	<@util.getTargetEntity doc=xml entity=entity property=manyToOne />
+</#list>
+</#if>
+<#if oneToManys?size gt 0>
+<#list oneToManys as oneToMany>
+	<@util.getTargetEntity doc=xml entity=entity property=oneToMany />
+</#list>
+</#if>
+<#if manyToManys?size gt 0>
+<#list manyToManys as manyToMany>
+	<@util.getTargetEntity doc=xml entity=entity property=manyToMany />
+</#list>
+</#if>
+
 <#list 1..5 as i>
 <@compress single_line=true>
 	<${entity.@tableName}
@@ -24,24 +40,14 @@
 
 </#list>
 
-<#if manyToOnes?size gt 0>
-<#list manyToOnes as manyToOne>
-	<@util.getTargetEntity doc=xml entity=entity property=manyToOne />
-</#list>
-</#if>
-<#if oneToManys?size gt 0>
 
+<#if oneToManys?size gt 0>
 <#list oneToManys as oneToMany>
-	<@util.getTargetEntity doc=xml entity=entity property=oneToMany />
-	
 	<@util.getJoinTable doc=xml entity=entity property=oneToMany />
 </#list>
 </#if>
 <#if manyToManys?size gt 0>
-
 <#list manyToManys as manyToMany>
-	<@util.getTargetEntity doc=xml entity=entity property=manyToMany />
-
 	<@util.getJoinTable doc=xml entity=entity property=manyToMany />
 </#list>
 </#if>

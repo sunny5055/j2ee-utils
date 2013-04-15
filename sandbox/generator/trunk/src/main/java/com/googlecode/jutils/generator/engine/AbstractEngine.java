@@ -160,9 +160,27 @@ public abstract class AbstractEngine implements Engine {
 
 	protected File getOutputDirectory(String key, Node node) {
 		File outputDirectory = null;
+		if (!StringUtil.isBlank(key) && node != null) {
+			final Document document = node.getDocument();
+			final String projectName = document.valueOf("//p:configuration/p:projectName");
+
+			outputDirectory = getOutputDirectory(key, node, projectName);
+		}
+		return outputDirectory;
+	}
+
+	protected File getOutputDirectory(String key, Node node, Object... values) {
+		File outputDirectory = null;
 		if (!StringUtil.isBlank(key)) {
 			final String pathKey = getEngineKey() + "." + FILE_PATH + "." + key;
-			final String value = resolveKey(pathKey);
+			final String filePathPattern = resolveKey(pathKey);
+			String value = null;
+			if (!StringUtil.isBlank(filePathPattern) && !ArrayUtil.isEmpty(values)) {
+				value = String.format(filePathPattern, values);
+			} else {
+				value = filePathPattern;
+			}
+
 			if (!StringUtil.isBlank(value)) {
 				outputDirectory = new File(config.getBaseOutputDirectory(), value);
 			} else {

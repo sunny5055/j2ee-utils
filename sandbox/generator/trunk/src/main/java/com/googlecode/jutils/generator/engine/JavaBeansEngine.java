@@ -21,7 +21,6 @@ public class JavaBeansEngine extends AbstractJavaEngine {
 	@Override
 	protected void init() {
 		super.init();
-
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + CLASS_KEY, "{" + JAVA_PATH_KEY + "}");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + INTERFACE_KEY, "{" + JAVA_PATH_KEY + "}");
 

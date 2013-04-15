@@ -70,13 +70,6 @@ public interface GenericService<PK extends Serializable, E extends Dto<PK>> exte
 	Integer deleteByPrimaryKeys(Collection<PK> pks);
 
 	/**
-	 * Deletes all entities.
-	 * 
-	 * @return the number of rows deleted
-	 */
-	Integer deleteAll();
-
-	/**
 	 * Check if a dto is removable.
 	 * 
 	 * @param pk

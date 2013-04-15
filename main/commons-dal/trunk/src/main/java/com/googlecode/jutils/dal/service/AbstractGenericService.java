@@ -7,6 +7,7 @@ import java.util.List;
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.dal.dao.GenericDao;
 import com.googlecode.jutils.dal.dto.Dto;
+import com.googlecode.jutils.dal.util.DtoUtil;
 
 /**
  * The Class AbstractGenericService.
@@ -48,13 +49,11 @@ public abstract class AbstractGenericService<PK extends Serializable, E extends 
 	 */
 	@Override
 	public Integer delete(E dto) {
-		Integer result = 0;
+		Integer deleted = 0;
 		if (dto != null) {
-			if (isRemovable(dto)) {
-				result = this.dao.delete(dto);
-			}
+			deleted = deleteByPrimaryKey(dto.getPrimaryKey());
 		}
-		return result;
+		return deleted;
 	}
 
 	/**
@@ -62,16 +61,12 @@ public abstract class AbstractGenericService<PK extends Serializable, E extends 
 	 */
 	@Override
 	public Integer delete(Collection<E> dtos) {
-		final Integer result = 0;
+		Integer deleted = 0;
 		if (!CollectionUtil.isEmpty(dtos)) {
-			Integer deleted = 0;
-			for (final E dto : dtos) {
-				if (isRemovable(dto)) {
-					deleted += this.dao.delete(dto);
-				}
-			}
+			final List<PK> pks = DtoUtil.getPrimaryKeyList(dtos);
+			deleted = deleteByPrimaryKeys(pks);
 		}
-		return result;
+		return deleted;
 	}
 
 	/**
@@ -79,14 +74,11 @@ public abstract class AbstractGenericService<PK extends Serializable, E extends 
 	 */
 	@Override
 	public Integer deleteByPrimaryKey(PK pk) {
-		Integer result = 0;
+		Integer deleted = 0;
 		if (pk != null) {
-			final E dto = this.dao.get(pk);
-			if (dto != null) {
-				result = delete(dto);
-			}
+			deleted = this.dao.deleteByPrimaryKey(pk);
 		}
-		return result;
+		return deleted;
 	}
 
 	/**
@@ -94,21 +86,11 @@ public abstract class AbstractGenericService<PK extends Serializable, E extends 
 	 */
 	@Override
 	public Integer deleteByPrimaryKeys(Collection<PK> pks) {
-		Integer result = 0;
+		Integer deleted = 0;
 		if (!CollectionUtil.isEmpty(pks)) {
-			final List<E> dtos = this.dao.getObjects(pks);
-			result = delete(dtos);
+			deleted = this.dao.deleteByPrimaryKeys(pks);
 		}
-		return result;
-	}
-
-	/**
-	 * {@inheritedDoc}
-	 */
-	@Override
-	public Integer deleteAll() {
-		final List<E> dtos = this.dao.findAll();
-		return delete(dtos);
+		return deleted;
 	}
 
 	/**

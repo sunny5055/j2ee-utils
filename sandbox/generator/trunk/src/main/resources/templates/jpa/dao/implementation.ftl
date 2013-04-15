@@ -54,19 +54,18 @@ public class ${daoImplName} extends
  implements ${daoName} {
 </@compress>
 
-
-	<@util.getMethod doc=xml daoName=daoName entity=entity property=primaryKey/>
+	<@util.getMethod doc=xml entity=entity property=primaryKey/>
 	<#list columns as column>
-	<@util.getMethod doc=xml daoName=daoName entity=entity property=column/>
+	<@util.getMethod doc=xml entity=entity property=column/>
 	</#list>
 	<#list manyToOnes as manyToOne>
-	<@util.getMethod doc=xml daoName=daoName entity=entity property=manyToOne/>
+	<@util.getMethod doc=xml entity=entity property=manyToOne/>
 	</#list>
 	<#list oneToManys as oneToMany>
-	<@util.getMethod doc=xml daoName=daoName entity=entity property=oneToMany/>
+	<@util.getMethod doc=xml entity=entity property=oneToMany/>
 	</#list>
 	<#list manyToManys as manyToMany>
-	<@util.getMethod doc=xml daoName=daoName entity=entity property=manyToMany/>
+	<@util.getMethod doc=xml entity=entity property=manyToMany/>
 	</#list>
 
 	<@util.getSearchMethod doc=xml entity=entity />

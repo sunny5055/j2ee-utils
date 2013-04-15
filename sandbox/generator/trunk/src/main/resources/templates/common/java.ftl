@@ -142,10 +142,20 @@
 </#macro>
 
 
+<#macro interfaceGetter type name methodName="get${name?cap_first}">
+	${type} ${methodName}();
+</#macro>
+
+
 <#macro getter type name methodName="get${name?cap_first}">
 	public ${type} ${methodName}() {
 		return ${name};
 	}
+</#macro>
+
+
+<#macro interfaceSetter type name methodName="set${name?cap_first}" argName=name>
+	void ${methodName}(${type} ${argName});
 </#macro>
 
 
@@ -160,6 +170,10 @@
 	this.${name} = ${value};
 </#macro>
 
+<#macro interfaceAddListMethod type name methodName="add${name?substring(0, name?length-1)?cap_first}" argName=name?substring(0, name?length-1)>
+    void ${methodName}(${type} ${argName});
+</#macro>
+
 
 <#macro addListMethod type name methodName="add${name?substring(0, name?length-1)?cap_first}" argName=name?substring(0, name?length-1)>
     public void ${methodName}(${type} ${argName}) {
@@ -167,6 +181,11 @@
         this.${name}.add(${argName});
       }
     }
+</#macro>
+
+
+<#macro interfaceAddMapMethod name keyType valueType keyName="key" valueName=name?substring(0, name?length-1) methodName="add${name?substring(0, name?length-1)?cap_first}">
+    void ${methodName}(${keyType} ${keyName}, ${valueType} ${valueName});
 </#macro>
 
 
@@ -179,12 +198,22 @@
 </#macro>
 
 
+<#macro interfaceRemoveListMethod type name methodName="remove${name?substring(0, name?length-1)?cap_first}" argName=name?substring(0, name?length-1)>
+    void ${methodName}(${type} ${argName});
+</#macro>
+
+
 <#macro removeListMethod type name methodName="remove${name?substring(0, name?length-1)?cap_first}" argName=name?substring(0, name?length-1)>
     public void ${methodName}(${type} ${argName}) {
       if (${checkNotNull(type, argName)}) {
         this.${name}.remove(${argName});
       }
     }
+</#macro>
+
+
+<#macro interfaceRemoveMapMethod name keyType keyName="key" methodName="remove${name?substring(0, name?length-1)?cap_first}">
+    void ${methodName}(${keyType} ${keyName});
 </#macro>
 
 

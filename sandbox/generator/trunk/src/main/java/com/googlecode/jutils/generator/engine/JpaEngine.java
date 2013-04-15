@@ -39,11 +39,11 @@ public class JpaEngine extends AbstractJavaEngine {
 	protected void init() {
 		super.init();
 
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + ENTITY_KEY, "{" + MODULE_MODELE + "}/{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + EMBEDDED_ID_KEY, "{" + MODULE_MODELE + "}/{" + JAVA_PATH_KEY + "}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + ENTITY_KEY, "{" + MODULE_API + "}/{" + JAVA_PATH_KEY + "}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + EMBEDDED_ID_KEY, "{" + MODULE_API + "}/{" + JAVA_PATH_KEY + "}");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + DAO_KEY, "{" + MODULE_SERVICE + "}/{" + JAVA_PATH_KEY + "}");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + DAO_IMPL_KEY, "{" + MODULE_SERVICE + "}/{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SERVICE_KEY, "{" + MODULE_MODELE + "}/{" + JAVA_PATH_KEY + "}");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SERVICE_KEY, "{" + MODULE_API + "}/{" + JAVA_PATH_KEY + "}");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SERVICE_IMPL_KEY, "{" + MODULE_SERVICE + "}/{" + JAVA_PATH_KEY + "}");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + TEST_SERVICE_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_JAVA_PATH_KEY + "}");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + TEST_XML_DATASET_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_RESOURCES_PATH_KEY + "}/dataset");
@@ -52,7 +52,7 @@ public class JpaEngine extends AbstractJavaEngine {
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_JPA_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TX_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_DATABASE_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + JPA_PERSISTENCE_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/META-INF");
+		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + JPA_PERSISTENCE_KEY, "{" + MODULE_API + "}/{" + RESOURCES_PATH_KEY + "}/META-INF");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_BUSINESS_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_DATABASE_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_RESOURCES_PATH_KEY + "}/spring");
 		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + INSERT_SQL_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_RESOURCES_PATH_KEY + "}/sql");
@@ -277,7 +277,7 @@ public class JpaEngine extends AbstractJavaEngine {
 			}
 
 			File outputFile = null;
-			outputFile = getOutputFile(JPA_PERSISTENCE_KEY, null);
+			outputFile = getOutputFile(JPA_PERSISTENCE_KEY, xmlDocument);
 			generate(outputFile, "jpa/persistence.ftl", data, model);
 		}
 	}
@@ -321,25 +321,25 @@ public class JpaEngine extends AbstractJavaEngine {
 			addSpringFiles(data);
 
 			File outputFile = null;
-			outputFile = getOutputFile(SPRING_BUSINESS_KEY, null);
+			outputFile = getOutputFile(SPRING_BUSINESS_KEY, xmlDocument);
 			generate(outputFile, "jpa/spring/business-context.ftl", data, model);
 
-			outputFile = getOutputFile(SPRING_JDBC_KEY, null);
+			outputFile = getOutputFile(SPRING_JDBC_KEY, xmlDocument);
 			generate(outputFile, "jpa/spring/jdbc-context.ftl", data, model);
 
-			outputFile = getOutputFile(SPRING_JPA_KEY, null);
+			outputFile = getOutputFile(SPRING_JPA_KEY, xmlDocument);
 			generate(outputFile, "jpa/spring/jpa-context.ftl", data, model);
 
-			outputFile = getOutputFile(SPRING_TX_KEY, null);
+			outputFile = getOutputFile(SPRING_TX_KEY, xmlDocument);
 			generate(outputFile, "jpa/spring/tx-context.ftl", data, model);
 
-			outputFile = getOutputFile(SPRING_DATABASE_KEY, null);
+			outputFile = getOutputFile(SPRING_DATABASE_KEY, xmlDocument);
 			generate(outputFile, "jpa/spring/database.ftl", data, model);
 
-			outputFile = getOutputFile(SPRING_TEST_BUSINESS_KEY, null);
+			outputFile = getOutputFile(SPRING_TEST_BUSINESS_KEY, xmlDocument);
 			generate(outputFile, "jpa/spring/test-context.ftl", data, model);
 
-			outputFile = getOutputFile(SPRING_TEST_DATABASE_KEY, null);
+			outputFile = getOutputFile(SPRING_TEST_DATABASE_KEY, xmlDocument);
 			generate(outputFile, "jpa/spring/test-database.ftl", data, model);
 		}
 	}
@@ -353,7 +353,7 @@ public class JpaEngine extends AbstractJavaEngine {
 				data.put("database", database.toLowerCase());
 			}
 
-			final File outputFile = getOutputFile(INSERT_SQL_KEY, null);
+			final File outputFile = getOutputFile(INSERT_SQL_KEY, xmlDocument);
 			generate(outputFile, "jpa/sql/insert.ftl", data, model);
 		}
 	}
@@ -401,6 +401,7 @@ public class JpaEngine extends AbstractJavaEngine {
 			final String packageName = node.valueOf("ancestor::p:package/@name");
 			final String className = node.valueOf("@name");
 
+			final String entityName = getFileNameWithoutExtension(ENTITY_KEY, node);
 			final String daoPackageName = getPackageName(packageName, DAO_KEY);
 			final String daoName = getFileNameWithoutExtension(DAO_KEY, node);
 			final String daoImplPackageName = getPackageName(packageName, DAO_IMPL_KEY);
@@ -413,6 +414,7 @@ public class JpaEngine extends AbstractJavaEngine {
 
 			data.put("packageName", packageName);
 			data.put("className", className);
+			data.put("entityName", entityName);
 
 			final Node embeddedId = node.selectSingleNode("j:embedded-id");
 			if (embeddedId != null) {

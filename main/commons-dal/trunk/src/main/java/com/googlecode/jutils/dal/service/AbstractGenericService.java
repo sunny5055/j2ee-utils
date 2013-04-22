@@ -26,22 +26,22 @@ public abstract class AbstractGenericService<PK extends Serializable, E extends 
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public E create(E dto) {
+	public PK create(E dto) {
+		PK pk = null;
 		if (dto != null) {
-			this.dao.create(dto);
+			pk = this.dao.create(dto);
 		}
-		return dto;
+		return pk;
 	}
 
 	/**
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public E update(E dto) {
+	public void update(E dto) {
 		if (dto != null) {
 			this.dao.update(dto);
 		}
-		return dto;
 	}
 
 	/**

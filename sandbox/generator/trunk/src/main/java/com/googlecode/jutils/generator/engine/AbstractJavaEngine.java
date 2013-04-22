@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.generator.formatter.impl.JavaFormatter;
+import com.googlecode.jutils.generator.freemarker.directive.ResolvePackageForKeyDirective;
 import com.googlecode.jutils.generator.freemarker.method.GetClassNameMethod;
 import com.googlecode.jutils.generator.freemarker.method.GetFqdnMethod;
 import com.googlecode.jutils.generator.freemarker.method.GetImportsMethod;
@@ -13,15 +14,15 @@ import com.googlecode.jutils.generator.freemarker.method.GetTypeMethod;
 import com.googlecode.jutils.generator.freemarker.method.IsPrimitiveMethod;
 
 public abstract class AbstractJavaEngine extends AbstractEngine {
-	protected static final String JAVA_PATH_KEY = "path.java";
-	protected static final String RESOURCES_PATH_KEY = "path.resources";
-	protected static final String WEBAPP_PATH_KEY = "path.webapp";
-	protected static final String CONFIG_PATH_KEY = "path.config";
-	protected static final String TEST_JAVA_PATH_KEY = "path.test_java";
-	protected static final String TEST_RESOURCES_PATH_KEY = "path.test_resources";
-	protected static final String MODULE_API = "module_api";
-	protected static final String MODULE_SERVICE = "module_service";
-	protected static final String MODULE_WEB = "module_web";
+	public static final String JAVA_PATH_KEY = "path.java";
+	public static final String RESOURCES_PATH_KEY = "path.resources";
+	public static final String WEBAPP_PATH_KEY = "path.webapp";
+	public static final String CONFIG_PATH_KEY = "path.config";
+	public static final String TEST_JAVA_PATH_KEY = "path.test_java";
+	public static final String TEST_RESOURCES_PATH_KEY = "path.test_resources";
+	public static final String MODULE_API = "module_api";
+	public static final String MODULE_SERVICE = "module_service";
+	public static final String MODULE_WEB = "module_web";
 
 	public AbstractJavaEngine() {
 		super();
@@ -31,16 +32,7 @@ public abstract class AbstractJavaEngine extends AbstractEngine {
 	protected void init() {
 		super.init();
 
-		this.defaultProperties.put(MODULE_API, "%1s-api");
-		this.defaultProperties.put(MODULE_SERVICE, "%1s-service");
-		this.defaultProperties.put(MODULE_WEB, "%1s-web");
-
-		this.defaultProperties.put(JAVA_PATH_KEY, "src/main/java");
-		this.defaultProperties.put(RESOURCES_PATH_KEY, "src/main/resources");
-		this.defaultProperties.put(WEBAPP_PATH_KEY, "src/main/webapp");
-		this.defaultProperties.put(CONFIG_PATH_KEY, "src/main/config");
-		this.defaultProperties.put(TEST_JAVA_PATH_KEY, "src/test/java");
-		this.defaultProperties.put(TEST_RESOURCES_PATH_KEY, "src/test/resources");
+		loadConfigFile("classpath:/config/abstract-java-engine.properties");
 
 		this.defaultFormatters.add(new JavaFormatter());
 	}
@@ -57,6 +49,8 @@ public abstract class AbstractJavaEngine extends AbstractEngine {
 			data.put("getModifiers", new GetModifiersMethod());
 			data.put("getType", new GetTypeMethod());
 			data.put("isPrimitive", new IsPrimitiveMethod());
+
+			data.put("resolvePackageForKey", new ResolvePackageForKeyDirective());
 		}
 	}
 

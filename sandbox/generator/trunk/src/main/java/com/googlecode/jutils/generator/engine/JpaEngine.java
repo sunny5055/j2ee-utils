@@ -17,72 +17,30 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import freemarker.ext.dom.NodeModel;
 
 public class JpaEngine extends AbstractJavaEngine {
-	private static final String ENTITY_KEY = "entity";
-	private static final String EMBEDDED_ID_KEY = "embedded_id";
-	private static final String DAO_KEY = "dao";
-	private static final String DAO_IMPL_KEY = "dao_impl";
-	private static final String SERVICE_KEY = "service";
-	private static final String SERVICE_IMPL_KEY = "service_impl";
-	private static final String TEST_SERVICE_KEY = "test_service";
-	private static final String TEST_XML_DATASET_KEY = "test_xml_dataset";
-	private static final String SPRING_BUSINESS_KEY = "spring_business";
-	private static final String SPRING_JDBC_KEY = "spring_jdbc";
-	private static final String SPRING_JPA_KEY = "spring_jpa";
-	private static final String SPRING_TX_KEY = "spring_tx";
-	private static final String SPRING_DATABASE_KEY = "spring_database";
-	private static final String JPA_PERSISTENCE_KEY = "jpa_persistence";
-	private static final String SPRING_TEST_BUSINESS_KEY = "spring_test_business";
-	private static final String SPRING_TEST_DATABASE_KEY = "spring_test_database";
-	private static final String INSERT_SQL_KEY = "insert_sql";
+	public static final String ENTITY_KEY = "entity";
+	public static final String EMBEDDED_ID_KEY = "embedded_id";
+	public static final String DAO_KEY = "dao";
+	public static final String DAO_IMPL_KEY = "dao_impl";
+	public static final String SERVICE_KEY = "service";
+	public static final String SERVICE_IMPL_KEY = "service_impl";
+	public static final String TEST_SERVICE_KEY = "test_service";
+	public static final String TEST_XML_DATASET_KEY = "test_xml_dataset";
+	public static final String SPRING_BUSINESS_KEY = "spring_business";
+	public static final String SPRING_JDBC_KEY = "spring_jdbc";
+	public static final String SPRING_JPA_KEY = "spring_jpa";
+	public static final String SPRING_TX_KEY = "spring_tx";
+	public static final String SPRING_DATABASE_KEY = "spring_database";
+	public static final String JPA_PERSISTENCE_KEY = "jpa_persistence";
+	public static final String SPRING_TEST_BUSINESS_KEY = "spring_test_business";
+	public static final String SPRING_TEST_DATABASE_KEY = "spring_test_database";
+	public static final String INSERT_SQL_KEY = "insert_sql";
+	public static final String EXPORTER_KEY = "ddl_exporter";
 
 	@Override
 	protected void init() {
 		super.init();
 
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + ENTITY_KEY, "{" + MODULE_API + "}/{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + EMBEDDED_ID_KEY, "{" + MODULE_API + "}/{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + DAO_KEY, "{" + MODULE_SERVICE + "}/{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + DAO_IMPL_KEY, "{" + MODULE_SERVICE + "}/{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SERVICE_KEY, "{" + MODULE_API + "}/{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SERVICE_IMPL_KEY, "{" + MODULE_SERVICE + "}/{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + TEST_SERVICE_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + TEST_XML_DATASET_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_RESOURCES_PATH_KEY + "}/dataset");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_BUSINESS_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_JDBC_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_JPA_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TX_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_DATABASE_KEY, "{" + MODULE_SERVICE + "}/{" + RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + JPA_PERSISTENCE_KEY, "{" + MODULE_API + "}/{" + RESOURCES_PATH_KEY + "}/META-INF");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_BUSINESS_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + SPRING_TEST_DATABASE_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_RESOURCES_PATH_KEY + "}/spring");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + INSERT_SQL_KEY, "{" + MODULE_SERVICE + "}/{" + TEST_RESOURCES_PATH_KEY + "}/sql");
-
-		this.defaultProperties.put(getEngineKey() + "." + ENTITY_KEY + ".package", ".model");
-		this.defaultProperties.put(getEngineKey() + "." + EMBEDDED_ID_KEY + ".package", ".model");
-		this.defaultProperties.put(getEngineKey() + "." + DAO_KEY + ".package", ".dao");
-		this.defaultProperties.put(getEngineKey() + "." + DAO_IMPL_KEY + ".package", ".dao.impl");
-		this.defaultProperties.put(getEngineKey() + "." + SERVICE_KEY + ".package", ".service");
-		this.defaultProperties.put(getEngineKey() + "." + SERVICE_IMPL_KEY + ".package", ".service.impl");
-
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + ENTITY_KEY, "%1s.java");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + EMBEDDED_ID_KEY, "%1s.java");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + DAO_KEY, "%1sDao.java");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + DAO_IMPL_KEY, "%1sDaoImpl.java");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SERVICE_KEY, "%1sService.java");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SERVICE_IMPL_KEY, "%1sServiceImpl.java");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + TEST_SERVICE_KEY, "%1sServiceTest.java");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + TEST_XML_DATASET_KEY, "%1sServiceTest.xml");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_BUSINESS_KEY, "business-context.xml");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_JDBC_KEY, "jdbc-context.xml");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_JPA_KEY, "jpa-context.xml");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TX_KEY, "tx-context.xml");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_DATABASE_KEY, "database.properties");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + JPA_PERSISTENCE_KEY, "persistence.xml");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_BUSINESS_KEY, "test-context.xml");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + SPRING_TEST_DATABASE_KEY, "test-database.properties");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + INSERT_SQL_KEY, "insert_entities.sql");
-
-		this.defaultProperties.put(getEngineKey() + ".database", "postgresql");
+		loadConfigFile("classpath:/config/jpa-engine.properties");
 	}
 
 	@Override
@@ -120,6 +78,8 @@ public class JpaEngine extends AbstractJavaEngine {
 				generateJpaFiles(xmlDocument, model);
 
 				generateSpring(xmlDocument, model);
+
+				generateExporter(xmlDocument, model);
 
 				generateSql(xmlDocument, model);
 			}
@@ -254,27 +214,9 @@ public class JpaEngine extends AbstractJavaEngine {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void generateJpaFiles(Document xmlDocument, NodeModel model) throws GeneratorServiceException {
 		if (xmlDocument != null && model != null) {
 			final Map<String, Object> data = new HashMap<String, Object>();
-			final Set<String> basePackages = new HashSet<String>();
-			final List<Node> entities = xmlDocument.selectNodes("//j:entity");
-			if (!CollectionUtil.isEmpty(entities)) {
-				for (final Node node : entities) {
-					final String nodePackageName = node.valueOf("ancestor::p:package/@name");
-					if (!StringUtil.isBlank(nodePackageName)) {
-						final String basePackageName = getBasePackageName(nodePackageName);
-						basePackages.add(basePackageName);
-					}
-				}
-			}
-			data.put("basePackages", basePackages);
-
-			final String database = resolveKey(getEngineKey() + ".database");
-			if (!StringUtil.isBlank(database)) {
-				data.put("database", database.toLowerCase());
-			}
 
 			File outputFile = null;
 			outputFile = getOutputFile(JPA_PERSISTENCE_KEY, xmlDocument);
@@ -344,6 +286,16 @@ public class JpaEngine extends AbstractJavaEngine {
 		}
 	}
 
+	private void generateExporter(Document xmlDocument, NodeModel model) throws GeneratorServiceException {
+		if (xmlDocument != null && model != null) {
+			final Map<String, Object> data = new HashMap<String, Object>();
+			addSpringFiles(data);
+
+			final File outputFile = getOutputFile(EXPORTER_KEY, xmlDocument);
+			generate(outputFile, "jpa/exporter.ftl", data, model);
+		}
+	}
+
 	private void generateSql(Document xmlDocument, NodeModel model) throws GeneratorServiceException {
 		if (xmlDocument != null && model != null) {
 			final Map<String, Object> data = new HashMap<String, Object>();
@@ -401,39 +353,8 @@ public class JpaEngine extends AbstractJavaEngine {
 			final String packageName = node.valueOf("ancestor::p:package/@name");
 			final String className = node.valueOf("@name");
 
-			final String entityName = getFileNameWithoutExtension(ENTITY_KEY, node);
-			final String daoPackageName = getPackageName(packageName, DAO_KEY);
-			final String daoName = getFileNameWithoutExtension(DAO_KEY, node);
-			final String daoImplPackageName = getPackageName(packageName, DAO_IMPL_KEY);
-			final String daoImplName = getFileNameWithoutExtension(DAO_IMPL_KEY, node);
-			final String servicePackageName = getPackageName(packageName, SERVICE_KEY);
-			final String serviceName = getFileNameWithoutExtension(SERVICE_KEY, node);
-			final String serviceImplPackageName = getPackageName(packageName, SERVICE_IMPL_KEY);
-			final String serviceImplName = getFileNameWithoutExtension(SERVICE_IMPL_KEY, node);
-			final String testServiceName = getFileNameWithoutExtension(TEST_SERVICE_KEY, node);
-
 			data.put("packageName", packageName);
 			data.put("className", className);
-			data.put("entityName", entityName);
-
-			final Node embeddedId = node.selectSingleNode("j:embedded-id");
-			if (embeddedId != null) {
-				final String embeddedIdPackageName = getPackageName(packageName, EMBEDDED_ID_KEY);
-				final String embeddedIdName = getFileNameWithoutExtension(EMBEDDED_ID_KEY, node);
-
-				data.put("embeddedIdPackageName", embeddedIdPackageName);
-				data.put("embeddedIdName", embeddedIdName);
-			}
-
-			data.put("daoPackageName", daoPackageName);
-			data.put("daoName", daoName);
-			data.put("daoImplPackageName", daoImplPackageName);
-			data.put("daoImplName", daoImplName);
-			data.put("servicePackageName", servicePackageName);
-			data.put("serviceName", serviceName);
-			data.put("serviceImplPackageName", serviceImplPackageName);
-			data.put("serviceImplName", serviceImplName);
-			data.put("testServiceName", testServiceName);
 		}
 		return data;
 	}

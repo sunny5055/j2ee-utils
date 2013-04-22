@@ -64,19 +64,6 @@ public class GeneratorConfig {
 		}
 	}
 
-	public Map<String, Object> getData() {
-		final Map<String, Object> data = new HashMap<String, Object>();
-		if (baseOutputDirectory != null) {
-			data.put("baseOutputDirectory", baseOutputDirectory);
-		}
-
-		if (!MapUtil.isEmpty(properties)) {
-			data.put("properties", properties);
-		}
-
-		return data;
-	}
-
 	public List<Formatter> getFormatters() {
 		return formatters;
 	}

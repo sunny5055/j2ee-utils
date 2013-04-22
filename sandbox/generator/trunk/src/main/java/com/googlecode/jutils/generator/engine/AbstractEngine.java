@@ -5,11 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.xml.XMLConstants;
@@ -42,6 +44,7 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import com.googlecode.jutils.generator.formatter.Formatter;
 import com.googlecode.jutils.generator.formatter.exception.FormatterException;
 import com.googlecode.jutils.generator.formatter.impl.XmlFormatter;
+import com.googlecode.jutils.generator.freemarker.directive.ResolveNameForKeyDirective;
 import com.googlecode.jutils.generator.util.MyResolver;
 import com.googlecode.jutils.generator.util.PropertyUtil;
 import com.googlecode.jutils.io.IoUtil;
@@ -55,8 +58,8 @@ import freemarker.ext.dom.NodeModel;
 
 public abstract class AbstractEngine implements Engine {
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractEngine.class);
-	protected static final String FILE_PATH = "file_path";
-	protected static final String FILE_NAME_PATTERN = "file_name_pattern";
+	public static final String FILE_PATH = "file_path";
+	public static final String FILE_NAME_PATTERN = "file_name_pattern";
 
 	protected GeneratorConfig config;
 	protected Map<String, String> defaultProperties;
@@ -76,7 +79,46 @@ public abstract class AbstractEngine implements Engine {
 
 	@PostConstruct
 	protected void init() {
+		loadConfigFile("classpath:/config/abstract-engine.properties");
+
 		this.defaultFormatters.add(new XmlFormatter());
+	}
+
+	protected void loadConfigFile(String location) {
+		if (!StringUtil.isBlank(location)) {
+			Reader reader = null;
+			try {
+				reader = ResourceUtil.getReader(location);
+			} catch (final IOException e) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug(e.getMessage(), e);
+				}
+			}
+
+			if (reader != null) {
+				Properties properties = null;
+				try {
+					properties = new Properties();
+					properties.load(reader);
+				} catch (final IOException e) {
+					properties = null;
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug(e.getMessage(), e);
+					}
+				}
+
+				if (properties != null) {
+					final Map<String, String> config = new HashMap<String, String>();
+					for (final Object key : properties.keySet()) {
+						config.put(key.toString(), properties.getProperty(key.toString()));
+					}
+
+					if (!MapUtil.isEmpty(config)) {
+						defaultProperties.putAll(config);
+					}
+				}
+			}
+		}
 	}
 
 	public GeneratorConfig getConfig() {
@@ -226,15 +268,22 @@ public abstract class AbstractEngine implements Engine {
 
 	protected void addFreemarkerExt(Map<String, Object> data) {
 		if (data != null) {
+			data.put("resolveNameForKey", new ResolveNameForKeyDirective());
 		}
 	}
 
 	private String getContent(String templateName, Map<String, Object> data, NodeModel model) throws GeneratorServiceException {
 		String content = null;
 		if (!StringUtil.isBlank(templateName) && data != null && model != null) {
+			data.put("engineKey", getEngineKey());
 			data.put("xml", model);
 			data.put("templateName", templateName);
-			data.putAll(config.getData());
+			data.put("baseOutputDirectory", config.getBaseOutputDirectory());
+			final Map<String, String> properties = new HashMap<String, String>();
+			properties.putAll(defaultProperties);
+			properties.putAll(config.getProperties());
+
+			data.put("properties", properties);
 
 			addFreemarkerExt(data);
 

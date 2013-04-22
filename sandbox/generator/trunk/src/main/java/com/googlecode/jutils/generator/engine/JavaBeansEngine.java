@@ -15,17 +15,14 @@ import com.googlecode.jutils.generator.exception.GeneratorServiceException;
 import freemarker.ext.dom.NodeModel;
 
 public class JavaBeansEngine extends AbstractJavaEngine {
-	private static final String CLASS_KEY = "class";
-	private static final String INTERFACE_KEY = "interface";
+	public static final String CLASS_KEY = "class";
+	public static final String INTERFACE_KEY = "interface";
 
 	@Override
 	protected void init() {
 		super.init();
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + CLASS_KEY, "{" + JAVA_PATH_KEY + "}");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_PATH + "." + INTERFACE_KEY, "{" + JAVA_PATH_KEY + "}");
 
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + CLASS_KEY, "%1s.java");
-		this.defaultProperties.put(getEngineKey() + "." + FILE_NAME_PATTERN + "." + INTERFACE_KEY, "%1s.java");
+		loadConfigFile("classpath:/config/java_engine.properties");
 	}
 
 	@Override

@@ -20,18 +20,17 @@ public interface GenericService<PK extends Serializable, E extends Dto<PK>> exte
 	 * 
 	 * @param dto
 	 *            the dto
-	 * @return the entity
+	 * @return the pk
 	 */
-	E create(E dto);
+	PK create(E dto);
 
 	/**
 	 * Updates the entity.
 	 * 
 	 * @param dto
 	 *            the dto
-	 * @return the entity
 	 */
-	E update(E dto);
+	void update(E dto);
 
 	/**
 	 * Deletes the entity.

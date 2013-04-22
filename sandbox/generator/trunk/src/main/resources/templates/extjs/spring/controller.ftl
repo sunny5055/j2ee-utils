@@ -1,5 +1,6 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa","g":"http://code.google.com/p/j2ee-utils/schema/gui"}>
 <#import "common.ftl" as util>
+<#assign entity = xml["//j:entity[@name=$className]"]>
 <#assign varName = className?uncap_first />
 
 <#if controllerPackageName?? && controllerPackageName?length gt 0>
@@ -20,7 +21,7 @@ import java.util.Map;
 <@addTo assignTo="imports" element="org.springframework.web.bind.annotation.RequestMethod" />
 <@addTo assignTo="imports" element="org.springframework.web.bind.annotation.ResponseBody" />
 
-<@addTo assignTo="imports" element="${packageName}.${className}" />
+<@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
 <@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
 
 ${getImports(false, controllerPackageName, imports)}

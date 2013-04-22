@@ -227,7 +227,7 @@
 
 
 <#macro constructor visibility className parameters="" content="">
-  ${visibility} ${className}(<@compress single_line=true>${parameters}</@compress>) {
+  ${visibility} ${className}(<#compress>${parameters}</#compress>) {
   <#compress>
   <#if content != "">
     ${content}
@@ -245,11 +245,11 @@
 
 
 <#macro interfaceOperation returnType methodName modifiers="" parameters="">
-  ${modifiers} ${returnType} ${methodName}(<@compress single_line=true>${parameters}</@compress>);
+  ${modifiers} ${returnType} ${methodName}(<#compress>${parameters}</#compress>);
 </#macro>
 
 <#macro operation visibility returnType methodName modifiers="" parameters="" content="">
-  ${visibility} ${modifiers} ${returnType} ${methodName}(<@compress single_line=true>${parameters}</@compress>) {
+  ${visibility} ${modifiers} ${returnType} ${methodName}(<#compress>${parameters}</#compress>) {
   <#compress>
   <#if content != "">
     ${content}
@@ -262,7 +262,6 @@
 	</#if>
   </#if>
   </#compress>
-
   }
 </#macro>
 

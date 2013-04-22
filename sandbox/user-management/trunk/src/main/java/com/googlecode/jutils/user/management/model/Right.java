@@ -9,7 +9,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.googlecode.jutils.dal.dto.AbstractHibernateDto;
+import com.googlecode.jutils.dal.dto.AbstractDto;
 import com.googlecode.jutils.user.management.dao.RightDao;
 
 /**
@@ -23,7 +23,7 @@ import com.googlecode.jutils.user.management.dao.RightDao;
     @NamedQuery(name = RightDao.COUNT_BY_ROLE_ID, query = "select count(rig) from Role as r left join r.rights as rig where r.id = :roleId"),
     @NamedQuery(name = RightDao.FIND_ALL_BY_ROLE_ID, query = "select rig from Role as r left join r.rights as rig where r.id = :roleId") })
 @SuppressWarnings("serial")
-public class Right extends AbstractHibernateDto<Integer> {
+public class Right extends AbstractDto<Integer> {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)

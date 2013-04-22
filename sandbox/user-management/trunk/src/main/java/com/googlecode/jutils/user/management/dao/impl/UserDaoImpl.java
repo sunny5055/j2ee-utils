@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.googlecode.jutils.dal.Search;
 import com.googlecode.jutils.dal.SearchCriteria;
 import com.googlecode.jutils.dal.SortOrder;
-import com.googlecode.jutils.dal.dao.AbstractGenericDaoHibernate;
+import com.googlecode.jutils.dal.dao.AbstractGenericJpaDao;
 import com.googlecode.jutils.dal.util.QueryUtil;
 import com.googlecode.jutils.user.management.dao.UserDao;
 import com.googlecode.jutils.user.management.model.User;
@@ -16,21 +16,14 @@ import com.googlecode.jutils.user.management.model.User;
  * The Class UserDaoImpl.
  */
 @Repository
-public class UserDaoImpl extends AbstractGenericDaoHibernate<Integer, User> implements UserDao {
-
-	/**
-	 * Instantiates a new user dao impl.
-	 */
-	public UserDaoImpl() {
-		super(User.class);
-	}
+public class UserDaoImpl extends AbstractGenericJpaDao<Integer, User> implements UserDao {
 
 	/**
 	 * {@inheritedDoc}
 	 */
 	@Override
 	public Integer countByLogin(String login) {
-		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), UserDao.COUNT_BY_LOGIN, new String[] { "login" }, login);
+		return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, UserDao.COUNT_BY_LOGIN, new String[] { "login" }, login);
 	}
 
 	/**
@@ -38,7 +31,7 @@ public class UserDaoImpl extends AbstractGenericDaoHibernate<Integer, User> impl
 	 */
 	@Override
 	public User findByLogin(String login) {
-		return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), UserDao.FIND_BY_LOGIN, new String[] { "login" }, login);
+		return QueryUtil.getByNamedQueryAndNamedParam(entityManager, UserDao.FIND_BY_LOGIN, new String[] { "login" }, login);
 	}
 
 	/**
@@ -46,7 +39,7 @@ public class UserDaoImpl extends AbstractGenericDaoHibernate<Integer, User> impl
 	 */
 	@Override
 	public Integer countByRoleId(Integer roleId) {
-		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), UserDao.COUNT_BY_ROLE_ID, new String[] { "roleId" }, roleId);
+		return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, UserDao.COUNT_BY_ROLE_ID, new String[] { "roleId" }, roleId);
 	}
 
 	/**

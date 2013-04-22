@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.googlecode.jutils.dal.Search;
 import com.googlecode.jutils.dal.SearchCriteria;
 import com.googlecode.jutils.dal.SortOrder;
-import com.googlecode.jutils.dal.dao.AbstractGenericDaoHibernate;
+import com.googlecode.jutils.dal.dao.AbstractGenericJpaDao;
 import com.googlecode.jutils.dal.util.QueryUtil;
 import com.googlecode.jutils.user.management.dao.RightDao;
 import com.googlecode.jutils.user.management.model.Right;
@@ -17,21 +17,14 @@ import com.googlecode.jutils.user.management.model.Right;
  * The Class RightDaoImpl.
  */
 @Repository
-public class RightDaoImpl extends AbstractGenericDaoHibernate<Integer, Right> implements RightDao {
-
-	/**
-	 * Instantiates a new right right dao impl.
-	 */
-	public RightDaoImpl() {
-		super(Right.class);
-	}
+public class RightDaoImpl extends AbstractGenericJpaDao<Integer, Right> implements RightDao {
 
 	/**
 	 * {@inheritedDoc}
 	 */
 	@Override
 	public Integer countByCode(String code) {
-		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RightDao.COUNT_BY_CODE, new String[] { "code" }, code);
+		return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, RightDao.COUNT_BY_CODE, new String[] { "code" }, code);
 	}
 
 	/**
@@ -39,7 +32,7 @@ public class RightDaoImpl extends AbstractGenericDaoHibernate<Integer, Right> im
 	 */
 	@Override
 	public Right findByCode(String code) {
-		return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), RightDao.FIND_BY_CODE, new String[] { "code" }, code);
+		return QueryUtil.getByNamedQueryAndNamedParam(entityManager, RightDao.FIND_BY_CODE, new String[] { "code" }, code);
 
 	}
 
@@ -48,7 +41,7 @@ public class RightDaoImpl extends AbstractGenericDaoHibernate<Integer, Right> im
 	 */
 	@Override
 	public Integer countByRoleId(Integer roleId) {
-		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RightDao.COUNT_BY_ROLE_ID, new String[] { "roleId" }, roleId);
+		return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, RightDao.COUNT_BY_ROLE_ID, new String[] { "roleId" }, roleId);
 	}
 
 	/**
@@ -56,7 +49,7 @@ public class RightDaoImpl extends AbstractGenericDaoHibernate<Integer, Right> im
 	 */
 	@Override
 	public List<Right> findAllByRoleId(Integer roleId) {
-		return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), RightDao.FIND_ALL_BY_ROLE_ID, new String[] { "roleId" }, roleId);
+		return QueryUtil.findByNamedQueryAndNamedParam(entityManager, RightDao.FIND_ALL_BY_ROLE_ID, new String[] { "roleId" }, roleId);
 	}
 
 	/**

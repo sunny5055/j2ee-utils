@@ -13,20 +13,16 @@ import com.googlecode.jutils.dal.service.GenericService;
 
 public abstract class AbstractGenericServiceTest<PK extends Serializable, E extends Dto<PK>, S extends GenericService<PK, E>> extends AbstractGenericReadServiceTest<PK, E, S> {
 
-	public AbstractGenericServiceTest(Class<PK> pkClass, Class<E> entityClass) {
-		super(pkClass, entityClass);
-	}
-
 	@Test
 	public void testCreate() {
 		final E entity = createEntity();
 
-		final E result = service.create(entity);
-		Assert.assertNotNull(result);
+		final PK pk = service.create(entity);
+		Assert.assertNotNull(pk);
 
-		final E hibernateEntity = service.get(entity.getPrimaryKey());
-		Assert.assertNotNull(hibernateEntity);
-		assertEntity(entity, hibernateEntity);
+		final E result = service.get(pk);
+		Assert.assertNotNull(result);
+		assertEntity(entity, result);
 
 		final int count = service.count();
 		Assert.assertEquals(primaryKeys.size() + 1, count);
@@ -38,12 +34,11 @@ public abstract class AbstractGenericServiceTest<PK extends Serializable, E exte
 		final E entity = service.get(primaryKey);
 		updateEntity(entity);
 
-		final E result = service.update(entity);
-		Assert.assertNotNull(result);
+		service.update(entity);
 
-		final E hibernateEntity = service.get(primaryKey);
-		Assert.assertNotNull(entity);
-		assertEntity(entity, hibernateEntity);
+		final E result = service.get(primaryKey);
+		Assert.assertNotNull(result);
+		assertEntity(entity, result);
 	}
 
 	@Test

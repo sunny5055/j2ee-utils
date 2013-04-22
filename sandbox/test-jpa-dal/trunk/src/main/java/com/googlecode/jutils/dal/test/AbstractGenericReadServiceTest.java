@@ -2,6 +2,8 @@ package com.googlecode.jutils.dal.test;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.core.AnnotationUtil;
 import com.googlecode.jutils.dal.dto.Dto;
@@ -50,9 +53,16 @@ public abstract class AbstractGenericReadServiceTest<PK extends Serializable, E 
 	protected List<PK> primaryKeys;
 	protected List<PK> fakePrimaryKeys;
 
-	public AbstractGenericReadServiceTest(Class<PK> pkClass, Class<E> entityClass) {
-		this.pkClass = pkClass;
-		this.entityClass = entityClass;
+	@SuppressWarnings("unchecked")
+	public AbstractGenericReadServiceTest() {
+		super();
+		final Type type = getClass().getGenericSuperclass();
+		final ParameterizedType parameterizedType = (ParameterizedType) type;
+		final Type[] typeArguments = parameterizedType.getActualTypeArguments();
+		if (!ArrayUtil.isEmpty(typeArguments) && typeArguments.length == 3) {
+			pkClass = (Class<PK>) typeArguments[0];
+			entityClass = (Class<E>) typeArguments[1];
+		}
 
 		this.primaryKeys = new ArrayList<PK>();
 		this.fakePrimaryKeys = new ArrayList<PK>();

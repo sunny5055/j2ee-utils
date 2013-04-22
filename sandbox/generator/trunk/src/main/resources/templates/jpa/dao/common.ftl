@@ -6,11 +6,11 @@
     <#assign columns = property["j:properties/j:column"]>
     <#list columns as column>
     <@java.interfaceOperation returnType="Integer" methodName=getCountQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}" />
-  <@java.interfaceOperation returnType="List<${entity.@name}>" methodName=getFindQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}" />
+  <@java.interfaceOperation returnType="List<${entityName}>" methodName=getFindQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}" />
   </#list>
   <#elseif property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
     <@java.interfaceOperation returnType="Integer" methodName=getCountQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}" />
-  <@java.interfaceOperation returnType="${entity.@name}" methodName=getFindQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}" />
+  <@java.interfaceOperation returnType="${entityName}" methodName=getFindQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}" />
   <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
     <#local argType = getType(property.@targetEntity)>
     <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
@@ -24,7 +24,7 @@
     <#local propertyName = "${propertyName}Id">
     </#if>
     <@java.interfaceOperation returnType="Integer" methodName=getCountQueryName(propertyName, false) parameters="${argType} ${propertyName}" />
-  <@java.interfaceOperation returnType="List<${entity.@name}>" methodName=getFindQueryName(propertyName, false) parameters="${argType} ${propertyName}" />
+  <@java.interfaceOperation returnType="List<${entityName}>" methodName=getFindQueryName(propertyName, false) parameters="${argType} ${propertyName}" />
   </#if>
 </#macro>
 
@@ -40,7 +40,7 @@
     </@java.operation>
 
     @Override
-  <@java.operation visibility="public" returnType="List<${entity.@name}>" methodName=getFindQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}">
+  <@java.operation visibility="public" returnType="List<${entityName}>" methodName=getFindQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}">
     return QueryUtil.findByNamedQueryAndNamedParam(entityManager, "${getFindQueryName(column.@name, false, entity.@name)}",
                 new String[] { "${column.@name}" }, ${column.@name});
   </@java.operation>
@@ -54,7 +54,7 @@
     </@java.operation>
 
   @Override
-  <@java.operation visibility="public" returnType="${entity.@name}" methodName=getFindQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}">
+  <@java.operation visibility="public" returnType="${entityName}" methodName=getFindQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}">
     return QueryUtil.getByNamedQueryAndNamedParam(entityManager,  "${getFindQueryName(property.@name, true, entity.@name)}",
                 new String[] { "${property.@name}" }, ${property.@name});
   </@java.operation>
@@ -78,7 +78,7 @@
     </@java.operation>
 
   @Override
-  <@java.operation visibility="public" returnType="List<${entity.@name}>" methodName=getFindQueryName(propertyName, false) parameters="${argType} ${propertyName}">
+  <@java.operation visibility="public" returnType="List<${entityName}>" methodName=getFindQueryName(propertyName, false) parameters="${argType} ${propertyName}">
     return QueryUtil.findByNamedQueryAndNamedParam(entityManager, "${getFindQueryName(propertyName, false, entity.@name)}",
                 new String[] { "${propertyName}" }, ${propertyName});
   </@java.operation>
@@ -95,7 +95,7 @@
             search = new Search();
 
             final StringBuilder buffer = new StringBuilder();
-            buffer.append("from ${entity.@name} as ${columnPrefix} ");
+            buffer.append("from ${entityName} as ${columnPrefix} ");
 
             if (searchCriteria.hasFilters()) {
                 buffer.append("where ");

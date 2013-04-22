@@ -1,8 +1,12 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
 <#import "common.ftl" as util>
+<#import "queries/queries.ftl" as queries>
+<#import "jpa/annotation.ftl" as jpa>
+
 <#assign entity = xml["//j:entity[@name=$className]"]>
 <#assign interfaces = xml["//j:entity[@name=$className]//j:interface"]>
 <#assign primaryKey = util.getPrimaryKey(entity)>
+<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
 <#assign columns = xml["//j:entity[@name=$className]/j:properties/j:column"]>
 <#assign manyToOnes = xml["//j:entity[@name=$className]/j:properties/j:many-to-one"]>
 <#assign oneToManys = xml["//j:entity[@name=$className]/j:properties/j:one-to-many"]>
@@ -11,8 +15,11 @@
 <#assign constructors = xml["//j:entity[@name=$className]//j:constructor"]>
 <#assign operations = xml["//j:entity[@name=$className]//j:operation"]>
 
-<#if packageName?? && packageName?length gt 0>
-package ${packageName};
+<#assign entityPackageName = util.getEntityPackageName(packageName) />
+<#assign entityName = util.getEntityName(entity.@name) />
+
+<#if entityPackageName?? && entityPackageName?length gt 0>
+package ${entityPackageName};
 </#if>
 
 <#assign imports = [] />
@@ -35,7 +42,7 @@ package ${packageName};
 	<@addTo assignTo="imports" element="javax.persistence.GenerationType" />
 <#else>
 	<@addTo assignTo="imports" element="javax.persistence.EmbeddedId" />
-	<@addTo assignTo="imports" element="${embeddedIdPackageName}.${embeddedIdName}" />
+	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(packageName)}.${primaryKeyType}" />
 </#if>
 
 <#list columns as column>
@@ -72,52 +79,52 @@ package ${packageName};
   <@addTo assignTo="imports" element=util.getImportsFor(operation) />
 </#list>
 
-<#if util.hasNamedQuery(xml, entity) == "true">
+<#if queries.hasNamedQuery(xml, entity) == "true">
 	<@addTo assignTo="imports" element="javax.persistence.NamedQueries" />
 	<@addTo assignTo="imports" element="javax.persistence.NamedQuery" />
 </#if>
 
-${getImports(true, packageName, imports)}
+${getImports(true, entityPackageName, imports)}
 
 
 @Entity
 @Table(name="${entity.@tableName}")
-<@util.getNamedQueries doc=xml entity=entity/>
+<@queries.getNamedQueries doc=xml entity=entity/>
 @SuppressWarnings("serial")
-<@compress single_line=true>
-public ${util.getModifiersFrom(entity)} class ${className}
+<#compress>
+public ${util.getModifiersFrom(entity)} class ${entityName}
 <#if util.xml.existAttribute(entity.@superClass)>
  extends ${getClassName(entity.@superClass)}
 <#else>
- extends AbstractDto<${util.getPrimaryKeyType(entity)}>
+ extends AbstractDto<${primaryKeyType}>
 </#if>
 <#if interfaces?size gt 0>
  implements <@myList list=interfaces var="interface">${getClassName(interface)}</@myList>
 </#if>
-{</@compress>
-${util.getJpaAnnotation(entity, primaryKey)}
+{</#compress>
+${jpa.getJpaAnnotation(entity, primaryKey)}
 <@util.getProperty property=primaryKey/>
 <#list columns as column>
-${util.getJpaAnnotation(entity, column)}
+${jpa.getJpaAnnotation(entity, column)}
 <@util.getProperty property=column/>
 </#list>
 <#list manyToOnes as manyToOne>
-${util.getJpaAnnotation(entity, manyToOne)}
+${jpa.getJpaAnnotation(entity, manyToOne)}
 <@util.getProperty property=manyToOne/>
 </#list>
 <#list oneToManys as oneToMany>
-${util.getJpaAnnotation(entity, oneToMany)}
+${jpa.getJpaAnnotation(entity, oneToMany)}
 <@util.getProperty property=oneToMany/>
 </#list>
 <#list manyToManys as manyToMany>
-${util.getJpaAnnotation(entity, manyToMany)}
+${jpa.getJpaAnnotation(entity, manyToMany)}
 <@util.getProperty property=manyToMany/>
 </#list>
 
-	public ${className}() {
+	public ${entityName}() {
 		super();
 		<#if primaryKey?node_name = "embedded-id">
-		this.${primaryKey.@name} = new ${embeddedIdName}();
+		this.${primaryKey.@name} = new ${primaryKeyType}();
 		<#else>
 		</#if>
 		<#list oneToManys as oneToMany>
@@ -129,7 +136,7 @@ ${util.getJpaAnnotation(entity, manyToMany)}
   	}
 
 <#list constructors as constructor>
-	<@util.constructor className=className constructor=constructor/>
+	<@util.constructor className=entityName constructor=constructor/>
 </#list>
 
 <@util.getterPrimaryKey property=primaryKey/>
@@ -156,23 +163,11 @@ ${util.getJpaAnnotation(entity, manyToMany)}
   <@util.getter property=oneToMany/>
 
   <@util.setter property=oneToMany/>
-
-  <@util.addMethod property=oneToMany/>
-
-  <@util.removeMethod property=oneToMany/>
 </#list>
 
 <#list manyToManys as manyToMany>
   <@util.getter property=manyToMany/>
 
   <@util.setter property=manyToMany/>
-
-  <@util.addMethod property=manyToMany/>
-
-  <@util.removeMethod property=manyToMany/>
-</#list>
-
-<#list operations as operation>
-  <@util.operation operation=operation/>
 </#list>
 }

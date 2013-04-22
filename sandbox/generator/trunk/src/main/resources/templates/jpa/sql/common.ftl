@@ -8,14 +8,14 @@
 <@xPath xml=doc expression="//j:entity[@name='${entity.@name}']/j:properties/j:many-to-one" assignTo="manyToOnes" />
 -------------------------------------------------------
 -- Table ${entity.@tableName}
-<@compress single_line=true>
+<#compress>
 INSERT INTO ${entity.@tableName} (${getColumnsDeclaration(doc, entity)}) VALUES
-</@compress>
+</#compress>
 
 <#list 1..5 as line>
-<@compress single_line=true>
+<#compress>
 (${getColumnsValue(doc, entity)})<#if line_has_next>,<#else>;</#if>
-</@compress>
+</#compress>
 
 </#list>
 -------------------------------------------------------
@@ -25,14 +25,14 @@ INSERT INTO ${entity.@tableName} (${getColumnsDeclaration(doc, entity)}) VALUES
 <#macro insertJoinTableSql doc entity property>
 -------------------------------------------------------
 -- Table ${getJoinTableName(entity, property)}
-<@compress single_line=true>
+<#compress>
 INSERT INTO ${getJoinTableName(entity, property)} (${getJoinColumnName(entity, property)}, ${getInverseJoinColumnName(entity, property)}) VALUES
-</@compress>
+</#compress>
 
 <#list 1..5 as line>
-<@compress single_line=true>
+<#compress>
 (${getValue("Integer")}, ${getValue("Integer")})<#if line_has_next>,<#else>;</#if>
-</@compress>
+</#compress>
 
 </#list>
 -------------------------------------------------------

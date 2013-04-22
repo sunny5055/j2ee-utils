@@ -3,10 +3,20 @@
 <#assign entity = xml["//j:entity[@name=$className]"]>
 <#assign interfaces = xml["//j:entity[@name=$className]//j:interface"]>
 <#assign primaryKey = util.getPrimaryKey(entity)>
+<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
 <#assign columns = xml["//j:entity[@name=$className]/j:properties/j:column"]>
 <#assign manyToOnes = xml["//j:entity[@name=$className]/j:properties/j:many-to-one"]>
 <#assign oneToManys = xml["//j:entity[@name=$className]/j:properties/j:one-to-many"]>
 <#assign manyToManys = xml["//j:entity[@name=$className]/j:properties/j:many-to-many"]>
+
+
+<#assign entityPackageName = util.getEntityPackageName(packageName) />
+<#assign entityName = util.getEntityName(entity.@name) />
+<#assign servicePackageName = util.getServicePackageName(packageName) />
+<#assign serviceName = util.getServiceName(entity.@name) />
+<#assign serviceImplPackageName = util.getServiceImplPackageName(packageName) />
+<#assign serviceImplName = util.getServiceImplName(entity.@name) />
+<#assign testServiceName = util.getTestServiceName(entity.@name) />
 
 <#if servicePackageName?? && servicePackageName?length gt 0>
 package ${servicePackageName};
@@ -17,10 +27,10 @@ package ${servicePackageName};
 <@addTo assignTo="imports" element="org.springframework.test.context.ContextConfiguration" />
 <@addTo assignTo="imports" element="org.junit.Test" />
 <@addTo assignTo="imports" element="com.github.springtestdbunit.annotation.DatabaseSetup" />
-<@addTo assignTo="imports" element="${packageName}.${entity.@name}" />
+<@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
 
 <#if primaryKey?node_name == "embedded-id">
-  <@addTo assignTo="imports" element="${embeddedIdPackageName}.${embeddedIdName}" />
+	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(packageName)}.${primaryKeyType}" />
     <#assign pkColumns = primaryKey["j:properties/j:column"]>
     <#list pkColumns as pkColumn>
   		<#if pkColumn.@type == "String">
@@ -59,25 +69,19 @@ package ${servicePackageName};
 <@addTo assignTo="imports" element="java.util.List" />
 
 
-
 ${getImports(true, servicePackageName, imports)}
-
 
 @ContextConfiguration(locations = { "classpath:${springTestBusinessFile}" })
 @DatabaseSetup(value = "classpath:${xmlDatasetFile}")
-<@compress single_line=true>
+<#compress>
 public class ${testServiceName} extends
 <#if util.xml.getAttribute(entity.@readOnly) == "true">
-  AbstractGenericReadServiceTest<${util.getPrimaryKeyType(entity)}, ${entity.@name}, ${serviceName}>
+AbstractGenericReadServiceTest<${primaryKeyType}, ${entityName}, ${serviceName}>
 <#else>
-  AbstractGenericServiceTest<${util.getPrimaryKeyType(entity)}, ${entity.@name}, ${serviceName}>
+AbstractGenericServiceTest<${primaryKeyType}, ${entityName}, ${serviceName}>
 </#if>
  {
-</@compress>
-  public ${testServiceName}() {
-    super(${util.getPrimaryKeyType(entity)}.class, ${entity.@name}.class);
-  }
-
+</#compress>
   @Autowired
   @Override
   public void setService(${serviceName} service) {
@@ -109,8 +113,8 @@ public class ${testServiceName} extends
   </#list>
 
   @Override
-  protected ${util.getPrimaryKeyType(entity)} getPrimaryKey(Node node) {
-    ${util.getPrimaryKeyType(entity)} id = null;
+  protected ${primaryKeyType} getPrimaryKey(Node node) {
+    ${primaryKeyType} id = null;
     if (node != null) {
       <#if primaryKey?node_name == "embedded-id">
       <#assign pkColumns = primaryKey["j:properties/j:column"]>
@@ -118,7 +122,7 @@ public class ${testServiceName} extends
       final String ${pkColumn.@name}Value = node.valueOf("@${util.getColumnName(entity.@columnPrefix, pkColumn)}");
       </#list>
 
-      id = new ${embeddedIdName}();
+      id = new ${primaryKeyType}();
       <#list pkColumns as pkColumn>
       id.set${pkColumn.@name?cap_first}(${util.java.convertFromString(pkColumn.@type, pkColumn.@name+"Value")});
       </#list>
@@ -133,15 +137,15 @@ public class ${testServiceName} extends
   }
 
   @Override
-  protected ${util.getPrimaryKeyType(entity)} getFakePrimaryKey() {
+  protected ${primaryKeyType} getFakePrimaryKey() {
     <#if primaryKey?node_name == "embedded-id">
-      ${util.getPrimaryKeyType(entity)} id = null;
+      ${primaryKeyType} id = null;
       <#assign pkColumns = primaryKey["j:properties/j:column"]>
         <#list pkColumns as pkColumn>
         final String ${pkColumn.@name}Value = ${util.java.getRandomValue(getType(pkColumn.@type), util.xml.getAttribute(pkColumn.@length))};
         </#list>
 
-        id = new ${embeddedIdName}();
+        id = new ${primaryKeyType}();
       <#list pkColumns as pkColumn>
       id.set${pkColumn.@name?cap_first}(${util.java.convertFromString(pkColumn.@type, pkColumn.@name+"Value")});
       </#list>
@@ -153,10 +157,10 @@ public class ${testServiceName} extends
 
   <#if util.xml.getAttribute(entity.@readOnly) == "" || util.xml.getAttribute(entity.@readOnly) == "false">
   @Override
-  protected ${entity.@name} createEntity() {
-    final ${entity.@name} entity = new ${entity.@name}();
+  protected ${entityName} createEntity() {
+    final ${entityName} entity = new ${entityName}();
 	<#if primaryKey?node_name == "embedded-id">
-		final ${embeddedIdName} primaryKey = getFakePrimaryKey();
+		final ${primaryKeyType} primaryKey = getFakePrimaryKey();
 		entity.setId(primaryKey);
 	</#if>
     <#list columns as column>
@@ -168,7 +172,7 @@ public class ${testServiceName} extends
   }
 
   @Override
-  protected void updateEntity(${entity.@name} entity) {
+  protected void updateEntity(${entityName} entity) {
     <#list columns as column>
     final ${getType(column.@type)} ${column.@name} = ${util.java.getRandomValue(getType(column.@type), util.xml.getAttribute(column.@length))};
     entity.set${column.@name?cap_first}(${column.@name});
@@ -176,7 +180,7 @@ public class ${testServiceName} extends
   }
 
   @Override
-  protected void assertEntity(${entity.@name} entity, ${entity.@name} entity2) {
+  protected void assertEntity(${entityName} entity, ${entityName} entity2) {
     Assert.assertNotNull(entity);
     Assert.assertNotNull(entity2);
 

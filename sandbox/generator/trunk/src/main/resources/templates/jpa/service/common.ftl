@@ -7,11 +7,11 @@
   	<#assign columns = property["j:properties/j:column"]>
   	<#list columns as column>
   	<@java.interfaceOperation returnType="Integer" methodName=getCountQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}" />
-	<@java.interfaceOperation returnType="List<${entity.@name}>" methodName=getFindQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}" />
+	<@java.interfaceOperation returnType="List<${entityName}>" methodName=getFindQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}" />
 	</#list>
   <#elseif property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
   	<@java.interfaceOperation returnType="boolean" methodName="existWith${property.@name?cap_first}" parameters="${getType(property.@type)} ${property.@name}" />
-	<@java.interfaceOperation returnType="${entity.@name}" methodName=getFindQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}" />
+	<@java.interfaceOperation returnType="${entityName}" methodName=getFindQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}" />
   <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
 	  <#local argType = getType(property.@targetEntity)>
 	  <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
@@ -25,7 +25,7 @@
 		<#local argName = "${argName}Id">
 	  </#if>
   	<@java.interfaceOperation returnType="Integer" methodName=getCountQueryName(argName, false) parameters="${argType} ${argName}" />
-	<@java.interfaceOperation returnType="List<${entity.@name}>" methodName=getFindQueryName(argName, false) parameters="${argType} ${argName}" />
+	<@java.interfaceOperation returnType="List<${entityName}>" methodName=getFindQueryName(argName, false) parameters="${argType} ${argName}" />
   </#if>
 </#macro>
 
@@ -44,9 +44,9 @@
   	</@java.operation>
 
   	@Override
-	<@java.operation visibility="public" returnType="List<${entity.@name}>" methodName=getFindQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}">
-		List<${entity.@name}> list = null;
-  		if(${java.checkNotNull(getType(column.@type), column.@name)}) {
+	<@java.operation visibility="public" returnType="List<${entityName}>" methodName=getFindQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}">
+  		List<${entityName}> list = null;
+		if(${java.checkNotNull(getType(column.@type), column.@name)}) {
   			list = dao.${getFindQueryName(column.@name, false)}(${column.@name});
   		}
   		return list;
@@ -64,11 +64,11 @@
   	</@java.operation>
 
   	@Override
-	<@java.operation visibility="public" returnType="${entity.@name}" methodName=getFindQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}">
-		${entity.@name} ${entity.@name?uncap_first} = null;
-        if(${java.checkNotNull(getType(property.@type), property.@name)}) {
+	<@java.operation visibility="public" returnType="${entityName}" methodName=getFindQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}">
+        ${entityName} ${entity.@name?uncap_first} = null;
+		if(${java.checkNotNull(getType(property.@type), property.@name)}) {
             ${entity.@name?uncap_first} = dao.${getFindQueryName(property.@name, true)}(${property.@name});
-        }
+  		}
         return ${entity.@name?uncap_first};
 	</@java.operation>
   <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
@@ -94,9 +94,9 @@
   	</@java.operation>
 
   	@Override
-	<@java.operation visibility="public" returnType="List<${entity.@name}>" methodName=getFindQueryName(argName, false) parameters="${argType} ${argName}">
-		List<${entity.@name}> list = null;
-  		if(${java.checkNotNull(argType, argName)}) {
+	<@java.operation visibility="public" returnType="List<${entityName}>" methodName=getFindQueryName(argName, false) parameters="${argType} ${argName}">
+		List<${entityName}> list = null;
+		if(${java.checkNotNull(argType, argName)}) {
   			list = dao.${getFindQueryName(argName, false)}(${argName});
   		}
   		return list;

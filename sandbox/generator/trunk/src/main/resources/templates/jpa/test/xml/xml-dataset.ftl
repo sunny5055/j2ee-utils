@@ -26,7 +26,7 @@
 </#if>
 
 <#list 1..5 as i>
-<@compress single_line=true>
+<#compress>
 	<${entity.@tableName}
 		<@util.getAttribute doc=xml entity=entity property=primaryKey />
 		<#list columns as column>
@@ -36,7 +36,7 @@
 			<@util.getAttribute doc=xml entity=entity property=manyToOne />
 		</#list>
 	/>
-</@compress>
+</#compress>
 
 </#list>
 

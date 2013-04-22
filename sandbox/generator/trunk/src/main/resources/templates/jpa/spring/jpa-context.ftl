@@ -17,6 +17,9 @@
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="persistenceUnitName" value="${projectName}" />
+		<property name="jpaVendorAdapter">
+   			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+  		</property>
 		<#noparse>
 		<property name="jpaProperties">
 		        <props>

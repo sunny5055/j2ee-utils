@@ -25,7 +25,7 @@
 	<@xPath xml=doc expression="//j:entity[@name='${getType(property.@targetEntity)}']/j:properties/j:column" assignTo="targetColumns" />
 	
 	<#list 1..3 as i>
-		<@compress single_line=true>
+		<#compress>
 		<${targetEntity.@tableName}
 			<#if targetPk?node_name = "id">
 				${getColumnName(targetEntity.@columnPrefix, targetPk)}="${random(getPrimaryKeyType(targetEntity))}"
@@ -39,7 +39,7 @@
 				${getColumnName(targetEntity.@columnPrefix, column)}="${random(getType(column.@type), xml.getAttribute(column.@length))}"
 			</#list>
 		/>
-	</@compress>
+	</#compress>
 	
 	</#list>
 </#if>
@@ -53,12 +53,12 @@
 	<@xPath xml=doc expression="//j:entity[@name='${getType(property.@targetEntity)}']/j:properties/j:column" assignTo="targetColumns" />
 	
 	<#list 1..5 as i>
-		<@compress single_line=true>
+		<#compress>
 		<${getJoinTableName(entity, property)}
 			${getJoinColumnName(entity, property)}=""
 			${getInverseJoinColumnName(entity, property)}=""
 		/>
-	</@compress>
+	</#compress>
 	
 	</#list>
 </#if>

@@ -3,10 +3,18 @@
 <#assign entity = xml["//j:entity[@name=$className]"]>
 <#assign interfaces = xml["//j:entity[@name=$className]//j:interface"]>
 <#assign primaryKey = util.getPrimaryKey(entity)>
+<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
 <#assign columns = xml["//j:entity[@name=$className]/j:properties/j:column"]>
 <#assign manyToOnes = xml["//j:entity[@name=$className]/j:properties/j:many-to-one"]>
 <#assign oneToManys = xml["//j:entity[@name=$className]/j:properties/j:one-to-many"]>
 <#assign manyToManys = xml["//j:entity[@name=$className]/j:properties/j:many-to-many"]>
+
+<#assign entityPackageName = util.getEntityPackageName(packageName) />
+<#assign entityName = util.getEntityName(entity.@name) />
+<#assign daoPackageName = util.getDaoPackageName(packageName) />
+<#assign daoName = util.getDaoName(entity.@name) />
+<#assign daoImplPackageName = util.getDaoImplPackageName(packageName) />
+<#assign daoImplName = util.getDaoImplName(entity.@name) />
 
 <#if daoImplPackageName?? && daoImplPackageName?length gt 0>
 package ${daoImplPackageName};
@@ -22,11 +30,11 @@ package ${daoImplPackageName};
 <@addTo assignTo="imports" element="com.googlecode.jutils.dal.Search" />
 <@addTo assignTo="imports" element="com.googlecode.jutils.dal.SearchCriteria" />
 <@addTo assignTo="imports" element="com.googlecode.jutils.dal.SortOrder" />
-<@addTo assignTo="imports" element="${packageName}.${entity.@name}" />
+<@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
 <@addTo assignTo="imports" element="${daoPackageName}.${daoName}" />
 
 <#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${embeddedIdPackageName}.${embeddedIdName}" />
+	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(packageName)}.${primaryKeyType}" />
 	<@addTo assignTo="imports" element="java.util.List" />
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.util.QueryUtil" />
 </#if>
@@ -44,15 +52,15 @@ package ${daoImplPackageName};
 ${getImports(false, daoImplPackageName, imports)}
 
 @Repository
-<@compress single_line=true>
+<#compress>
 public class ${daoImplName} extends
 <#if util.xml.getAttribute(entity.@readOnly) == "true">
-	AbstractGenericJpaReadDao<${util.getPrimaryKeyType(entity)}, ${entity.@name}>
+AbstractGenericJpaReadDao<${primaryKeyType}, ${entityName}>
 <#else>
-	AbstractGenericJpaDao<${util.getPrimaryKeyType(entity)}, ${entity.@name}>
+AbstractGenericJpaDao<${primaryKeyType}, ${entityName}>
 </#if>
  implements ${daoName} {
-</@compress>
+</#compress>
 
 	<@util.getMethod doc=xml entity=entity property=primaryKey/>
 	<#list columns as column>

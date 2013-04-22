@@ -3,11 +3,17 @@
 <#assign entity = xml["//j:entity[@name=$className]"]>
 <#assign interfaces = xml["//j:entity[@name=$className]//j:interface"]>
 <#assign primaryKey = util.getPrimaryKey(entity)>
+<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
 <#assign allProperties = xml["//j:entity[@name=$className]/j:properties/*"]>
 <#assign columns = xml["//j:entity[@name=$className]/j:properties/j:column"]>
 <#assign manyToOnes = xml["//j:entity[@name=$className]/j:properties/j:many-to-one"]>
 <#assign oneToManys = xml["//j:entity[@name=$className]/j:properties/j:one-to-many"]>
 <#assign manyToManys = xml["//j:entity[@name=$className]/j:properties/j:many-to-many"]>
+
+<#assign entityPackageName = util.getEntityPackageName(packageName) />
+<#assign entityName = util.getEntityName(entity.@name) />
+<#assign daoPackageName = util.getDaoPackageName(packageName) />
+<#assign daoName = util.getDaoName(entity.@name) />
 
 <#if daoPackageName?? && daoPackageName?length gt 0>
 package ${daoPackageName};
@@ -19,9 +25,9 @@ package ${daoPackageName};
 <#else>
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dao.GenericDao" />
 </#if>
-<@addTo assignTo="imports" element="${packageName}.${entity.@name}" />
+<@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
 <#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${embeddedIdPackageName}.${embeddedIdName}" />
+	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(packageName)}.${primaryKeyType}" />
 	<@addTo assignTo="imports" element="java.util.List" />
 </#if>
 <#if manyToOnes?size gt 0 || oneToManys?size gt 0 || manyToManys?size gt 0>
@@ -30,14 +36,14 @@ package ${daoPackageName};
 
 ${getImports(false, daoPackageName, imports)}
 
-<@compress single_line=true>
+<#compress>
 public interface ${daoName} extends
 <#if util.xml.getAttribute(entity.@readOnly) == "true">
-	GenericReadDao<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
+GenericReadDao<${primaryKeyType}, ${entityName}> {
 <#else>
-	GenericDao<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
+GenericDao<${primaryKeyType}, ${entityName}> {
 </#if>
-</@compress>
+</#compress>
 
 <@util.getInterfaceMethod doc=xml entity=entity property=primaryKey/>
 <#list columns as column>

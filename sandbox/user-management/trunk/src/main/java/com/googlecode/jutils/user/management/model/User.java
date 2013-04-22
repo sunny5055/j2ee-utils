@@ -16,7 +16,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.googlecode.jutils.dal.dto.AbstractHibernateDto;
+import com.googlecode.jutils.dal.dto.AbstractDto;
 import com.googlecode.jutils.user.management.dao.UserDao;
 
 /**
@@ -29,7 +29,7 @@ import com.googlecode.jutils.user.management.dao.UserDao;
     @NamedQuery(name = UserDao.FIND_BY_LOGIN, query = "select u from User as u where u.login = :login"),
     @NamedQuery(name = UserDao.COUNT_BY_ROLE_ID, query = "select count(u) from User as u left join u.roles as r where r.id = :roleId") })
 @SuppressWarnings("serial")
-public class User extends AbstractHibernateDto<Integer> {
+public class User extends AbstractDto<Integer> {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)

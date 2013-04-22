@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.googlecode.jutils.dal.Search;
 import com.googlecode.jutils.dal.SearchCriteria;
 import com.googlecode.jutils.dal.SortOrder;
-import com.googlecode.jutils.dal.dao.AbstractGenericDaoHibernate;
+import com.googlecode.jutils.dal.dao.AbstractGenericJpaDao;
 import com.googlecode.jutils.dal.util.QueryUtil;
 import com.googlecode.jutils.user.management.dao.RoleDao;
 import com.googlecode.jutils.user.management.model.Role;
@@ -17,21 +17,14 @@ import com.googlecode.jutils.user.management.model.Role;
  * The Class RoleDaoImpl.
  */
 @Repository
-public class RoleDaoImpl extends AbstractGenericDaoHibernate<Integer, Role> implements RoleDao {
-
-	/**
-	 * Instantiates a new role dao impl.
-	 */
-	public RoleDaoImpl() {
-		super(Role.class);
-	}
+public class RoleDaoImpl extends AbstractGenericJpaDao<Integer, Role> implements RoleDao {
 
 	/**
 	 * {@inheritedDoc}
 	 */
 	@Override
 	public Integer countByCode(String code) {
-		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_BY_CODE, new String[] { "code" }, code);
+		return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, RoleDao.COUNT_BY_CODE, new String[] { "code" }, code);
 	}
 
 	/**
@@ -39,7 +32,7 @@ public class RoleDaoImpl extends AbstractGenericDaoHibernate<Integer, Role> impl
 	 */
 	@Override
 	public Role findByCode(String code) {
-		return QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.FIND_BY_CODE, new String[] { "code" }, code);
+		return QueryUtil.getByNamedQueryAndNamedParam(entityManager, RoleDao.FIND_BY_CODE, new String[] { "code" }, code);
 
 	}
 
@@ -48,7 +41,7 @@ public class RoleDaoImpl extends AbstractGenericDaoHibernate<Integer, Role> impl
 	 */
 	@Override
 	public Integer countByUserId(Integer userId) {
-		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_BY_USER_ID, new String[] { "userId" }, userId);
+		return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, RoleDao.COUNT_BY_USER_ID, new String[] { "userId" }, userId);
 	}
 
 	/**
@@ -56,7 +49,7 @@ public class RoleDaoImpl extends AbstractGenericDaoHibernate<Integer, Role> impl
 	 */
 	@Override
 	public List<Role> findAllByUserId(Integer userId) {
-		return QueryUtil.findByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.FIND_ALL_BY_USER_ID, new String[] { "userId" }, userId);
+		return QueryUtil.findByNamedQueryAndNamedParam(entityManager, RoleDao.FIND_ALL_BY_USER_ID, new String[] { "userId" }, userId);
 	}
 
 	/**
@@ -64,7 +57,7 @@ public class RoleDaoImpl extends AbstractGenericDaoHibernate<Integer, Role> impl
 	 */
 	@Override
 	public Integer countByRightId(Integer rightId) {
-		return QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), RoleDao.COUNT_BY_RIGHT_ID, new String[] { "rightId" }, rightId);
+		return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, RoleDao.COUNT_BY_RIGHT_ID, new String[] { "rightId" }, rightId);
 	}
 
 	/**

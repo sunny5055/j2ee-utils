@@ -3,17 +3,16 @@ package com.googlecode.jutils.parameter.hibernate.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projections;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.springframework.stereotype.Repository;
 
 import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.collection.ArrayUtil;
-import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.dal.Search;
 import com.googlecode.jutils.dal.SearchCriteria;
 import com.googlecode.jutils.dal.SortOrder;
@@ -23,12 +22,14 @@ import com.googlecode.jutils.parameter.hibernate.model.AbstractParameter;
 
 @Repository
 public class ParameterDaoImpl implements ParameterDao {
-	@Autowired
-	private SessionFactory sessionFactory;
-	private Class<?> entityClass;
+	@PersistenceContext
+	protected EntityManager entityManager;
+	protected Class<Integer> pkClass;
+	protected Class<?> entityClass;
 
 	public ParameterDaoImpl() {
 		super();
+		this.pkClass = Integer.class;
 		this.entityClass = AbstractParameter.class;
 	}
 
@@ -36,10 +37,17 @@ public class ParameterDaoImpl implements ParameterDao {
 	 * {@inheritedDoc}
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public Integer count() {
-		final Criteria criteria = getCurrentSession().createCriteria(entityClass);
-		criteria.setProjection(Projections.rowCount());
-		return ((Long) criteria.list().get(0)).intValue();
+		Integer count = 0;
+
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<Long> query = builder.createQuery(Long.class);
+		final Root<AbstractParameter<?>> from = (Root<AbstractParameter<?>>) query.from(entityClass);
+		query.select(builder.count(from));
+		count = entityManager.createQuery(query).getSingleResult().intValue();
+
+		return count;
 	}
 
 	/**
@@ -48,7 +56,15 @@ public class ParameterDaoImpl implements ParameterDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<AbstractParameter<?>> findAll() {
-		return getCurrentSession().createQuery("from " + entityClass.getName()).list();
+		List<AbstractParameter<?>> dtos = null;
+
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<AbstractParameter<?>> query = (CriteriaQuery<AbstractParameter<?>>) builder.createQuery(entityClass);
+		final Root<AbstractParameter<?>> from = (Root<AbstractParameter<?>>) query.from(entityClass);
+		query.select(from);
+		dtos = entityManager.createQuery(query).getResultList();
+
+		return dtos;
 	}
 
 	/**
@@ -62,16 +78,11 @@ public class ParameterDaoImpl implements ParameterDao {
 			if (search != null) {
 				final String[] parameterNames = search.getParameterNames();
 				final Object[] values = search.getValues();
-
-				final Query query = getCurrentSession().createQuery(search.getCountQuery());
 				if (!ArrayUtil.isEmpty(parameterNames)) {
-					QueryUtil.applyNamedParametersToQuery(query, parameterNames, values);
+					count = QueryUtil.getNumberByNamedParam(this.entityManager, search.getCountQuery(), parameterNames, values);
 				} else {
-					QueryUtil.applyParametersToQuery(query, values);
+					count = QueryUtil.getNumber(this.entityManager, search.getCountQuery());
 				}
-
-				final List<?> result = query.list();
-				count = CollectionUtil.getIntegerElementFromList(result);
 			}
 		}
 		return count;
@@ -81,31 +92,31 @@ public class ParameterDaoImpl implements ParameterDao {
 	 * {@inheritedDoc}
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<AbstractParameter<?>> findAll(SearchCriteria searchCriteria) {
-		List<AbstractParameter<?>> parameters = null;
+		List<AbstractParameter<?>> dtos = null;
 		if (searchCriteria != null) {
 			final Search search = getSearch(searchCriteria);
 			if (search != null) {
 				final String[] parameterNames = search.getParameterNames();
 				final Object[] values = search.getValues();
 
-				final Query query = getCurrentSession().createQuery(search.getQuery());
 				if (!ArrayUtil.isEmpty(parameterNames)) {
-					QueryUtil.applyNamedParametersToQuery(query, parameterNames, values);
+					if (searchCriteria.hasPagination()) {
+						dtos = QueryUtil.findByNamedParam(this.entityManager, search.getQuery(), searchCriteria.getFirstResult(), searchCriteria.getMaxResults(), parameterNames,
+								values);
+					} else {
+						dtos = QueryUtil.findByNamedParam(this.entityManager, search.getQuery(), parameterNames, values);
+					}
 				} else {
-					QueryUtil.applyParametersToQuery(query, values);
+					if (searchCriteria.hasPagination()) {
+						dtos = QueryUtil.find(this.entityManager, search.getQuery(), searchCriteria.getFirstResult(), searchCriteria.getMaxResults());
+					} else {
+						dtos = QueryUtil.find(this.entityManager, search.getQuery());
+					}
 				}
-
-				if (searchCriteria.hasPagination()) {
-					query.setFirstResult(searchCriteria.getFirstResult());
-					query.setMaxResults(searchCriteria.getMaxResults());
-				}
-
-				parameters = query.list();
 			}
 		}
-		return parameters;
+		return dtos;
 	}
 
 	/**
@@ -115,7 +126,7 @@ public class ParameterDaoImpl implements ParameterDao {
 	public Integer countByName(String name) {
 		Integer count = 0;
 		if (!StringUtil.isBlank(name)) {
-			count = QueryUtil.getNumberByNamedQueryAndNamedParam(getCurrentSession(), ParameterDao.COUNT_BY_NAME, new String[] { "name" }, name);
+			count = QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, ParameterDao.COUNT_BY_NAME, new String[] { "name" }, name);
 		}
 		return count;
 	}
@@ -127,7 +138,7 @@ public class ParameterDaoImpl implements ParameterDao {
 	public AbstractParameter<?> findByName(String name) {
 		AbstractParameter<?> parameter = null;
 		if (!StringUtil.isBlank(name)) {
-			parameter = QueryUtil.getByNamedQueryAndNamedParam(getCurrentSession(), ParameterDao.FIND_BY_NAME, new String[] { "name" }, name);
+			parameter = QueryUtil.getByNamedQueryAndNamedParam(entityManager, ParameterDao.FIND_BY_NAME, new String[] { "name" }, name);
 		}
 		return parameter;
 	}
@@ -139,7 +150,7 @@ public class ParameterDaoImpl implements ParameterDao {
 	public Integer save(AbstractParameter<?> parameter) {
 		Integer primaryKey = null;
 		if (parameter != null) {
-			getCurrentSession().saveOrUpdate(parameter);
+			entityManager.persist(parameter);
 			primaryKey = parameter.getPrimaryKey();
 		}
 		return primaryKey;
@@ -149,11 +160,14 @@ public class ParameterDaoImpl implements ParameterDao {
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public Integer delete(AbstractParameter<?> parameter) {
+	public Integer deleteByName(String name) {
 		Integer deleted = 0;
-		if (parameter != null) {
-			getCurrentSession().delete(parameter);
-			deleted = 1;
+		if (!StringUtil.isBlank(name)) {
+			final AbstractParameter<?> entity = findByName(name);
+			if (entity != null) {
+				entityManager.remove(entity);
+				deleted = 1;
+			}
 		}
 		return deleted;
 	}
@@ -219,14 +233,5 @@ public class ParameterDaoImpl implements ParameterDao {
 			search.setQuery(buffer.toString());
 		}
 		return search;
-	}
-
-	/**
-	 * Gets the current session.
-	 * 
-	 * @return the current session
-	 */
-	private Session getCurrentSession() {
-		return this.sessionFactory != null ? sessionFactory.getCurrentSession() : null;
 	}
 }

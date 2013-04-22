@@ -24,8 +24,8 @@ public class Main {
 			User user = null;
 
 			user = createUser("Jérémy", "SCHAAL");
-			user = userService.create(user);
-			System.out.println("create : " + user);
+			final Integer pk = userService.create(user);
+			System.out.println("create : " + pk);
 
 			count = userService.count();
 			System.out.println("count : " + count);

@@ -40,7 +40,7 @@ ${getImports(true, packageName, imports)}
 <#if interfaces?size gt 0 && (interfaces?seq_contains("Serializable") || interfaces?seq_contains("java.io.Serializable"))>
 @SuppressWarnings("serial")
 </#if>
-<@compress single_line=true>
+<#compress>
 public ${util.getModifiersFrom(class)} class ${className}
 <#if util.xml.existAttribute(class.@superClass)>
  extends ${getClassName(class.@superClass)}
@@ -48,7 +48,7 @@ public ${util.getModifiersFrom(class)} class ${className}
 <#if interfaces?size gt 0>
  implements <@myList list=interfaces var="interface">${getClassName(interface)}</@myList>
 </#if>
-{</@compress>
+{</#compress>
 <#list properties as property>
 <@util.getProperty property=property/>
 </#list>

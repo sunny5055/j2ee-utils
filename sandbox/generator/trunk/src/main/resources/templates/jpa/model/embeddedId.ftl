@@ -1,8 +1,14 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
 <#import "common.ftl" as util>
+<#import "jpa/annotation.ftl" as jpa>
+
 <#assign entity = xml["//j:entity[@name=$className]"]>
-<#assign embeddedId = xml["//j:embedded-id[@targetEntity=$embeddedIdName]"]>
+<#assign embeddedId = xml["//j:entity[@name=$className]/j:embedded-id"]>
 <#assign columns = embeddedId["j:properties/j:column"]>
+
+<#assign embeddedIdPackageName = util.getEmbeddedIdPackageName(packageName) />
+<#assign embeddedIdName = util.getEmbeddedIdName(embeddedId.@targetEntity) />
+
 <#if embeddedIdPackageName?? && embeddedIdPackageName?length gt 0>
 package ${embeddedIdPackageName};
 </#if>
@@ -25,7 +31,7 @@ ${getImports(true, embeddedIdPackageName, imports)}
 @SuppressWarnings("serial")
 public class ${embeddedIdName} implements Serializable {
 <#list columns as column>
-${util.getJpaAnnotation(entity, column)}
+${jpa.getJpaAnnotation(entity, column)}
 <@util.getProperty property=column/>
 </#list>
 

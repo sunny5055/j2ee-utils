@@ -3,10 +3,16 @@
 <#assign entity = xml["//j:entity[@name=$className]"]>
 <#assign interfaces = xml["//j:entity[@name=$className]//j:interface"]>
 <#assign primaryKey = util.getPrimaryKey(entity)>
+<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
 <#assign columns = xml["//j:entity[@name=$className]/j:properties/j:column"]>
 <#assign manyToOnes = xml["//j:entity[@name=$className]/j:properties/j:many-to-one"]>
 <#assign oneToManys = xml["//j:entity[@name=$className]/j:properties/j:one-to-many"]>
 <#assign manyToManys = xml["//j:entity[@name=$className]/j:properties/j:many-to-many"]>
+
+<#assign entityPackageName = util.getEntityPackageName(packageName) />
+<#assign entityName = util.getEntityName(entity.@name) />
+<#assign servicePackageName = util.getServicePackageName(packageName) />
+<#assign serviceName = util.getServiceName(entity.@name) />
 
 <#if servicePackageName?? && servicePackageName?length gt 0>
 package ${servicePackageName};
@@ -18,9 +24,9 @@ package ${servicePackageName};
 <#else>
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.GenericService" />
 </#if>
-<@addTo assignTo="imports" element="${packageName}.${entity.@name}" />
+<@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
 <#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${embeddedIdPackageName}.${embeddedIdName}" />
+	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(packageName)}.${primaryKeyType}" />
 	<@addTo assignTo="imports" element="java.util.List" />
 </#if>
 <#if manyToOnes?size gt 0 || oneToManys?size gt 0 || manyToManys?size gt 0>
@@ -30,14 +36,14 @@ package ${servicePackageName};
 ${getImports(false, servicePackageName, imports)}
 
 
-<@compress single_line=true>
+<#compress>
 public interface ${serviceName} extends
 <#if util.xml.getAttribute(entity.@readOnly) == "true">
-	GenericReadService<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
+	GenericReadService<${primaryKeyType}, ${entityName}> {
 <#else>
-	GenericService<${util.getPrimaryKeyType(entity)}, ${entity.@name}> {
+	GenericService<${primaryKeyType}, ${entityName}> {
 </#if>
-</@compress>
+</#compress>
 
 <@util.getInterfaceMethod doc=xml entity=entity property=primaryKey/>
 <#list columns as column>

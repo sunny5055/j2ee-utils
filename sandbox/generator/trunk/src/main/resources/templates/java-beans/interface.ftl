@@ -23,12 +23,12 @@ package ${packageName};
 
 ${getImports(false, packageName, imports)}
 
-<@compress single_line=true>
+<#compress>
 public interface ${interfaceName}
 <#if interfaces?size gt 0>
  extends <@myList list=interfaces var="interface">${getClassName(interface)}</@myList>
 </#if>
-{</@compress>
+{</#compress>
 <#list properties as property>
 <@util.getInterfaceProperty property=property/>
 </#list>

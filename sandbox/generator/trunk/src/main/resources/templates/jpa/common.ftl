@@ -60,7 +60,7 @@
   <#if entity["j:id"]?is_node>
     <#local primaryKeyType = getType(entity["j:id/@type"])>
   <#else>
-    <#local primaryKeyType = getType(entity["j:embedded-id/@targetEntity"])>
+    <#local primaryKeyType = getEmbeddedIdName(getType(entity["j:embedded-id/@targetEntity"])) >
   </#if>
   <#return primaryKeyType>
 </#function>
@@ -163,3 +163,83 @@
   	</#if>
     <#return queryName />
 </#function>
+
+
+<#function getEntityPackageName packageName>
+	<@resolvePackageForKey packageName=packageName key="entity" assignTo="entityPackageName"/>
+    <#return entityPackageName />
+</#function>
+
+
+<#function getEntityName value>
+	<@resolveNameForKey value=value key="entity" assignTo="entityName"/>
+    <#return entityName />
+</#function>
+
+
+<#function getDaoPackageName packageName>
+	<@resolvePackageForKey packageName=packageName key="dao" assignTo="daoPackageName"/>
+    <#return daoPackageName />
+</#function>
+
+
+<#function getDaoName value>
+	<@resolveNameForKey value=value key="dao" assignTo="daoName"/>
+    <#return daoName />
+</#function>
+
+
+<#function getDaoImplPackageName packageName>
+	<@resolvePackageForKey packageName=packageName key="dao_impl" assignTo="daoImplPackageName"/>
+    <#return daoImplPackageName />
+</#function>
+
+
+<#function getDaoImplName value>
+	<@resolveNameForKey value=value key="dao_impl" assignTo="daoImplName"/>
+    <#return daoImplName />
+</#function>
+
+
+<#function getServicePackageName packageName>
+	<@resolvePackageForKey packageName=packageName key="service" assignTo="servicePackageName"/>
+    <#return servicePackageName />
+</#function>
+
+
+<#function getServiceName value>
+	<@resolveNameForKey value=value key="service" assignTo="serviceName"/>
+    <#return serviceName />
+</#function>
+
+
+<#function getServiceImplPackageName packageName>
+	<@resolvePackageForKey packageName=packageName key="service_impl" assignTo="serviceImplPackageName"/>
+    <#return serviceImplPackageName />
+</#function>
+
+
+<#function getServiceImplName value>
+	<@resolveNameForKey value=value key="service_impl" assignTo="serviceImplName"/>
+    <#return serviceImplName />
+</#function>
+
+
+<#function getEmbeddedIdPackageName packageName>
+	<@resolvePackageForKey packageName=packageName key="embedded_id" assignTo="embeddedIdPackageName"/>
+    <#return embeddedIdPackageName />
+</#function>
+
+
+<#function getEmbeddedIdName value>
+	<@resolveNameForKey value=value key="embedded_id" assignTo="embeddedIdName"/>
+    <#return embeddedIdName />
+</#function>
+
+
+<#function getTestServiceName value>
+	<@resolveNameForKey value=value key="test_service" assignTo="testServiceName"/>
+    <#return testServiceName />
+</#function>
+
+

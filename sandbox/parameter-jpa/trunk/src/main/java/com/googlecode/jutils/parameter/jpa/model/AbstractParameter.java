@@ -1,4 +1,4 @@
-package com.googlecode.jutils.parameter.hibernate.model;
+package com.googlecode.jutils.parameter.jpa.model;
 
 import java.io.Serializable;
 
@@ -14,7 +14,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.googlecode.jutils.dal.dto.AbstractDto;
-import com.googlecode.jutils.parameter.hibernate.dao.ParameterDao;
+import com.googlecode.jutils.parameter.jpa.dao.ParameterDao;
 
 /**
  * The Class Parameter.

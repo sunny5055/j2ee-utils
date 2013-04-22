@@ -1,4 +1,4 @@
-package com.googlecode.jutils.parameter.hibernate.service;
+package com.googlecode.jutils.parameter.jpa.service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import com.googlecode.jutils.dal.SearchCriteria;
-import com.googlecode.jutils.parameter.hibernate.model.AbstractParameter;
+import com.googlecode.jutils.parameter.jpa.model.AbstractParameter;
 
 /**
  * The Interface ParameterService.

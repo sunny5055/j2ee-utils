@@ -1,9 +1,9 @@
-package com.googlecode.jutils.parameter.hibernate.dao;
+package com.googlecode.jutils.parameter.jpa.dao;
 
 import java.util.List;
 
 import com.googlecode.jutils.dal.SearchCriteria;
-import com.googlecode.jutils.parameter.hibernate.model.AbstractParameter;
+import com.googlecode.jutils.parameter.jpa.model.AbstractParameter;
 
 /**
  * The Interface ParameterDao.

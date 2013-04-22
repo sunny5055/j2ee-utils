@@ -1,4 +1,4 @@
-package com.googlecode.jutils.parameter.hibernate.dao.impl;
+package com.googlecode.jutils.parameter.jpa.dao.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -17,8 +17,8 @@ import com.googlecode.jutils.dal.Search;
 import com.googlecode.jutils.dal.SearchCriteria;
 import com.googlecode.jutils.dal.SortOrder;
 import com.googlecode.jutils.dal.util.QueryUtil;
-import com.googlecode.jutils.parameter.hibernate.dao.ParameterDao;
-import com.googlecode.jutils.parameter.hibernate.model.AbstractParameter;
+import com.googlecode.jutils.parameter.jpa.dao.ParameterDao;
+import com.googlecode.jutils.parameter.jpa.model.AbstractParameter;
 
 @Repository
 public class ParameterDaoImpl implements ParameterDao {

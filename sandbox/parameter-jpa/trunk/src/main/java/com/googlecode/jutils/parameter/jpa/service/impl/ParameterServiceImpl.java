@@ -1,4 +1,4 @@
-package com.googlecode.jutils.parameter.hibernate.service.impl;
+package com.googlecode.jutils.parameter.jpa.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,15 +17,15 @@ import com.googlecode.jutils.DateUtil;
 import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.dal.SearchCriteria;
-import com.googlecode.jutils.parameter.hibernate.dao.ParameterDao;
-import com.googlecode.jutils.parameter.hibernate.enumeration.DateFormatEnum;
-import com.googlecode.jutils.parameter.hibernate.model.AbstractParameter;
-import com.googlecode.jutils.parameter.hibernate.model.BooleanParameter;
-import com.googlecode.jutils.parameter.hibernate.model.DateParameter;
-import com.googlecode.jutils.parameter.hibernate.model.FloatParameter;
-import com.googlecode.jutils.parameter.hibernate.model.IntegerParameter;
-import com.googlecode.jutils.parameter.hibernate.model.StringParameter;
-import com.googlecode.jutils.parameter.hibernate.service.ParameterService;
+import com.googlecode.jutils.parameter.jpa.dao.ParameterDao;
+import com.googlecode.jutils.parameter.jpa.enumeration.DateFormatEnum;
+import com.googlecode.jutils.parameter.jpa.model.AbstractParameter;
+import com.googlecode.jutils.parameter.jpa.model.BooleanParameter;
+import com.googlecode.jutils.parameter.jpa.model.DateParameter;
+import com.googlecode.jutils.parameter.jpa.model.FloatParameter;
+import com.googlecode.jutils.parameter.jpa.model.IntegerParameter;
+import com.googlecode.jutils.parameter.jpa.model.StringParameter;
+import com.googlecode.jutils.parameter.jpa.service.ParameterService;
 
 @Service
 public class ParameterServiceImpl implements ParameterService {

@@ -1,4 +1,4 @@
-package com.googlecode.jutils.parameter.hibernate.model;
+package com.googlecode.jutils.parameter.jpa.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

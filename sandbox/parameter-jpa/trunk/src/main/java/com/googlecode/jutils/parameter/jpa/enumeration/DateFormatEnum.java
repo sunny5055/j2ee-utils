@@ -1,4 +1,4 @@
-package com.googlecode.jutils.parameter.hibernate.enumeration;
+package com.googlecode.jutils.parameter.jpa.enumeration;
 
 public enum DateFormatEnum {
     DATE_TIME("dd/MM/yyyy HH:mm:ss"), DATE_ONLY("dd/MM/yyyy"), TIME_ONLY("HH:mm:ss");

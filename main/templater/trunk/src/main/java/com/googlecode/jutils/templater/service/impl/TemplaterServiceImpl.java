@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,96 @@ public class TemplaterServiceImpl implements TemplaterService {
 	public TemplaterServiceImpl() {
 		super();
 		this.engines = new ArrayList<TemplaterEngine>();
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public void process(String templateName, Map<String, Object> data, Writer writer) throws TemplaterServiceException {
+		if (!StringUtil.isBlank(templateName) && writer != null) {
+			final TemplaterEngine templaterEngine = getTemplaterEngine(getTemplateType(templateName));
+			if (templaterEngine == null) {
+				throw new TemplaterServiceException("Unable to find a templater engine for template : " + templateName);
+			}
+
+			templaterEngine.process(templateName, data, writer);
+		}
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public void processFromString(String templateContent, String templateType, Map<String, Object> data, Writer writer) throws TemplaterServiceException {
+		if (!StringUtil.isBlank(templateContent) && !StringUtil.isBlank(templateType) && writer != null) {
+			InputStream inputStream = null;
+			try {
+				inputStream = IOUtils.toInputStream(templateContent);
+			} catch (final Exception e) {
+				throw new TemplaterServiceException(e);
+			}
+			processFromInputStream(inputStream, templateType, data, writer);
+		}
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public void processFromFile(File templateFile, Map<String, Object> data, Writer writer) throws TemplaterServiceException {
+		if (templateFile != null && writer != null) {
+			final String templateType = getTemplateType(templateFile.getName());
+			Reader reader = null;
+			try {
+				reader = new BufferedReader(new InputStreamReader(new FileInputStream(templateFile)));
+			} catch (final FileNotFoundException e) {
+				throw new TemplaterServiceException(e);
+			} catch (final Exception e) {
+				throw new TemplaterServiceException(e);
+			}
+
+			if (reader != null) {
+				final TemplaterEngine templaterEngine = getTemplaterEngine(templateType);
+				if (templaterEngine == null) {
+					throw new TemplaterServiceException("Unable to find a templater engine for type : " + templateType);
+				}
+
+				templaterEngine.addTemplateLoaderPath(templateFile);
+				templaterEngine.processFromReader(reader, data, writer);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public void processFromInputStream(InputStream inputStream, String templateType, Map<String, Object> data, Writer writer) throws TemplaterServiceException {
+		if (inputStream != null && !StringUtil.isBlank(templateType) && writer != null) {
+			Reader reader = null;
+			try {
+				reader = new InputStreamReader(inputStream);
+			} catch (final Exception e) {
+				throw new TemplaterServiceException(e);
+			}
+			processFromReader(reader, templateType, data, writer);
+		}
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public void processFromReader(Reader readerTemplate, String templateType, Map<String, Object> data, Writer writer) throws TemplaterServiceException {
+		if (readerTemplate != null && !StringUtil.isBlank(templateType) && writer != null) {
+			final TemplaterEngine templaterEngine = getTemplaterEngine(templateType);
+			if (templaterEngine == null) {
+				throw new TemplaterServiceException("Unable to find a templater engine for type : " + templateType);
+			}
+
+			templaterEngine.processFromReader(readerTemplate, data, writer);
+		}
 	}
 
 	/**
@@ -89,7 +180,16 @@ public class TemplaterServiceImpl implements TemplaterService {
 			} catch (final Exception e) {
 				throw new TemplaterServiceException(e);
 			}
-			content = getContentFromReader(reader, templateType, data);
+
+			if (reader != null) {
+				final TemplaterEngine templaterEngine = getTemplaterEngine(templateType);
+				if (templaterEngine == null) {
+					throw new TemplaterServiceException("Unable to find a templater engine for type : " + templateType);
+				}
+
+				templaterEngine.addTemplateLoaderPath(templateFile);
+				content = templaterEngine.getContentFromReader(reader, data);
+			}
 		}
 		return content;
 	}

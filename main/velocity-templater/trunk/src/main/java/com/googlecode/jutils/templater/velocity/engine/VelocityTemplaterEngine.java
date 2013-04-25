@@ -1,7 +1,9 @@
 package com.googlecode.jutils.templater.velocity.engine;
 
+import java.io.File;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +31,9 @@ public class VelocityTemplaterEngine extends AbstractTemplaterEngine {
 		super();
 	}
 
+	/**
+	 * {@inheritedDoc}
+	 */
 	@Override
 	public boolean accept(String extension) {
 		boolean accept = false;
@@ -36,6 +41,61 @@ public class VelocityTemplaterEngine extends AbstractTemplaterEngine {
 			accept = StringUtil.equalsIgnoreCase(extension, EXTENSION);
 		}
 		return accept;
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public void addTemplateLoaderPath(File file) {
+	}
+
+	@Override
+	public void process(String templateName, Map<String, Object> data, Writer writer) throws TemplaterServiceException {
+		if (!StringUtil.isBlank(templateName) && writer != null) {
+			if (data == null) {
+				data = new HashMap<String, Object>();
+			}
+
+			if (!MapUtil.isEmpty(defaultData)) {
+				data.putAll(defaultData);
+			}
+
+			final VelocityContext context = new VelocityContext(data);
+			try {
+				configuration.mergeTemplate(templateName, (String) configuration.getProperty(RuntimeConstants.INPUT_ENCODING), context, writer);
+			} catch (final ResourceNotFoundException e) {
+				throw new TemplaterServiceException(e);
+			} catch (final ParseErrorException e) {
+				throw new TemplaterServiceException(e);
+			} catch (final MethodInvocationException e) {
+				throw new TemplaterServiceException(e);
+			}
+		}
+	}
+
+	@Override
+	public void processFromReader(Reader reader, Map<String, Object> data, Writer writer) throws TemplaterServiceException {
+		if (reader != null && writer != null) {
+			if (data == null) {
+				data = new HashMap<String, Object>();
+			}
+
+			if (!MapUtil.isEmpty(defaultData)) {
+				data.putAll(defaultData);
+			}
+
+			final VelocityContext context = new VelocityContext(data);
+			try {
+				configuration.evaluate(context, writer, "test", reader);
+			} catch (final ParseErrorException e) {
+				throw new TemplaterServiceException(e);
+			} catch (final MethodInvocationException e) {
+				throw new TemplaterServiceException(e);
+			} catch (final ResourceNotFoundException e) {
+				throw new TemplaterServiceException(e);
+			}
+		}
 	}
 
 	/**

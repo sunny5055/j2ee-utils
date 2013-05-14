@@ -14,7 +14,7 @@
 <#assign serviceImplPackageName = util.getServiceImplPackageName(entityPackageName) />
 <#assign serviceImplName = util.getServiceImplName(entity.@name) />
 <#assign testServiceName = util.getTestServiceName(entity.@name) />
-
+<@resolveKey map=config key="testXmlDatasetFileName" value=entityName assignTo="testXmlDatasetFileName"/>
 
 <@resolveKey map=config key="testServiceFilePath" value=projectName assignTo="filePath"/>
 <#assign filePath = filePath + "/" + packageToDir(servicePackageName) />
@@ -84,7 +84,7 @@ package ${servicePackageName};
 ${getImports(true, servicePackageName, imports)}
 
 @ContextConfiguration(locations = { "classpath:${util.getClassPathResource(config.springTestBusinessFilePath, config.springTestBusinessFileName)}" })
-@DatabaseSetup(value = "classpath:${util.getClassPathResource(config.testXmlDatasetFilePath, config.testXmlDatasetFileName)}")
+@DatabaseSetup(value = "classpath:${util.getClassPathResource(config.testXmlDatasetFilePath, testXmlDatasetFileName)}")
 <#compress>
 public class ${testServiceName} extends
 <#if util.xml.getAttribute(entity.@readOnly) == "true">

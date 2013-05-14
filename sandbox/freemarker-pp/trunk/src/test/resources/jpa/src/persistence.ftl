@@ -6,7 +6,6 @@
 <@resolveKey map=config key="jpaPersistenceFilePath" value=projectName assignTo="filePath"/>
 <@resolveKey map=config key="jpaPersistenceFileName" value=projectName assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
-<#assign projectName = xml["//p:configuration/p:projectName"]>
 <#assign entities = xml["//j:entity"]>
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"

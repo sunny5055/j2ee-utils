@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:project xmlns:p="http://code.google.com/p/j2ee-utils/schema/project"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:b="http://code.google.com/p/j2ee-utils/schema/java-beans"
+	xmlns:j="http://code.google.com/p/j2ee-utils/schema/jpa" xmlns:g="http://code.google.com/p/j2ee-utils/schema/gui"
+	xsi:schemaLocation="http://code.google.com/p/j2ee-utils/schema/project http://code.google.com/p/j2ee-utils/schema/project.xsd http://code.google.com/p/j2ee-utils/schema/java-beans http://code.google.com/p/j2ee-utils/schema/java-beans.xsd http://code.google.com/p/j2ee-utils/schema/jpa http://code.google.com/p/j2ee-utils/schema/jpa.xsd http://code.google.com/p/j2ee-utils/schema/gui http://code.google.com/p/j2ee-utils/schema/gui.xsd ">
+	<p:configuration>
+		<p:projectName>test</p:projectName>
+	</p:configuration>
+	<p:packages>
+		<p:package name="com.googlecode.test">
+			<b:interface name="AnInterface">
+				<b:properties>
+					<b:static-property name="testVar" type="String"
+						value="TEST" />
+					<b:static-property name="TEST_VAR2" type="String"
+						value="TEST" />
+				</b:properties>
+				<b:operations>
+					<b:operation name="doSomething">
+						<b:return>
+							<b:type type="void" />
+						</b:return>
+						<b:parameters>
+							<b:parameter name="value" type="String" />
+						</b:parameters>
+					</b:operation>
+				</b:operations>
+			</b:interface>
+			<b:class name="Car" abstract="true">
+				<b:implements>
+					<b:element>java.io.Serializable</b:element>
+				</b:implements>
+				<b:properties>
+					<b:property name="id" type="Integer" />
+					<b:property name="brand" type="String" />
+					<b:property name="modelName" type="String" />
+					<b:property-list name="motorizations" type="java.util.List"
+						value="String" />
+				</b:properties>
+				<b:constructors>
+					<b:constructor>
+						<b:content>
+							<![CDATA[
+							this();
+							this.brand = brand;
+							this.modelName = modelName;
+							]]>
+						</b:content>
+						<b:parameters>
+							<b:parameter name="brand" type="String" />
+							<b:parameter name="modelName" type="String" />
+						</b:parameters>
+					</b:constructor>
+				</b:constructors>
+				<b:operations>
+					<b:operation name="main" static="true">
+						<b:return>
+							<b:type type="void" />
+						</b:return>
+						<b:parameters>
+							<b:parameter-list name="args" type="array"
+								value="String" />
+						</b:parameters>
+					</b:operation>
+				</b:operations>
+			</b:class>
+			<b:class name="Picasso" superClass="Car">
+				<b:properties>
+					<b:property name="breakCar" type="Boolean" />
+					<b:property-map name="colors" type="java.util.Map"
+						key="String" value="java.awt.Color" />
+				</b:properties>
+			</b:class>
+		</p:package>
+		<p:package name="fr.direst.webcams.model">
+			<j:entity tableName="CAM_CAMERA" name="Camera" columnPrefix="CAM">
+				<j:id name="id" type="Integer" />
+				<j:properties>
+					<j:column name="code" type="String" unique="true"
+						nullable="false" length="50" />
+					<j:column name="nom" type="String" nullable="false"
+						length="50" />
+					<j:column name="detailObservation" type="String" nullable="false"
+						length="2000" />
+					<j:many-to-one name="axe" targetEntity="Axe" />
+				</j:properties>
+			</j:entity>
+			<j:entity tableName="AXE_AXE" name="Axe" columnPrefix="AXE">
+				<j:id name="id" type="Integer" />
+				<j:properties>
+					<j:column name="code" type="String" unique="true"
+						nullable="false" length="50" />
+					<j:column name="libelle" type="String" nullable="false"
+						length="255" />
+				</j:properties>
+			</j:entity>
+		</p:package>
+		<p:package name="com.googlecode.test">
+			<j:entity tableName="USE_USER" name="User" columnPrefix="USE">
+				<j:id name="id" type="Integer" />
+				<j:properties>
+					<j:column name="firstName" type="String" nullable="false"
+						length="50" />
+					<j:column name="lastName" type="String" nullable="false"
+						length="50" />
+					<j:column name="login" type="String" unique="true"
+						nullable="false" length="50" />
+					<j:column name="password" type="String" nullable="false"
+						length="50" />
+					<j:column name="active" type="Boolean" nullable="false" />
+					<j:many-to-many name="roles" listType="java.util.List"
+						targetEntity="com.googlecode.test.Role" />
+				</j:properties>
+			</j:entity>
+			<j:entity tableName="ROL_ROLE" name="Role" columnPrefix="ROL"
+				readOnly="true">
+				<j:id name="id" type="Integer" />
+				<j:properties>
+					<j:column name="code" type="String" unique="true"
+						nullable="false" length="50" />
+					<j:column name="name" type="String" nullable="false"
+						length="50" />
+				</j:properties>
+			</j:entity>
+			<j:entity tableName="LAB_LABEL" name="Label" columnPrefix="LAB">
+				<j:embedded-id targetEntity="LabelId" name="id">
+					<j:properties>
+						<j:column name="key" type="String" nullable="false"
+							length="100" />
+						<j:column name="lang" type="String" nullable="false"
+							length="2" />
+					</j:properties>
+				</j:embedded-id>
+				<j:properties>
+					<j:column name="value" type="String" nullable="false"
+						length="250" />
+				</j:properties>
+			</j:entity>
+		</p:package>
+	</p:packages>
+</p:project>

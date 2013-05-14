@@ -10,6 +10,7 @@
 # header
 login_link=Se connecter
 logout_link=Se déconnecter
+global_head_title=${projectName?cap_first}
 # header
 
 # Menu
@@ -51,25 +52,31 @@ blank_value=Non renseigné
 select=Sélectionnez
 # Common form
 
-# error
+# error messages
 error_create_failed=La création a échoué
 error_update_failed=La mise à jour a échoué
 error_delete_failed=La suppression a échoué
-
 error_unable_to_find_entity=Impossible de trouver l'entité
+error_value_required={0} est obligatoire.
+error_int_value_invalid={0} n''est pas un nombre entier valide.
+error_float_value_invalid={0} n''est pas un nombre flottant valide.
+error_date_value_invalid={0} n''est pas une date valide.
+# error messages
 
-error_page_title=Erreur
+# Home
+home_head_title=Accueil
+# Home
+
+
+# Error
+error_head_title=Erreur
+
 error_exception_title=Erreur
 error_exception_content=Une erreur est survenue, merci de contacter l'administrateur du site.
 
 error_no_access_title=Accès interdit
 error_no_access_content=Vous n'avez pas accès à cette page
-
-error_value_required={0} est obligatoire.
-error_int_value_invalid={0} n''est pas un nombre entier valide.
-error_float_value_invalid={0} n''est pas un nombre flottant valide.
-error_date_value_invalid={0} n''est pas une date valide.
-# error
+# Error
 
 <#list entities as entity>
 <@xPath xml=xml expression="//j:entity[@name='${entity.@name}']/j:properties/*" assignTo="allProperties" />

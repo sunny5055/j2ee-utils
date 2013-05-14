@@ -139,6 +139,50 @@
 </#function>
 
 
+
+<#function getWebResource path fileName>
+	<#local webResource = ""/>
+
+	<#local webResource =  path />
+	<#local webResource =  webResource?replace("{moduleWeb}", "") />
+	<#local webResource =  webResource?replace("{webappPath}", "") />
+
+	<#list 1..100000000 as x>
+		<#if webResource?starts_with("/")>
+			<#local webResource =  webResource?substring(1) />
+		<#else>
+			<#break>
+		</#if>
+	</#list>
+	<#list 1..100000000 as x>
+		<#if webResource?starts_with("\\")>
+			<#local webResource =  webResource?substring(2) />
+		<#else>
+			<#break>
+		</#if>
+	</#list>
+
+	<#list 1..100000000 as x>
+		<#if webResource?ends_with("/")>
+			<#local webResource =  webResource?substring(0, classpathResource?length-1) />
+		<#else>
+			<#break>
+		</#if>
+	</#list>
+	<#list 1..100000000 as x>
+		<#if webResource?ends_with("\\")>
+			<#local webResource =  webResource?substring(0, classpathResource?length-2) />
+		<#else>
+			<#break>
+		</#if>
+	</#list>
+
+	<#local webResource =  "/" + webResource + "/" + fileName />
+
+	<#return webResource/>
+</#function>
+
+
 <#function getEntityPackageNames xml>
 	<#local entityPackageNames = [] />
 	<#local entities = xml["//j:entity"]/>

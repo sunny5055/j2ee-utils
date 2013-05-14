@@ -1,0 +1,14 @@
+{
+	sourceDirectory : 'src',
+	outputDirectory : 'out',
+	actions : [
+		{
+    		name : 'process',
+    		applyTo : '**/*.ftl'
+		}
+	],
+	data : {
+    	config : 'properties(config/config.properties)',
+    	xml : 'xml(data/test.xml)'
+	}
+}

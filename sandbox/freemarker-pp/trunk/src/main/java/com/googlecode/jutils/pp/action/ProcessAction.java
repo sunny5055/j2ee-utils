@@ -71,6 +71,9 @@ public class ProcessAction extends AbstractAction {
 			data = new HashMap<String, Object>();
 			data.putAll(settings.getData());
 
+			data.put("dollar", "$");
+			data.put("sharp", "#");
+
 			data.put("renameOutputFile", new RenameOutputFileTransform());
 			data.put("changeOutputFile", new ChangeOutputFileTransform());
 			data.put("dropOutputFile", new DropOutputFileTransform());

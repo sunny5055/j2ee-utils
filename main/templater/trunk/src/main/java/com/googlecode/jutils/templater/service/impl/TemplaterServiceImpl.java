@@ -43,6 +43,18 @@ public class TemplaterServiceImpl implements TemplaterService {
 	 * {@inheritedDoc}
 	 */
 	@Override
+	public void addTemplateLoaderPath(File file) {
+		if (file != null) {
+			for (final TemplaterEngine templaterEngine : engines) {
+				templaterEngine.addTemplateLoaderPath(file);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
 	public void process(String templateName, Map<String, Object> data, Writer writer) throws TemplaterServiceException {
 		if (!StringUtil.isBlank(templateName) && writer != null) {
 			final TemplaterEngine templaterEngine = getTemplaterEngine(getTemplateType(templateName));

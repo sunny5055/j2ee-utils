@@ -12,6 +12,13 @@ import com.googlecode.jutils.templater.exception.TemplaterServiceException;
  * Interface TemplaterService.
  */
 public interface TemplaterService {
+	/**
+	 * Adds the template loader path.
+	 * 
+	 * @param file
+	 *            the file
+	 */
+	void addTemplateLoaderPath(File file);
 
 	/**
 	 * Process the template using data from the map parameter.

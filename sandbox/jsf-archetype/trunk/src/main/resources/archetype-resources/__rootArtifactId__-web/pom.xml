@@ -12,20 +12,6 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<repositories>
-		<repository>
-			<id>jboss-public-repository-group</id>
-			<name>JBoss Public Maven Repository Group</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-		</repository>
-		<repository>
-			<id>prime-repo</id>
-			<name>Prime Technology Maven Repository</name>
-			<url>http://repository.primefaces.org</url>
-			<layout>default</layout>
-		</repository>
-	</repositories>
-
 	<build>
 		<finalName>${rootArtifactId}</finalName>
 		<resources>
@@ -39,13 +25,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>${groupId}</groupId>
-			<artifactId>${rootArtifactId}-business</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>jee-utils</groupId>
-			<artifactId>jsf-util</artifactId>
-			<version>1.0.0</version>
+			<artifactId>${rootArtifactId}-service</artifactId>
 		</dependency>
 
 		<!-- Servlet API -->
@@ -72,13 +52,13 @@
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.faces</artifactId>
-			<version>2.1.7</version>
+			<version>2.1.21</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>3.2</version>
+			<version>3.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces</groupId>
@@ -88,7 +68,7 @@
 		<dependency>
 			<groupId>org.apache.myfaces.tomahawk</groupId>
 			<artifactId>tomahawk20</artifactId>
-			<version>1.1.11</version>
+			<version>1.1.14</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:util="http://java.sun.com/jsf/composite/components">
+<h:head>
+	<title><ui:insert name="headTitle" /> - <h:outputText value="#{bundle.global_head_title}" /></title>
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</h:head>
+
+<h:body>
+	<f:view contentType="text/html">
+		<link rel="stylesheet" href="#{resource['css:main.css']}" type="text/css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="#{resource['css:main-ie.css']}" type="text/css" /><![endif]-->
+
+		<ui:insert name="stylesheet" />
+
+		<!--[if lt IE 7]><script type="text/javascript" src="#{resource['js:DD_belatedPNG_0.0.8a-min.js']}"></script><![endif]-->
+		<!--[if IE]><script type="text/javascript" src="#{resource['js:html5.js']}"></script><![endif]-->
+		<!--[if lte IE 7]><script type="text/javascript" src="#{resource['js:IE8.js']}"></script><![endif]-->
+
+		<script type="text/javascript" src="#{resource['js:main.js']}"></script>
+
+		<ui:insert name="javascript" />
+
+		<ui:insert name="header">
+			<ui:include src="/xhtml/template/header.xhtml" />
+		</ui:insert>
+
+		<div id="wrapper">
+			<ui:insert name="breadcrumb">
+				<ui:include src="/xhtml/template/breadcrumb.xhtml" />
+			</ui:insert>
+
+			<div id="content">
+				<h:form id="contentForm">
+					<ui:insert name="content" />
+				</h:form>
+			</div>
+		</div>
+
+		<ui:insert name="footer">
+			<ui:include src="/xhtml/template/footer.xhtml" />
+		</ui:insert>
+
+
+		<ui:insert name="confirmDialog" />
+
+		<ui:insert name="ajaxStatus">
+			<p:ajaxStatus onstart="statusDialog.show();"
+				onsuccess="statusDialog.hide();" />
+			<p:dialog modal="true" widgetVar="statusDialog" header="Status"
+				draggable="false" closable="false" width="240">
+				<h:graphicImage name="ajaxloadingbar.gif" library="img"
+					alt="Loading bar" />
+			</p:dialog>
+		</ui:insert>
+	</f:view>
+</h:body>
+</html>

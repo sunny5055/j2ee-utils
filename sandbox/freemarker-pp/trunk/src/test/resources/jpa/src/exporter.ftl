@@ -2,9 +2,9 @@
 <#import "/common/common.inc" as util />
 
 <@dropOutputFile />
-<#assign projectName = xml["//p:projectName"]/>
-<@resolveKey map=config key="ddlExporterFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="ddlExporterFileName" value=entityName assignTo="fileName"/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
+<@resolveKey map=config key="ddlExporterFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="ddlExporterFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <#assign className = fileName?replace(".java", "") />
 

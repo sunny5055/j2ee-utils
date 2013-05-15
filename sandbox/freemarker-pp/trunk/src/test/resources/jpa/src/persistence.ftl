@@ -2,9 +2,9 @@
 <#import "/common/common.inc" as util />
 <@dropOutputFile />
 <#assign entities = xml["//j:entity"]/>
-<#assign projectName = xml["//p:projectName"]/>
-<@resolveKey map=config key="jpaPersistenceFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="jpaPersistenceFileName" value=projectName assignTo="fileName"/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
+<@resolveKey map=config key="jpaPersistenceFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="jpaPersistenceFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <#assign entities = xml["//j:entity"]>
 <?xml version="1.0" encoding="UTF-8"?>

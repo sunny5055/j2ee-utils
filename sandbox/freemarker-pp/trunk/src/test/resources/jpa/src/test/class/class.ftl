@@ -4,7 +4,7 @@
 <@dropOutputFile />
 
 <#assign entities = xml["//j:entity"]/>
-<#assign projectName = xml["//p:projectName"]/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
 
 <#list entities as entity>
 <#assign entityPackageName = entity["ancestor::p:package/@name"] />
@@ -14,9 +14,9 @@
 <#assign serviceImplPackageName = util.getServiceImplPackageName(entityPackageName) />
 <#assign serviceImplName = util.getServiceImplName(entity.@name) />
 <#assign testServiceName = util.getTestServiceName(entity.@name) />
-<@resolveKey map=config key="testXmlDatasetFileName" value=entityName assignTo="testXmlDatasetFileName"/>
+<@resolveKey map=config key="testXmlDatasetFileName" values=[entityName] assignTo="testXmlDatasetFileName"/>
 
-<@resolveKey map=config key="testServiceFilePath" value=projectName assignTo="filePath"/>
+<@resolveKey map=config key="testServiceFilePath" values=[projectName] assignTo="filePath"/>
 <#assign filePath = filePath + "/" + packageToDir(servicePackageName) />
 
 <@changeOutputFile name=filePath + "/"+ testServiceName + ".java" />

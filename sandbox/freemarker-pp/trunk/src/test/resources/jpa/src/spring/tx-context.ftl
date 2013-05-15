@@ -1,14 +1,14 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
 <#import "includes/spring.inc" as util>
 <@dropOutputFile />
-<#assign projectName = xml["//p:projectName"]/>
-<@resolveKey map=config key="springTxFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="springTxFileName" value=projectName assignTo="fileName"/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
+<@resolveKey map=config key="springTxFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="springTxFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <#assign basePackages = util.getEntityPackageNames(xml) />
-<@format format=config.serviceFileName value="*" assignTo="serviceName"/>
+<@format format=config.serviceFileName values=["*"] assignTo="serviceName"/>
 <#assign serviceName = serviceName?replace(".java", "")/>
-<@format format=config.daoFileName value="*" assignTo="daoName"/>
+<@format format=config.daoFileName values=["*"] assignTo="daoName"/>
 <#assign daoName = daoName?replace(".java", "")/>
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"

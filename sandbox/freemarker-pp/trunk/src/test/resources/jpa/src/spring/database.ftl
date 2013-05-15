@@ -1,9 +1,9 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
 <#import "includes/spring.inc" as util>
 <@dropOutputFile />
-<#assign projectName = xml["//p:projectName"]/>
-<@resolveKey map=config key="springDatabaseFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="springDatabaseFileName" value=projectName assignTo="fileName"/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
+<@resolveKey map=config key="springDatabaseFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="springDatabaseFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 # Jdbc
 <#if config.database == "postgresql">

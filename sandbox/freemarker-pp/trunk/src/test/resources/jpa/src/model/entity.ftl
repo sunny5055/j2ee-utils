@@ -6,13 +6,13 @@
 <@dropOutputFile />
 
 <#assign entities = xml["//j:entity"]/>
-<#assign projectName = xml["//p:projectName"]/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
 
 <#list entities as entity>
 <#assign entityPackageName = entity["ancestor::p:package/@name"] />
 <#assign entityName = util.getEntityName(entity.@name) />
 
-<@resolveKey map=config key="entityFilePath" value=projectName assignTo="filePath"/>
+<@resolveKey map=config key="entityFilePath" values=[projectName] assignTo="filePath"/>
 <#assign filePath = filePath + "/" + packageToDir(entityPackageName) />
 
 <@changeOutputFile name=filePath + "/"+ entityName + ".java" />

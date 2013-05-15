@@ -3,24 +3,8 @@
 	outputDirectory : 'D:\\jschaal\\Perso\\Projets\\j2ee-utils\\test\\trunk',
 	actions : [
 		{
-    		name : 'process',
-    		applyTo : '**/faces-config.ftl'
-		},
-		{
-    		name : 'process',
-    		applyTo : '**/index_jsp.ftl'
-		},
-		{
-    		name : 'process',
-    		applyTo : '**/web_xml.ftl'
-		},
-		{
-    		name : 'process',
-    		applyTo : '**/spring/*.ftl'
-		},
-		{
-    		name : 'process',
-    		applyTo : '**/bundle/*.ftl'
+			name : 'process',
+			applyTo : '**/web/*.ftl'
 		}
 	],
 	data : {

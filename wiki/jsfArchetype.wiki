@@ -1,9 +1,10 @@
 =jsf-archetype=
 
-This project defines a Web project archetype that relies on Spring, Hibernate, Maven, JSF2 and PrimeFaces. It creates a main project splitted into two modules :
+This project defines a Web project archetype that relies on Spring, JPA (Hibernate), Maven, JSF2 and PrimeFaces. It creates a main project splitted into three modules :
 <ul>
-	<li>A business module : contains all the classes and interfaces representing the business aspect of the application;</li>
-	<li>A web ùodule : contains all the components that are used in the Web GUI.</li>
+	<li>An api module : contains the models and service interfaces of the application;</li>
+	<li>A service module : contains the dao and service implementations of the application;</li>
+	<li>A web module : contains all the components that are used in the Web GUI.</li>
 </ul>
 
 {{{

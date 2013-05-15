@@ -2,8 +2,8 @@
 <#import "/common/common.inc" as util />
 <@dropOutputFile />
 <#assign projectName = xml["//p:configuration/p:projectName"]>
-<@resolveKey map=config key="errorXhtmlFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="errorXhtmlFileName" value=projectName assignTo="fileName"/>
+<@resolveKey map=config key="errorXhtmlFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="errorXhtmlFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"

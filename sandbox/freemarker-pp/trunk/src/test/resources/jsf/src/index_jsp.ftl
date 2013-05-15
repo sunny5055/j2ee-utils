@@ -2,8 +2,8 @@
 <#import "/common/common.inc" as util />
 <@dropOutputFile />
 <#assign projectName = xml["//p:configuration/p:projectName"]>
-<@resolveKey map=config key="indexJspFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="indexJspFileName" value=projectName assignTo="fileName"/>
+<@resolveKey map=config key="indexJspFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="indexJspFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <!DOCTYPE HTML>
 <html>

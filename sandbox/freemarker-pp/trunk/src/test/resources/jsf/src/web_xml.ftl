@@ -2,8 +2,8 @@
 <#import "/common/common.inc" as util />
 <@dropOutputFile />
 <#assign projectName = xml["//p:configuration/p:projectName"]>
-<@resolveKey map=config key="webXmlFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="webXmlFileName" value=projectName assignTo="fileName"/>
+<@resolveKey map=config key="webXmlFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="webXmlFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"

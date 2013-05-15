@@ -85,10 +85,176 @@
   <#return returnType>
 </#function>
 
-<#function getModifiersFrom node>
-  <#return getModifiers(xml.getAttribute(node.@abstract), xml.getAttribute(node.@static), xml.getAttribute(node.@final))>
+
+<#function getEntityName value>
+	<#local entityName>
+		<@format format=config.entityFileName values=[value]/>
+	</#local>
+
+	<#return entityName?replace(".java", "") />
 </#function>
 
+
+<#function getDaoPackageName packageName>
+    <#local daoPackageName = packageName>
+	<#if config.entityPackage??>
+		<#local daoPackageName = daoPackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.daoPackage??>
+		<#local daoPackageName = daoPackageName + config.daoPackage />
+	</#if>
+
+    <#return daoPackageName />
+</#function>
+
+
+<#function getDaoName value>
+    <@format format=config.daoFileName values=[value] assignTo="daoName"/>
+	<#return daoName?replace(".java", "") />
+</#function>
+
+
+<#function getDaoImplPackageName packageName>
+    <#local daoImplPackageName = packageName>
+	<#if config.entityPackage??>
+		<#local daoImplPackageName = daoImplPackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.daoImplPackage??>
+		<#local daoImplPackageName = daoImplPackageName + config.daoImplPackage />
+	</#if>
+
+    <#return daoImplPackageName />
+</#function>
+
+
+<#function getDaoImplName value>
+    <@format format=config.daoImplFileName values=[value] assignTo="daoImplName"/>
+	<#return daoImplName?replace(".java", "") />
+</#function>
+
+
+<#function getServicePackageName packageName>
+    <#local servicePackageName = packageName>
+	<#if config.entityPackage??>
+		<#local servicePackageName = servicePackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.servicePackage??>
+		<#local servicePackageName = servicePackageName + config.servicePackage />
+	</#if>
+
+    <#return servicePackageName />
+</#function>
+
+
+<#function getServiceName value>
+    <@format format=config.serviceFileName values=[value] assignTo="serviceName"/>
+	<#return serviceName?replace(".java", "") />
+</#function>
+
+
+<#function getServiceImplPackageName packageName>
+    <#local serviceImplPackageName = packageName>
+	<#if config.entityPackage??>
+		<#local serviceImplPackageName = serviceImplPackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.serviceImplPackage??>
+		<#local serviceImplPackageName = serviceImplPackageName + config.serviceImplPackage />
+	</#if>
+
+    <#return serviceImplPackageName />
+</#function>
+
+
+<#function getServiceImplName value>
+    <@format format=config.serviceImplFileName values=[value] assignTo="serviceImplName"/>
+	<#return serviceImplName?replace(".java", "") />
+</#function>
+
+
+<#function getEmbeddedIdPackageName packageName>
+    <#local embeddedIdPackageName = packageName>
+	<#if config.entityPackage??>
+		<#local embeddedIdPackageName = embeddedIdPackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.embeddedIdPackage??>
+		<#local embeddedIdPackageName = embeddedIdPackageName + config.embeddedIdPackage />
+	</#if>
+
+    <#return embeddedIdPackageName />
+</#function>
+
+
+<#function getEmbeddedIdName value>
+    <@format format=config.embeddedIdFileName values=[value] assignTo="embeddedIdName"/>
+	<#return embeddedIdName?replace(".java", "") />
+</#function>
+
+
+<#function getTestServiceName value>
+    <@format format=config.testServiceFileName values=[value] assignTo="testServiceName"/>
+	<#return testServiceName?replace(".java", "") />
+</#function>
+
+
+<#function getClassPathResource path fileName>
+	<#local classPathResource = ""/>
+
+	<#local classPathResource =  path />
+	<#local classPathResource =  classPathResource?replace("{moduleApi}", "") />
+	<#local classPathResource =  classPathResource?replace("{moduleService}", "") />
+	<#local classPathResource =  classPathResource?replace("{moduleWeb}", "") />
+
+	<#local classPathResource =  classPathResource?replace("{javaPath}", "") />
+	<#local classPathResource =  classPathResource?replace("{resourcesPath}", "") />
+	<#local classPathResource =  classPathResource?replace("{testJavaPath}", "") />
+	<#local classPathResource =  classPathResource?replace("{testResourcesPath}", "") />
+
+	<#list 1..100000000 as x>
+		<#if classPathResource?starts_with("/")>
+			<#local classPathResource =  classPathResource?substring(1) />
+		<#else>
+			<#break>
+		</#if>
+	</#list>
+	<#list 1..100000000 as x>
+		<#if classPathResource?starts_with("\\")>
+			<#local classPathResource =  classPathResource?substring(2) />
+		<#else>
+			<#break>
+		</#if>
+	</#list>
+
+	<#list 1..100000000 as x>
+		<#if classPathResource?ends_with("/")>
+			<#local classPathResource =  classPathResource?substring(0, classpathResource?length-1) />
+		<#else>
+			<#break>
+		</#if>
+	</#list>
+	<#list 1..100000000 as x>
+		<#if classPathResource?ends_with("\\")>
+			<#local classPathResource =  classPathResource?substring(0, classpathResource?length-2) />
+		<#else>
+			<#break>
+		</#if>
+	</#list>
+
+	<#local classPathResource =  classPathResource + "/" + fileName />
+
+	<#return classPathResource/>
+</#function>
+
+
+<#function getEntityPackageNames xml>
+	<#local entityPackageNames = [] />
+	<#local entities = xml["//j:entity"]/>
+	<#list entities as entity>
+		<#local entityPackageName = entity["ancestor::p:package/@name"] />
+		<#local entityPackageNames = dir.addToList(entityPackageNames, entityPackageName, true)  />
+	</#list>
+
+	<#return entityPackageNames />
+</#function>
 
 <#function getClassPathResource path fileName>
 	<#local classPathResource = ""/>

@@ -2,10 +2,10 @@
 <#import "/common/common.inc" as util />
 <@dropOutputFile />
 <#assign entities = xml["//j:entity"]/>
-<#assign projectName = xml["//p:projectName"]/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
 
-<@resolveKey map=config key="resourceBundleFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="resourceBundleFileName" value=entityName assignTo="fileName"/>
+<@resolveKey map=config key="resourceBundleFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="resourceBundleFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 # header
 login_link=Se connecter
@@ -84,6 +84,7 @@ error_no_access_content=Vous n'avez pas accès à cette page
 # ${entity.@name}
 ${toUnderscoreCase(entity.@name)?lower_case}_title=${entity.@name}
 
+${toUnderscoreCase(entity.@name)?lower_case}_list_head_title=${entity.@name}
 <#if embeddedIdProperties??>
 <#list embeddedIdProperties as property>
 ${toUnderscoreCase(entity.@name)?lower_case}_list_${toUnderscoreCase(property.@name)?lower_case}=${property.@name?cap_first}
@@ -92,11 +93,11 @@ ${toUnderscoreCase(entity.@name)?lower_case}_list_${toUnderscoreCase(property.@n
 <#list allProperties as property>
 ${toUnderscoreCase(entity.@name)?lower_case}_list_${toUnderscoreCase(property.@name)?lower_case}=${property.@name?cap_first}
 </#list>
-${toUnderscoreCase(entity.@name)?lower_case}_found=${entity.@name?lower_case}(s) trouvée(s)
+${toUnderscoreCase(entity.@name)?lower_case}_list_found=${entity.@name?lower_case}(s) trouvée(s)
 ${toUnderscoreCase(entity.@name)?lower_case}_list_empty=Aucune ${entity.@name?lower_case} n'est enregistrée dans l'application
 
-${toUnderscoreCase(entity.@name)?lower_case}_create_title=Création d'un ${entity.@name?lower_case}
-${toUnderscoreCase(entity.@name)?lower_case}_update_title=Mise à jour de ${entity.@name?lower_case}
+${toUnderscoreCase(entity.@name)?lower_case}_create_head_title=Création d'un ${entity.@name?lower_case}
+${toUnderscoreCase(entity.@name)?lower_case}_update_head_title=Mise à jour de ${entity.@name?lower_case}
 <#if embeddedIdProperties??>
 <#list embeddedIdProperties as property>
 ${toUnderscoreCase(entity.@name)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}=${property.@name?cap_first}

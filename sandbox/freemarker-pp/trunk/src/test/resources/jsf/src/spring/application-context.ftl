@@ -2,8 +2,8 @@
 <#import "/common/common.inc" as util />
 <@dropOutputFile />
 <#assign projectName = xml["//p:configuration/p:projectName"]>
-<@resolveKey map=config key="springApplicationFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="springApplicationFileName" value=projectName assignTo="fileName"/>
+<@resolveKey map=config key="springApplicationFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="springApplicationFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <#assign basePackages = util.getEntityPackageNames(xml) />
 <?xml version="1.0" encoding="UTF-8"?>

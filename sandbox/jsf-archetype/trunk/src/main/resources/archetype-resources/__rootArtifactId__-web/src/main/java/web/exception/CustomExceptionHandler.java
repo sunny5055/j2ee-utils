@@ -3,53 +3,81 @@
 #set( $symbol_escape = '\' )
 package ${package}.web.exception;
 
+import java.io.IOException;
+import java.util.Iterator;
+
+import javax.faces.FacesException;
+import javax.faces.application.ViewExpiredException;
 import javax.faces.context.ExceptionHandler;
-import com.google.code.jee.utils.jsf.exception.AbstractExceptionHandler;
+import javax.faces.context.ExceptionHandlerWrapper;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ExceptionQueuedEvent;
+import javax.faces.event.ExceptionQueuedEventContext;
 
-/**
- * The Class CustomExceptionHandler.
- */
-public class CustomExceptionHandler extends AbstractExceptionHandler {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    /**
-     * Instantiates a new custom exception handler.
-     * 
-     * @param wrapped the wrapped
-     */
+import ${package}.web.bean.ErrorBean;
+import ${package}.web.util.FacesUtils;
+
+public class CustomExceptionHandler extends ExceptionHandlerWrapper {
+    protected static final Logger LOGGER = LoggerFactory.getLogger(CustomExceptionHandler.class);
+    private ExceptionHandler wrapped;
+
     public CustomExceptionHandler(ExceptionHandler wrapped) {
-        super(wrapped);
+        this.wrapped = wrapped;
     }
 
     /**
      * {@inheritedDoc}
      */
     @Override
-    public String getViewExpiredPage() {
-        return "/xhtml/index.xhtml";
+    public ExceptionHandler getWrapped() {
+        return this.wrapped;
     }
 
     /**
      * {@inheritedDoc}
      */
     @Override
-    public String getExceptionTitle() {
-        return "error_exception_title";
-    }
+    public void handle() throws FacesException {
+        final FacesContext facesContext = FacesContext.getCurrentInstance();
+        final Iterator<ExceptionQueuedEvent> it = getUnhandledExceptionQueuedEvents().iterator();
+        while (it.hasNext()) {
+            final ExceptionQueuedEvent event = it.next();
+            final ExceptionQueuedEventContext context = (ExceptionQueuedEventContext) event.getSource();
+            final Throwable exception = context.getException();
 
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public String getExceptionContent() {
-        return "error_exception_content";
-    }
+            FacesUtils.setSessionAttribute(facesContext, "exception", exception);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(exception.getMessage(), exception);
+            }
 
-    /**
-     * {@inheritedDoc}
-     */
-    @Override
-    public String getErrorPage() {
-        return "/xhtml/error.xhtml";
+            try {
+                if (exception instanceof ViewExpiredException) {
+                    FacesUtils.redirect(facesContext, "/xhtml/index.xhtml", true);
+                } else {
+
+                    final ErrorBean errorBean = FacesUtils.getBean(facesContext, "errorBean", ErrorBean.class);
+                    if (errorBean != null) {
+                        final String title = FacesUtils.getLabel(facesContext, "error_exception_title");
+                        errorBean.setTitle(title);
+
+                        final String message = FacesUtils.getLabel(facesContext, "error_exception_content");
+                        errorBean.setMessage(message);
+                    }
+
+                    FacesUtils.redirect(facesContext, "/xhtml/erreur.xhtml", false);
+                }
+            } catch (final IOException e) {
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(e.getMessage(), e);
+                }
+            } finally {
+                it.remove();
+            }
+        }
+
+        getWrapped().handle();
     }
 }
-

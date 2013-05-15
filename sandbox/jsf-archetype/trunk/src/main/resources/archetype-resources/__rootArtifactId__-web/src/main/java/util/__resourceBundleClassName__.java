@@ -2,7 +2,7 @@
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
 package ${package}.util;
-import com.googlecode.jee.utils.AbstractUnicodeResourceBundle;
+import com.googlecode.jutils.AbstractUnicodeResourceBundle;
 
 public class ${resourceBundleClassName} extends AbstractUnicodeResourceBundle {
 

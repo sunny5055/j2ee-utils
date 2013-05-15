@@ -2,8 +2,8 @@
 <#import "/common/common.inc" as util />
 <@dropOutputFile />
 <#assign projectName = xml["//p:configuration/p:projectName"]>
-<@resolveKey map=config key="breadcrumbXhtmlFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="breadcrumbXhtmlFileName" value=projectName assignTo="fileName"/>
+<@resolveKey map=config key="breadcrumbXhtmlFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="breadcrumbXhtmlFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"

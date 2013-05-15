@@ -2,8 +2,8 @@
 <#import "/common/common.inc" as util />
 <@dropOutputFile />
 <#assign projectName = xml["//p:configuration/p:projectName"]>
-<@resolveKey map=config key="facesConfigFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="facesConfigFileName" value=projectName assignTo="fileName"/>
+<@resolveKey map=config key="facesConfigFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="facesConfigFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <?xml version="1.0" encoding="UTF-8"?>
 <faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"

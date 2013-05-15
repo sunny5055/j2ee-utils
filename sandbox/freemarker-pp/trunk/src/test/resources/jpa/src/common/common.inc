@@ -167,7 +167,7 @@
 
 <#function getEntityName value>
 	<#local entityName>
-		<@format format=config.entityFileName value=value/>
+		<@format format=config.entityFileName values=[value]/>
 	</#local>
 
 	<#return entityName?replace(".java", "") />
@@ -188,7 +188,7 @@
 
 
 <#function getDaoName value>
-    <@format format=config.daoFileName value=value assignTo="daoName"/>
+    <@format format=config.daoFileName values=[value] assignTo="daoName"/>
 	<#return daoName?replace(".java", "") />
 </#function>
 
@@ -207,7 +207,7 @@
 
 
 <#function getDaoImplName value>
-    <@format format=config.daoImplFileName value=value assignTo="daoImplName"/>
+    <@format format=config.daoImplFileName values=[value] assignTo="daoImplName"/>
 	<#return daoImplName?replace(".java", "") />
 </#function>
 
@@ -226,7 +226,7 @@
 
 
 <#function getServiceName value>
-    <@format format=config.serviceFileName value=value assignTo="serviceName"/>
+    <@format format=config.serviceFileName values=[value] assignTo="serviceName"/>
 	<#return serviceName?replace(".java", "") />
 </#function>
 
@@ -245,7 +245,7 @@
 
 
 <#function getServiceImplName value>
-    <@format format=config.serviceImplFileName value=value assignTo="serviceImplName"/>
+    <@format format=config.serviceImplFileName values=[value] assignTo="serviceImplName"/>
 	<#return serviceImplName?replace(".java", "") />
 </#function>
 
@@ -264,13 +264,13 @@
 
 
 <#function getEmbeddedIdName value>
-    <@format format=config.embeddedIdFileName value=value assignTo="embeddedIdName"/>
+    <@format format=config.embeddedIdFileName values=[value] assignTo="embeddedIdName"/>
 	<#return embeddedIdName?replace(".java", "") />
 </#function>
 
 
 <#function getTestServiceName value>
-    <@format format=config.testServiceFileName value=value assignTo="testServiceName"/>
+    <@format format=config.testServiceFileName values=[value] assignTo="testServiceName"/>
 	<#return testServiceName?replace(".java", "") />
 </#function>
 

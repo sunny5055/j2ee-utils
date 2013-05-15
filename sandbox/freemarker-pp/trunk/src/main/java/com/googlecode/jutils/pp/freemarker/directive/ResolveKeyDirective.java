@@ -1,11 +1,14 @@
 package com.googlecode.jutils.pp.freemarker.directive;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.googlecode.jutils.StringUtil;
+import com.googlecode.jutils.collection.ArrayUtil;
 import com.googlecode.jutils.templater.freemarker.template.directive.DirectiveUtil;
 
 import freemarker.core.Environment;
@@ -17,11 +20,12 @@ import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
+import freemarker.template.TemplateSequenceModel;
 
 public class ResolveKeyDirective implements TemplateDirectiveModel {
 	private static final String PARAM_NAME_MAP = "map";
 	private static final String PARAM_NAME_KEY = "key";
-	private static final String PARAM_NAME_VALUE = "value";
+	private static final String PARAM_NAME_VALUES = "values";
 	private static final String PARAM_NAME_ASSIGN_TO = "assignTo";
 	private static String START_TAG = "{";
 	private static String END_TAG = "}";
@@ -31,18 +35,27 @@ public class ResolveKeyDirective implements TemplateDirectiveModel {
 	@Override
 	public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
 		final TemplateHashModel map = DirectiveUtil.getRequiredParameter(params, PARAM_NAME_MAP, TemplateHashModel.class);
-
 		final TemplateScalarModel key = DirectiveUtil.getRequiredParameter(params, PARAM_NAME_KEY, TemplateScalarModel.class);
-		final TemplateScalarModel value = DirectiveUtil.getParameter(params, PARAM_NAME_VALUE, TemplateScalarModel.class);
-		String stringValue = null;
-		if (value != null) {
-			stringValue = value.getAsString();
+		final TemplateSequenceModel values = DirectiveUtil.getParameter(params, PARAM_NAME_VALUES, TemplateSequenceModel.class);		
+		Object[] args = null;
+		if (values != null) {
+			final List<String> list = new ArrayList<String>();
+			for (int i = 0; i < values.size(); i++) {
+				final TemplateModel v = values.get(i);
+				if (v instanceof TemplateScalarModel) {
+					list.add(((TemplateScalarModel) v).getAsString());
+				} else {
+					list.add(values.get(i).toString());
+				}
+			}
+			args = list.toArray(new String[0]);
 		}
+
 		final TemplateScalarModel assignTo = DirectiveUtil.getParameter(params, PARAM_NAME_ASSIGN_TO, TemplateScalarModel.class);
 
 		String result = resolve(map, key.getAsString());
-		if (!StringUtil.isBlank(result) && !StringUtil.isBlank(stringValue)) {
-			result = String.format(result, stringValue);
+		if (!StringUtil.isBlank(result) && !ArrayUtil.isEmpty(args)) {
+			result = String.format(result, args);
 		}
 
 		if (assignTo != null) {

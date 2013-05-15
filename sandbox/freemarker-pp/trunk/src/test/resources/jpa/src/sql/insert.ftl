@@ -1,9 +1,9 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
 <#import "includes/sql.inc" as util>
 <@dropOutputFile />
-<#assign projectName = xml["//p:projectName"]/>
-<@resolveKey map=config key="insertSqlFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="insertSqlFileName" value=projectName assignTo="fileName"/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
+<@resolveKey map=config key="insertSqlFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="insertSqlFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <#assign entities = xml["//j:entity"]>
 

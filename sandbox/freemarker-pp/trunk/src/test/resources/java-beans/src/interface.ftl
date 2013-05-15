@@ -6,7 +6,7 @@
 <#assign interfaces = xml["//b:interface"]/>
 <#list interfaces as interface>
 <#assign packageName = interface["ancestor::p:package/@name"]>
-<@format format=config.interfaceFileName value=interface.@name assignTo="fileName"/>
+<@format format=config.interfaceFileName values=[interface.@name] assignTo="fileName"/>
 <#assign interfaceName = fileName?replace(".java", "")>
 <@changeOutputFile name=config.javaPath + "/" + packageToDir(packageName) + "/"+ fileName />
 

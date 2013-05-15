@@ -6,7 +6,7 @@
 <#assign classes = xml["//b:class"]/>
 <#list classes as class>
 <#assign packageName = class["ancestor::p:package/@name"]>
-<@format format=config.classFileName value=class.@name assignTo="fileName"/>
+<@format format=config.classFileName values=[class.@name] assignTo="fileName"/>
 <#assign className = fileName?replace(".java", "")>
 <@changeOutputFile name=config.javaPath + "/" + packageToDir(packageName) + "/"+ fileName />
 

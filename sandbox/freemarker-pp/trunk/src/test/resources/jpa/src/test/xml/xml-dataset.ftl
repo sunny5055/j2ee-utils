@@ -2,12 +2,12 @@
 <#import "includes/test-xml.inc" as util>
 <@dropOutputFile />
 <#assign entities = xml["//j:entity"]/>
-<#assign projectName = xml["//p:projectName"]/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
 <#list entities as entity>
 <#assign entityPackageName = entity["ancestor::p:package/@name"] />
 <#assign entityName = util.getEntityName(entity.@name) />
-<@resolveKey map=config key="testXmlDatasetFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="testXmlDatasetFileName" value=entityName assignTo="fileName"/>
+<@resolveKey map=config key="testXmlDatasetFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="testXmlDatasetFileName" values=[entityName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <#assign interfaces = entity["./j:interface"]>
 <#assign primaryKey = util.getPrimaryKey(entity)>

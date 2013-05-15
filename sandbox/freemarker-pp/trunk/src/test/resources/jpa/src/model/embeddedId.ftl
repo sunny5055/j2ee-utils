@@ -5,7 +5,7 @@
 <@dropOutputFile />
 
 <#assign embeddedIds = xml["//j:embedded-id"]/>
-<#assign projectName = xml["//p:projectName"]/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
 
 <#list embeddedIds as embeddedId>
 <#assign entityPackageName = embeddedId["ancestor::p:package/@name"] />
@@ -13,7 +13,7 @@
 <#assign embeddedIdPackageName = util.getEmbeddedIdPackageName(entityPackageName) />
 <#assign embeddedIdName = util.getEmbeddedIdName(embeddedId.@targetEntity) />
 
-<@resolveKey map=config key="embeddedIdFilePath" value=projectName assignTo="filePath"/>
+<@resolveKey map=config key="embeddedIdFilePath" values=[projectName] assignTo="filePath"/>
 <#assign filePath = filePath + "/" + packageToDir(embeddedIdPackageName) />
 
 <@changeOutputFile name=filePath + "/"+ embeddedIdName + ".java" />

@@ -1,9 +1,9 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
 <#import "includes/spring.inc" as util>
 <@dropOutputFile />
-<#assign projectName = xml["//p:projectName"]/>
-<@resolveKey map=config key="springTestBusinessFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="springTestBusinessFileName" value=projectName assignTo="fileName"/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
+<@resolveKey map=config key="springTestBusinessFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="springTestBusinessFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <#assign basePackages = util.getEntityPackageNames(xml) />
 <?xml version="1.0" encoding="UTF-8"?>

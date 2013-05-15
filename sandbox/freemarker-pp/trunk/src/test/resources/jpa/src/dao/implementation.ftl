@@ -4,7 +4,7 @@
 <@dropOutputFile />
 
 <#assign entities = xml["//j:entity"]/>
-<#assign projectName = xml["//p:projectName"]/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
 
 <#list entities as entity>
 <#assign entityPackageName = entity["ancestor::p:package/@name"] />
@@ -14,7 +14,7 @@
 <#assign daoImplPackageName = util.getDaoImplPackageName(entityPackageName) />
 <#assign daoImplName = util.getDaoImplName(entity.@name) />
 
-<@resolveKey map=config key="daoImplFilePath" value=projectName assignTo="filePath"/>
+<@resolveKey map=config key="daoImplFilePath" values=[projectName] assignTo="filePath"/>
 <#assign filePath = filePath + "/" + packageToDir(daoImplPackageName) />
 
 <@changeOutputFile name=filePath + "/"+ daoImplName + ".java" />

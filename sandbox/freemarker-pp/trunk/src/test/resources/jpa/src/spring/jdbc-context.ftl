@@ -1,9 +1,9 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
 <#import "includes/spring.inc" as util>
 <@dropOutputFile />
-<#assign projectName = xml["//p:projectName"]/>
-<@resolveKey map=config key="springJdbcFilePath" value=projectName assignTo="filePath"/>
-<@resolveKey map=config key="springJdbcFileName" value=projectName assignTo="fileName"/>
+<#assign projectName = xml["//p:configuration/p:projectName"]/>
+<@resolveKey map=config key="springJdbcFilePath" values=[projectName] assignTo="filePath"/>
+<@resolveKey map=config key="springJdbcFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"

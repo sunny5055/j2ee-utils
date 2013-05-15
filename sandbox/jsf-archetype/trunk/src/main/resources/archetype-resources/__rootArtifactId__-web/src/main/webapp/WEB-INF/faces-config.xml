@@ -19,4 +19,7 @@
 	<factory>
 		<exception-handler-factory>${package}.web.exception.CustomExceptionHandlerFactory</exception-handler-factory>
 	</factory>
+	<lifecycle>
+		<phase-listener>${package}.web.listener.MessageHandler</phase-listener>
+	</lifecycle>
 </faces-config>

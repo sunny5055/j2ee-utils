@@ -79,16 +79,21 @@ error_no_access_content=Vous n'avez pas accès à cette page
 # Error
 
 <#list entities as entity>
-<@xPath xml=xml expression="//j:entity[@name='${entity.@name}']/j:properties/*" assignTo="allProperties" />
-<@xPath xml=xml expression="//j:entity[@name='${entity.@name}']/j:embedded-id/j:properties/j:column" assignTo="embeddedIdProperties" />
+<#assign primaryKey = util.getPrimaryKey(entity)>
+<#assign allProperties = entity["./j:properties/*"] />
+<#assign embeddedIdProperties = entity["./j:embedded-id/j:properties/j:column"] />
 # ${entity.@name}
 ${toUnderscoreCase(entity.@name)?lower_case}_title=${entity.@name}
 
 ${toUnderscoreCase(entity.@name)?lower_case}_list_head_title=${entity.@name}
+<#if primaryKey?node_name = "embedded-id">
 <#if embeddedIdProperties??>
 <#list embeddedIdProperties as property>
 ${toUnderscoreCase(entity.@name)?lower_case}_list_${toUnderscoreCase(property.@name)?lower_case}=${property.@name?cap_first}
 </#list>
+</#if>
+<#else>
+${toUnderscoreCase(entity.@name)?lower_case}_list_${toUnderscoreCase(primaryKey.@name)?lower_case}=${primaryKey.@name?cap_first}
 </#if>
 <#list allProperties as property>
 ${toUnderscoreCase(entity.@name)?lower_case}_list_${toUnderscoreCase(property.@name)?lower_case}=${property.@name?cap_first}
@@ -98,17 +103,38 @@ ${toUnderscoreCase(entity.@name)?lower_case}_list_empty=Aucune ${entity.@name?lo
 
 ${toUnderscoreCase(entity.@name)?lower_case}_create_head_title=Création d'un ${entity.@name?lower_case}
 ${toUnderscoreCase(entity.@name)?lower_case}_update_head_title=Mise à jour de ${entity.@name?lower_case}
+<#if primaryKey?node_name = "embedded-id">
 <#if embeddedIdProperties??>
 <#list embeddedIdProperties as property>
 ${toUnderscoreCase(entity.@name)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}=${property.@name?cap_first}
 </#list>
 </#if>
+<#else>
+${toUnderscoreCase(entity.@name)?lower_case}_form_${toUnderscoreCase(primaryKey.@name)?lower_case}=${primaryKey.@name?cap_first}
+</#if>
 <#list allProperties as property>
 ${toUnderscoreCase(entity.@name)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}=${property.@name?cap_first}
 </#list>
 
-<#list allProperties as property>
+<#if primaryKey?node_name = "embedded-id">
+<#if embeddedIdProperties??>
+<#list embeddedIdProperties as property>
 error_${toUnderscoreCase(entity.@name)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required=${property.@name?cap_first} est obligatoire.
+</#list>
+</#if>
+</#if>
+<#list allProperties as property>
+<#if property?node_name == "column">
+<#if getClassName(property.@type) != "Boolean" && getType(property.@type) != "boolean">
+<#if util.xml.getAttribute(property.@nullable) == "false">
+error_${toUnderscoreCase(entity.@name)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required=${property.@name?cap_first} est obligatoire.
+</#if>
+</#if>
+<#else>
+<#if util.xml.getAttribute(property.@nullable) == "false">
+error_${toUnderscoreCase(entity.@name)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required=${property.@name?cap_first} est obligatoire.
+</#if>
+</#if>
 </#list>
 # ${entity.@name}
 

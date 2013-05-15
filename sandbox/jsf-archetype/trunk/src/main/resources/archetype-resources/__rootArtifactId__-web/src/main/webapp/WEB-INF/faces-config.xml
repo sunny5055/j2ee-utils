@@ -4,7 +4,7 @@
 <?xml version="1.0"?>
 <faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">	
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 	<application>
 		<resource-bundle>
 			<base-name>${package}.util.${resourceBundleClassName}</base-name>
@@ -19,15 +19,4 @@
 	<factory>
 		<exception-handler-factory>${package}.web.exception.CustomExceptionHandlerFactory</exception-handler-factory>
 	</factory>
-	<lifecycle>
-		<phase-listener>com.google.code.jee.utils.jsf.listener.CustomScopeListener</phase-listener>
-		<phase-listener>com.google.code.jee.utils.jsf.listener.MessageHandler</phase-listener>
-	</lifecycle>
-	<render-kit>
-		<renderer>
-			<component-family>org.primefaces.component</component-family>
-			<renderer-type>org.primefaces.component.DataTableRenderer</renderer-type>
-			<renderer-class>org.primefaces.component.datatable.MyDataTableRenderer</renderer-class>
-		</renderer>		
-	</render-kit>
 </faces-config>

@@ -72,7 +72,7 @@
 				</b:properties>
 			</b:class>
 		</p:package>
-		<p:package name="fr.direst.webcams.model">
+		<p:package name="com.googlecode.test.model">
 			<j:entity tableName="CAM_CAMERA" name="Camera" columnPrefix="CAM">
 				<j:id name="id" type="Integer" />
 				<j:properties>
@@ -107,7 +107,7 @@
 						length="50" />
 					<j:column name="active" type="Boolean" nullable="false" />
 					<j:many-to-many name="roles" listType="java.util.List"
-						targetEntity="fr.direst.webcams.model.Role" />
+						targetEntity="com.googlecode.test.model.Role" />
 				</j:properties>
 			</j:entity>
 			<j:entity tableName="ROL_ROLE" name="Role" columnPrefix="ROL"

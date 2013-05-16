@@ -359,3 +359,79 @@
 
 	<#return entityPackageNames />
 </#function>
+
+
+<#function getCreateFormBeanPackageName packageName>
+    <#local createFormBeanPackageName = packageName>
+	<#if config.entityPackage??>
+		<#local createFormBeanPackageName = createFormBeanPackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.createFormBeanPackage??>
+		<#local createFormBeanPackageName = createFormBeanPackageName + config.createFormBeanPackage />
+	</#if>
+
+    <#return createFormBeanPackageName />
+</#function>
+
+
+<#function getCreateFormBeanName value>
+    <@format format=config.createFormBeanFileName values=[value] assignTo="createFormBeanName"/>
+	<#return createFormBeanName?replace(".java", "") />
+</#function>
+
+
+<#function getFormBeanPackageName packageName>
+    <#local formBeanPackageName = packageName>
+	<#if config.entityPackage??>
+		<#local formBeanPackageName = formBeanPackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.formBeanPackage??>
+		<#local formBeanPackageName = formBeanPackageName + config.formBeanPackage />
+	</#if>
+
+    <#return formBeanPackageName />
+</#function>
+
+
+<#function getFormBeanName value>
+    <@format format=config.formBeanFileName values=[value] assignTo="formBeanName"/>
+	<#return formBeanName?replace(".java", "") />
+</#function>
+
+
+<#function getListBeanPackageName packageName>
+    <#local listBeanPackageName = packageName>
+	<#if config.entityPackage??>
+		<#local listBeanPackageName = listBeanPackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.listBeanPackage??>
+		<#local listBeanPackageName = listBeanPackageName + config.listBeanPackage />
+	</#if>
+
+    <#return listBeanPackageName />
+</#function>
+
+
+<#function getListBeanName value>
+    <@format format=config.listBeanFileName values=[value] assignTo="listBeanName"/>
+	<#return listBeanName?replace(".java", "") />
+</#function>
+
+
+<#function getDataTableBeanPackageName packageName>
+    <#local dataTableBeanPackageName = packageName>
+	<#if config.entityPackage??>
+		<#local dataTableBeanPackageName = dataTableBeanPackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.dataTableBeanPackage??>
+		<#local dataTableBeanPackageName = dataTableBeanPackageName + config.dataTableBeanPackage />
+	</#if>
+
+    <#return dataTableBeanPackageName />
+</#function>
+
+
+<#function getDataTableBeanName value>
+    <@format format=config.dataTableBeanFileName values=[value] assignTo="dataTableBeanName"/>
+	<#return dataTableBeanName?replace(".java", "") />
+</#function>

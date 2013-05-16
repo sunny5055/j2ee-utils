@@ -1,5 +1,5 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
-<#import "/common/common.inc" as util />
+<#import "/web/xhtml/includes/xhtml.inc" as util />
 <@dropOutputFile />
 <#assign entities = xml["//j:entity"]/>
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
@@ -45,11 +45,7 @@
 				forId="${property.@name}Value"
 				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
 			<util:inplace id="${property.@name}" value="${sharp}{${lowerEntityName}FormBean.entity.${primaryKey.@name}.${property.@name}}">
-				<p:inputText id="${property.@name}Value"
-					required="true"
-					requiredMessage="${sharp}{bundle.error_${toUnderscoreCase(lowerEntityName)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required}"
-					maxlength="255"
-					value="${sharp}{${lowerEntityName}CreationFormBean.entity.${primaryKey.@name}.${property.@name}}"/>
+				<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity.${primaryKey.@name}" property=property />
 			</util:inplace>
 
 			</#list>
@@ -58,22 +54,27 @@
 			<util:formLabel
 				forId="${primaryKey.@name}Value"
 				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(primaryKey.@name)?lower_case}}" />
-				<h:outputText id="${primaryKey.@name}Value"
-					value="${sharp}{${lowerEntityName}CreationFormBean.entity.${primaryKey.@name}}"/>
+				<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=primaryKey/>
 
 			</#if>
 			<#list allProperties as property>
 			<util:formLabel
 				forId="${property.@name}Value"
 				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
+			<#if property?node_name == "one-to-many" || property?node_name == "many-to-many">
+			<h:panelGroup id="${property.@name}">
+				<h:panelGroup rendered="${sharp}{false}">
+					<@util.getXhtmlOutput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=property />
+				</h:panelGroup>
+				<h:panelGroup rendered="${sharp}{true}">
+					<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=property />
+				</h:panelGroup>
+			</h:panelGroup>
+			<#else>
 			<util:inplace id="${property.@name}" value="${sharp}{${lowerEntityName}FormBean.entity.${property.@name}}">
-				<p:inputText id="${property.@name}Value"
-					required="true"
-					requiredMessage="${sharp}{bundle.error_${toUnderscoreCase(lowerEntityName)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required}"
-					maxlength="255"
-					value="${sharp}{${lowerEntityName}FormBean.entity.${property.@name}}"/>
+				<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=property />
 			</util:inplace>
-
+			</#if>
 			</#list>
 		</h:panelGrid>
 

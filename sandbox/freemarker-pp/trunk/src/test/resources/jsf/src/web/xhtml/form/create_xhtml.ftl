@@ -1,5 +1,5 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
-<#import "/common/common.inc" as util />
+<#import "/web/xhtml/includes/xhtml.inc" as util />
 <@dropOutputFile />
 <#assign entities = xml["//j:entity"]/>
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
@@ -44,11 +44,8 @@
 			<util:formLabel
 				forId="${property.@name}Value"
 				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
-			<p:inputText id="${property.@name}Value"
-				required="true"
-				requiredMessage="${sharp}{bundle.error_${toUnderscoreCase(lowerEntityName)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required}"
-				maxlength="255"
-				value="${sharp}{${lowerEntityName}CreationFormBean.entity.${primaryKey.@name}.${property.@name}}"/>
+ 			<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}CreationFormBean.entity.${primaryKey.@name}" property=property />
+
 
 			</#list>
 			</#if>
@@ -57,11 +54,8 @@
 			<util:formLabel
 				forId="${property.@name}Value"
 				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
-			<p:inputText id="${property.@name}Value"
-				required="true"
-				requiredMessage="${sharp}{bundle.error_${toUnderscoreCase(lowerEntityName)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required}"
-				maxlength="255"
-				value="${sharp}{${lowerEntityName}CreationFormBean.entity.${property.@name}}"/>
+ 			<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}CreationFormBean.entity" property=property />
+
 
 			</#list>
 		</h:panelGrid>

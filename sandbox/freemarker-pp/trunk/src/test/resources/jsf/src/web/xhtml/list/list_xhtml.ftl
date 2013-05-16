@@ -1,5 +1,5 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
-<#import "/common/common.inc" as util />
+<#import "/web/xhtml/includes/xhtml.inc" as util />
 <@dropOutputFile />
 <#assign entities = xml["//j:entity"]/>
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
@@ -43,18 +43,18 @@
 			<#if embeddedIdProperties??>
 			<#list embeddedIdProperties as property>
 			<p:column headerText="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_list_${toUnderscoreCase(property.@name)?lower_case}}" sortBy="${sharp}{${lowerEntityName}.${primaryKey.@name}.${property.@name}}">
-				<h:outputText value="${sharp}{${lowerEntityName}.${primaryKey.@name}.${property.@name}}" />
+				<@util.getXhtmlOutput entityName=lowerEntityName path="${lowerEntityName}.${primaryKey.@name}" property=property/>
 			</p:column>
 			</#list>
 			</#if>
 			<#else>
 			<p:column headerText="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_list_${toUnderscoreCase(primaryKey.@name)?lower_case}}" sortBy="${sharp}{${lowerEntityName}.${primaryKey.@name}}">
-				<h:outputText value="${sharp}{${lowerEntityName}.${primaryKey.@name}}" />
+				<@util.getXhtmlOutput entityName=lowerEntityName property=primaryKey/>
 			</p:column>
 			</#if>
 			<#list allProperties as property>
 			<p:column headerText="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_list_${toUnderscoreCase(property.@name)?lower_case}}" sortBy="${sharp}{${lowerEntityName}.${property.@name}}">
-				<h:outputText value="${sharp}{${lowerEntityName}.${property.@name}}" />
+				<@util.getXhtmlOutput entityName=lowerEntityName property=property/>
 			</p:column>
 			</#list>
 

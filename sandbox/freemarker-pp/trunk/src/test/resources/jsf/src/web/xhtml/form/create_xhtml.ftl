@@ -7,7 +7,7 @@
 <#assign entityPackageName = entity["ancestor::p:package/@name"] />
 <#assign entityName = util.getEntityName(entity.@name) />
 <#assign lowerEntityName = entityName?uncap_first />
-<@format format=config.listXhtmlFilePath values=[projectName, lowerEntityName] assignTo="listXhtmlFilePath"/>
+<@format format=config.listXhtmlFilePath values=[lowerEntityName] assignTo="listXhtmlFilePath"/>
 <@format format=config.listXhtmlFileName values=[projectName] assignTo="listXhtmlFileName"/>
 <@resolveKey map=config key="createXhtmlFilePath" values=[projectName, lowerEntityName] assignTo="filePath"/>
 <@resolveKey map=config key="createXhtmlFileName" values=[projectName] assignTo="fileName"/>

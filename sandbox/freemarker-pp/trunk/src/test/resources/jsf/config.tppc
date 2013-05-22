@@ -1,10 +1,10 @@
 {
 	sourceDirectory : 'src',
-	outputDirectory : 'D:\\jschaal\\Perso\\Projets\\j2ee-utils\\test\\trunk',
+	outputDirectory : 'out',
 	actions : [
 		{
 			name : 'process',
-			applyTo : '**/web/*.ftl'
+			applyTo : '**/*.ftl'
 		}
 	],
 	data : {

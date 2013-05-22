@@ -19,7 +19,6 @@
 <#assign filePath = filePath + "/" + packageToDir(dataTableBeanPackageName) />
 
 <@changeOutputFile name=filePath + "/"+ dataTableBeanName + ".java" />
-
 <#assign interfaces = entity["./j:interface"]>
 <#assign primaryKey = util.getPrimaryKey(entity)>
 <#assign primaryKeyType = util.getPrimaryKeyType(entity) />
@@ -30,8 +29,6 @@
 <#assign uniqueColumns = entity["./j:properties/j:column[@unique='true']"] />
 <#assign constructors = entity["./j:constructor"]>
 <#assign operations = entity["./j:operation"]>
-
-
 <#if dataTableBeanPackageName?? && dataTableBeanPackageName?length gt 0>
 package ${dataTableBeanPackageName};
 </#if>
@@ -45,15 +42,19 @@ package ${dataTableBeanPackageName};
 <@addTo assignTo="imports" element="java.util.Map" />
 <@addTo assignTo="imports" element="javax.faces.context.FacesContext" />
 <@addTo assignTo="imports" element="org.primefaces.model.LazyDataModel" />
-<@addTo assignTo="imports" element="org.primefaces.model.SortOrder" />
+<@addTo assignTo="imports" element="org.primefaces.model.SortMeta" />
 
 <@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
+<#if primaryKey?node_name == "embedded-id">
+	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(entityPackageName)}.${primaryKeyType}" />
+</#if>
 <@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
 
 <@addTo assignTo="imports" element="com.googlecode.jutils.StringUtil" />
 <@addTo assignTo="imports" element="com.googlecode.jutils.dal.SearchCriteria" />
+<@addTo assignTo="imports" element="${util.getBasePackageName(entityPackageName)}.util.SearchCriteriaUtil" />
 
-${getImports(true, dataTableBeanPackageName, imports)}
+${getImports(false, dataTableBeanPackageName, imports)}
 
 
 @Controller
@@ -69,12 +70,10 @@ public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType
         super();
         dataModel = new LazyDataModel<${entityName}>() {
             @Override
-            public List<${entityName}> load(int first, int pageSize, String sortField, SortOrder sortOrder,
-                    Map<String, String> filters) {
+            public List<${entityName}> load(int first, int pageSize, List<SortMeta> sortFields, Map<String, String> filters) {
                 List<${entityName}> ${lowerEntityName}s = null;
 
-                final SearchCriteria searchCriteria = SearchCriteriaUtil.toSearchCriteria(first, pageSize, sortField,
-                        sortOrder, filters);
+                final SearchCriteria searchCriteria = SearchCriteriaUtil.toSearchCriteria(first, pageSize, sortFields, filters);
                 final Integer count = service.count(searchCriteria);
                 this.setRowCount(count);
                 if (count > 0) {
@@ -87,7 +86,12 @@ public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType
             public ${entityName} getRowData(String rowKey) {
                 ${entityName} ${lowerEntityName} = null;
                 if (!StringUtil.isBlank(rowKey)) {
-                    final Integer primaryKey = Integer.valueOf(rowKey);
+                	<#if primaryKey?node_name == "id">
+                    final ${primaryKeyType} primaryKey = ${util.java.convertFromString(primaryKeyType, "rowKey")};
+					<#else>
+					final ${primaryKeyType} primaryKey = null;
+					//TODO need to be completed
+					</#if>
                     ${lowerEntityName} = service.get(primaryKey);
                 }
                 return ${lowerEntityName};

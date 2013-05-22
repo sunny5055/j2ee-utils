@@ -66,7 +66,7 @@ public class ${listBeanName} extends AbstractListBean<${primaryKeyType}, ${entit
 
     @Override
     protected SelectItem toSelectItem(${entityName} ${lowerEntityName}) {
-        return new SelectItem(${lowerEntityName}.getPrimaryKey(), ${lowerEntityName});
+        return new SelectItem(${lowerEntityName}.getPrimaryKey(), ${lowerEntityName}.toString());
     }
 }
 </#list>

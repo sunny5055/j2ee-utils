@@ -86,6 +86,16 @@
 </#function>
 
 
+<#function getBasePackageName packageName>
+    <#local basePackageName = packageName>
+	<#if config.entityPackage??>
+		<#local basePackageName = basePackageName?replace(config.entityPackage, "") />
+	</#if>
+
+    <#return basePackageName />
+</#function>
+
+
 <#function getEntityName value>
 	<#local entityName>
 		<@format format=config.entityFileName values=[value]/>

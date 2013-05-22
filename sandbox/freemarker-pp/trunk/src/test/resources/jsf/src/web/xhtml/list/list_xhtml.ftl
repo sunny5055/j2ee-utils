@@ -36,7 +36,7 @@
 
 	<ui:define name="content">
 		<p:dataTable id="${lowerEntityName}DataTable" widgetVar="${lowerEntityName}DataTable"
-			lazy="true" var="${lowerEntityName}" rowKey="${sharp}{${lowerEntityName}.primaryKey}"
+			lazy="true" var="${lowerEntityName}" sortMode="multiple" rowKey="${sharp}{${lowerEntityName}.primaryKey}"
 			value="${sharp}{${lowerEntityName}DataTableBean.dataModel}" paginator="true"
 			emptyMessage="${sharp}{${lowerEntityName}DataTableBean.listEmpty}">
 			<#if primaryKey?node_name = "embedded-id">

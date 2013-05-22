@@ -4,6 +4,7 @@
 <#assign entities = xml["//j:entity"]/>
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 <#list entities as entity>
+<#if util.xml.getAttribute(entity.@readOnly) != "true">
 <#assign entityPackageName = entity["ancestor::p:package/@name"] />
 <#assign entityName = util.getEntityName(entity.@name) />
 <#assign lowerEntityName = entityName?uncap_first />
@@ -72,4 +73,5 @@
 	</ui:define>
 </ui:composition>
 </html>
+</#if>
 </#list>

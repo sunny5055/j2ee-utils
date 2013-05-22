@@ -1,7 +1,7 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
 <#include "/common/common.inc" />
 
-<#macro getXhtmlOutput entityName property path=entityName styleClass="">
+<#macro getXhtmlOutput entityName property id="" path=entityName styleClass="">
 	<#local value = "${path}.${property.@name}" />
 	<#local type = "" />
 	<#if property?node_name == "id" || property?node_name == "column">
@@ -14,41 +14,52 @@
 	<#compress>
 		<#if property?node_name == "one-to-many" || property?node_name == "many-to-many">
 			<#local propertyName = getClassName(property.@targetEntity)?uncap_first/>
-			<p:dataList id="${property.@name}Value"
+			<p:dataList <#if id?length != 0>id="${id}"</#if>
 				value="${sharp}{${value}}"
 				var="${propertyName}"
 				type="none"
-				<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
+				<#if styleClass?length != 0>styleClass="${styleClass}"</#if>
 				>
 				<h:outputText value="${sharp}{${propertyName}}" />
 			</p:dataList>
 		<#else>
 			<#if type == "String" || type == "Character">
-				<h:outputText value="${sharp}{${value}}"
-				<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
-				/>
+				<h:outputText <#if id?length != 0>id="${id}"</#if>
+					value="${sharp}{${value}}"
+					<#if styleClass?length != 0>styleClass="${styleClass}"</#if>
+					/>
 			<#elseif type == "Double" || type == "Float">
-				<h:outputText value="${sharp}{${value}}"
-				<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
-				/>
+				<h:outputText
+					<#if id?length != 0>id="${id}"</#if>
+					value="${sharp}{${value}}"
+					<#if styleClass?length != 0>styleClass="${styleClass}"</#if>
+					/>
 		    <#elseif type == "Integer"
 				|| type == "Long"
 				|| type == "Byte"
 				|| type == "Short">
-				<h:outputText value="${sharp}{${value}}"
-				<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
-				/>
+				<h:outputText
+					<#if id?length != 0>id="${id}"</#if>
+					value="${sharp}{${value}}"
+					<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
+					/>
 		    <#elseif type == "Date">
-				<h:outputText value="${sharp}{${value}}"<#if styleClass?length != 0> styleClass="${styleClass}"</#if>>
+				<h:outputText
+					<#if id?length != 0>id="${id}"</#if>
+					value="${sharp}{${value}}"
+					<#if styleClass?length != 0>styleClass="${styleClass}"</#if>>
 					<f:convertDateTime pattern="dd/MM/yyyy" timeZone="Europe/Paris" />
 				</h:outputText>
 		  	<#elseif type == "Boolean">
-				<h:outputText value="${sharp}{bundle.yes}"<#if styleClass?length != 0> styleClass="${styleClass}"</#if> rendered="${sharp}{${value}}"/>
-				<h:outputText value="${sharp}{bundle.no}"<#if styleClass?length != 0> styleClass="${styleClass}"</#if> rendered="${sharp}{not ${value}}"/>
+		  		<h:panelGroup <#if id?length != 0>id="${id}"</#if>>
+					<h:outputText value="${sharp}{bundle.yes}"<#if styleClass?length != 0> styleClass="${styleClass}"</#if> rendered="${sharp}{${value}}"/>
+					<h:outputText value="${sharp}{bundle.no}"<#if styleClass?length != 0> styleClass="${styleClass}"</#if> rendered="${sharp}{not ${value}}"/>
+				</h:panelGroup>
 			<#else>
-				<h:outputText value="${sharp}{${value}}"
-				<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
-				/>
+				<h:outputText <#if id?length != 0>id="${id}"</#if>
+					value="${sharp}{${value}}"
+					<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
+					/>
 			</#if>
 		</#if>
 	</#compress>

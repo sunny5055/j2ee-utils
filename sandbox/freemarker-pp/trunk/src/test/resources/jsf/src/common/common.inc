@@ -445,3 +445,22 @@
     <@format format=config.dataTableBeanFileName values=[value] assignTo="dataTableBeanName"/>
 	<#return dataTableBeanName?replace(".java", "") />
 </#function>
+
+
+<#function getConverterBeanPackageName packageName>
+    <#local converterBeanPackageName = packageName>
+	<#if config.entityPackage??>
+		<#local converterBeanPackageName = converterBeanPackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.converterBeanPackage??>
+		<#local converterBeanPackageName = converterBeanPackageName + config.converterBeanPackage />
+	</#if>
+
+    <#return converterBeanPackageName />
+</#function>
+
+
+<#function getConverterBeanName value>
+    <@format format=config.converterBeanFileName values=[value] assignTo="converterBeanName"/>
+	<#return converterBeanName?replace(".java", "") />
+</#function>

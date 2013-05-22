@@ -1,7 +1,7 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-package ${package}.web.bean.converter;
+package ${package}.web.converter;
 
 import java.io.Serializable;
 

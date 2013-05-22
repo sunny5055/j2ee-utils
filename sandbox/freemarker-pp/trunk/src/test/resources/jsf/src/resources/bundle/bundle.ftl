@@ -50,6 +50,8 @@ no=Non
 select_all=Tous
 blank_value=Non renseigné
 select=Sélectionnez
+back=Retour
+next=Suivant
 # Common form
 
 # error messages
@@ -103,6 +105,7 @@ ${toUnderscoreCase(entity.@name)?lower_case}_list_empty=Aucune ${entity.@name?lo
 
 ${toUnderscoreCase(entity.@name)?lower_case}_create_head_title=Création d'un ${entity.@name?lower_case}
 ${toUnderscoreCase(entity.@name)?lower_case}_update_head_title=Mise à jour de ${entity.@name?lower_case}
+${toUnderscoreCase(entity.@name)?lower_case}_view_head_title=Détail de ${entity.@name?lower_case}
 <#if primaryKey?node_name = "embedded-id">
 <#if embeddedIdProperties??>
 <#list embeddedIdProperties as property>

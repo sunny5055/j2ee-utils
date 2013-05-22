@@ -4,14 +4,14 @@
 <#assign entities = xml["//j:entity"]/>
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 <#list entities as entity>
-<#if util.xml.getAttribute(entity.@readOnly) != "true">
+<#if util.xml.getAttribute(entity.@readOnly) == "true">
 <#assign entityPackageName = entity["ancestor::p:package/@name"] />
 <#assign entityName = util.getEntityName(entity.@name) />
 <#assign lowerEntityName = entityName?uncap_first />
 <@format format=config.listXhtmlFilePath values=[lowerEntityName] assignTo="listXhtmlFilePath"/>
 <@format format=config.listXhtmlFileName values=[projectName] assignTo="listXhtmlFileName"/>
-<@resolveKey map=config key="updateXhtmlFilePath" values=[projectName, lowerEntityName] assignTo="filePath"/>
-<@resolveKey map=config key="updateXhtmlFileName" values=[projectName] assignTo="fileName"/>
+<@resolveKey map=config key="viewXhtmlFilePath" values=[projectName, lowerEntityName] assignTo="filePath"/>
+<@resolveKey map=config key="viewXhtmlFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <#assign primaryKey = util.getPrimaryKey(entity)>
 <#assign primaryKeyType = util.getPrimaryKeyType(entity) />
@@ -34,7 +34,7 @@
 	xmlns:util="http://java.sun.com/jsf/composite/components">
 <ui:composition template="${util.getWebResource(config.layoutXhtmlFilePath, config.layoutXhtmlFileName)}">
 	<ui:define name="headTitle">
-		<h:outputText value="${sharp}{bundle.${toUnderscoreCase(entityName)?lower_case}_update_head_title}" />
+		<h:outputText value="${sharp}{bundle.${toUnderscoreCase(entityName)?lower_case}_view_head_title}" />
 	</ui:define>
 
 	<ui:define name="content">
@@ -45,9 +45,7 @@
 			<util:formLabel
 				forId="${property.@name}Value"
 				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
-			<util:inplace id="${property.@name}" value="${sharp}{${lowerEntityName}FormBean.entity.${primaryKey.@name}.${property.@name}}">
-				<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity.${primaryKey.@name}" property=property />
-			</util:inplace>
+			<@util.getXhtmlOutput id="${property.@name}Value" entityName=lowerEntityName path="${lowerEntityName}FormBean.entity.${primaryKey.@name}" property=property />
 
 			</#list>
 			</#if>
@@ -55,39 +53,20 @@
 			<util:formLabel
 				forId="${primaryKey.@name}Value"
 				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(primaryKey.@name)?lower_case}}" />
-				<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=primaryKey/>
+				<@util.getXhtmlOutput id="${primaryKey.@name}Value" entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=primaryKey />
 
 			</#if>
 			<#list allProperties as property>
 			<util:formLabel
 				forId="${property.@name}Value"
 				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
-			<#if property?node_name == "one-to-many" || property?node_name == "many-to-many">
-			<h:panelGroup id="${property.@name}">
-				<h:panelGroup rendered="${sharp}{false}">
-					<@util.getXhtmlOutput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=property />
-				</h:panelGroup>
-				<h:panelGroup rendered="${sharp}{true}">
-					<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=property />
-				</h:panelGroup>
-			</h:panelGroup>
-			<#else>
-			<util:inplace id="${property.@name}" value="${sharp}{${lowerEntityName}FormBean.entity.${property.@name}}">
-				<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=property />
-			</util:inplace>
-			</#if>
+			<@util.getXhtmlOutput id="${property.@name}Value" entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=property />
 			</#list>
 		</h:panelGrid>
 
 		<h:panelGroup id="formActions">
 			<p:commandButton immediate="true" process="@this"
-				value="${sharp}{bundle.form_update}" icon="ui-icon-pencil" />
-
-			<p:commandButton id="updateBtn"
-				value="${sharp}{bundle.form_save}" icon="ui-icon-disk" />
-
-			<p:commandButton immediate="true" process="@this"
-				value="${sharp}{bundle.form_cancel}" />
+				value="${sharp}{bundle.back}" />
 		</h:panelGroup>
 	</ui:define>
 </ui:composition>

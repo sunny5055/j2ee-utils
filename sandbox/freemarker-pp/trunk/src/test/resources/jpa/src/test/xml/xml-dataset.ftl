@@ -4,18 +4,11 @@
 <#assign entities = xml["//j:entity"]/>
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 <#list entities as entity>
-<#assign entityPackageName = entity["ancestor::p:package/@name"] />
-<#assign entityName = util.getEntityName(entity.@name) />
+<#include "/common/assign.inc" />
+
 <@resolveKey map=config key="testXmlDatasetFilePath" values=[projectName] assignTo="filePath"/>
 <@resolveKey map=config key="testXmlDatasetFileName" values=[entityName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
-<#assign interfaces = entity["./j:interface"]>
-<#assign primaryKey = util.getPrimaryKey(entity)>
-<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
-<#assign columns = entity["./j:properties/j:column"]>
-<#assign manyToOnes = entity["./j:properties/j:many-to-one"]>
-<#assign oneToManys = entity["./j:properties/j:one-to-many"]>
-<#assign manyToManys = entity["./j:properties/j:many-to-many"]>
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
 <#if manyToOnes?size gt 0>

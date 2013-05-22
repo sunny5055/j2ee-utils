@@ -7,24 +7,12 @@
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 
 <#list entities as entity>
-<#assign entityPackageName = entity["ancestor::p:package/@name"] />
-<#assign entityName = util.getEntityName(entity.@name) />
-<#assign servicePackageName = util.getServicePackageName(entityPackageName) />
-<#assign serviceName = util.getServiceName(entity.@name) />
+<#include "/common/assign.inc" />
 
 <@resolveKey map=config key="serviceFilePath" values=[projectName] assignTo="filePath"/>
 <#assign filePath = filePath + "/" + packageToDir(servicePackageName) />
 
 <@changeOutputFile name=filePath + "/"+ serviceName + ".java" />
-
-<#assign interfaces = entity["./j:interface"]>
-<#assign primaryKey = util.getPrimaryKey(entity)>
-<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
-<#assign columns = entity["./j:properties/j:column"]>
-<#assign manyToOnes = entity["./j:properties/j:many-to-one"]>
-<#assign oneToManys = entity["./j:properties/j:one-to-many"]>
-<#assign manyToManys = entity["./j:properties/j:many-to-many"]>
-
 
 <#if servicePackageName?? && servicePackageName?length gt 0>
 package ${servicePackageName};

@@ -7,28 +7,12 @@
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 
 <#list entities as entity>
-<#assign entityPackageName = entity["ancestor::p:package/@name"] />
-<#assign entityName = util.getEntityName(entity.@name) />
-<#assign servicePackageName = util.getServicePackageName(entityPackageName) />
-<#assign serviceName = util.getServiceName(entity.@name) />
-<#assign serviceImplPackageName = util.getServiceImplPackageName(entityPackageName) />
-<#assign serviceImplName = util.getServiceImplName(entity.@name) />
-<#assign testServiceName = util.getTestServiceName(entity.@name) />
-<@resolveKey map=config key="testXmlDatasetFileName" values=[entityName] assignTo="testXmlDatasetFileName"/>
+<#include "/common/assign.inc" />
 
 <@resolveKey map=config key="testServiceFilePath" values=[projectName] assignTo="filePath"/>
 <#assign filePath = filePath + "/" + packageToDir(servicePackageName) />
 
 <@changeOutputFile name=filePath + "/"+ testServiceName + ".java" />
-
-<#assign interfaces = entity["./j:interface"]>
-<#assign primaryKey = util.getPrimaryKey(entity)>
-<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
-<#assign columns = entity["./j:properties/j:column"]>
-<#assign uniqueColumns = entity["./j:properties/j:column[@unique='true']"] />
-<#assign manyToOnes = entity["./j:properties/j:many-to-one"]>
-<#assign oneToManys = entity["./j:properties/j:one-to-many"]>
-<#assign manyToManys = entity["./j:properties/j:many-to-many"]>
 
 <#if servicePackageName?? && servicePackageName?length gt 0>
 package ${servicePackageName};

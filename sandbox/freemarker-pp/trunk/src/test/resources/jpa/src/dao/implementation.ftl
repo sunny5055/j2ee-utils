@@ -7,25 +7,12 @@
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 
 <#list entities as entity>
-<#assign entityPackageName = entity["ancestor::p:package/@name"] />
-<#assign entityName = util.getEntityName(entity.@name) />
-<#assign daoPackageName = util.getDaoPackageName(entityPackageName) />
-<#assign daoName = util.getDaoName(entity.@name) />
-<#assign daoImplPackageName = util.getDaoImplPackageName(entityPackageName) />
-<#assign daoImplName = util.getDaoImplName(entity.@name) />
+<#include "/common/assign.inc" />
 
 <@resolveKey map=config key="daoImplFilePath" values=[projectName] assignTo="filePath"/>
 <#assign filePath = filePath + "/" + packageToDir(daoImplPackageName) />
 
 <@changeOutputFile name=filePath + "/"+ daoImplName + ".java" />
-
-<#assign interfaces = entity["./j:interface"]>
-<#assign primaryKey = util.getPrimaryKey(entity)>
-<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
-<#assign columns = entity["./j:properties/j:column"]>
-<#assign manyToOnes = entity["./j:properties/j:many-to-one"]>
-<#assign oneToManys = entity["./j:properties/j:one-to-many"]>
-<#assign manyToManys = entity["./j:properties/j:many-to-many"]>
 
 <#if daoImplPackageName?? && daoImplPackageName?length gt 0>
 package ${daoImplPackageName};

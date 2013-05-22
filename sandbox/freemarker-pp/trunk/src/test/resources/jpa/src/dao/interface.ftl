@@ -7,24 +7,12 @@
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 
 <#list entities as entity>
-<#assign entityPackageName = entity["ancestor::p:package/@name"] />
-<#assign entityName = util.getEntityName(entity.@name) />
-<#assign daoPackageName = util.getDaoPackageName(entityPackageName) />
-<#assign daoName = util.getDaoName(entity.@name) />
+<#include "/common/assign.inc" />
 
 <@resolveKey map=config key="daoFilePath" values=[projectName] assignTo="filePath"/>
 <#assign filePath = filePath + "/" + packageToDir(daoPackageName) />
 
 <@changeOutputFile name=filePath + "/"+ daoName + ".java" />
-
-<#assign interfaces = entity["./j:interface"]>
-<#assign primaryKey = util.getPrimaryKey(entity)>
-<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
-<#assign allProperties = entity["/j:properties/*"]>
-<#assign columns = entity["./j:properties/j:column"]>
-<#assign manyToOnes = entity["./j:properties/j:many-to-one"]>
-<#assign oneToManys = entity["./j:properties/j:one-to-many"]>
-<#assign manyToManys = entity["./j:properties/j:many-to-many"]>
 
 <#if daoPackageName?? && daoPackageName?length gt 0>
 package ${daoPackageName};

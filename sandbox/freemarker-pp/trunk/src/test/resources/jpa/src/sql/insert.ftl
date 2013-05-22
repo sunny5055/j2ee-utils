@@ -13,8 +13,8 @@
 </#list>
 
 <#list entities as entity>
-	<@xPath xml=xml expression="//j:entity[@name='${entity.@name}']/j:properties/j:one-to-many" assignTo="oneToManys" />
-	<@xPath xml=xml expression="//j:entity[@name='${entity.@name}']/j:properties/j:many-to-many" assignTo="manyToManys" />
+	<#include "/common/assign.inc" />
+
 	<#if oneToManys?? && oneToManys?size != 0>
 	<#list oneToManys as oneToMany>
 		<@util.insertJoinTableSql doc=xml entity=entity property=oneToMany />

@@ -17,8 +17,7 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 
 		<#list entities as entity>
-			<#assign entityPackageName = entity["ancestor::p:package/@name"] />
-			<#assign entityName = util.getEntityName(entity.@name) />
+			<#include "/common/assign.inc" />
 			<class>${entityPackageName}.${entityName}</class>
 		</#list>
 	</persistence-unit>

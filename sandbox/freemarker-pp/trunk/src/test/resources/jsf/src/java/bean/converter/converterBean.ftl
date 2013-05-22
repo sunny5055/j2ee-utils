@@ -12,14 +12,13 @@
 <#assign lowerEntityName = entityName?uncap_first />
 <#assign servicePackageName = util.getServicePackageName(entityPackageName) />
 <#assign serviceName = util.getServiceName(entity.@name) />
-<#assign listBeanPackageName = util.getListBeanPackageName(entityPackageName) />
-<#assign listBeanName = util.getListBeanName(entity.@name) />
+<#assign converterBeanPackageName = util.getConverterBeanPackageName(entityPackageName) />
+<#assign converterBeanName = util.getConverterBeanName(entity.@name) />
 
-<@resolveKey map=config key="listBeanFilePath" values=[projectName] assignTo="filePath"/>
-<#assign filePath = filePath + "/" + packageToDir(listBeanPackageName) />
+<@resolveKey map=config key="converterBeanFilePath" values=[projectName] assignTo="filePath"/>
+<#assign filePath = filePath + "/" + packageToDir(converterBeanPackageName) />
 
-<@changeOutputFile name=filePath + "/"+ listBeanName + ".java" />
-
+<@changeOutputFile name=filePath + "/"+ converterBeanName + ".java" />
 <#assign interfaces = entity["./j:interface"]>
 <#assign primaryKey = util.getPrimaryKey(entity)>
 <#assign primaryKeyType = util.getPrimaryKeyType(entity) />
@@ -30,18 +29,12 @@
 <#assign uniqueColumns = entity["./j:properties/j:column[@unique='true']"] />
 <#assign constructors = entity["./j:constructor"]>
 <#assign operations = entity["./j:operation"]>
-
-
-<#if listBeanPackageName?? && listBeanPackageName?length gt 0>
-package ${listBeanPackageName};
+<#if converterBeanPackageName?? && converterBeanPackageName?length gt 0>
+package ${converterBeanPackageName};
 </#if>
 
 <#assign imports = [] />
-<@addTo assignTo="imports" element="org.springframework.beans.factory.annotation.Autowired" />
-<@addTo assignTo="imports" element="org.springframework.context.annotation.Scope" />
-<@addTo assignTo="imports" element="org.springframework.stereotype.Controller" />
-
-<@addTo assignTo="imports" element="javax.faces.model.SelectItem" />
+<@addTo assignTo="imports" element="javax.faces.convert.FacesConverter" />
 
 <@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
 <#if primaryKey?node_name == "embedded-id">
@@ -49,27 +42,30 @@ package ${listBeanPackageName};
 </#if>
 <@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
 
-${getImports(true, listBeanPackageName, imports)}
+<@addTo assignTo="imports" element="com.googlecode.jutils.StringUtil" />
 
-@Controller
-@Scope("session")
-@SuppressWarnings("serial")
-public class ${listBeanName} extends AbstractListBean<${primaryKeyType}, ${entityName}, ${serviceName}> {
-    @Autowired
-    private ${serviceName} service;
+${getImports(false, converterBeanPackageName, imports)}
 
-    public ${listBeanName}() {
-        super();
+
+@FacesConverter(forClass = ${entityName}.class)
+public class ${converterBeanName} extends AbstractConverter<${primaryKeyType}, ${entityName}, ${serviceName}> {
+
+	@Override
+    public Class<${serviceName}> getServiceClass() {
+        return ${serviceName}.class;
     }
 
     @Override
-    protected ${serviceName} getService() {
-        return service;
-    }
-
-    @Override
-    protected SelectItem toSelectItem(${entityName} ${lowerEntityName}) {
-        return new SelectItem(${lowerEntityName}.getPrimaryKey(), ${lowerEntityName}.toString());
+    protected ${primaryKeyType} getPrimaryKey(String value) {
+        ${primaryKeyType} primaryKey = null;
+        if (!StringUtil.isBlank(value)) {
+	    	<#if primaryKey?node_name == "id">
+	        primaryKey = ${util.java.convertFromString(primaryKeyType, "value")};
+			<#else>
+			//TODO need to be completed
+			</#if>
+        }
+        return primaryKey;
     }
 }
 </#list>

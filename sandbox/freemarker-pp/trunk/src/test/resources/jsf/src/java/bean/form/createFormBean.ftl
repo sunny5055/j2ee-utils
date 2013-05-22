@@ -7,6 +7,7 @@
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 
 <#list entities as entity>
+<#if util.xml.getAttribute(entity.@readOnly) != "true">
 <#assign entityPackageName = entity["ancestor::p:package/@name"] />
 <#assign entityName = util.getEntityName(entity.@name) />
 <#assign servicePackageName = util.getServicePackageName(entityPackageName) />
@@ -103,4 +104,5 @@ public class ${createFormBeanName} extends AbstractCreateFormBean<${primaryKeyTy
         return create;
     }
 }
+</#if>
 </#list>

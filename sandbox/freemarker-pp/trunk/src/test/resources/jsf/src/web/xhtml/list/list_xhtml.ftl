@@ -4,21 +4,10 @@
 <#assign entities = xml["//j:entity"]/>
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 <#list entities as entity>
-<#assign entityPackageName = entity["ancestor::p:package/@name"] />
-<#assign entityName = util.getEntityName(entity.@name) />
-<#assign lowerEntityName = entityName?uncap_first />
+<#include "/common/assign.inc" />
 <@resolveKey map=config key="listXhtmlFilePath" values=[projectName, lowerEntityName] assignTo="filePath"/>
 <@resolveKey map=config key="listXhtmlFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
-<#assign primaryKey = util.getPrimaryKey(entity)>
-<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
-<#assign allProperties=entity["./j:properties/*"] />
-<#assign embeddedIdProperties=entity["./j:embedded-id/j:properties/j:column"] />
-<#assign columns = entity["./j:properties/j:column"]>
-<#assign manyToOnes = entity["./j:properties/j:many-to-one"]>
-<#assign oneToManys = entity["./j:properties/j:one-to-many"]>
-<#assign manyToManys = entity["./j:properties/j:many-to-many"]>
-<#assign uniqueColumns = entity["./j:properties/j:column[@unique='true']"] />
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"

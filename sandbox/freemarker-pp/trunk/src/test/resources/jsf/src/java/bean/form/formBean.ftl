@@ -8,31 +8,11 @@
 
 <#list entities as entity>
 <#if util.xml.getAttribute(entity.@readOnly) != "true">
-<#assign entityPackageName = entity["ancestor::p:package/@name"] />
-<#assign entityName = util.getEntityName(entity.@name) />
-<#assign servicePackageName = util.getServicePackageName(entityPackageName) />
-<#assign serviceName = util.getServiceName(entity.@name) />
-<#assign formBeanPackageName = util.getFormBeanPackageName(entityPackageName) />
-<#assign formBeanName = util.getFormBeanName(entity.@name) />
-<@format format=config.listXhtmlFilePath values=[entityName?uncap_first] assignTo="listXhtmlFilePath"/>
-<@format format=config.listXhtmlFileName values=[projectName] assignTo="listXhtmlFileName"/>
+<#include "/common/assign.inc" />
 
 <@resolveKey map=config key="formBeanFilePath" values=[projectName] assignTo="filePath"/>
 <#assign filePath = filePath + "/" + packageToDir(formBeanPackageName) />
-
 <@changeOutputFile name=filePath + "/"+ formBeanName + ".java" />
-
-<#assign interfaces = entity["./j:interface"]>
-<#assign primaryKey = util.getPrimaryKey(entity)>
-<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
-<#assign columns = entity["./j:properties/j:column"]>
-<#assign manyToOnes = entity["./j:properties/j:many-to-one"]>
-<#assign oneToManys = entity["./j:properties/j:one-to-many"]>
-<#assign manyToManys = entity["./j:properties/j:many-to-many"]>
-<#assign uniqueColumns = entity["./j:properties/j:column[@unique='true']"] />
-<#assign constructors = entity["./j:constructor"]>
-<#assign operations = entity["./j:operation"]>
-
 
 <#if formBeanPackageName?? && formBeanPackageName?length gt 0>
 package ${formBeanPackageName};

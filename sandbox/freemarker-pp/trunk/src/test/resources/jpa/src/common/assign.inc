@@ -1,6 +1,20 @@
 <#if entity??>
+	<#assign interfaces = entity["./j:interface"]>
+	<#assign primaryKey = util.getPrimaryKey(entity)>
+	<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
+	<#assign allProperties = entity["./j:properties/*"]>
+	<#assign embeddedIdProperties=entity["./j:embedded-id/j:properties/j:column"] />
+	<#assign columns = entity["./j:properties/j:column"]>
+	<#assign uniqueColumns = entity["./j:properties/j:column[@unique='true']"] />
+	<#assign manyToOnes = entity["./j:properties/j:many-to-one"]>
+	<#assign oneToManys = entity["./j:properties/j:one-to-many"]>
+	<#assign manyToManys = entity["./j:properties/j:many-to-many"]>
+	<#assign constructors = entity["./j:constructor"]>
+	<#assign operations = entity["./j:operation"]>
+
 	<#assign entityPackageName = entity["ancestor::p:package/@name"] />
 	<#assign entityName = util.getEntityName(entity.@name) />
+	<#assign lowerEntityName = entityName?uncap_first />
 
 	<#assign daoPackageName = util.getDaoPackageName(entityPackageName) />
 	<#assign daoName = util.getDaoName(entity.@name) />
@@ -15,17 +29,5 @@
 	<#assign serviceImplName = util.getServiceImplName(entity.@name) />
 
 	<#assign testServiceName = util.getTestServiceName(entity.@name) />
-	<@resolveKey map=config key="testXmlDatasetFileName" values=[entityName] assignTo="testXmlDatasetFileName"/>
-
-	<#assign interfaces = entity["./j:interface"]>
-	<#assign primaryKey = util.getPrimaryKey(entity)>
-	<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
-	<#assign allProperties = entity["/j:properties/*"]>
-	<#assign columns = entity["./j:properties/j:column"]>
-	<#assign uniqueColumns = entity["./j:properties/j:column[@unique='true']"] />
-	<#assign manyToOnes = entity["./j:properties/j:many-to-one"]>
-	<#assign oneToManys = entity["./j:properties/j:one-to-many"]>
-	<#assign manyToManys = entity["./j:properties/j:many-to-many"]>
-	<#assign constructors = entity["./j:constructor"]>
-	<#assign operations = entity["./j:operation"]>
+	<@format format=config.testXmlDatasetFileName values=[entityName] assignTo="testXmlDatasetFileName"/>
 </#if>

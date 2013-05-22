@@ -81,13 +81,13 @@ error_no_access_content=Vous n'avez pas accès à cette page
 # Error
 
 <#list entities as entity>
-<#assign primaryKey = util.getPrimaryKey(entity)>
-<#assign allProperties = entity["./j:properties/*"] />
-<#assign embeddedIdProperties = entity["./j:embedded-id/j:properties/j:column"] />
+<#include "/common/assign.inc" />
 # ${entity.@name}
-${toUnderscoreCase(entity.@name)?lower_case}_title=${entity.@name}
-
 ${toUnderscoreCase(entity.@name)?lower_case}_list_head_title=${entity.@name}
+${toUnderscoreCase(entity.@name)?lower_case}_create_head_title=Création d'un ${entity.@name?lower_case}
+${toUnderscoreCase(entity.@name)?lower_case}_update_head_title=Mise à jour de ${entity.@name?lower_case}
+${toUnderscoreCase(entity.@name)?lower_case}_view_head_title=Détail de ${entity.@name?lower_case}
+
 <#if primaryKey?node_name = "embedded-id">
 <#if embeddedIdProperties??>
 <#list embeddedIdProperties as property>
@@ -103,9 +103,6 @@ ${toUnderscoreCase(entity.@name)?lower_case}_list_${toUnderscoreCase(property.@n
 ${toUnderscoreCase(entity.@name)?lower_case}_list_found=${entity.@name?lower_case}(s) trouvée(s)
 ${toUnderscoreCase(entity.@name)?lower_case}_list_empty=Aucune ${entity.@name?lower_case} n'est enregistrée dans l'application
 
-${toUnderscoreCase(entity.@name)?lower_case}_create_head_title=Création d'un ${entity.@name?lower_case}
-${toUnderscoreCase(entity.@name)?lower_case}_update_head_title=Mise à jour de ${entity.@name?lower_case}
-${toUnderscoreCase(entity.@name)?lower_case}_view_head_title=Détail de ${entity.@name?lower_case}
 <#if primaryKey?node_name = "embedded-id">
 <#if embeddedIdProperties??>
 <#list embeddedIdProperties as property>

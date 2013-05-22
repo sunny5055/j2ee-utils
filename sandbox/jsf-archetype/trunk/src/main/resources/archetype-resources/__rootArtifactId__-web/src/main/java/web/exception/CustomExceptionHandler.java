@@ -67,7 +67,7 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
                         errorBean.setMessage(message);
                     }
 
-                    FacesUtils.redirect(facesContext, "/xhtml/erreur.xhtml", false);
+                    FacesUtils.redirect(facesContext, "/xhtml/error.xhtml", false);
                 }
             } catch (final IOException e) {
                 if (LOGGER.isDebugEnabled()) {

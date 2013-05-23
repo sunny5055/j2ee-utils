@@ -9,7 +9,7 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 
 import com.googlecode.jutils.collection.ArrayUtil;
-import com.googlecode.jutils.dal.model.BaseEntity;
+import com.googlecode.jutils.dal.entity.BaseEntity;
 
 /**
  * The Class EntityUtil.

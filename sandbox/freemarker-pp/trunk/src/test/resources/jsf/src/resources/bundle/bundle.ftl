@@ -8,8 +8,6 @@
 <@resolveKey map=config key="resourceBundleFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 # header
-login_link=Se connecter
-logout_link=Se déconnecter
 global_head_title=${projectName?cap_first}
 # header
 
@@ -22,36 +20,50 @@ menu_${toUnderscoreCase(entity.@name)?lower_case}=${entity.@name}
 # footer
 # footer
 
+# Buttons
+login_btn=Se connecter
+logout_btn=Se déconnecter
+save_btn=Enregistrer
+cancel_btn=Annuler
+new_btn=Nouveau
+create_btn=Créer
+update_btn=Mettre à jour
+delete_btn=Supprimer
+view_btn=Visualiser
+edit_btn=Éditer
+modify_btn=Modifier
+add_btn=Ajouter
+upload_btn=Charger
+download_btn=Télécharger
+return_btn=Retour
+back_btn=Précédent
+next_btn=Suivant
+search_btn=Rechercher
+export_btn=Exporter
+print_btn=Imprimer
+# Buttons
+
+loading=Chargement...
+
 # Common list
 list_results_per_page=Résultats par page
 list_results=Résultats de la recherche
 list_from=de
 list_to=à
 list_page=page
-list_display=Consulter
-list_remove=Supprimer
-list_edit=Éditer
-list_search=Rechercher
+list_search_title=Recherche
+list_advanced_search_title=Recherche avancée
+list_simple_search_title=Recherche simple
 list_result_empty=Aucun résultat ne correspond à vos filtres de recherche
 # Common list
 
 # Common form
-form_save=Enregistrer
-form_cancel=Annuler
-form_new=Nouveau
-form_create=Créer
-form_update=Mettre à jour
-form_delete=Supprimer
-form_edit=Éditer
-form_add=Ajouter
-form_valid=Valider
 yes=Oui
 no=Non
 select_all=Tous
 blank_value=Non renseigné
 select=Sélectionnez
-back=Retour
-next=Suivant
+confirm_delete=Êtes-vous sûr de vouloir supprimer cet élément ?
 # Common form
 
 # error messages
@@ -103,6 +115,9 @@ ${toUnderscoreCase(entity.@name)?lower_case}_list_${toUnderscoreCase(property.@n
 ${toUnderscoreCase(entity.@name)?lower_case}_list_found=${entity.@name?lower_case}(s) trouvée(s)
 ${toUnderscoreCase(entity.@name)?lower_case}_list_empty=Aucune ${entity.@name?lower_case} n'est enregistrée dans l'application
 
+${toUnderscoreCase(entity.@name)?lower_case}_created=${entity.@name} a été créé avec succès
+${toUnderscoreCase(entity.@name)?lower_case}_updated=${entity.@name} a été mis à jour avec succès
+${toUnderscoreCase(entity.@name)?lower_case}_deleted=${entity.@name} a été supprimé avec succès
 <#if primaryKey?node_name = "embedded-id">
 <#if embeddedIdProperties??>
 <#list embeddedIdProperties as property>

@@ -9,17 +9,17 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 
 import com.googlecode.jutils.collection.ArrayUtil;
-import com.googlecode.jutils.dal.dto.Dto;
+import com.googlecode.jutils.dal.model.BaseEntity;
 
 /**
- * The Class DtoUtil.
+ * The Class EntityUtil.
  */
-public final class DtoUtil {
+public final class EntityUtil {
 
 	/**
-	 * Instantiates a new dto util.
+	 * Instantiates a new entity util.
 	 */
-	private DtoUtil() {
+	private EntityUtil() {
 		super();
 	}
 
@@ -34,7 +34,7 @@ public final class DtoUtil {
 	 *            the entities
 	 * @return the primary key list
 	 */
-	public static <PK extends Serializable, E extends Dto<PK>> List<PK> getPrimaryKeyList(E... entities) {
+	public static <PK extends Serializable, E extends BaseEntity<PK>> List<PK> getPrimaryKeyList(E... entities) {
 		List<PK> pks = new ArrayList<PK>();
 		if (!ArrayUtil.isEmpty(entities)) {
 			pks = getPrimaryKeyList(Arrays.asList(entities));
@@ -53,7 +53,7 @@ public final class DtoUtil {
 	 *            the entities
 	 * @return the primary key list
 	 */
-	public static <PK extends Serializable, E extends Dto<PK>> List<PK> getPrimaryKeyList(Collection<E> entities) {
+	public static <PK extends Serializable, E extends BaseEntity<PK>> List<PK> getPrimaryKeyList(Collection<E> entities) {
 		final List<PK> pks = new ArrayList<PK>();
 		if (!CollectionUtils.isEmpty(entities)) {
 			for (final E entity : entities) {
@@ -77,7 +77,7 @@ public final class DtoUtil {
 	 * @return the primary key array
 	 */
 	@SuppressWarnings("unchecked")
-	public static <PK extends Serializable, E extends Dto<PK>> PK[] getPrimaryKeyArray(E... entities) {
+	public static <PK extends Serializable, E extends BaseEntity<PK>> PK[] getPrimaryKeyArray(E... entities) {
 		final List<PK> pks = getPrimaryKeyList(entities);
 		return (PK[]) pks.toArray();
 	}
@@ -94,7 +94,7 @@ public final class DtoUtil {
 	 * @return the primary key array
 	 */
 	@SuppressWarnings("unchecked")
-	public static <PK extends Serializable, E extends Dto<PK>> PK[] getPrimaryKeyArray(List<E> entities) {
+	public static <PK extends Serializable, E extends BaseEntity<PK>> PK[] getPrimaryKeyArray(List<E> entities) {
 		final List<PK> pks = getPrimaryKeyList(entities);
 		return (PK[]) pks.toArray();
 	}

@@ -1,4 +1,4 @@
-package com.googlecode.jutils.dal.model;
+package com.googlecode.jutils.dal.entity;
 
 import java.io.Serializable;
 

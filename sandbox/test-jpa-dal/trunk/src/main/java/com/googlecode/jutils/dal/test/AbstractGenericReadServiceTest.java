@@ -35,13 +35,14 @@ import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.collection.ArrayUtil;
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.core.AnnotationUtil;
+import com.googlecode.jutils.dal.dto.Dto;
 import com.googlecode.jutils.dal.entity.BaseEntity;
 import com.googlecode.jutils.dal.service.GenericReadService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @TestExecutionListeners({ TransactionalTestExecutionListener.class, DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class })
-public abstract class AbstractGenericReadServiceTest<PK extends Serializable, DTO, E extends BaseEntity<PK>, S extends GenericReadService<PK, DTO>> extends
+public abstract class AbstractGenericReadServiceTest<PK extends Serializable, DTO extends Dto<PK>, E extends BaseEntity<PK>, S extends GenericReadService<PK, DTO>> extends
 		AbstractTransactionalJUnit4SpringContextTests {
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractGenericReadServiceTest.class);
 

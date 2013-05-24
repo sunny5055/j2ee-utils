@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.googlecode.jutils.dal.SearchCriteria;
+import com.googlecode.jutils.dal.dto.Dto;
 
 /**
  * The Interface GenericReadService.
@@ -14,7 +15,7 @@ import com.googlecode.jutils.dal.SearchCriteria;
  * @param <DTO>
  *            the element type
  */
-public interface GenericReadService<PK extends Serializable, DTO> {
+public interface GenericReadService<PK extends Serializable, DTO extends Dto<PK>> {
 
 	/**
 	 * Gets the dto.

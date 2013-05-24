@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.dal.dao.GenericDao;
+import com.googlecode.jutils.dal.dto.Dto;
 import com.googlecode.jutils.dal.entity.BaseEntity;
 import com.googlecode.jutils.dal.util.EntityUtil;
 
@@ -21,7 +22,7 @@ import com.googlecode.jutils.dal.util.EntityUtil;
  * @param <DAO>
  *            the generic type
  */
-public abstract class AbstractGenericService<PK extends Serializable, DTO, E extends BaseEntity<PK>, DAO extends GenericDao<PK, E>> extends
+public abstract class AbstractGenericService<PK extends Serializable, DTO extends Dto<PK>, E extends BaseEntity<PK>, DAO extends GenericDao<PK, E>> extends
 		AbstractGenericReadService<PK, DTO, E, DAO> implements GenericService<PK, DTO> {
 
 	/**

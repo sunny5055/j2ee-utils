@@ -8,10 +8,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.googlecode.jutils.core.ClassUtil;
+import com.googlecode.jutils.dal.dto.Dto;
 import com.googlecode.jutils.dal.entity.BaseEntity;
 import com.googlecode.jutils.dal.service.GenericService;
 
-public abstract class AbstractGenericServiceTest<PK extends Serializable, DTO, E extends BaseEntity<PK>, S extends GenericService<PK, DTO>> extends
+public abstract class AbstractGenericServiceTest<PK extends Serializable, DTO extends Dto<PK>, E extends BaseEntity<PK>, S extends GenericService<PK, DTO>> extends
 		AbstractGenericReadServiceTest<PK, DTO, E, S> {
 
 	@Test

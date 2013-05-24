@@ -1,0 +1,68 @@
+package com.googlecode.jutils.dal.entity;
+
+import java.io.Serializable;
+
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import com.googlecode.jutils.StringUtil;
+
+/**
+ * The Class AbstractEntity.
+ * 
+ * @param <PK>
+ *            the generic type
+ */
+@SuppressWarnings("serial")
+public abstract class AbstractEntity<PK extends Serializable> implements BaseEntity<PK> {
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public String getStringPrimaryKey() {
+		return StringUtil.toString(getPrimaryKey());
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+
+		if (o == null) {
+			return false;
+		}
+
+		final Class<?> oClass = o.getClass();
+
+		if (getClass() != oClass) {
+			return false;
+		}
+
+		final BaseEntity<?> that = (BaseEntity<?>) o;
+		return this.getPrimaryKey() != null && this.getPrimaryKey().equals(that.getPrimaryKey());
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(this.getPrimaryKey()).toHashCode();
+	}
+
+	/**
+	 * {@inheritedDoc}
+	 */
+	@Override
+	public String toString() {
+		final StringBuffer buffer = new StringBuffer(this.getClass().getName());
+		buffer.append(" [id=");
+		buffer.append(this.getStringPrimaryKey());
+		buffer.append("]");
+		return buffer.toString();
+	}
+}

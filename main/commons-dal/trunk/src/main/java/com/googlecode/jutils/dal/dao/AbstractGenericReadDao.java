@@ -13,7 +13,7 @@ import com.googlecode.jutils.BooleanUtil;
 import com.googlecode.jutils.collection.ArrayUtil;
 import com.googlecode.jutils.dal.Search;
 import com.googlecode.jutils.dal.SearchCriteria;
-import com.googlecode.jutils.dal.dto.Dto;
+import com.googlecode.jutils.dal.entity.BaseEntity;
 
 /**
  * The Class AbstractGenericReadDao.
@@ -23,7 +23,7 @@ import com.googlecode.jutils.dal.dto.Dto;
  * @param <E>
  *            the element type
  */
-public abstract class AbstractGenericReadDao<PK extends Serializable, E extends Dto<PK>> implements GenericReadDao<PK, E> {
+public abstract class AbstractGenericReadDao<PK extends Serializable, E extends BaseEntity<PK>> implements GenericReadDao<PK, E> {
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractGenericReadDao.class);
 	protected Class<PK> pkClass;
 	protected Class<E> entityClass;

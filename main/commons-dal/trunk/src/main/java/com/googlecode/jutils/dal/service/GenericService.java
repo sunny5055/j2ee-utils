@@ -3,55 +3,53 @@ package com.googlecode.jutils.dal.service;
 import java.io.Serializable;
 import java.util.Collection;
 
-import com.googlecode.jutils.dal.dto.Dto;
-
 /**
  * The Interface GenericService.
  * 
  * @param <PK>
  *            the generic type
- * @param <E>
+ * @param <DTO>
  *            the element type
  */
-public interface GenericService<PK extends Serializable, E extends Dto<PK>> extends GenericReadService<PK, E> {
+public interface GenericService<PK extends Serializable, DTO> extends GenericReadService<PK, DTO> {
 
 	/**
-	 * Creates the entity.
+	 * Creates the dto.
 	 * 
 	 * @param dto
 	 *            the dto
 	 * @return the pk
 	 */
-	PK create(E dto);
+	PK create(DTO dto);
 
 	/**
-	 * Updates the entity.
+	 * Updates the dto.
 	 * 
 	 * @param dto
 	 *            the dto
 	 */
-	void update(E dto);
+	void update(DTO dto);
 
 	/**
-	 * Deletes the entity.
+	 * Deletes the dto.
 	 * 
 	 * @param dto
 	 *            the dto
 	 * @return the number of rows deleted
 	 */
-	Integer delete(E dto);
+	Integer delete(DTO dto);
 
 	/**
-	 * Deletes the entities.
+	 * Deletes the dtos.
 	 * 
 	 * @param dtos
 	 *            the dtos
 	 * @return the number of rows deleted
 	 */
-	Integer delete(Collection<E> dtos);
+	Integer delete(Collection<DTO> dtos);
 
 	/**
-	 * Deletes the entity by primary key.
+	 * Deletes the dto by primary key.
 	 * 
 	 * @param pk
 	 *            the pk
@@ -60,7 +58,7 @@ public interface GenericService<PK extends Serializable, E extends Dto<PK>> exte
 	Integer deleteByPrimaryKey(PK pk);
 
 	/**
-	 * Deletes the entities by primary keys.
+	 * Deletes the dtos by primary keys.
 	 * 
 	 * @param pks
 	 *            the pks
@@ -84,5 +82,5 @@ public interface GenericService<PK extends Serializable, E extends Dto<PK>> exte
 	 *            the dto
 	 * @return boolean
 	 */
-	boolean isRemovable(E dto);
+	boolean isRemovable(DTO dto);
 }

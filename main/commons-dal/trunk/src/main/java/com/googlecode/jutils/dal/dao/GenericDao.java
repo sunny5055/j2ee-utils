@@ -3,7 +3,7 @@ package com.googlecode.jutils.dal.dao;
 import java.io.Serializable;
 import java.util.Collection;
 
-import com.googlecode.jutils.dal.dto.Dto;
+import com.googlecode.jutils.dal.entity.BaseEntity;
 
 /**
  * The Interface GenericDao.
@@ -13,25 +13,25 @@ import com.googlecode.jutils.dal.dto.Dto;
  * @param <E>
  *            the element type
  */
-public interface GenericDao<PK extends Serializable, E extends Dto<PK>> extends GenericReadDao<PK, E> {
+public interface GenericDao<PK extends Serializable, E extends BaseEntity<PK>> extends GenericReadDao<PK, E> {
 
 	/**
 	 * Creates the entity.
 	 * 
-	 * @param dto
-	 *            the dto
+	 * @param entity
+	 *            the entity
 	 * @return the primary key
 	 */
-	PK create(E dto);
+	PK create(E entity);
 
 	/**
 	 * Updates the entity.
 	 * 
-	 * @param dto
-	 *            the dto
+	 * @param entity
+	 *            the entity
 	 * @return the number of rows updated
 	 */
-	Integer update(E dto);
+	Integer update(E entity);
 
 	/**
 	 * Deletes the entity by primary key.

@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.googlecode.jutils.dal.SearchCriteria;
-import com.googlecode.jutils.dal.dto.Dto;
+import com.googlecode.jutils.dal.entity.BaseEntity;
 
 /**
  * The Interface GenericReadDao.
@@ -15,7 +15,7 @@ import com.googlecode.jutils.dal.dto.Dto;
  * @param <E>
  *            the element type
  */
-public interface GenericReadDao<PK extends Serializable, E extends Dto<PK>> {
+public interface GenericReadDao<PK extends Serializable, E extends BaseEntity<PK>> {
 
 	/**
 	 * Gets the entity.

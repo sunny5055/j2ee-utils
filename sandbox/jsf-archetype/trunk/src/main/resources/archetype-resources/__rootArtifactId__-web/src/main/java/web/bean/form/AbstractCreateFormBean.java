@@ -18,14 +18,14 @@ import com.googlecode.jutils.dal.service.GenericService;
  * The Class AbstractCreateFormBean.
  *
  * @param <PK> the generic type
- * @param <E> the element type
+ * @param <DTO> the element type
  * @param <S> the generic type
  */
 @SuppressWarnings("serial")
-public abstract class AbstractCreateFormBean<PK extends Serializable, E extends Dto<PK>, S extends GenericService<PK, E>>
+public abstract class AbstractCreateFormBean<PK extends Serializable, DTO extends Dto<PK>, S extends GenericService<PK, DTO>>
         implements Serializable {
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractCreateFormBean.class);
-    protected E entity;
+    protected DTO model;
 
     /**
      * Instantiates a new abstract create form bean.
@@ -38,20 +38,20 @@ public abstract class AbstractCreateFormBean<PK extends Serializable, E extends 
      */
     @PostConstruct
     protected void init() {
-        entity = getNewEntityInstance();
+        model = getNewModelInstance();
     }
 
     public abstract S getService();
 
-    public E getEntity() {
-        return entity;
+    public DTO getModel() {
+        return model;
     }
 
-    public void setEntity(E entity) {
-        this.entity = entity;
+    public void setModel(DTO model) {
+        this.model = model;
     }
 
-    protected abstract E getNewEntityInstance();
+    protected abstract DTO getNewModelInstance();
 
     protected abstract String getListPage();
 
@@ -83,14 +83,14 @@ public abstract class AbstractCreateFormBean<PK extends Serializable, E extends 
     protected abstract boolean prepareCreate();
 
     /**
-     * Creates the entity.
+     * Creates the model.
      *
      * @param event the event
      */
     public void create(ActionEvent event) {
-        if (entity != null) {
+        if (model != null) {
             if (prepareCreate()) {
-                this.getService().create(entity);
+                this.getService().create(model);
 
                 reInit();
             }

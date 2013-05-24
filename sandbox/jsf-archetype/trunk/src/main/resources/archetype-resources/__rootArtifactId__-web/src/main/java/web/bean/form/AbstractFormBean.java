@@ -15,10 +15,10 @@ import com.googlecode.jutils.dal.dto.Dto;
 import com.googlecode.jutils.dal.service.GenericService;
 
 @SuppressWarnings("serial")
-public abstract class AbstractFormBean<PK extends Serializable, E extends Dto<PK>, S extends GenericService<PK, E>>
+public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<PK>, S extends GenericService<PK, DTO>>
         implements Serializable {
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractFormBean.class);
-    protected E entity;
+    protected DTO model;
 
     public AbstractFormBean() {
     }
@@ -28,20 +28,20 @@ public abstract class AbstractFormBean<PK extends Serializable, E extends Dto<PK
      */
     @PostConstruct
     protected void init() {
-        entity = getNewEntityInstance();
+        model = getNewModelInstance();
     }
 
     public abstract S getService();
 
-    public E getEntity() {
-        return entity;
+    public DTO getModel() {
+        return model;
     }
 
-    public void setEntity(E entity) {
-        this.entity = entity;
+    public void setModel(DTO model) {
+        this.model = model;
     }
 
-    protected abstract E getNewEntityInstance();
+    protected abstract DTO getNewModelInstance();
 
     protected abstract String getListPage();
 
@@ -68,9 +68,9 @@ public abstract class AbstractFormBean<PK extends Serializable, E extends Dto<PK
     protected abstract boolean prepareUpdate();
 
     public void update(ActionEvent event) {
-        if (entity != null) {
+        if (model != null) {
             if (prepareUpdate()) {
-                this.getService().update(entity);
+                this.getService().update(model);
 
                 reInit();
             }

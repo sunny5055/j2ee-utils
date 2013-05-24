@@ -21,19 +21,19 @@ package ${serviceImplPackageName};
 <#assign imports = [] />
 <@addTo assignTo="imports" element="org.springframework.beans.factory.annotation.Autowired" />
 <@addTo assignTo="imports" element="org.springframework.stereotype.Service" />
+<@addTo assignTo="imports" element="org.dozer.Mapper" />
 
 <#if util.xml.getAttribute(entity.@readOnly) == "true">
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.AbstractGenericReadService" />
 <#else>
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.AbstractGenericService" />
 </#if>
-
+<@addTo assignTo="imports" element="${modelPackageName}.${modelName}" />
 <@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
 <@addTo assignTo="imports" element="${daoPackageName}.${daoName}" />
 <@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
 
-<#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(entityPackageName)}.${primaryKeyType}" />
+<#if uniqueConstraints?size gt 0>
 	<@addTo assignTo="imports" element="java.util.List" />
 	<@addTo assignTo="imports" element=" com.googlecode.jutils.StringUtil" />
 </#if>
@@ -53,9 +53,9 @@ ${getImports(false, serviceImplPackageName, imports)}
 <#compress>
 public class ${serviceImplName} extends
 <#if util.xml.getAttribute(entity.@readOnly) == "true">
-AbstractGenericReadService<${primaryKeyType}, ${entityName}, ${daoName}>
+AbstractGenericReadService<${primaryKeyType}, ${modelName}, ${entityName}, ${daoName}>
 <#else>
-AbstractGenericService<${primaryKeyType}, ${entityName}, ${daoName}>
+AbstractGenericService<${primaryKeyType}, ${modelName}, ${entityName}, ${daoName}>
 </#if>
  implements ${serviceName} {
 </#compress>
@@ -65,6 +65,12 @@ AbstractGenericService<${primaryKeyType}, ${entityName}, ${daoName}>
     public void setDao(${daoName} dao) {
         this.dao = dao;
     }
+
+	@Autowired
+	@Override
+	public void setMapper(Mapper mapper) {
+		this.mapper = mapper;
+	}
 
 	<@util.getMethod doc=xml entity=entity property=primaryKey/>
 	<#list columns as column>
@@ -79,5 +85,6 @@ AbstractGenericService<${primaryKeyType}, ${entityName}, ${daoName}>
 	<#list manyToManys as manyToMany>
 	<@util.getMethod doc=xml entity=entity property=manyToMany/>
 	</#list>
+	<@util.getMethodForConstraints doc=xml entity=entity />
 }
 </#list>

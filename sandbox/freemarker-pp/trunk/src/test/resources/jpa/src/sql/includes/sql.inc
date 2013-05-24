@@ -45,7 +45,7 @@ INSERT INTO ${getJoinTableName(entity, property)} (${getJoinColumnName(entity, p
 	<@xPath xml=doc expression="//j:entity[@name='${entity.@name}']/j:properties/j:column" assignTo="columns" />
 	<@xPath xml=doc expression="//j:entity[@name='${entity.@name}']/j:properties/j:many-to-one" assignTo="manyToOnes" />
 
-	<#if primaryKey?node_name == "embedded-id" || config.database != "mysql">
+	<#if config.database != "mysql">
 		<#local result = getPrimaryKeyColumn(entity.@columnPrefix, primaryKey) />
 	</#if>
 	<#if columns?? && columns?size != 0>
@@ -73,14 +73,8 @@ INSERT INTO ${getJoinTableName(entity, property)} (${getJoinColumnName(entity, p
 	<@xPath xml=doc expression="//j:entity[@name='${entity.@name}']/j:properties/j:column" assignTo="columns" />
 	<@xPath xml=doc expression="//j:entity[@name='${entity.@name}']/j:properties/j:many-to-one" assignTo="manyToOnes" />
 
-	<#if primaryKey?node_name != "embedded-id">
-		<#if config.database != "mysql">
-			<#local result = getNextSequenceValue() />
-		</#if>
-	<#else>
-		<#assign pkColumns = primaryKey["j:properties/j:column"]>
-        <@myList list=pkColumns var="column" assignTo="pkColumnsDeclaration">${getValue(column.@type)}</@myList>
-		<#local result = pkColumnsDeclaration />
+	<#if config.database != "mysql">
+		<#local result = getNextSequenceValue() />
 	</#if>
 	<#if columns?? && columns?size != 0>
 		<@myList list=columns var="column" assignTo="columnsDeclaration">${getValue(column.@type)}</@myList>
@@ -101,20 +95,7 @@ INSERT INTO ${getJoinTableName(entity, property)} (${getJoinColumnName(entity, p
 </#function>
 
 <#function getPrimaryKeyColumn columnPrefix property>
-  <#local primaryKeyColum = ""/>
-  <#if property?node_name == "id">
-    <#local primaryKeyColum = getColumnName(columnPrefix, property) />
-  <#elseif property?node_name == "embedded-id">
-    <#assign pkColumns = property["j:properties/j:column"]>
-        <#list pkColumns as column>
-          <#if column_index != 0>
-            <#local primaryKeyColum= primaryKeyColum + ", " />
-          </#if>
-
-          <#local primaryKeyColum = primaryKeyColum + getColumnName(columnPrefix, column) />
-      </#list>
-  </#if>
-  <#return primaryKeyColum />
+  <#return getColumnName(columnPrefix, property) />
 </#function>
 
 <#function getNextSequenceValue sequenceName="hibernate_sequence">

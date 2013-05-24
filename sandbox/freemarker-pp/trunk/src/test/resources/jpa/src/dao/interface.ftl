@@ -25,8 +25,7 @@ package ${daoPackageName};
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dao.GenericDao" />
 </#if>
 <@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
-<#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(entityPackageName)}.${primaryKeyType}" />
+<#if uniqueConstraints?size gt 0>
 	<@addTo assignTo="imports" element="java.util.List" />
 </#if>
 <#if manyToOnes?size gt 0 || oneToManys?size gt 0 || manyToManys?size gt 0>
@@ -57,5 +56,6 @@ GenericDao<${primaryKeyType}, ${entityName}> {
 <#list manyToManys as manyToMany>
 <@util.getInterfaceMethod doc=xml entity=entity property=manyToMany/>
 </#list>
+<@util.getInterfaceMethodForConstraints doc=xml entity=entity />
 }
 </#list>

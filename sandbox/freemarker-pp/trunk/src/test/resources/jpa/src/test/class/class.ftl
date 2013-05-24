@@ -23,24 +23,13 @@ package ${servicePackageName};
 <@addTo assignTo="imports" element="org.springframework.test.context.ContextConfiguration" />
 <@addTo assignTo="imports" element="org.junit.Test" />
 <@addTo assignTo="imports" element="com.github.springtestdbunit.annotation.DatabaseSetup" />
+<@addTo assignTo="imports" element="${modelPackageName}.${modelName}" />
 <@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
 
-<#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(entityPackageName)}.${primaryKeyType}" />
-    <#assign pkColumns = primaryKey["j:properties/j:column"]>
-    <#list pkColumns as pkColumn>
-  		<#if pkColumn.@type == "String">
-			<@addTo assignTo="imports" element="org.apache.commons.lang3.RandomStringUtils" />
-		<#else>
-			<@addTo assignTo="imports" element="java.util.Random" />
-		</#if>
-	</#list>
+<#if util.getPrimaryKeyType(entity) == "String">
+	<@addTo assignTo="imports" element="org.apache.commons.lang3.RandomStringUtils" />
 <#else>
-	<#if util.getPrimaryKeyType(entity) == "String">
-		<@addTo assignTo="imports" element="org.apache.commons.lang3.RandomStringUtils" />
-	<#else>
-		<@addTo assignTo="imports" element="java.util.Random" />
-	</#if>
+	<@addTo assignTo="imports" element="java.util.Random" />
 </#if>
 
 <#list columns as column>
@@ -72,9 +61,9 @@ ${getImports(true, servicePackageName, imports)}
 <#compress>
 public class ${testServiceName} extends
 <#if util.xml.getAttribute(entity.@readOnly) == "true">
-AbstractGenericReadServiceTest<${primaryKeyType}, ${entityName}, ${serviceName}>
+AbstractGenericReadServiceTest<${primaryKeyType}, ${modelName}, ${entityName}, ${serviceName}>
 <#else>
-AbstractGenericServiceTest<${primaryKeyType}, ${entityName}, ${serviceName}>
+AbstractGenericServiceTest<${primaryKeyType}, ${modelName}, ${entityName}, ${serviceName}>
 </#if>
  {
 </#compress>
@@ -107,81 +96,52 @@ AbstractGenericServiceTest<${primaryKeyType}, ${entityName}, ${serviceName}>
   <#list manyToManys as manyToMany>
   <@util.getTestMethod doc=xml entity=entity property=manyToMany/>
   </#list>
+  <@util.getTestMethodForConstraints doc=xml entity=entity />
 
   @Override
   protected ${primaryKeyType} getPrimaryKey(Node node) {
     ${primaryKeyType} id = null;
     if (node != null) {
-      <#if primaryKey?node_name == "embedded-id">
-      <#assign pkColumns = primaryKey["j:properties/j:column"]>
-        <#list pkColumns as pkColumn>
-      final String ${pkColumn.@name}Value = node.valueOf("@${util.getColumnName(entity.@columnPrefix, pkColumn)}");
-      </#list>
-
-      id = new ${primaryKeyType}();
-      <#list pkColumns as pkColumn>
-      id.set${pkColumn.@name?cap_first}(${util.java.convertFromString(pkColumn.@type, pkColumn.@name+"Value")});
-      </#list>
-      <#else>
       final String stringValue = node.valueOf("@${util.getColumnName(entity.@columnPrefix, primaryKey)}");
       if (!StringUtil.isBlank(stringValue)) {
         id = ${util.java.convertFromString(util.getPrimaryKeyType(entity), "stringValue")};
       }
-      </#if>
     }
     return id;
   }
 
   @Override
   protected ${primaryKeyType} getFakePrimaryKey() {
-    <#if primaryKey?node_name == "embedded-id">
-      ${primaryKeyType} id = null;
-      <#assign pkColumns = primaryKey["j:properties/j:column"]>
-        <#list pkColumns as pkColumn>
-        final String ${pkColumn.@name}Value = ${util.java.getRandomValue(getType(pkColumn.@type), util.xml.getAttribute(pkColumn.@length))};
-        </#list>
-
-        id = new ${primaryKeyType}();
-      <#list pkColumns as pkColumn>
-      id.set${pkColumn.@name?cap_first}(${util.java.convertFromString(pkColumn.@type, pkColumn.@name+"Value")});
-      </#list>
-      return id;
-    <#else>
       return ${util.java.getRandomValue(util.getPrimaryKeyType(entity), "1000")};
-    </#if>
   }
 
   <#if util.xml.getAttribute(entity.@readOnly) == "" || util.xml.getAttribute(entity.@readOnly) == "false">
   @Override
-  protected ${entityName} createEntity() {
-    final ${entityName} entity = new ${entityName}();
-	<#if primaryKey?node_name == "embedded-id">
-		final ${primaryKeyType} primaryKey = getFakePrimaryKey();
-		entity.setId(primaryKey);
-	</#if>
+  protected ${modelName} createDto() {
+    final ${modelName} dto = new ${modelName}();
     <#list columns as column>
     final ${getType(column.@type)} ${column.@name} = ${util.java.getRandomValue(getType(column.@type), util.xml.getAttribute(column.@length))};
-    entity.set${column.@name?cap_first}(${column.@name});
+    dto.set${column.@name?cap_first}(${column.@name});
     </#list>
 
-    return entity;
+    return dto;
   }
 
   @Override
-  protected void updateEntity(${entityName} entity) {
+  protected void updateDto(${modelName} dto) {
     <#list columns as column>
     final ${getType(column.@type)} ${column.@name} = ${util.java.getRandomValue(getType(column.@type), util.xml.getAttribute(column.@length))};
-    entity.set${column.@name?cap_first}(${column.@name});
+    dto.set${column.@name?cap_first}(${column.@name});
     </#list>
   }
 
   @Override
-  protected void assertEntity(${entityName} entity, ${entityName} entity2) {
-    Assert.assertNotNull(entity);
-    Assert.assertNotNull(entity2);
+  protected void assertDto(${modelName} dto, ${modelName} dto2) {
+    Assert.assertNotNull(dto);
+    Assert.assertNotNull(dto2);
 
     <#list columns as column>
-    Assert.assertEquals(entity.get${column.@name?cap_first}(), entity2.get${column.@name?cap_first}());
+    Assert.assertEquals(dto.get${column.@name?cap_first}(), dto2.get${column.@name?cap_first}());
     </#list>
   }
   </#if>
@@ -199,5 +159,6 @@ AbstractGenericServiceTest<${primaryKeyType}, ${entityName}, ${serviceName}>
   <#list manyToManys as manyToMany>
   <@util.getValues doc=xml entity=entity property=manyToMany/>
   </#list>
+  <@util.getValuesForConstraints doc=xml entity=entity />
 }
 </#list>

@@ -1,5 +1,5 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
-<#import "includes/model.inc" as util>
+<#import "includes/entity.inc" as util>
 <#import "includes/queries/queries.inc" as queries>
 <#import "includes/jpa/annotation.inc" as jpa>
 
@@ -24,7 +24,7 @@ package ${entityPackageName};
 <#if util.xml.existAttribute(entity.@superClass)>
 	<@addTo assignTo="imports" element=getFqdn(entity.@superClass) />
 <#else>
-	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dto.AbstractDto" />
+	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.entity.AbstractEntity" />
 </#if>
 <#list interfaces as interface>
 	<@addTo assignTo="imports" element=getFqdn(interface) />
@@ -34,35 +34,34 @@ package ${entityPackageName};
 <@addTo assignTo="imports" element="javax.persistence.Table" />
 <@addTo assignTo="imports" element="javax.persistence.Column" />
 
-<#if primaryKey?node_name = "id">
-	<@addTo assignTo="imports" element="javax.persistence.Id" />
-	<@addTo assignTo="imports" element="javax.persistence.GeneratedValue" />
-	<@addTo assignTo="imports" element="javax.persistence.GenerationType" />
-<#else>
-	<@addTo assignTo="imports" element="javax.persistence.EmbeddedId" />
-	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(entityPackageName)}.${primaryKeyType}" />
+<@addTo assignTo="imports" element="javax.persistence.Id" />
+<@addTo assignTo="imports" element="javax.persistence.GeneratedValue" />
+<@addTo assignTo="imports" element="javax.persistence.GenerationType" />
+
+<#if uniqueConstraints?size gt 0>
+	<@addTo assignTo="imports" element="javax.persistence.UniqueConstraint" />
 </#if>
 
 <#list columns as column>
-  	<@addTo assignTo="imports" element=util.getImportsFor(column) />
+  	<@addTo assignTo="imports" element=util.getImportsFor(column, true) />
 </#list>
 <#if manyToOnes?size gt 0>
 	<@addTo assignTo="imports" element="javax.persistence.ManyToOne" />
 	<#list manyToOnes as manyToOne>
-		<@addTo assignTo="imports" element=util.getImportsFor(manyToOne) />
+		<@addTo assignTo="imports" element=util.getImportsFor(manyToOne, true) />
 	</#list>
 </#if>
 <#if oneToManys?size gt 0>
 	<@addTo assignTo="imports" element="javax.persistence.OneToMany" />
 	<#list oneToManys as oneToMany>
-		<@addTo assignTo="imports" element=util.getImportsFor(oneToMany) />
+		<@addTo assignTo="imports" element=util.getImportsFor(oneToMany, true) />
 	</#list>
 </#if>
 <#if manyToManys?size gt 0>
 	<@addTo assignTo="imports" element="javax.persistence.ManyToMany" />
 	<@addTo assignTo="imports" element="javax.persistence.JoinTable" />
 	<#list manyToManys as manyToMany>
-		<@addTo assignTo="imports" element=util.getImportsFor(manyToMany) />
+		<@addTo assignTo="imports" element=util.getImportsFor(manyToMany, true) />
 	</#list>
 </#if>
 <#if manyToOnes?size gt 0 || oneToManys?size gt 0 || manyToManys?size gt 0>
@@ -71,10 +70,10 @@ package ${entityPackageName};
 	<@addTo assignTo="imports" element="javax.persistence.FetchType" />
 </#if>
 <#list constructors as constructor>
-	<@addTo assignTo="imports" element=util.getImportsFor(constructor) />
+	<@addTo assignTo="imports" element=util.getImportsFor(constructor, true) />
 </#list>
 <#list operations as operation>
-  <@addTo assignTo="imports" element=util.getImportsFor(operation) />
+  <@addTo assignTo="imports" element=util.getImportsFor(operation, true) />
 </#list>
 
 <#if queries.hasNamedQuery(xml, entity) == "true">
@@ -83,10 +82,8 @@ package ${entityPackageName};
 </#if>
 
 ${getImports(true, entityPackageName, imports)}
-
-
 @Entity
-@Table(name="${entity.@tableName}")
+${jpa.getTableAnnotation(xml, entity)}
 <@queries.getNamedQueries doc=xml entity=entity/>
 @SuppressWarnings("serial")
 <#compress>
@@ -94,7 +91,7 @@ public ${util.getModifiersFrom(entity)} class ${entityName}
 <#if util.xml.existAttribute(entity.@superClass)>
  extends ${getClassName(entity.@superClass)}
 <#else>
- extends AbstractDto<${primaryKeyType}>
+ extends AbstractEntity<${primaryKeyType}>
 </#if>
 <#if interfaces?size gt 0>
  implements <@myList list=interfaces var="interface">${getClassName(interface)}</@myList>
@@ -121,10 +118,6 @@ ${jpa.getJpaAnnotation(entity, manyToMany)}
 
 	public ${entityName}() {
 		super();
-		<#if primaryKey?node_name = "embedded-id">
-		this.${primaryKey.@name} = new ${primaryKeyType}();
-		<#else>
-		</#if>
 		<#list oneToManys as oneToMany>
 			<@util.initProperties property=oneToMany/>
 		</#list>

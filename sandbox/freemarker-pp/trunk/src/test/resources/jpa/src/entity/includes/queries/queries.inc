@@ -1,12 +1,12 @@
 <#ftl ns_prefixes={"p":"http://code.google.com/p/j2ee-utils/schema/project","j":"http://code.google.com/p/j2ee-utils/schema/jpa"}>
 <#include "/common/common.inc" />
-<#include "embedded-id.inc">
+<#include "unique-constraints.inc">
 <#include "unique-column.inc">
 <#include "association.inc">
 
 <#function hasNamedQuery doc entity>
-	<#local primaryKey = getPrimaryKey(entity)>
-	<#if primaryKey?? && primaryKey?node_name == "embedded-id">
+	<@xPath xml=doc expression="//j:entity[@name='${entity.@name}']/j:constraints/j:uniqueConstraint" assignTo="uniqueConstraints" />
+	<#if uniqueConstraints?? && uniqueConstraints?size gt 0>
 		<#return "true">
 	</#if>
 	<@xPath xml=doc expression="//j:entity[@name='${entity.@name}']/j:properties/j:column[@unique='true']" assignTo="uniqueColumns" />
@@ -37,10 +37,16 @@
 		<@xPath xml=doc expression="//j:entity[@name='${entity.@name}']/j:properties/j:many-to-one" assignTo="manyToOnes" />
 		<@xPath xml=doc expression="//j:entity[@name='${entity.@name}']/j:properties/j:one-to-many" assignTo="oneToManys" />
 		<@xPath xml=doc expression="//j:entity[@name='${entity.@name}']/j:properties/j:many-to-many" assignTo="manyToManys" />
+		<@xPath xml=doc expression="//j:entity[@name='${entity.@name}']/j:constraints/j:uniqueConstraint" assignTo="uniqueConstraints" />
 
 		<#local namedQueries = "" />
-		<#if primaryKey?node_name = "embedded-id">
-			<#local namedQueries = namedQueries + getEmbeddedIdNamedQuery(doc, entity, primaryKey) />
+		<#if uniqueConstraints?? && uniqueConstraints?size gt 0>
+			<#list uniqueConstraints as uniqueConstraint>
+				<#if namedQueries?length gt 0>
+					<#local namedQueries = namedQueries + "," />
+				</#if>
+				<#local namedQueries = namedQueries + getUniqueConstraintNamedQuery(doc, entity, uniqueConstraint) />
+			</#list>
 		</#if>
 		<#if uniqueColumns??>
 			<#list uniqueColumns as column>

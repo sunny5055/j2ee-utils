@@ -3,13 +3,7 @@
 
 <#macro getInterfaceMethod doc entity property>
   <#local entityName = getEntityName(entity.@name) />
-  <#if property?node_name = "embedded-id">
-    <#assign columns = property["j:properties/j:column"]>
-    <#list columns as column>
-    <@java.interfaceOperation returnType="Integer" methodName=getCountQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}" />
-  <@java.interfaceOperation returnType="List<${entityName}>" methodName=getFindQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}" />
-  </#list>
-  <#elseif property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
+  <#if property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
     <@java.interfaceOperation returnType="Integer" methodName=getCountQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}" />
   <@java.interfaceOperation returnType="${entityName}" methodName=getFindQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}" />
   <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
@@ -32,23 +26,7 @@
 
 <#macro getMethod doc entity property>
   <#local entityName = getEntityName(entity.@name) />
-  <#if property?node_name = "embedded-id">
-    <#assign columns = property["j:properties/j:column"]>
-    <#list columns as column>
-    @Override
-    <@java.operation visibility="public" returnType="Integer" methodName=getCountQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}">
-    return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, "${getCountQueryName(column.@name, false, entity.@name)}",
-                new String[] { "${column.@name}" }, ${column.@name});
-    </@java.operation>
-
-    @Override
-  <@java.operation visibility="public" returnType="List<${entityName}>" methodName=getFindQueryName(column.@name, false) parameters="${getType(column.@type)} ${column.@name}">
-    return QueryUtil.findByNamedQueryAndNamedParam(entityManager, "${getFindQueryName(column.@name, false, entity.@name)}",
-                new String[] { "${column.@name}" }, ${column.@name});
-  </@java.operation>
-
-  </#list>
-  <#elseif property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
+  <#if property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
     @Override
     <@java.operation visibility="public" returnType="Integer" methodName=getCountQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}">
       return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, "${getCountQueryName(property.@name, true, entity.@name)}",
@@ -86,6 +64,68 @@
   </@java.operation>
   </#if>
 </#macro>
+
+
+<#macro getInterfaceMethodForConstraints doc entity>
+	<#local entityName = getEntityName(entity.@name) />
+	<#local uniqueConstraints=entity["./j:constraints/j:uniqueConstraint"] />
+	<#if uniqueConstraints?size gt 0>
+		<#list uniqueConstraints as uniqueConstraint>
+			<#local ucColumns = uniqueConstraint["./j:columns/j:column"]>
+  			<#list ucColumns as ucColumn>
+				<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
+				<@java.interfaceOperation returnType="Integer" methodName=getCountQueryName(prop.@name, false) parameters="${getType(prop.@type)} ${prop.@name}" />
+				<@java.interfaceOperation returnType="List<${entityName}>" methodName=getFindQueryName(prop.@name, false) parameters="${getType(prop.@type)} ${prop.@name}" />
+			</#list>
+
+			Integer countBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+			${entityName} findBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+		</#list>
+	</#if>
+</#macro>
+
+
+<#macro getMethodForConstraints doc entity>
+  <#local entityName = getEntityName(entity.@name) />
+  <#local uniqueConstraints=entity["./j:constraints/j:uniqueConstraint"] />
+	<#if uniqueConstraints?size gt 0>
+		<#list uniqueConstraints as uniqueConstraint>
+			<#local ucColumns = uniqueConstraint["./j:columns/j:column"]>
+  			<#local parameters = ""/>
+  			<#list ucColumns as ucColumn>
+				<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
+				<#if parameters?length gt 0>
+					<#local parameters = parameters + ", "/>
+				</#if>
+				<#local parameters = parameters + "${getType(prop.@type)} ${prop.@name}"/>
+				@Override
+			  	<@java.operation visibility="public" returnType="Integer" methodName=getCountQueryName(prop.@name, false) parameters="${getType(prop.@type)} ${prop.@name}">
+			  		return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, "${getCountQueryName(prop.@name, false, entity.@name)}",
+                	new String[] { "${prop.@name}" }, ${prop.@name});
+			  	</@java.operation>
+
+			  	@Override
+				<@java.operation visibility="public" returnType="List<${entityName}>" methodName=getFindQueryName(prop.@name, false) parameters="${getType(prop.@type)} ${prop.@name}">
+			  		return QueryUtil.findByNamedQueryAndNamedParam(entityManager, "${getFindQueryName(prop.@name, false, entity.@name)}",
+                	new String[] { "${prop.@name}" }, ${prop.@name});
+				</@java.operation>
+			</#list>
+
+			@Override
+			public Integer countBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>) {
+				return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, "${entity.@name?uncap_first}.countBy<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name?cap_first}<#if ucColumn_has_next>And</#if></#list>",
+                	new String[] { <#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />"${prop.@name}"<#if ucColumn_has_next>, </#if></#list> }, <#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+			}
+
+			@Override
+			public ${entityName} findBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>) {
+				return QueryUtil.getByNamedQueryAndNamedParam(entityManager, "${entity.@name?uncap_first}.findBy<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name?cap_first}<#if ucColumn_has_next>And</#if></#list>",
+                	new String[] { <#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />"${prop.@name}"<#if ucColumn_has_next>, </#if></#list> }, <#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+			}
+		</#list>
+	</#if>
+</#macro>
+
 
 <#macro getSearchMethod doc entity>
 	<#local entityName = getEntityName(entity.@name) />

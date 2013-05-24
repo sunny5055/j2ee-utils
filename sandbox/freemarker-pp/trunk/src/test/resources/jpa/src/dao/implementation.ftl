@@ -31,8 +31,7 @@ package ${daoImplPackageName};
 <@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
 <@addTo assignTo="imports" element="${daoPackageName}.${daoName}" />
 
-<#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(entityPackageName)}.${primaryKeyType}" />
+<#if uniqueConstraints?size gt 0>
 	<@addTo assignTo="imports" element="java.util.List" />
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.util.QueryUtil" />
 </#if>
@@ -73,6 +72,8 @@ AbstractGenericJpaDao<${primaryKeyType}, ${entityName}>
 	<#list manyToManys as manyToMany>
 	<@util.getMethod doc=xml entity=entity property=manyToMany/>
 	</#list>
+
+	<@util.getMethodForConstraints doc=xml entity=entity />
 
 	<@util.getSearchMethod doc=xml entity=entity />
 }

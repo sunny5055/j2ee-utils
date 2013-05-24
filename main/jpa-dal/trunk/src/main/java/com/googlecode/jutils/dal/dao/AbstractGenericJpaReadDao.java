@@ -17,7 +17,7 @@ import com.googlecode.jutils.collection.ArrayUtil;
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.dal.Search;
 import com.googlecode.jutils.dal.SearchCriteria;
-import com.googlecode.jutils.dal.dto.Dto;
+import com.googlecode.jutils.dal.entity.BaseEntity;
 import com.googlecode.jutils.dal.util.QueryUtil;
 
 /**
@@ -28,7 +28,7 @@ import com.googlecode.jutils.dal.util.QueryUtil;
  * @param <E>
  *            the element type
  */
-public abstract class AbstractGenericJpaReadDao<PK extends Serializable, E extends Dto<PK>> extends AbstractGenericReadDao<PK, E> {
+public abstract class AbstractGenericJpaReadDao<PK extends Serializable, E extends BaseEntity<PK>> extends AbstractGenericReadDao<PK, E> {
 	@PersistenceContext
 	protected EntityManager entityManager;
 
@@ -47,11 +47,11 @@ public abstract class AbstractGenericJpaReadDao<PK extends Serializable, E exten
 	 */
 	@Override
 	public E get(PK pk) {
-		E dto = null;
+		E entity = null;
 		if (pk != null) {
-			dto = this.entityManager.find(entityClass, pk);
+			entity = this.entityManager.find(entityClass, pk);
 		}
-		return dto;
+		return entity;
 	}
 
 	/**
@@ -59,15 +59,15 @@ public abstract class AbstractGenericJpaReadDao<PK extends Serializable, E exten
 	 */
 	@Override
 	public List<E> getObjects(final Collection<PK> pks) {
-		List<E> dtos = null;
+		List<E> entities = null;
 		if (!CollectionUtil.isEmpty(pks)) {
 			final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 			final CriteriaQuery<E> query = builder.createQuery(entityClass);
 			final Root<E> from = query.from(entityClass);
 			query.select(from).where(from.get(getIdName()).in(pks));
-			dtos = entityManager.createQuery(query).getResultList();
+			entities = entityManager.createQuery(query).getResultList();
 		}
-		return dtos;
+		return entities;
 	}
 
 	/**
@@ -75,15 +75,15 @@ public abstract class AbstractGenericJpaReadDao<PK extends Serializable, E exten
 	 */
 	@Override
 	public List<E> findAll() {
-		List<E> dtos = null;
+		List<E> entities = null;
 
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		final CriteriaQuery<E> query = builder.createQuery(entityClass);
 		final Root<E> from = query.from(entityClass);
 		query.select(from);
-		dtos = entityManager.createQuery(query).getResultList();
+		entities = entityManager.createQuery(query).getResultList();
 
-		return dtos;
+		return entities;
 	}
 
 	/**
@@ -112,7 +112,7 @@ public abstract class AbstractGenericJpaReadDao<PK extends Serializable, E exten
 	 */
 	@Override
 	public List<E> findAll(SearchCriteria searchCriteria) {
-		List<E> dtos = null;
+		List<E> entities = null;
 		if (searchCriteria != null) {
 			final Search search = getSearch(searchCriteria);
 			if (search != null) {
@@ -121,21 +121,21 @@ public abstract class AbstractGenericJpaReadDao<PK extends Serializable, E exten
 
 				if (!ArrayUtil.isEmpty(parameterNames)) {
 					if (searchCriteria.hasPagination()) {
-						dtos = QueryUtil.findByNamedParam(this.entityManager, search.getQuery(), searchCriteria.getFirstResult(), searchCriteria.getMaxResults(), parameterNames,
-								values);
+						entities = QueryUtil.findByNamedParam(this.entityManager, search.getQuery(), searchCriteria.getFirstResult(), searchCriteria.getMaxResults(),
+								parameterNames, values);
 					} else {
-						dtos = QueryUtil.findByNamedParam(this.entityManager, search.getQuery(), parameterNames, values);
+						entities = QueryUtil.findByNamedParam(this.entityManager, search.getQuery(), parameterNames, values);
 					}
 				} else {
 					if (searchCriteria.hasPagination()) {
-						dtos = QueryUtil.find(this.entityManager, search.getQuery(), searchCriteria.getFirstResult(), searchCriteria.getMaxResults());
+						entities = QueryUtil.find(this.entityManager, search.getQuery(), searchCriteria.getFirstResult(), searchCriteria.getMaxResults());
 					} else {
-						dtos = QueryUtil.find(this.entityManager, search.getQuery());
+						entities = QueryUtil.find(this.entityManager, search.getQuery());
 					}
 				}
 			}
 		}
-		return dtos;
+		return entities;
 	}
 
 	/**

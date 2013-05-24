@@ -33,8 +33,8 @@
 		<freemarker-templater-version>1.0.2</freemarker-templater-version>
 		<velocity-templater-version>1.0.1</velocity-templater-version>
 		<mail-sender-version>1.0.1</mail-sender-version>
-		<commons-dal-version>1.0.3</commons-dal-version>
-		<jpa-dal-version>1.0.2</jpa-dal-version>
+		<commons-dal-version>1.0.4</commons-dal-version>
+		<jpa-dal-version>1.0.3</jpa-dal-version>
 		<i18n-jpa-version>1.0.0</i18n-jpa-version>
 		<mail-jpa-version>1.0.0</mail-jpa-version>
 

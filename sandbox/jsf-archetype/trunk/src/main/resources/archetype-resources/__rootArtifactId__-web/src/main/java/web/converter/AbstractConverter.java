@@ -19,7 +19,7 @@ import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.dal.dto.Dto;
 import com.googlecode.jutils.dal.service.GenericService;
 
-public abstract class AbstractConverter<PK extends Serializable, E extends Dto<PK>, S extends GenericReadService<PK, E>>
+public abstract class AbstractConverter<PK extends Serializable, DTO extends Dto<PK>, S extends GenericReadService<PK, DTO>>
         implements Converter {
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractConverter.class);
 
@@ -54,7 +54,7 @@ public abstract class AbstractConverter<PK extends Serializable, E extends Dto<P
         String toReturn = "";
         if (value != null) {
             if (value instanceof Dto) {
-                final E dto = (E) value;
+                final DTO dto = (DTO) value;
 
                 toReturn = dto.getStringPrimaryKey();
             }

@@ -17,12 +17,12 @@ import com.googlecode.jutils.dal.dto.Dto;
  * The Class AbstractDataTableBean.
  *
  * @param <PK> the generic type
- * @param <E> the element type
+ * @param <DTO> the element type
  */
 @SuppressWarnings("serial")
-public abstract class AbstractDataTableBean<PK extends Serializable, E extends Dto<PK>> implements Serializable {
+public abstract class AbstractDataTableBean<PK extends Serializable, DTO extends Dto<PK>> implements Serializable {
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractDataTableBean.class);
-    protected E selectedObject;
+    protected DTO selectedObject;
 
     @Value("#{config.getProperty('list_default_rows')}")
     protected String defaultRows;
@@ -47,11 +47,11 @@ public abstract class AbstractDataTableBean<PK extends Serializable, E extends D
     protected void init() {
     }
 
-    public E getSelectedObject() {
+    public DTO getSelectedObject() {
         return selectedObject;
     }
 
-    public void setSelectedObject(E newSelectedObject) {
+    public void setSelectedObject(DTO newSelectedObject) {
         this.selectedObject = newSelectedObject;
     }
 

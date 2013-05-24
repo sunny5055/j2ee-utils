@@ -7,7 +7,7 @@
 <#include "/common/assign.inc" />
 
 <@resolveKey map=config key="testXmlDatasetFilePath" values=[projectName] assignTo="filePath"/>
-<@resolveKey map=config key="testXmlDatasetFileName" values=[entityName] assignTo="fileName"/>
+<@resolveKey map=config key="testXmlDatasetFileName" values=[modelName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>

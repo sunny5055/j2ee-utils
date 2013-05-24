@@ -5,11 +5,6 @@
 <#macro getAttribute doc entity property>
 <#if property?node_name = "id">
 	${getColumnName(entity.@columnPrefix, property)}="${random(getType(property.@type), xml.getAttribute(property.@length))}"
-<#elseif property?node_name = "embedded-id">
-	<#assign pkColumns = property["j:properties/j:column"]>
-	<#list pkColumns as pkColumn>
-		${getColumnName(entity.@columnPrefix, pkColumn)}="${random(getType(pkColumn.@type), xml.getAttribute(pkColumn.@length))}"
-	</#list>
 <#elseif property?node_name = "column">
 	${getColumnName(entity.@columnPrefix, property)}="${random(getType(property.@type), xml.getAttribute(property.@length))}"
 <#elseif property?node_name = "many-to-one">

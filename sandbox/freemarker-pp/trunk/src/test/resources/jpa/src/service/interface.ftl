@@ -24,9 +24,8 @@ package ${servicePackageName};
 <#else>
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.GenericService" />
 </#if>
-<@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
-<#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(entityPackageName)}.${primaryKeyType}" />
+<@addTo assignTo="imports" element="${modelPackageName}.${modelName}" />
+<#if uniqueConstraints?size gt 0>
 	<@addTo assignTo="imports" element="java.util.List" />
 </#if>
 <#if manyToOnes?size gt 0 || oneToManys?size gt 0 || manyToManys?size gt 0>
@@ -39,9 +38,9 @@ ${getImports(false, servicePackageName, imports)}
 <#compress>
 public interface ${serviceName} extends
 <#if util.xml.getAttribute(entity.@readOnly) == "true">
-	GenericReadService<${primaryKeyType}, ${entityName}> {
+	GenericReadService<${primaryKeyType}, ${modelName}> {
 <#else>
-	GenericService<${primaryKeyType}, ${entityName}> {
+	GenericService<${primaryKeyType}, ${modelName}> {
 </#if>
 </#compress>
 
@@ -58,5 +57,6 @@ public interface ${serviceName} extends
 <#list manyToManys as manyToMany>
 <@util.getInterfaceMethod doc=xml entity=entity property=manyToMany/>
 </#list>
+<@util.getInterfaceMethodForConstraints doc=xml entity=entity />
 }
 </#list>

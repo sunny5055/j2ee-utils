@@ -35,17 +35,18 @@ import com.googlecode.jutils.StringUtil;
 import com.googlecode.jutils.collection.ArrayUtil;
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.core.AnnotationUtil;
-import com.googlecode.jutils.dal.dto.Dto;
+import com.googlecode.jutils.dal.entity.BaseEntity;
 import com.googlecode.jutils.dal.service.GenericReadService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @TestExecutionListeners({ TransactionalTestExecutionListener.class, DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class })
-public abstract class AbstractGenericReadServiceTest<PK extends Serializable, E extends Dto<PK>, S extends GenericReadService<PK, E>> extends
+public abstract class AbstractGenericReadServiceTest<PK extends Serializable, DTO, E extends BaseEntity<PK>, S extends GenericReadService<PK, DTO>> extends
 		AbstractTransactionalJUnit4SpringContextTests {
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractGenericReadServiceTest.class);
 
 	protected Class<PK> pkClass;
+	protected Class<DTO> dtoClass;
 	protected Class<E> entityClass;
 
 	protected S service;
@@ -59,9 +60,10 @@ public abstract class AbstractGenericReadServiceTest<PK extends Serializable, E 
 		final Type type = getClass().getGenericSuperclass();
 		final ParameterizedType parameterizedType = (ParameterizedType) type;
 		final Type[] typeArguments = parameterizedType.getActualTypeArguments();
-		if (!ArrayUtil.isEmpty(typeArguments) && typeArguments.length == 3) {
+		if (!ArrayUtil.isEmpty(typeArguments) && typeArguments.length == 4) {
 			pkClass = (Class<PK>) typeArguments[0];
-			entityClass = (Class<E>) typeArguments[1];
+			dtoClass = (Class<DTO>) typeArguments[1];
+			entityClass = (Class<E>) typeArguments[2];
 		}
 
 		this.primaryKeys = new ArrayList<PK>();
@@ -103,36 +105,35 @@ public abstract class AbstractGenericReadServiceTest<PK extends Serializable, E 
 
 	@Test
 	public void testGet() {
-		E entity = null;
+		DTO dto = null;
 
 		for (final PK id : primaryKeys) {
-			entity = service.get(id);
-			Assert.assertNotNull(entity);
-			Assert.assertEquals(id, entity.getPrimaryKey());
+			dto = service.get(id);
+			Assert.assertNotNull(dto);
 		}
 
 		for (final PK id : fakePrimaryKeys) {
-			entity = service.get(id);
-			Assert.assertNull(entity);
+			dto = service.get(id);
+			Assert.assertNull(dto);
 		}
 	}
 
 	@Test
 	public void testGetObjects() {
 		final List<PK> allPrimaryKeys = getAllPrimaryKeys();
-		List<E> entities = null;
+		List<DTO> dtos = null;
 
-		entities = service.getObjects(primaryKeys);
-		Assert.assertNotNull(entities);
-		Assert.assertEquals(primaryKeys.size(), entities.size());
+		dtos = service.getObjects(primaryKeys);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(primaryKeys.size(), dtos.size());
 
-		entities = service.getObjects(fakePrimaryKeys);
-		Assert.assertNotNull(entities);
-		Assert.assertEquals(0, entities.size());
+		dtos = service.getObjects(fakePrimaryKeys);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());
 
-		entities = service.getObjects(allPrimaryKeys);
-		Assert.assertNotNull(entities);
-		Assert.assertEquals(primaryKeys.size(), entities.size());
+		dtos = service.getObjects(allPrimaryKeys);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(primaryKeys.size(), dtos.size());
 	}
 
 	@Test
@@ -143,9 +144,9 @@ public abstract class AbstractGenericReadServiceTest<PK extends Serializable, E 
 
 	@Test
 	public void testFindAll() {
-		final List<E> entities = service.findAll();
-		Assert.assertNotNull(entities);
-		Assert.assertEquals(primaryKeys.size(), entities.size());
+		final List<DTO> dtos = service.findAll();
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(primaryKeys.size(), dtos.size());
 	}
 
 	@Test

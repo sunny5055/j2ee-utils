@@ -15,6 +15,7 @@ import com.googlecode.jutils.collection.ArrayUtil;
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.dal.SearchCriteria;
 import com.googlecode.jutils.dal.dao.GenericReadDao;
+import com.googlecode.jutils.dal.dto.Dto;
 import com.googlecode.jutils.dal.entity.BaseEntity;
 
 /**
@@ -29,7 +30,8 @@ import com.googlecode.jutils.dal.entity.BaseEntity;
  * @param <DAO>
  *            the generic type
  */
-public abstract class AbstractGenericReadService<PK extends Serializable, DTO, E extends BaseEntity<PK>, DAO extends GenericReadDao<PK, E>> implements GenericReadService<PK, DTO> {
+public abstract class AbstractGenericReadService<PK extends Serializable, DTO extends Dto<PK>, E extends BaseEntity<PK>, DAO extends GenericReadDao<PK, E>> implements
+		GenericReadService<PK, DTO> {
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractGenericReadService.class);
 	protected Class<PK> pkClass;
 	protected Class<DTO> dtoClass;

@@ -3,6 +3,8 @@ package com.googlecode.jutils.dal.service;
 import java.io.Serializable;
 import java.util.Collection;
 
+import com.googlecode.jutils.dal.dto.Dto;
+
 /**
  * The Interface GenericService.
  * 
@@ -11,7 +13,7 @@ import java.util.Collection;
  * @param <DTO>
  *            the element type
  */
-public interface GenericService<PK extends Serializable, DTO> extends GenericReadService<PK, DTO> {
+public interface GenericService<PK extends Serializable, DTO extends Dto<PK>> extends GenericReadService<PK, DTO> {
 
 	/**
 	 * Creates the dto.

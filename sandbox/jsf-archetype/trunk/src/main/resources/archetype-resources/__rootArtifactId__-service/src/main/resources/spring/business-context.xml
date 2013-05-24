@@ -16,4 +16,7 @@
 	<import resource="classpath:spring/jdbc-context.xml" />
 	<import resource="classpath:spring/jpa-context.xml" />
 	<import resource="classpath:spring/tx-context.xml" />
+
+	<bean id="mapper" class="org.dozer.DozerBeanMapper" />
+
 </beans>

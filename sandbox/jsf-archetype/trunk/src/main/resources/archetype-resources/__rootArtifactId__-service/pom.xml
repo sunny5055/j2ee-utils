@@ -28,6 +28,11 @@
 			<artifactId>${rootArtifactId}-api</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>jee-utils</groupId>
+			<artifactId>jpa-dal</artifactId>
+		</dependency>
+
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>

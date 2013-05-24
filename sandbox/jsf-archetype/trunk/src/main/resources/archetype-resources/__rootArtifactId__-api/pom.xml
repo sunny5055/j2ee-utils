@@ -24,7 +24,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>jee-utils</groupId>
-			<artifactId>jpa-dal</artifactId>
+			<artifactId>commons-dal</artifactId>
 		</dependency>
 	</dependencies>
 </project>

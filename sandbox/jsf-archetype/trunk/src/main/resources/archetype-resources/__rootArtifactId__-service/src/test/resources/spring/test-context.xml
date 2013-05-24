@@ -16,6 +16,8 @@
 	<import resource="classpath:spring/jpa-context.xml" />
 	<import resource="classpath:spring/tx-context.xml" />
 
+	<bean id="mapper" class="org.dozer.DozerBeanMapper" />
+
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 		<property name="driverClass" value="${symbol_dollar}{jdbc.driverClassName}" />
 		<property name="jdbcUrl" value="${symbol_dollar}{jdbc.url}" />

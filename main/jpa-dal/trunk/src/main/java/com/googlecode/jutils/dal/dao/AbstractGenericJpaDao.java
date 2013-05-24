@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.googlecode.jutils.collection.CollectionUtil;
-import com.googlecode.jutils.dal.dto.Dto;
+import com.googlecode.jutils.dal.entity.BaseEntity;
 
 /**
  * The Class AbstractGenericJpaDao.
@@ -15,7 +15,7 @@ import com.googlecode.jutils.dal.dto.Dto;
  * @param <E>
  *            the element type
  */
-public abstract class AbstractGenericJpaDao<PK extends Serializable, E extends Dto<PK>> extends AbstractGenericJpaReadDao<PK, E> implements GenericDao<PK, E> {
+public abstract class AbstractGenericJpaDao<PK extends Serializable, E extends BaseEntity<PK>> extends AbstractGenericJpaReadDao<PK, E> implements GenericDao<PK, E> {
 
 	/**
 	 * Instantiates a new abstract generic jpa dao.
@@ -29,11 +29,11 @@ public abstract class AbstractGenericJpaDao<PK extends Serializable, E extends D
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public PK create(E dto) {
+	public PK create(E entity) {
 		PK primaryKey = null;
-		if (dto != null) {
-			this.entityManager.persist(dto);
-			primaryKey = dto.getPrimaryKey();
+		if (entity != null) {
+			this.entityManager.persist(entity);
+			primaryKey = entity.getPrimaryKey();
 		}
 		return primaryKey;
 	}
@@ -42,10 +42,10 @@ public abstract class AbstractGenericJpaDao<PK extends Serializable, E extends D
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public Integer update(E dto) {
+	public Integer update(E entity) {
 		Integer updated = 0;
-		if (dto != null) {
-			this.entityManager.merge(dto);
+		if (entity != null) {
+			this.entityManager.merge(entity);
 			updated = 1;
 		}
 		return updated;

@@ -36,12 +36,12 @@ public class QueryUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(EntityManager entityManager, String queryString, Object... values) {
-		T dto = null;
+		T entity = null;
 		if (entityManager != null && !StringUtil.isBlank(queryString)) {
-			final List<?> dtos = find(entityManager, queryString, values);
-			dto = (T) CollectionUtil.getFirstElementFromList(dtos);
+			final List<?> entities = find(entityManager, queryString, values);
+			entity = (T) CollectionUtil.getFirstElementFromList(entities);
 		}
-		return dto;
+		return entity;
 	}
 
 	/**
@@ -61,12 +61,12 @@ public class QueryUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getByNamedParam(EntityManager entityManager, String queryString, String[] paramNames, Object... values) {
-		T dto = null;
+		T entity = null;
 		if (entityManager != null && !StringUtil.isBlank(queryString) && !ArrayUtil.isEmpty(paramNames) && !ArrayUtil.isEmpty(values)) {
-			final List<?> dtos = findByNamedParam(entityManager, queryString, paramNames, values);
-			dto = (T) CollectionUtil.getFirstElementFromList(dtos);
+			final List<?> entities = findByNamedParam(entityManager, queryString, paramNames, values);
+			entity = (T) CollectionUtil.getFirstElementFromList(entities);
 		}
-		return dto;
+		return entity;
 	}
 
 	/**
@@ -84,12 +84,12 @@ public class QueryUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getByNamedQuery(EntityManager entityManager, String queryName, Object... values) {
-		T dto = null;
+		T entity = null;
 		if (entityManager != null && !StringUtil.isBlank(queryName)) {
-			final List<?> dtos = findByNamedQuery(entityManager, queryName, values);
-			dto = (T) CollectionUtil.getFirstElementFromList(dtos);
+			final List<?> entities = findByNamedQuery(entityManager, queryName, values);
+			entity = (T) CollectionUtil.getFirstElementFromList(entities);
 		}
-		return dto;
+		return entity;
 	}
 
 	/**
@@ -109,12 +109,12 @@ public class QueryUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getByNamedQueryAndNamedParam(EntityManager entityManager, String queryName, String[] paramNames, Object... values) {
-		T dto = null;
+		T entity = null;
 		if (entityManager != null && !StringUtil.isBlank(queryName) && !ArrayUtil.isEmpty(paramNames) && !ArrayUtil.isEmpty(values)) {
-			final List<?> dtos = findByNamedQueryAndNamedParam(entityManager, queryName, paramNames, values);
-			dto = (T) CollectionUtil.getFirstElementFromList(dtos);
+			final List<?> entities = findByNamedQueryAndNamedParam(entityManager, queryName, paramNames, values);
+			entity = (T) CollectionUtil.getFirstElementFromList(entities);
 		}
-		return dto;
+		return entity;
 	}
 
 	/**
@@ -132,14 +132,14 @@ public class QueryUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> find(EntityManager entityManager, final String queryString, final Object... values) {
-		List<T> dtos = null;
+		List<T> entities = null;
 		if (entityManager != null && !StringUtil.isBlank(queryString)) {
 			final Query query = entityManager.createQuery(queryString);
 			applyParametersToQuery(query, values);
 
-			dtos = query.getResultList();
+			entities = query.getResultList();
 		}
-		return dtos;
+		return entities;
 	}
 
 	/**
@@ -161,16 +161,16 @@ public class QueryUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> find(EntityManager entityManager, final String queryString, final Integer firstResult, final Integer maxResults, final Object... values) {
-		List<T> dtos = null;
+		List<T> entities = null;
 		if (entityManager != null && !StringUtil.isBlank(queryString) && firstResult != null && maxResults != null) {
 			final Query query = entityManager.createQuery(queryString);
 			applyParametersToQuery(query, values);
 
 			query.setFirstResult(firstResult);
 			query.setMaxResults(maxResults);
-			dtos = query.getResultList();
+			entities = query.getResultList();
 		}
-		return dtos;
+		return entities;
 	}
 
 	/**
@@ -190,14 +190,14 @@ public class QueryUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> findByNamedParam(EntityManager entityManager, String queryString, String[] paramNames, Object... values) {
-		List<T> dtos = null;
+		List<T> entities = null;
 		if (entityManager != null && !StringUtil.isBlank(queryString) && !ArrayUtil.isEmpty(paramNames) && !ArrayUtil.isEmpty(values)) {
 			final Query query = entityManager.createQuery(queryString);
 			applyNamedParametersToQuery(query, paramNames, values);
 
-			dtos = query.getResultList();
+			entities = query.getResultList();
 		}
-		return dtos;
+		return entities;
 	}
 
 	/**
@@ -222,16 +222,16 @@ public class QueryUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> findByNamedParam(EntityManager entityManager, final String queryString, final Integer firstResult, final Integer maxResults,
 			final String[] paramNames, final Object... values) {
-		List<T> dtos = null;
+		List<T> entities = null;
 		if (entityManager != null && !StringUtil.isBlank(queryString) && firstResult != null && maxResults != null && !ArrayUtil.isEmpty(paramNames) && !ArrayUtil.isEmpty(values)) {
 			final Query query = entityManager.createQuery(queryString);
 			applyNamedParametersToQuery(query, paramNames, values);
 
 			query.setFirstResult(firstResult);
 			query.setMaxResults(maxResults);
-			dtos = query.getResultList();
+			entities = query.getResultList();
 		}
-		return dtos;
+		return entities;
 	}
 
 	/**
@@ -249,14 +249,14 @@ public class QueryUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> findByNamedQuery(EntityManager entityManager, String queryName, Object... values) {
-		List<T> dtos = null;
+		List<T> entities = null;
 		if (entityManager != null && !StringUtil.isBlank(queryName)) {
 			final Query query = entityManager.createNamedQuery(queryName);
 			applyParametersToQuery(query, values);
 
-			dtos = query.getResultList();
+			entities = query.getResultList();
 		}
-		return dtos;
+		return entities;
 	}
 
 	/**
@@ -278,16 +278,16 @@ public class QueryUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> findByNamedQuery(EntityManager entityManager, final String queryName, final Integer firstResult, final Integer maxResults, final Object... values) {
-		List<T> dtos = null;
+		List<T> entities = null;
 		if (entityManager != null && !StringUtil.isBlank(queryName) && firstResult != null && maxResults != null) {
 			final Query query = entityManager.createNamedQuery(queryName);
 			applyParametersToQuery(query, values);
 
 			query.setFirstResult(firstResult);
 			query.setMaxResults(maxResults);
-			dtos = query.getResultList();
+			entities = query.getResultList();
 		}
-		return dtos;
+		return entities;
 	}
 
 	/**
@@ -307,14 +307,14 @@ public class QueryUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> findByNamedQueryAndNamedParam(EntityManager entityManager, String queryName, String[] paramNames, Object... values) {
-		List<T> dtos = null;
+		List<T> entities = null;
 		if (entityManager != null && !StringUtil.isBlank(queryName) && !ArrayUtil.isEmpty(paramNames) && !ArrayUtil.isEmpty(values)) {
 			final Query query = entityManager.createNamedQuery(queryName);
 			applyNamedParametersToQuery(query, paramNames, values);
 
-			dtos = query.getResultList();
+			entities = query.getResultList();
 		}
-		return dtos;
+		return entities;
 	}
 
 	/**
@@ -339,16 +339,16 @@ public class QueryUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> findByNamedQueryAndNamedParam(EntityManager entityManager, final String queryName, final Integer firstResult, final Integer maxResults,
 			final String[] paramNames, final Object... values) {
-		List<T> dtos = null;
+		List<T> entities = null;
 		if (entityManager != null && !StringUtil.isBlank(queryName) && firstResult != null && maxResults != null && !ArrayUtil.isEmpty(paramNames) && !ArrayUtil.isEmpty(values)) {
 			final Query query = entityManager.createNamedQuery(queryName);
 			applyNamedParametersToQuery(query, paramNames, values);
 
 			query.setFirstResult(firstResult);
 			query.setMaxResults(maxResults);
-			dtos = query.getResultList();
+			entities = query.getResultList();
 		}
-		return dtos;
+		return entities;
 	}
 
 	/**

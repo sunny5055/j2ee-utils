@@ -5,35 +5,34 @@ import java.util.Collection;
 import java.util.List;
 
 import com.googlecode.jutils.dal.SearchCriteria;
-import com.googlecode.jutils.dal.dto.Dto;
 
 /**
  * The Interface GenericReadService.
  * 
  * @param <PK>
  *            the generic type
- * @param <E>
+ * @param <DTO>
  *            the element type
  */
-public interface GenericReadService<PK extends Serializable, E extends Dto<PK>> {
+public interface GenericReadService<PK extends Serializable, DTO> {
 
 	/**
-	 * Gets the entity.
+	 * Gets the dto.
 	 * 
 	 * @param pk
 	 *            the primary key
-	 * @return the entity
+	 * @return the dto
 	 */
-	E get(PK pk);
+	DTO get(PK pk);
 
 	/**
-	 * Gets the entities.
+	 * Gets the dtos.
 	 * 
 	 * @param pks
 	 *            the primary keys
 	 * @return the objects
 	 */
-	List<E> getObjects(Collection<PK> pks);
+	List<DTO> getObjects(Collection<PK> pks);
 
 	/**
 	 * Count.
@@ -43,11 +42,11 @@ public interface GenericReadService<PK extends Serializable, E extends Dto<PK>> 
 	Integer count();
 
 	/**
-	 * Finds all entities.
+	 * Finds all dtos.
 	 * 
 	 * @return the list
 	 */
-	List<E> findAll();
+	List<DTO> findAll();
 
 	/**
 	 * Count.
@@ -59,13 +58,13 @@ public interface GenericReadService<PK extends Serializable, E extends Dto<PK>> 
 	Integer count(SearchCriteria searchCriteria);
 
 	/**
-	 * Finds all entities.
+	 * Finds all dtos.
 	 * 
 	 * @param searchCriteria
 	 *            the search criteria
 	 * @return the list
 	 */
-	List<E> findAll(SearchCriteria searchCriteria);
+	List<DTO> findAll(SearchCriteria searchCriteria);
 
 	/**
 	 * Exist primary key.

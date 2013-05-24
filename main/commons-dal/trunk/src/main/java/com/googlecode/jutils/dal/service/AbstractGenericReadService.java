@@ -1,31 +1,61 @@
 package com.googlecode.jutils.dal.service;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.googlecode.jutils.collection.ArrayUtil;
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.dal.SearchCriteria;
 import com.googlecode.jutils.dal.dao.GenericReadDao;
-import com.googlecode.jutils.dal.dto.Dto;
+import com.googlecode.jutils.dal.entity.BaseEntity;
 
 /**
  * The Class AbstractGenericReadService.
  * 
  * @param <PK>
  *            the generic type
+ * @param <DTO>
+ *            the element type
  * @param <E>
  *            the element type
  * @param <DAO>
  *            the generic type
  */
-public abstract class AbstractGenericReadService<PK extends Serializable, E extends Dto<PK>, DAO extends GenericReadDao<PK, E>> implements GenericReadService<PK, E> {
+public abstract class AbstractGenericReadService<PK extends Serializable, DTO, E extends BaseEntity<PK>, DAO extends GenericReadDao<PK, E>> implements GenericReadService<PK, DTO> {
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractGenericReadService.class);
+	protected Class<PK> pkClass;
+	protected Class<DTO> dtoClass;
+	protected Class<E> entityClass;
+	protected Mapper mapper;
 	protected DAO dao;
+
+	@SuppressWarnings("unchecked")
+	public AbstractGenericReadService() {
+		final Type type = getClass().getGenericSuperclass();
+		final ParameterizedType parameterizedType = (ParameterizedType) type;
+		final Type[] typeArguments = parameterizedType.getActualTypeArguments();
+		if (!ArrayUtil.isEmpty(typeArguments) && typeArguments.length == 4) {
+			pkClass = (Class<PK>) typeArguments[0];
+			dtoClass = (Class<DTO>) typeArguments[1];
+			entityClass = (Class<E>) typeArguments[2];
+		}
+	}
+
+	/**
+	 * Sets the mapper.
+	 * 
+	 * @param mapper
+	 *            the new mapper
+	 */
+	public abstract void setMapper(Mapper mapper);
 
 	/**
 	 * Sets the dao.
@@ -39,24 +69,27 @@ public abstract class AbstractGenericReadService<PK extends Serializable, E exte
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public E get(final PK pk) {
-		return this.dao.get(pk);
+	public DTO get(final PK pk) {
+		DTO dto = null;
+		if (pk != null) {
+			final E entity = this.dao.get(pk);
+			dto = toDto(entity);
+		}
+		return dto;
 	}
 
 	/**
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public List<E> getObjects(final Collection<PK> pks) {
-		List<E> entities = null;
+	public List<DTO> getObjects(final Collection<PK> pks) {
+		List<DTO> dtos = null;
 		if (!CollectionUtil.isEmpty(pks)) {
-			entities = this.dao.getObjects(pks);
-		}
+			final List<E> entities = this.dao.getObjects(pks);
 
-		if (entities == null) {
-			entities = new ArrayList<E>();
+			dtos = toDtos(entities);
 		}
-		return entities;
+		return dtos;
 	}
 
 	/**
@@ -71,13 +104,10 @@ public abstract class AbstractGenericReadService<PK extends Serializable, E exte
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public List<E> findAll() {
-		List<E> entities = this.dao.findAll();
+	public List<DTO> findAll() {
+		final List<E> entities = this.dao.findAll();
 
-		if (entities == null) {
-			entities = new ArrayList<E>();
-		}
-		return entities;
+		return toDtos(entities);
 	}
 
 	/**
@@ -92,13 +122,14 @@ public abstract class AbstractGenericReadService<PK extends Serializable, E exte
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public List<E> findAll(SearchCriteria searchCriteria) {
-		List<E> entities = this.dao.findAll(searchCriteria);
-
-		if (entities == null) {
-			entities = new ArrayList<E>();
+	public List<DTO> findAll(SearchCriteria searchCriteria) {
+		List<DTO> dtos = null;
+		if (searchCriteria != null) {
+			final List<E> entities = this.dao.findAll(searchCriteria);
+			dtos = toDtos(entities);
 		}
-		return entities;
+
+		return dtos;
 	}
 
 	/**
@@ -107,5 +138,69 @@ public abstract class AbstractGenericReadService<PK extends Serializable, E exte
 	@Override
 	public boolean existPk(final PK pk) {
 		return this.dao.existPk(pk);
+	}
+
+	/**
+	 * To entity.
+	 * 
+	 * @param dto
+	 *            the dto
+	 * @return the e
+	 */
+	protected E toEntity(DTO dto) {
+		E entity = null;
+		if (dto != null) {
+			entity = mapper.map(dto, entityClass);
+		}
+		return entity;
+	}
+
+	/**
+	 * To dto.
+	 * 
+	 * @param entity
+	 *            the entity
+	 * @return the dto
+	 */
+	protected DTO toDto(E entity) {
+		DTO dto = null;
+		if (entity != null) {
+			dto = mapper.map(entity, dtoClass);
+		}
+		return dto;
+	}
+
+	/**
+	 * To entities.
+	 * 
+	 * @param dtos
+	 *            the dtos
+	 * @return the list
+	 */
+	protected List<E> toEntities(Collection<DTO> dtos) {
+		final List<E> entities = new ArrayList<E>();
+		if (!CollectionUtil.isEmpty(dtos)) {
+			for (final DTO dto : dtos) {
+				entities.add(toEntity(dto));
+			}
+		}
+		return entities;
+	}
+
+	/**
+	 * To dtos.
+	 * 
+	 * @param entities
+	 *            the entities
+	 * @return the list
+	 */
+	protected List<DTO> toDtos(Collection<E> entities) {
+		final List<DTO> dtos = new ArrayList<DTO>();
+		if (!CollectionUtil.isEmpty(entities)) {
+			for (final E entity : entities) {
+				dtos.add(toDto(entity));
+			}
+		}
+		return dtos;
 	}
 }

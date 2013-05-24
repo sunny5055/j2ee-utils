@@ -6,30 +6,33 @@ import java.util.List;
 
 import com.googlecode.jutils.collection.CollectionUtil;
 import com.googlecode.jutils.dal.dao.GenericDao;
-import com.googlecode.jutils.dal.dto.Dto;
-import com.googlecode.jutils.dal.util.DtoUtil;
+import com.googlecode.jutils.dal.entity.BaseEntity;
+import com.googlecode.jutils.dal.util.EntityUtil;
 
 /**
  * The Class AbstractGenericService.
  * 
  * @param <PK>
  *            the generic type
+ * @param <DTO>
+ *            the element type
  * @param <E>
  *            the element type
  * @param <DAO>
  *            the generic type
  */
-public abstract class AbstractGenericService<PK extends Serializable, E extends Dto<PK>, DAO extends GenericDao<PK, E>> extends AbstractGenericReadService<PK, E, DAO> implements
-		GenericService<PK, E> {
+public abstract class AbstractGenericService<PK extends Serializable, DTO, E extends BaseEntity<PK>, DAO extends GenericDao<PK, E>> extends
+		AbstractGenericReadService<PK, DTO, E, DAO> implements GenericService<PK, DTO> {
 
 	/**
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public PK create(E dto) {
+	public PK create(DTO dto) {
 		PK pk = null;
 		if (dto != null) {
-			pk = this.dao.create(dto);
+			final E entity = toEntity(dto);
+			pk = this.dao.create(entity);
 		}
 		return pk;
 	}
@@ -38,9 +41,10 @@ public abstract class AbstractGenericService<PK extends Serializable, E extends 
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public void update(E dto) {
+	public void update(DTO dto) {
 		if (dto != null) {
-			this.dao.update(dto);
+			final E entity = toEntity(dto);
+			this.dao.update(entity);
 		}
 	}
 
@@ -48,10 +52,11 @@ public abstract class AbstractGenericService<PK extends Serializable, E extends 
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public Integer delete(E dto) {
+	public Integer delete(DTO dto) {
 		Integer deleted = 0;
 		if (dto != null) {
-			deleted = deleteByPrimaryKey(dto.getPrimaryKey());
+			final E entity = toEntity(dto);
+			deleted = deleteByPrimaryKey(entity.getPrimaryKey());
 		}
 		return deleted;
 	}
@@ -60,10 +65,11 @@ public abstract class AbstractGenericService<PK extends Serializable, E extends 
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public Integer delete(Collection<E> dtos) {
+	public Integer delete(Collection<DTO> dtos) {
 		Integer deleted = 0;
 		if (!CollectionUtil.isEmpty(dtos)) {
-			final List<PK> pks = DtoUtil.getPrimaryKeyList(dtos);
+			final List<E> entities = toEntities(dtos);
+			final List<PK> pks = EntityUtil.getPrimaryKeyList(entities);
 			deleted = deleteByPrimaryKeys(pks);
 		}
 		return deleted;
@@ -105,10 +111,11 @@ public abstract class AbstractGenericService<PK extends Serializable, E extends 
 	 * {@inheritedDoc}
 	 */
 	@Override
-	public boolean isRemovable(E dto) {
+	public boolean isRemovable(DTO dto) {
 		boolean removable = true;
 		if (dto != null) {
-			removable = isRemovable(dto.getPrimaryKey());
+			final E entity = toEntity(dto);
+			removable = isRemovable(entity.getPrimaryKey());
 		}
 		return removable;
 	}

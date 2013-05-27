@@ -72,7 +72,7 @@
 				</b:properties>
 			</b:class>
 		</p:package>
-		<p:package name="com.googlecode.test.model">
+		<p:package name="com.googlecode.test.entity">
 			<j:entity tableName="CAM_CAMERA" name="Camera" columnPrefix="CAM">
 				<j:id name="id" type="Integer" />
 				<j:properties>
@@ -107,7 +107,7 @@
 						length="50" />
 					<j:column name="active" type="Boolean" nullable="false" />
 					<j:many-to-many name="roles" listType="java.util.List"
-						targetEntity="com.googlecode.test.model.Role" />
+						targetEntity="Role" />
 				</j:properties>
 			</j:entity>
 			<j:entity tableName="ROL_ROLE" name="Role" columnPrefix="ROL"
@@ -121,18 +121,23 @@
 				</j:properties>
 			</j:entity>
 			<j:entity tableName="LAB_LABEL" name="Label" columnPrefix="LAB">
-				<j:embedded-id targetEntity="LabelId" name="id">
-					<j:properties>
-						<j:column name="key" type="String" nullable="false"
-							length="100" />
-						<j:column name="lang" type="String" nullable="false"
-							length="2" />
-					</j:properties>
-				</j:embedded-id>
+				<j:id name="id" type="Integer" />
 				<j:properties>
+					<j:column name="key" type="String" nullable="false"
+						length="100" />
+					<j:column name="lang" type="String" nullable="false"
+						length="2" />
 					<j:column name="value" type="String" nullable="false"
 						length="250" />
 				</j:properties>
+				<j:constraints>
+					<j:uniqueConstraint>
+						<j:columns>
+							<j:column>key</j:column>
+							<j:column>lang</j:column>
+						</j:columns>
+					</j:uniqueConstraint>
+				</j:constraints>
 			</j:entity>
 		</p:package>
 	</p:packages>

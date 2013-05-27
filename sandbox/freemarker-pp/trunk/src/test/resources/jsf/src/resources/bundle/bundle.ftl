@@ -100,15 +100,7 @@ ${toUnderscoreCase(entity.@name)?lower_case}_create_head_title=Création d'un ${
 ${toUnderscoreCase(entity.@name)?lower_case}_update_head_title=Mise à jour de ${entity.@name?lower_case}
 ${toUnderscoreCase(entity.@name)?lower_case}_view_head_title=Détail de ${entity.@name?lower_case}
 
-<#if primaryKey?node_name = "embedded-id">
-<#if embeddedIdProperties??>
-<#list embeddedIdProperties as property>
-${toUnderscoreCase(entity.@name)?lower_case}_list_${toUnderscoreCase(property.@name)?lower_case}=${property.@name?cap_first}
-</#list>
-</#if>
-<#else>
 ${toUnderscoreCase(entity.@name)?lower_case}_list_${toUnderscoreCase(primaryKey.@name)?lower_case}=${primaryKey.@name?cap_first}
-</#if>
 <#list allProperties as property>
 ${toUnderscoreCase(entity.@name)?lower_case}_list_${toUnderscoreCase(property.@name)?lower_case}=${property.@name?cap_first}
 </#list>
@@ -118,26 +110,11 @@ ${toUnderscoreCase(entity.@name)?lower_case}_list_empty=Aucune ${entity.@name?lo
 ${toUnderscoreCase(entity.@name)?lower_case}_created=${entity.@name} a été créé avec succès
 ${toUnderscoreCase(entity.@name)?lower_case}_updated=${entity.@name} a été mis à jour avec succès
 ${toUnderscoreCase(entity.@name)?lower_case}_deleted=${entity.@name} a été supprimé avec succès
-<#if primaryKey?node_name = "embedded-id">
-<#if embeddedIdProperties??>
-<#list embeddedIdProperties as property>
-${toUnderscoreCase(entity.@name)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}=${property.@name?cap_first}
-</#list>
-</#if>
-<#else>
 ${toUnderscoreCase(entity.@name)?lower_case}_form_${toUnderscoreCase(primaryKey.@name)?lower_case}=${primaryKey.@name?cap_first}
-</#if>
 <#list allProperties as property>
 ${toUnderscoreCase(entity.@name)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}=${property.@name?cap_first}
 </#list>
 
-<#if primaryKey?node_name = "embedded-id">
-<#if embeddedIdProperties??>
-<#list embeddedIdProperties as property>
-error_${toUnderscoreCase(entity.@name)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required=${property.@name?cap_first} est obligatoire.
-</#list>
-</#if>
-</#if>
 <#list allProperties as property>
 <#if property?node_name == "column">
 <#if getClassName(property.@type) != "Boolean" && getType(property.@type) != "boolean">

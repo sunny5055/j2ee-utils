@@ -5,7 +5,7 @@
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 <#list entities as entity>
 <#include "/common/assign.inc" />
-<@resolveKey map=config key="listXhtmlFilePath" values=[projectName, lowerEntityName] assignTo="filePath"/>
+<@resolveKey map=config key="listXhtmlFilePath" values=[projectName, lowerModelName] assignTo="filePath"/>
 <@resolveKey map=config key="listXhtmlFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <!DOCTYPE html>
@@ -24,35 +24,25 @@
 	</ui:define>
 
 	<ui:define name="content">
-		<p:dataTable id="${lowerEntityName}DataTable" widgetVar="${lowerEntityName}DataTable"
-			lazy="true" var="${lowerEntityName}" sortMode="multiple" rowKey="${sharp}{${lowerEntityName}.primaryKey}"
-			value="${sharp}{${lowerEntityName}DataTableBean.dataModel}" paginator="true"
-			emptyMessage="${sharp}{${lowerEntityName}DataTableBean.listEmpty}">
-			<#if primaryKey?node_name = "embedded-id">
-			<#if embeddedIdProperties??>
-			<#list embeddedIdProperties as property>
-			<p:column headerText="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_list_${toUnderscoreCase(property.@name)?lower_case}}" sortBy="${sharp}{${lowerEntityName}.${primaryKey.@name}.${property.@name}}">
-				<@util.getXhtmlOutput entityName=lowerEntityName path="${lowerEntityName}.${primaryKey.@name}" property=property/>
+		<p:dataTable id="${lowerModelName}DataTable" widgetVar="${lowerModelName}DataTable"
+			lazy="true" var="${lowerModelName}" sortMode="multiple" rowKey="${sharp}{${lowerModelName}.primaryKey}"
+			value="${sharp}{${lowerModelName}DataTableBean.dataModel}" paginator="true"
+			emptyMessage="${sharp}{${lowerModelName}DataTableBean.listEmpty}">
+			<p:column headerText="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_list_${toUnderscoreCase(primaryKey.@name)?lower_case}}" sortBy="${sharp}{${lowerModelName}.${primaryKey.@name}}">
+				<@util.getXhtmlOutput entityName=lowerModelName property=primaryKey/>
 			</p:column>
-			</#list>
-			</#if>
-			<#else>
-			<p:column headerText="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_list_${toUnderscoreCase(primaryKey.@name)?lower_case}}" sortBy="${sharp}{${lowerEntityName}.${primaryKey.@name}}">
-				<@util.getXhtmlOutput entityName=lowerEntityName property=primaryKey/>
-			</p:column>
-			</#if>
 			<#list allProperties as property>
-			<p:column headerText="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_list_${toUnderscoreCase(property.@name)?lower_case}}" sortBy="${sharp}{${lowerEntityName}.${property.@name}}">
-				<@util.getXhtmlOutput entityName=lowerEntityName property=property/>
+			<p:column headerText="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_list_${toUnderscoreCase(property.@name)?lower_case}}" sortBy="${sharp}{${lowerModelName}.${property.@name}}">
+				<@util.getXhtmlOutput entityName=lowerModelName property=property/>
 			</p:column>
 			</#list>
 
 			<p:column style="width:30px">
 				<h:panelGroup>
-					<p:commandLink ajax="false" action="${sharp}{${lowerEntityName}DataTableBean.view}"
+					<p:commandLink ajax="false" action="${sharp}{${lowerModelName}DataTableBean.view}"
 						title="${sharp}{bundle.list_display}" icon="ui-icon-search">
-						<f:setPropertyActionListener value="${sharp}{${lowerEntityName}}"
-							target="${sharp}{${lowerEntityName}DataTableBean.selectedObject}" />
+						<f:setPropertyActionListener value="${sharp}{${lowerModelName}}"
+							target="${sharp}{${lowerModelName}DataTableBean.selectedObject}" />
 					</p:commandLink>
 				</h:panelGroup>
 			</p:column>

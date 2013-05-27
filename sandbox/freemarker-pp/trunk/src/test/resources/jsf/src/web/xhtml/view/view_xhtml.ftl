@@ -6,7 +6,7 @@
 <#list entities as entity>
 <#if util.xml.getAttribute(entity.@readOnly) == "true">
 <#include "/common/assign.inc" />
-<@resolveKey map=config key="viewXhtmlFilePath" values=[projectName, lowerEntityName] assignTo="filePath"/>
+<@resolveKey map=config key="viewXhtmlFilePath" values=[projectName, lowerModelName] assignTo="filePath"/>
 <@resolveKey map=config key="viewXhtmlFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <!DOCTYPE html>
@@ -26,28 +26,16 @@
 
 	<ui:define name="content">
 		<h:panelGrid columns="2" cellpadding="0" cellspacing="0">
-			<#if primaryKey?node_name = "embedded-id">
-			<#if embeddedIdProperties??>
-			<#list embeddedIdProperties as property>
-			<util:formLabel
-				forId="${property.@name}Value"
-				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
-			<@util.getXhtmlOutput id="${property.@name}Value" entityName=lowerEntityName path="${lowerEntityName}FormBean.entity.${primaryKey.@name}" property=property />
-
-			</#list>
-			</#if>
-			<#else>
 			<util:formLabel
 				forId="${primaryKey.@name}Value"
-				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(primaryKey.@name)?lower_case}}" />
-				<@util.getXhtmlOutput id="${primaryKey.@name}Value" entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=primaryKey />
+				value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(primaryKey.@name)?lower_case}}" />
+				<@util.getXhtmlOutput id="${primaryKey.@name}Value" entityName=lowerModelName path="${lowerModelName}FormBean.model" property=primaryKey />
 
-			</#if>
 			<#list allProperties as property>
 			<util:formLabel
 				forId="${property.@name}Value"
-				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
-			<@util.getXhtmlOutput id="${property.@name}Value" entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=property />
+				value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
+			<@util.getXhtmlOutput id="${property.@name}Value" entityName=lowerModelName path="${lowerModelName}FormBean.model" property=property />
 			</#list>
 		</h:panelGrid>
 

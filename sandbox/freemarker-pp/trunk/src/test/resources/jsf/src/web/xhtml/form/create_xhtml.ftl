@@ -6,7 +6,7 @@
 <#list entities as entity>
 <#if util.xml.getAttribute(entity.@readOnly) != "true">
 <#include "/common/assign.inc" />
-<@resolveKey map=config key="createXhtmlFilePath" values=[projectName, lowerEntityName] assignTo="filePath"/>
+<@resolveKey map=config key="createXhtmlFilePath" values=[projectName, lowerModelName] assignTo="filePath"/>
 <@resolveKey map=config key="createXhtmlFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <!DOCTYPE html>
@@ -26,23 +26,11 @@
 
 	<ui:define name="content">
 		<h:panelGrid columns="2" cellpadding="0" cellspacing="0">
-			<#if primaryKey?node_name = "embedded-id">
-			<#if embeddedIdProperties??>
-			<#list embeddedIdProperties as property>
-			<util:formLabel
-				forId="${property.@name}Value"
-				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
- 			<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}CreationFormBean.entity.${primaryKey.@name}" property=property />
-
-
-			</#list>
-			</#if>
-			</#if>
 			<#list allProperties as property>
 			<util:formLabel
 				forId="${property.@name}Value"
-				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
- 			<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}CreationFormBean.entity" property=property />
+				value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
+ 			<@util.getXhtmlInput entityName=lowerModelName path="${lowerModelName}CreationFormBean.model" property=property />
 
 
 			</#list>
@@ -51,7 +39,7 @@
 		<h:panelGroup id="formActions">
 			<p:commandButton id="createButton" value="${sharp}{bundle.form_save}"
 				icon="ui-icon-disk"
-				actionListener="${sharp}{${lowerEntityName}CreationFormBean.create}" />
+				actionListener="${sharp}{${lowerModelName}CreationFormBean.create}" />
 
 			<p:commandButton value="${sharp}{bundle.form_cancel}"
 				immediate="true" process="@this"

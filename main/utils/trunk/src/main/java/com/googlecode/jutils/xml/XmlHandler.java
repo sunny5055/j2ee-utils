@@ -1,5 +1,6 @@
 package com.googlecode.jutils.xml;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
@@ -208,7 +209,7 @@ public class XmlHandler extends DefaultHandler2 {
 				final String attributeName = attributes.getQName(i);
 				final String attributeValue = StringUtil.trimToEmpty(attributes.getValue(i));
 
-				final String attribute = attributeName + "=" + attributeQuoteChar + attributeValue + attributeQuoteChar;
+				final String attribute = attributeName + "=" + attributeQuoteChar + StringEscapeUtils.escapeXml(attributeValue) + attributeQuoteChar;
 				if (currentLineWidth + attribute.length() > lineWidth) {
 					buffer.append(line + "\n");
 					line = indentString + attribute;

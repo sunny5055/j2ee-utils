@@ -8,14 +8,14 @@
 	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:util="http://java.sun.com/jsf/composite/components">
-<h:head>
-	<title><ui:insert name="headTitle" /> - <h:outputText value="#{bundle.global_head_title}" /></title>
-	<meta http-equiv="X-UA-Compatible" content="IE=8" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-</h:head>
+<f:view contentType="text/html">
+	<h:head>
+		<title><ui:insert name="headTitle" /> - <h:outputText value="#{bundle.global_head_title}" /></title>
+		<meta http-equiv="X-UA-Compatible" content="IE=8" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	</h:head>
 
-<h:body>
-	<f:view contentType="text/html">
+	<h:body>
 		<link rel="stylesheet" href="#{resource['css:main.css']}" type="text/css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="#{resource['css:main-ie.css']}" type="text/css" /><![endif]-->
 
@@ -60,6 +60,6 @@
 				<h:graphicImage name="ajaxloadingbar.gif" library="img" />
 			</p:dialog>
 		</ui:insert>
-	</f:view>
-</h:body>
+	</h:body>
+</f:view>
 </html>

@@ -8,20 +8,22 @@
 	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:util="http://java.sun.com/jsf/composite/components">
-<ui:composition template="/xhtml/template/layout.xhtml">
-	<ui:define name="headTitle">
-		<h:outputText value="#{bundle.error_page_title}" />
-	</ui:define>
+<f:view contentType="text/html">
+	<ui:composition template="/xhtml/template/layout.xhtml">
+		<ui:define name="headTitle">
+			<h:outputText value="#{bundle.error_head_title}" />
+		</ui:define>
 
-	<ui:define name="content">
-		<div id="content">
-			<t:htmlTag value="h2" rendered="#{!empty errorBean.title}">
-				<h:outputText value="#{errorBean.title}" />
-			</t:htmlTag>
-			<h:outputText value="#{errorBean.message}" escape="false" />
+		<ui:define name="content">
+			<div id="content">
+				<t:htmlTag value="h2" rendered="#{!empty errorBean.title}">
+					<h:outputText value="#{errorBean.title}" />
+				</t:htmlTag>
+				<h:outputText value="#{errorBean.message}" escape="false" />
 
-			<!-- #{exception} -->
-		</div>
-	</ui:define>
-</ui:composition>
+				<!-- #{exception} -->
+			</div>
+		</ui:define>
+	</ui:composition>
+</f:view>
 </html>

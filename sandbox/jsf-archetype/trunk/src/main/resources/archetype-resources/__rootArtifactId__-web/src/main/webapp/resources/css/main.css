@@ -22,3 +22,13 @@ body {margin:0; padding:0 16px 0 16px; font-size:0.8em; height:100%;}
 
 /* Form */
 .ui-required {color: #FF0000; font-weight: bold; padding-left: 4px; vertical-align: super;}
+
+/* Actions */
+.action-link {display:inline-block; height:16px; margin:6px 2px 0 2px; padding-right:20px; background-repeat:no-repeat; background-position:right center; }
+.view-link {background-image:url(img/icons/view.png);}
+.edit-link {background-image:url(img/icons/edit.png);}
+.delete-link {background-image:url(img/icons/delete.png);}
+.csv-export-link {background-image:url(img/icons/csv.png);}
+.pdf-export-link {background-image:url(img/icons/pdf.png);}
+.print-link {background-image:url(img/icons/print.png);}
+.download-link {background-image:url(img/icons/download.png);}

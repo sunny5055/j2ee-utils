@@ -19,32 +19,34 @@
 	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:util="http://java.sun.com/jsf/composite/components">
-<ui:composition template="${util.getWebResource(config.layoutXhtmlFilePath, config.layoutXhtmlFileName)}">
-	<ui:define name="headTitle">
-		<h:outputText value="${sharp}{bundle.${toUnderscoreCase(entityName)?lower_case}_view_head_title}" />
-	</ui:define>
+<f:view contentType="text/html">
+	<ui:composition template="${util.getWebResource(config.layoutXhtmlFilePath, config.layoutXhtmlFileName)}">
+		<ui:define name="headTitle">
+			<h:outputText value="${sharp}{bundle.${toUnderscoreCase(entityName)?lower_case}_view_head_title}" />
+		</ui:define>
 
-	<ui:define name="content">
-		<h:panelGrid columns="2" cellpadding="0" cellspacing="0">
-			<util:formLabel
-				forId="${primaryKey.@name}Value"
-				value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(primaryKey.@name)?lower_case}}" />
-				<@util.getXhtmlOutput id="${primaryKey.@name}Value" entityName=lowerModelName path="${lowerModelName}FormBean.model" property=primaryKey />
+		<ui:define name="content">
+			<h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+				<util:formLabel
+					forId="${primaryKey.@name}Value"
+					value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(primaryKey.@name)?lower_case}}" />
+					<@util.getXhtmlOutput id="${primaryKey.@name}Value" entityName=lowerModelName path="${lowerModelName}FormBean.model" property=primaryKey />
 
-			<#list allProperties as property>
-			<util:formLabel
-				forId="${property.@name}Value"
-				value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
-			<@util.getXhtmlOutput id="${property.@name}Value" entityName=lowerModelName path="${lowerModelName}FormBean.model" property=property />
-			</#list>
-		</h:panelGrid>
+				<#list allProperties as property>
+				<util:formLabel
+					forId="${property.@name}Value"
+					value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
+				<@util.getXhtmlOutput id="${property.@name}Value" entityName=lowerModelName path="${lowerModelName}FormBean.model" property=property />
+				</#list>
+			</h:panelGrid>
 
-		<h:panelGroup id="formActions">
-			<p:commandButton immediate="true" process="@this"
-				value="${sharp}{bundle.back}" />
-		</h:panelGroup>
-	</ui:define>
-</ui:composition>
+			<h:panelGroup id="formActions">
+				<p:commandButton immediate="true" process="@this"
+					value="${sharp}{bundle.back}" />
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+</f:view>
 </html>
 </#if>
 </#list>

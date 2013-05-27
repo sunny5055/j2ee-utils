@@ -27,7 +27,7 @@
 
 		<!-- Version of dependencies -->
 		<!-- j2ee-utils -->
-		<utils-version>1.0.3</utils-version>
+		<utils-version>1.0.4</utils-version>
 		<spring-util-version>1.0.0</spring-util-version>
 		<templater-version>1.0.3</templater-version>
 		<freemarker-templater-version>1.0.2</freemarker-templater-version>

@@ -6,19 +6,23 @@ package ${package}.web.bean.form;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.googlecode.jutils.BooleanUtil;
 import com.googlecode.jutils.dal.dto.Dto;
 import com.googlecode.jutils.dal.service.GenericService;
+
 
 @SuppressWarnings("serial")
 public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<PK>, S extends GenericService<PK, DTO>>
         implements Serializable {
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractFormBean.class);
     protected DTO model;
+    protected boolean editionMode;
 
     public AbstractFormBean() {
     }
@@ -28,7 +32,18 @@ public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<
      */
     @PostConstruct
     protected void init() {
-        model = getNewModelInstance();
+    	model = getFromRequest();
+
+    	final FacesContext facesContext = FacesContext.getCurrentInstance();
+        Object parameter = null;
+        //parameter = FacesUtils.getCustomScopeParameter(facesContext, "editionMode");
+        if (parameter != null && BooleanUtil.toBooleanObject(parameter)) {
+            editionMode = true;
+        }
+
+        if (model == null) {
+            model = getNewInstance();
+        }
     }
 
     public abstract S getService();
@@ -41,9 +56,28 @@ public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<
         this.model = model;
     }
 
-    protected abstract DTO getNewModelInstance();
+    public abstract PK getPrimaryKey();
+
+    protected abstract DTO getNewInstance();
 
     protected abstract String getListPage();
+
+    public boolean isEditionMode() {
+        return editionMode;
+    }
+
+    public void setEditionMode(boolean editionMode) {
+        this.editionMode = editionMode;
+    }
+
+    public DTO getFromRequest() {
+        DTO dto = null;
+        final PK pk = getPrimaryKey();
+        if (pk != null) {
+            dto = this.getService().get(pk);
+        }
+        return dto;
+    }
 
     protected String getViewPage() {
         return "";
@@ -53,7 +87,13 @@ public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<
      * Re init.
      */
     protected void reInit() {
+    	 if (model != null && model.getPrimaryKey() != null) {
+             model = getService().get(model.getPrimaryKey());
+         } else {
+             model = getNewInstance();
+         }
 
+         setEditionMode(false);
     }
 
     /**
@@ -75,5 +115,9 @@ public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<
                 reInit();
             }
         }
+    }
+
+    public void editionMode(ActionEvent event) {
+        setEditionMode(true);
     }
 }

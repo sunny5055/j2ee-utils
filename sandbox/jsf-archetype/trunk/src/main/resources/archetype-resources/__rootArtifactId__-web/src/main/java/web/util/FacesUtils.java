@@ -24,6 +24,7 @@ import javax.faces.application.NavigationHandler;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -444,6 +445,46 @@ public final class FacesUtils {
             session.invalidate();
         }
     }
+
+	public static Flash getFlash(FacesContext facesContext) {
+		Flash flash = null;
+		if (facesContext != null) {
+			flash = facesContext.getExternalContext().getFlash();
+		}
+		return flash;
+	}
+
+	public static Object getFlashAttribute(FacesContext facesContext, String name) {
+		Object value = null;
+		final Flash flash = getFlash(facesContext);
+		if (flash != null && !StringUtil.isBlank(name)) {
+			value = flash.get(name);
+		}
+		return value;
+	}
+
+	public static void setFlashAttribute(FacesContext facesContext, String name, Object value) {
+		final Flash flash = getFlash(facesContext);
+		if (flash != null && !StringUtil.isBlank(name)) {
+			flash.put(name, value);
+		}
+	}
+
+	public static void removeFlashAttribute(FacesContext facesContext, String name) {
+		final Flash flash = getFlash(facesContext);
+		if (flash != null && !StringUtil.isBlank(name)) {
+			flash.remove(name);
+		}
+	}
+
+	public static boolean containsFlashAttribute(FacesContext facesContext, String name) {
+		boolean contains = false;
+		final Flash flash = getFlash(facesContext);
+		if (flash != null && !StringUtil.isBlank(name)) {
+			contains = flash.containsKey(name);
+		}
+		return contains;
+	}
 
     public static HttpServletResponse getResponse(FacesContext facesContext) {
         HttpServletResponse response = null;

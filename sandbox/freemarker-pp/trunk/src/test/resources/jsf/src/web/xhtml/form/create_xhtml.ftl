@@ -19,34 +19,36 @@
 	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:util="http://java.sun.com/jsf/composite/components">
-<ui:composition template="${util.getWebResource(config.layoutXhtmlFilePath, config.layoutXhtmlFileName)}">
-	<ui:define name="headTitle">
-		<h:outputText value="${sharp}{bundle.${toUnderscoreCase(entityName)?lower_case}_create_head_title}" />
-	</ui:define>
+<f:view contentType="text/html">
+	<ui:composition template="${util.getWebResource(config.layoutXhtmlFilePath, config.layoutXhtmlFileName)}">
+		<ui:define name="headTitle">
+			<h:outputText value="${sharp}{bundle.${toUnderscoreCase(modelName)?lower_case}_create_head_title}" />
+		</ui:define>
 
-	<ui:define name="content">
-		<h:panelGrid columns="2" cellpadding="0" cellspacing="0">
-			<#list allProperties as property>
-			<util:formLabel
-				forId="${property.@name}Value"
-				value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
- 			<@util.getXhtmlInput entityName=lowerModelName path="${lowerModelName}CreationFormBean.model" property=property />
+		<ui:define name="content">
+			<h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+				<#list allProperties as property>
+				<util:formLabel
+					forId="${property.@name}Value"
+					value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
+	 			<@util.getXhtmlInput entityName=lowerModelName path="${lowerModelName}CreationFormBean.model" property=property />
 
 
-			</#list>
-		</h:panelGrid>
+				</#list>
+			</h:panelGrid>
 
-		<h:panelGroup id="formActions">
-			<p:commandButton id="createButton" value="${sharp}{bundle.form_save}"
-				icon="ui-icon-disk"
-				actionListener="${sharp}{${lowerModelName}CreationFormBean.create}" />
+			<h:panelGroup id="formActions">
+				<p:commandButton id="createButton" value="${sharp}{bundle.save_btn}"
+					icon="ui-icon-disk"
+					actionListener="${sharp}{${lowerModelName}CreationFormBean.create}" />
 
-			<p:commandButton value="${sharp}{bundle.form_cancel}"
-				immediate="true" process="@this"
-				action="${util.getWebResource(listXhtmlFilePath, listXhtmlFileName)}?faces-redirect=true&amp;includeViewParams=true" />
-		</h:panelGroup>
-	</ui:define>
-</ui:composition>
+				<p:commandButton value="${sharp}{bundle.cancel_btn}"
+					immediate="true" process="@this"
+					action="${util.getWebResource(listXhtmlFilePath, listXhtmlFileName)}?faces-redirect=true&amp;includeViewParams=true" />
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+</f:view>
 </html>
 </#if>
 </#list>

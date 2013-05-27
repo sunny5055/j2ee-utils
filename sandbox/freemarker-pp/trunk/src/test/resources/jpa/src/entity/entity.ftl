@@ -97,6 +97,9 @@ public ${util.getModifiersFrom(entity)} class ${entityName}
  implements <@myList list=interfaces var="interface">${getClassName(interface)}</@myList>
 </#if>
 {</#compress>
+<@queries.getQueryNames doc=xml entity=entity />
+
+
 ${jpa.getJpaAnnotation(entity, primaryKey)}
 <@util.getProperty property=primaryKey/>
 <#list columns as column>

@@ -11,19 +11,22 @@
 			<#local namedQuery= namedQuery + ", " />
 		</#if>
 
-		<#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getCountQueryName(prop.@name, false, entity.@name) + "\", query = \"select count(*) from ${entityName} as ${columnPrefix} where ${columnPrefix}.${prop.@name} = :${prop.@name}\")," />
-		<#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getFindQueryName(prop.@name, false, entity.@name) + "\", query = \"from ${entityName} as ${columnPrefix} where ${columnPrefix}.${prop.@name} = :${prop.@name}\")" />
+		<#local namedQuery= namedQuery + "@NamedQuery(name = " + getCountQueryConstant(prop.@name, false, entityName) + ", query = \"select count(*) from ${entityName} as ${columnPrefix} where ${columnPrefix}.${prop.@name} = :${prop.@name}\")," />
+		<#local namedQuery= namedQuery + "@NamedQuery(name = " + getFindQueryConstant(prop.@name, false, entityName) + ", query = \"from ${entityName} as ${columnPrefix} where ${columnPrefix}.${prop.@name} = :${prop.@name}\")" />
 	</#list>
 
-	<#local namedQuery= namedQuery + ", @NamedQuery(name = \"" + entity.@name?uncap_first + ".countBy" />
+
+	<#local queryName= "" />
 	<#list ucColumns as ucColumn>
 		<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
-		<#local namedQuery = namedQuery + prop.@name?cap_first />
+		<#local queryName = queryName + prop.@name?cap_first />
 		<#if ucColumn_has_next>
-			<#local namedQuery= namedQuery + "And"/>
+			<#local queryName= queryName + "And"/>
 		</#if>
 	</#list>
-	<#local namedQuery= namedQuery + "\", query = \"select count(*) from ${entityName} as ${columnPrefix} where "/>
+
+	<#local namedQuery= namedQuery + ", @NamedQuery(name = " + getCountQueryConstant(queryName, false, entityName) />
+	<#local namedQuery= namedQuery + ", query = \"select count(*) from ${entityName} as ${columnPrefix} where "/>
 	<#list ucColumns as ucColumn>
 		<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
 		<#local namedQuery = namedQuery + "${columnPrefix}.${prop.@name} = :${prop.@name}" />
@@ -33,15 +36,8 @@
 	</#list>
 	<#local namedQuery= namedQuery + "\")" />
 
-	<#local namedQuery= namedQuery + ", @NamedQuery(name = \"" + entity.@name?uncap_first + ".findBy" />
-	<#list ucColumns as ucColumn>
-		<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
-		<#local namedQuery = namedQuery + prop.@name?cap_first />
-		<#if ucColumn_has_next>
-			<#local namedQuery= namedQuery + "And"/>
-		</#if>
-	</#list>
-	<#local namedQuery= namedQuery + "\", query = \"from ${entityName} as ${columnPrefix} where "/>
+	<#local namedQuery= namedQuery + ", @NamedQuery(name = " + getFindQueryConstant(queryName, false, entityName) />
+	<#local namedQuery= namedQuery + ", query = \"from ${entityName} as ${columnPrefix} where "/>
 	<#list ucColumns as ucColumn>
 		<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
 		<#local namedQuery = namedQuery + "${columnPrefix}.${prop.@name} = :${prop.@name}" />

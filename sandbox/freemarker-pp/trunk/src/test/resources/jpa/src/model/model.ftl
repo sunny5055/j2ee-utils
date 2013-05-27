@@ -19,7 +19,7 @@ package ${modelPackageName};
 </#if>
 
 <#assign imports = [] />
-<@addTo assignTo="imports" element="java.io.Serializable" />
+<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dto.AbstractDto" />
 
 <#list columns as column>
   	<@addTo assignTo="imports" element=util.getImportsFor(column) />
@@ -45,7 +45,7 @@ ${getImports(true, modelPackageName, imports)}
 
 @SuppressWarnings("serial")
 <#compress>
-public ${util.getModifiersFrom(entity)} class ${modelName} implements Serializable
+public ${util.getModifiersFrom(entity)} class ${modelName} extends AbstractDto<${primaryKeyType}>
 {</#compress>
 <@util.getProperty property=primaryKey/>
 <#list columns as column>
@@ -70,6 +70,10 @@ public ${util.getModifiersFrom(entity)} class ${modelName} implements Serializab
 			<@util.initProperties property=manyToMany/>
 		</#list>
   	}
+
+<@util.getterPrimaryKey property=primaryKey/>
+
+<@util.setterPrimaryKey property=primaryKey/>
 
 <@util.getter property=primaryKey/>
 

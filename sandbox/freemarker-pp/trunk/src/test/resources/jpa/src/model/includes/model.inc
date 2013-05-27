@@ -23,6 +23,16 @@
   </#if>
 </#macro>
 
+<#macro getterPrimaryKey property>
+  @Override
+  <@java.getter type=getType(property.@type) name=property.@name methodName="getPrimaryKey" />
+</#macro>
+
+<#macro setterPrimaryKey property>
+  @Override
+  <@java.setter type=getType(property.@type) name=property.@name methodName="setPrimaryKey" argName="primaryKey"/>
+</#macro>
+
 
 <#macro getter property>
   <#if property?node_name = "id">

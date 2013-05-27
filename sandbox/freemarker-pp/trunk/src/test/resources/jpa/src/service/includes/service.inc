@@ -95,8 +95,17 @@
 				<@java.interfaceOperation returnType="List<${modelName}>" methodName=getFindQueryName(prop.@name, false) parameters="${getType(prop.@type)} ${prop.@name}" />
 			</#list>
 
-			boolean existsWith(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
-			${modelName} findBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+
+			<#local queryName= "" />
+			<#list ucColumns as ucColumn>
+				<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
+				<#local queryName = queryName + prop.@name?cap_first />
+				<#if ucColumn_has_next>
+					<#local queryName= queryName + "And"/>
+				</#if>
+			</#list>
+			boolean existsWith${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+			${modelName} findBy${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
 		</#list>
 	</#if>
 </#macro>
@@ -136,21 +145,29 @@
 				</@java.operation>
 			</#list>
 
+			<#local queryName= "" />
+			<#list ucColumns as ucColumn>
+				<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
+				<#local queryName = queryName + prop.@name?cap_first />
+				<#if ucColumn_has_next>
+					<#local queryName= queryName + "And"/>
+				</#if>
+			</#list>
 			@Override
-			public boolean existsWith(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>) {
+			public boolean existsWith${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>) {
 				boolean exists = false;
 				if(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${java.checkNotNull(getType(prop.@type), prop.@name)}<#if ucColumn_has_next>&& </#if></#list>) {
-					Integer count = dao.countBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+					Integer count = dao.countBy${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
 					exists = count != 0;
 				}
 				return exists;
 			}
 
 			@Override
-			public ${modelName} findBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>) {
+			public ${modelName} findBy${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>) {
 				${modelName} ${modelName?uncap_first} = null;
 				if(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${java.checkNotNull(getType(prop.@type), prop.@name)}<#if ucColumn_has_next>&& </#if></#list>) {
-					${entityName} entity = dao.findBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+					${entityName} entity = dao.findBy${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
 					${modelName?uncap_first} = toDto(entity);
 				}
 				return ${modelName?uncap_first};

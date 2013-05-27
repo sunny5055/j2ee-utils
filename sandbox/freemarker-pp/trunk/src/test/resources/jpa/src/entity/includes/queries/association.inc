@@ -18,11 +18,11 @@
 	  </#if>
 
 	  <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
-		  <#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getCountQueryName(propertyName, false, entity.@name) + "\", query = \"select count(*) from ${entityName} as ${columnPrefix} left join ${columnPrefix}.${property.@name} as ${targetColumnPrefix} where ${targetColumnPrefix}.${targetColumn.@name} = :${propertyName}\")," />
-	      <#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getFindQueryName(propertyName, false, entity.@name) + "\", query = \"select ${columnPrefix} from ${entityName} as ${columnPrefix} left join ${columnPrefix}.${property.@name} as ${targetColumnPrefix} where ${targetColumnPrefix}.${targetColumn.@name} = :${propertyName}\")" />
+		  <#local namedQuery= namedQuery + "@NamedQuery(name = " + getCountQueryConstant(propertyName, false, entityName) + ", query = \"select count(*) from ${entityName} as ${columnPrefix} left join ${columnPrefix}.${property.@name} as ${targetColumnPrefix} where ${targetColumnPrefix}.${targetColumn.@name} = :${propertyName}\")," />
+	      <#local namedQuery= namedQuery + "@NamedQuery(name = " + getFindQueryConstant(propertyName, false, entityName) + ", query = \"select ${columnPrefix} from ${entityName} as ${columnPrefix} left join ${columnPrefix}.${property.@name} as ${targetColumnPrefix} where ${targetColumnPrefix}.${targetColumn.@name} = :${propertyName}\")" />
 	  <#else>
-	      <#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getCountQueryName(propertyName, false, entity.@name) + "\", query = \"select count(*) from ${entityName} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${targetColumn.@name} = :${propertyName}\")," />
-	      <#local namedQuery= namedQuery + "@NamedQuery(name = \"" + getFindQueryName(propertyName, false, entity.@name) + "\", query = \"select ${columnPrefix} from ${entityName} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${targetColumn.@name} = :${propertyName}\")" />
+	      <#local namedQuery= namedQuery + "@NamedQuery(name = " + getCountQueryConstant(propertyName, false, entityName) + ", query = \"select count(*) from ${entityName} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${targetColumn.@name} = :${propertyName}\")," />
+	      <#local namedQuery= namedQuery + "@NamedQuery(name = " + getFindQueryConstant(propertyName, false, entityName) + ", query = \"select ${columnPrefix} from ${entityName} as ${columnPrefix} where ${columnPrefix}.${property.@name}.${targetColumn.@name} = :${propertyName}\")" />
 	  </#if>
     </#if>
 	<#return namedQuery />

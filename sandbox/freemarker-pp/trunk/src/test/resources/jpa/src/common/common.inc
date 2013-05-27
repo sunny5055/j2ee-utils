@@ -283,25 +283,6 @@
 </#function>
 
 
-<#function getEmbeddedIdPackageName packageName>
-    <#local embeddedIdPackageName = packageName>
-	<#if config.entityPackage??>
-		<#local embeddedIdPackageName = embeddedIdPackageName?replace(config.entityPackage, "") />
-	</#if>
-	<#if config.embeddedIdPackage??>
-		<#local embeddedIdPackageName = embeddedIdPackageName + config.embeddedIdPackage />
-	</#if>
-
-    <#return embeddedIdPackageName />
-</#function>
-
-
-<#function getEmbeddedIdName value>
-    <@format format=config.embeddedIdFileName values=[value] assignTo="embeddedIdName"/>
-	<#return embeddedIdName?replace(".java", "") />
-</#function>
-
-
 <#function getTestServiceName value>
     <@format format=config.testServiceFileName values=[value] assignTo="testServiceName"/>
 	<#return testServiceName?replace(".java", "") />
@@ -366,4 +347,14 @@
 	</#list>
 
 	<#return entityPackageNames />
+</#function>
+
+
+<#function getCountQueryConstant propertyName singleResult modelName="">
+	<#return java.getConstant(getCountQueryName(propertyName?cap_first, singleResult), modelName) />
+</#function>
+
+
+<#function getFindQueryConstant propertyName singleResult modelName="">
+	<#return java.getConstant(getFindQueryName(propertyName?cap_first, singleResult), modelName) />
 </#function>

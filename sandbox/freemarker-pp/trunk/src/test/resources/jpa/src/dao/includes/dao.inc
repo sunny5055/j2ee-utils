@@ -29,13 +29,13 @@
   <#if property?node_name = "column" && xml.getAttribute(property.@unique) == "true">
     @Override
     <@java.operation visibility="public" returnType="Integer" methodName=getCountQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}">
-      return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, "${getCountQueryName(property.@name, true, entity.@name)}",
+      return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, ${getCountQueryConstant(property.@name, true, entityName)},
                 new String[] { "${property.@name}" }, ${property.@name});
     </@java.operation>
 
   @Override
   <@java.operation visibility="public" returnType="${entityName}" methodName=getFindQueryName(property.@name, true) parameters="${getType(property.@type)} ${property.@name}">
-    return QueryUtil.getByNamedQueryAndNamedParam(entityManager,  "${getFindQueryName(property.@name, true, entity.@name)}",
+    return QueryUtil.getByNamedQueryAndNamedParam(entityManager,  ${getFindQueryConstant(property.@name, true, entityName)},
                 new String[] { "${property.@name}" }, ${property.@name});
   </@java.operation>
   <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
@@ -53,13 +53,13 @@
 
   @Override
     <@java.operation visibility="public" returnType="Integer" methodName=getCountQueryName(propertyName, false) parameters="${argType} ${propertyName}">
-      return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, "${getCountQueryName(propertyName, false, entity.@name)}",
+      return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, ${getCountQueryConstant(propertyName, false, entityName)},
                 new String[] { "${propertyName}" }, ${propertyName});
     </@java.operation>
 
   @Override
   <@java.operation visibility="public" returnType="List<${entityName}>" methodName=getFindQueryName(propertyName, false) parameters="${argType} ${propertyName}">
-    return QueryUtil.findByNamedQueryAndNamedParam(entityManager, "${getFindQueryName(propertyName, false, entity.@name)}",
+    return QueryUtil.findByNamedQueryAndNamedParam(entityManager, ${getFindQueryConstant(propertyName, false, entityName)},
                 new String[] { "${propertyName}" }, ${propertyName});
   </@java.operation>
   </#if>
@@ -78,8 +78,16 @@
 				<@java.interfaceOperation returnType="List<${entityName}>" methodName=getFindQueryName(prop.@name, false) parameters="${getType(prop.@type)} ${prop.@name}" />
 			</#list>
 
-			Integer countBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
-			${entityName} findBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+			<#local queryName= "" />
+			<#list ucColumns as ucColumn>
+				<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
+				<#local queryName = queryName + prop.@name?cap_first />
+				<#if ucColumn_has_next>
+					<#local queryName= queryName + "And"/>
+				</#if>
+			</#list>
+			Integer countBy${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+			${entityName} findBy${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
 		</#list>
 	</#if>
 </#macro>
@@ -100,26 +108,34 @@
 				<#local parameters = parameters + "${getType(prop.@type)} ${prop.@name}"/>
 				@Override
 			  	<@java.operation visibility="public" returnType="Integer" methodName=getCountQueryName(prop.@name, false) parameters="${getType(prop.@type)} ${prop.@name}">
-			  		return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, "${getCountQueryName(prop.@name, false, entity.@name)}",
+			  		return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, ${getCountQueryConstant(prop.@name, false, entityName)},
                 	new String[] { "${prop.@name}" }, ${prop.@name});
 			  	</@java.operation>
 
 			  	@Override
 				<@java.operation visibility="public" returnType="List<${entityName}>" methodName=getFindQueryName(prop.@name, false) parameters="${getType(prop.@type)} ${prop.@name}">
-			  		return QueryUtil.findByNamedQueryAndNamedParam(entityManager, "${getFindQueryName(prop.@name, false, entity.@name)}",
+			  		return QueryUtil.findByNamedQueryAndNamedParam(entityManager, ${getFindQueryConstant(prop.@name, false, entityName)},
                 	new String[] { "${prop.@name}" }, ${prop.@name});
 				</@java.operation>
 			</#list>
 
+			<#local queryName= "" />
+			<#list ucColumns as ucColumn>
+				<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
+				<#local queryName = queryName + prop.@name?cap_first />
+				<#if ucColumn_has_next>
+					<#local queryName= queryName + "And"/>
+				</#if>
+			</#list>
 			@Override
-			public Integer countBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>) {
-				return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, "${entity.@name?uncap_first}.countBy<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name?cap_first}<#if ucColumn_has_next>And</#if></#list>",
+			public Integer countBy${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>) {
+				return QueryUtil.getNumberByNamedQueryAndNamedParam(entityManager, ${getCountQueryConstant(queryName, false, entityName)},
                 	new String[] { <#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />"${prop.@name}"<#if ucColumn_has_next>, </#if></#list> }, <#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
 			}
 
 			@Override
-			public ${entityName} findBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>) {
-				return QueryUtil.getByNamedQueryAndNamedParam(entityManager, "${entity.@name?uncap_first}.findBy<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name?cap_first}<#if ucColumn_has_next>And</#if></#list>",
+			public ${entityName} findBy${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${getType(prop.@type)} ${prop.@name}<#if ucColumn_has_next>, </#if></#list>) {
+				return QueryUtil.getByNamedQueryAndNamedParam(entityManager, ${getFindQueryConstant(queryName, false, entityName)},
                 	new String[] { <#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />"${prop.@name}"<#if ucColumn_has_next>, </#if></#list> }, <#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
 			}
 		</#list>

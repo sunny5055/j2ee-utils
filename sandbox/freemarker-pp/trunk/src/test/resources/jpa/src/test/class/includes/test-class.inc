@@ -143,8 +143,16 @@
 				</@java.operation>
 			</#list>
 
+			<#local queryName= "" />
+			<#list ucColumns as ucColumn>
+				<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
+				<#local queryName = queryName + prop.@name?cap_first />
+				<#if ucColumn_has_next>
+					<#local queryName= queryName + "And"/>
+				</#if>
+			</#list>
 			@Test
-			public void testExistsWith<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name?cap_first}<#if ucColumn_has_next>And</#if></#list>() {
+			public void testExistsWith${queryName?cap_first}() {
 				<#list ucColumns as ucColumn>
 					<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
 					final List<${getType(prop.@type)}> ${prop.@name}s = get${prop.@name?cap_first}s();
@@ -162,7 +170,7 @@
 					<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
 					${getType(prop.@type)} ${prop.@name} = ${prop.@name}s.get(i);
 					</#list>
-					exists = service.existsWith(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+					exists = service.existsWith${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
 					Assert.assertTrue(exists);
 				}
 
@@ -171,13 +179,13 @@
 					<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
 					${getType(prop.@type)} ${prop.@name} = fake${prop.@name?cap_first}s.get(i);
 					</#list>
-					exists = service.existsWith(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+					exists = service.existsWith${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
 					Assert.assertFalse(exists);
 				}
 			}
 
 			@Test
-			public void testFindBy<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name?cap_first}<#if ucColumn_has_next>And</#if></#list>() {
+			public void testFindBy${queryName?cap_first}() {
 				<#list ucColumns as ucColumn>
 					<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
 					final List<${getType(prop.@type)}> ${prop.@name}s = get${prop.@name?cap_first}s();
@@ -195,7 +203,7 @@
 					<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
 					${getType(prop.@type)} ${prop.@name} = ${prop.@name}s.get(i);
 					</#list>
-					dto = service.findBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+					dto = service.findBy${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
 					Assert.assertNotNull(dto);
 				}
 
@@ -204,7 +212,7 @@
 					<#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />
 					${getType(prop.@type)} ${prop.@name} = fake${prop.@name?cap_first}s.get(i);
 					</#list>
-					dto = service.findBy(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
+					dto = service.findBy${queryName?cap_first}(<#list ucColumns as ucColumn><#local prop = entity["./j:properties/j:column[@name='${ucColumn}']"] />${prop.@name}<#if ucColumn_has_next>, </#if></#list>);
 					Assert.assertNull(dto);
 				}
 			}

@@ -25,11 +25,10 @@ package ${createFormBeanPackageName};
 <@addTo assignTo="imports" element="org.springframework.context.annotation.Scope" />
 <@addTo assignTo="imports" element="org.springframework.stereotype.Controller" />
 
-<@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
+<@addTo assignTo="imports" element="${modelPackageName}.${modelName}" />
 <@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
 
-<#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(entityPackageName)}.${primaryKeyType}" />
+<#if uniqueConstraints?size gt 0>
 	<@addTo assignTo="imports" element="java.util.List" />
 	<@addTo assignTo="imports" element=" com.googlecode.jutils.StringUtil" />
 </#if>
@@ -48,7 +47,7 @@ ${getImports(true, createFormBeanPackageName, imports)}
 @Controller
 @Scope("view")
 @SuppressWarnings("serial")
-public class ${createFormBeanName} extends AbstractCreateFormBean<${primaryKeyType}, ${entityName}, ${serviceName}> {
+public class ${createFormBeanName} extends AbstractCreateFormBean<${primaryKeyType}, ${modelName}, ${serviceName}> {
     @Autowired
     private ${serviceName} service;
 
@@ -62,8 +61,8 @@ public class ${createFormBeanName} extends AbstractCreateFormBean<${primaryKeyTy
     }
 
     @Override
-    protected ${entityName} getNewEntityInstance() {
-        return new ${entityName}();
+    protected ${modelName} getNewModelInstance() {
+        return new ${modelName}();
     }
 
     @Override

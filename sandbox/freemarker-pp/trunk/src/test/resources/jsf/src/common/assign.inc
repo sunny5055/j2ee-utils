@@ -3,7 +3,6 @@
 	<#assign primaryKey = util.getPrimaryKey(entity)>
 	<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
 	<#assign allProperties = entity["./j:properties/*"]>
-	<#assign embeddedIdProperties=entity["./j:embedded-id/j:properties/j:column"] />
 	<#assign columns = entity["./j:properties/j:column"]>
 	<#assign uniqueColumns = entity["./j:properties/j:column[@unique='true']"] />
 	<#assign manyToOnes = entity["./j:properties/j:many-to-one"]>
@@ -12,9 +11,16 @@
 	<#assign constructors = entity["./j:constructor"]>
 	<#assign operations = entity["./j:operation"]>
 
+	<#assign allConstraints=entity["./j:constraints/*"] />
+	<#assign uniqueConstraints=entity["./j:constraints/j:uniqueConstraint"] />
+
 	<#assign entityPackageName = entity["ancestor::p:package/@name"] />
 	<#assign entityName = util.getEntityName(entity.@name) />
 	<#assign lowerEntityName = entityName?uncap_first />
+
+	<#assign modelPackageName =  util.getModelPackageName(entityPackageName) />
+	<#assign modelName = util.getModelName(entity.@name) />
+	<#assign lowerModelName = modelName?uncap_first />
 
 	<#assign daoPackageName = util.getDaoPackageName(entityPackageName) />
 	<#assign daoName = util.getDaoName(entity.@name) />
@@ -29,7 +35,7 @@
 	<#assign serviceImplName = util.getServiceImplName(entity.@name) />
 
 	<#assign testServiceName = util.getTestServiceName(entity.@name) />
-	<@format format=config.testXmlDatasetFileName values=[entityName] assignTo="testXmlDatasetFileName"/>
+	<@format format=config.testXmlDatasetFileName values=[modelName] assignTo="testXmlDatasetFileName"/>
 
 	<#assign converterBeanPackageName = util.getConverterBeanPackageName(entityPackageName) />
 	<#assign converterBeanName = util.getConverterBeanName(entity.@name) />
@@ -47,12 +53,12 @@
 
 	<@format format=config.resourceBundleFilePath values=[projectName] assignTo="resourceBundleFilePath"/>
 	<@format format=config.resourceBundleFileName values=[projectName] assignTo="resourceBundleFileName"/>
-	<@format format=config.listXhtmlFilePath values=[lowerEntityName] assignTo="listXhtmlFilePath"/>
+	<@format format=config.listXhtmlFilePath values=[lowerModelName] assignTo="listXhtmlFilePath"/>
 	<@format format=config.listXhtmlFileName values=[projectName] assignTo="listXhtmlFileName"/>
-	<@format format=config.createXhtmlFilePath values=[lowerEntityName] assignTo="createXhtmlFilePath"/>
+	<@format format=config.createXhtmlFilePath values=[lowerModelName] assignTo="createXhtmlFilePath"/>
 	<@format format=config.createXhtmlFileName values=[projectName] assignTo="createXhtmlFileName"/>
-	<@format format=config.updateXhtmlFilePath values=[lowerEntityName] assignTo="updateXhtmlFilePath"/>
+	<@format format=config.updateXhtmlFilePath values=[lowerModelName] assignTo="updateXhtmlFilePath"/>
 	<@format format=config.updateXhtmlFileName values=[projectName] assignTo="updateXhtmlFileName"/>
-	<@format format=config.viewXhtmlFilePath values=[lowerEntityName] assignTo="viewXhtmlFilePath"/>
+	<@format format=config.viewXhtmlFilePath values=[lowerModelName] assignTo="viewXhtmlFilePath"/>
 	<@format format=config.viewXhtmlFileName values=[projectName] assignTo="viewXhtmlFileName"/>
 </#if>

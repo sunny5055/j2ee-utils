@@ -27,10 +27,7 @@ package ${dataTableBeanPackageName};
 <@addTo assignTo="imports" element="org.primefaces.model.LazyDataModel" />
 <@addTo assignTo="imports" element="org.primefaces.model.SortMeta" />
 
-<@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
-<#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(entityPackageName)}.${primaryKeyType}" />
-</#if>
+<@addTo assignTo="imports" element="${modelPackageName}.${modelName}" />
 <@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
 
 <@addTo assignTo="imports" element="com.googlecode.jutils.StringUtil" />
@@ -43,48 +40,43 @@ ${getImports(false, dataTableBeanPackageName, imports)}
 @Controller
 @Scope("view")
 @SuppressWarnings("serial")
-public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType}, ${entityName}> {
+public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType}, ${modelName}> {
    	@Autowired
     private ${serviceName} service;
 
-    private LazyDataModel<${entityName}> dataModel;
+    private LazyDataModel<${modelName}> dataModel;
 
     public ${dataTableBeanName}() {
         super();
-        dataModel = new LazyDataModel<${entityName}>() {
+        dataModel = new LazyDataModel<${modelName}>() {
             @Override
-            public List<${entityName}> load(int first, int pageSize, List<SortMeta> sortFields, Map<String, String> filters) {
-                List<${entityName}> ${lowerEntityName}s = null;
+            public List<${modelName}> load(int first, int pageSize, List<SortMeta> sortFields, Map<String, String> filters) {
+                List<${modelName}> ${lowerModelName}s = null;
 
                 final SearchCriteria searchCriteria = SearchCriteriaUtil.toSearchCriteria(first, pageSize, sortFields, filters);
                 final Integer count = service.count(searchCriteria);
                 this.setRowCount(count);
                 if (count > 0) {
-                    ${lowerEntityName}s = service.findAll(searchCriteria);
+                    ${lowerModelName}s = service.findAll(searchCriteria);
                 }
-                return ${lowerEntityName}s;
+                return ${lowerModelName}s;
             }
 
             @Override
-            public ${entityName} getRowData(String rowKey) {
-                ${entityName} ${lowerEntityName} = null;
+            public ${modelName} getRowData(String rowKey) {
+                ${modelName} ${lowerModelName} = null;
                 if (!StringUtil.isBlank(rowKey)) {
-                	<#if primaryKey?node_name == "id">
                     final ${primaryKeyType} primaryKey = ${util.java.convertFromString(primaryKeyType, "rowKey")};
-					<#else>
-					final ${primaryKeyType} primaryKey = null;
-					//TODO need to be completed
-					</#if>
-                    ${lowerEntityName} = service.get(primaryKey);
+                    ${lowerModelName} = service.get(primaryKey);
                 }
-                return ${lowerEntityName};
+                return ${lowerModelName};
             }
 
             @Override
-            public Object getRowKey(${entityName} ${lowerEntityName}) {
+            public Object getRowKey(${modelName} ${lowerModelName}) {
                 String rowKey = null;
-                if (${lowerEntityName} != null) {
-                    rowKey = ${lowerEntityName}.getStringPrimaryKey();
+                if (${lowerModelName} != null) {
+                    rowKey = ${lowerModelName}.getStringPrimaryKey();
                 }
                 return rowKey;
             }
@@ -95,11 +87,11 @@ public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType
         dataModel.setPageSize(1);
     }
 
-    public LazyDataModel<${entityName}> getDataModel() {
+    public LazyDataModel<${modelName}> getDataModel() {
         return dataModel;
     }
 
-    public void setDataModel(LazyDataModel<${entityName}> dataModel) {
+    public void setDataModel(LazyDataModel<${modelName}> dataModel) {
         this.dataModel = dataModel;
     }
 

@@ -4,7 +4,8 @@
 <#import "/common/directives.inc" as dir>
 
 
-<#function getImportsFor node>
+
+<#function getImportsFor node jpa=false>
   <#assign imports = [] />
   <#if node?node_name = "property" || node?node_name = "type" || node?node_name = "parameter">
       <@addTo assignTo="imports" element=node.@type />
@@ -36,33 +37,42 @@
   <#elseif node?node_name = "column">
       <@addTo assignTo="imports" element=node.@type />
   <#elseif node?node_name = "many-to-one">
-      <@addTo assignTo="imports" element=node.@targetEntity />
+  	  <#local targetPackage = getPackage(node.@targetEntity)/>
+  	  <#local targetName = getClassName(node.@targetEntity) />
+      <#if targetPackage?length == 0>
+      	<#local targetPackage = node["ancestor::p:package/@name"] />
+      </#if>
+
+      <#if jpa == true>
+      	<@addTo assignTo="imports" element=targetPackage+"."+getEntityName(targetName) />
+      <#else>
+      	<@addTo assignTo="imports" element=getModelPackageName(targetPackage)+"."+getModelName(targetName) />
+  	  </#if>
   <#elseif node?node_name = "one-to-many" || node?node_name = "many-to-many">
       <@addTo assignTo="imports" element=xml.getAttribute(node.@listType) />
-      <@addTo assignTo="imports" element=xml.getAttribute(node.@targetEntity) />
+      <#local targetPackage = getPackage(node.@targetEntity)/>
+  	  <#local targetName = getClassName(node.@targetEntity) />
+      <#if targetPackage?length == 0>
+      	<#local targetPackage = node["ancestor::p:package/@name"] />
+      </#if>
+
+      <#if jpa == true>
+      	<@addTo assignTo="imports" element=targetPackage+"."+getEntityName(targetName) />
+      <#else>
+      	<@addTo assignTo="imports" element=getModelPackageName(targetPackage)+"."+getModelName(targetName) />
+  	  </#if>
   </#if>
   <#return imports>
 </#function>
 
 
 <#function getPrimaryKey entity>
-  <#if entity["j:id"]?is_node>
-    <#local primaryKey = entity["j:id"]>
-  <#else>
-    <#local primaryKey = entity["j:embedded-id"]>
-  </#if>
-  <#return primaryKey>
+	<#return  entity["j:id"]>
 </#function>
 
 
 <#function getPrimaryKeyType entity>
-  <#local primaryKeyType= "">
-  <#if entity["j:id"]?is_node>
-    <#local primaryKeyType = getType(entity["j:id/@type"])>
-  <#else>
-    <#local primaryKeyType = getEmbeddedIdName(getType(entity["j:embedded-id/@targetEntity"])) >
-  </#if>
-  <#return primaryKeyType>
+  <#return getType(entity["j:id/@type"])>
 </#function>
 
 
@@ -102,6 +112,28 @@
 	</#local>
 
 	<#return entityName?replace(".java", "") />
+</#function>
+
+
+<#function getModelPackageName packageName>
+    <#local modelPackageName = packageName>
+	<#if config.entityPackage??>
+		<#local modelPackageName = modelPackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.entityPackage??>
+		<#local modelPackageName = modelPackageName + config.modelPackage />
+	</#if>
+
+    <#return modelPackageName />
+</#function>
+
+
+<#function getModelName value>
+	<#local modelName>
+		<@format format=config.modelFileName values=[value]/>
+	</#local>
+
+	<#return modelName?replace(".java", "") />
 </#function>
 
 
@@ -178,25 +210,6 @@
 <#function getServiceImplName value>
     <@format format=config.serviceImplFileName values=[value] assignTo="serviceImplName"/>
 	<#return serviceImplName?replace(".java", "") />
-</#function>
-
-
-<#function getEmbeddedIdPackageName packageName>
-    <#local embeddedIdPackageName = packageName>
-	<#if config.entityPackage??>
-		<#local embeddedIdPackageName = embeddedIdPackageName?replace(config.entityPackage, "") />
-	</#if>
-	<#if config.embeddedIdPackage??>
-		<#local embeddedIdPackageName = embeddedIdPackageName + config.embeddedIdPackage />
-	</#if>
-
-    <#return embeddedIdPackageName />
-</#function>
-
-
-<#function getEmbeddedIdName value>
-    <@format format=config.embeddedIdFileName values=[value] assignTo="embeddedIdName"/>
-	<#return embeddedIdName?replace(".java", "") />
 </#function>
 
 

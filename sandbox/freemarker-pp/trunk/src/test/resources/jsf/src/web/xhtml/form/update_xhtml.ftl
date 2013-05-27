@@ -6,7 +6,7 @@
 <#list entities as entity>
 <#if util.xml.getAttribute(entity.@readOnly) != "true">
 <#include "/common/assign.inc" />
-<@resolveKey map=config key="updateXhtmlFilePath" values=[projectName, lowerEntityName] assignTo="filePath"/>
+<@resolveKey map=config key="updateXhtmlFilePath" values=[projectName, lowerModelName] assignTo="filePath"/>
 <@resolveKey map=config key="updateXhtmlFileName" values=[projectName] assignTo="fileName"/>
 <@changeOutputFile name=filePath + "/"+ fileName />
 <!DOCTYPE html>
@@ -26,41 +26,27 @@
 
 	<ui:define name="content">
 		<h:panelGrid columns="2" cellpadding="0" cellspacing="0">
-			<#if primaryKey?node_name = "embedded-id">
-			<#if embeddedIdProperties??>
-			<#list embeddedIdProperties as property>
-			<util:formLabel
-				forId="${property.@name}Value"
-				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
-			<util:inplace id="${property.@name}" value="${sharp}{${lowerEntityName}FormBean.entity.${primaryKey.@name}.${property.@name}}">
-				<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity.${primaryKey.@name}" property=property />
-			</util:inplace>
-
-			</#list>
-			</#if>
-			<#else>
 			<util:formLabel
 				forId="${primaryKey.@name}Value"
-				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(primaryKey.@name)?lower_case}}" />
-				<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=primaryKey/>
+				value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(primaryKey.@name)?lower_case}}" />
+				<@util.getXhtmlInput entityName=lowerModelName path="${lowerModelName}FormBean.model" property=primaryKey/>
 
-			</#if>
 			<#list allProperties as property>
 			<util:formLabel
 				forId="${property.@name}Value"
-				value="${sharp}{bundle.${toUnderscoreCase(lowerEntityName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
+				value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
 			<#if property?node_name == "one-to-many" || property?node_name == "many-to-many">
 			<h:panelGroup id="${property.@name}">
 				<h:panelGroup rendered="${sharp}{false}">
-					<@util.getXhtmlOutput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=property />
+					<@util.getXhtmlOutput entityName=lowerModelName path="${lowerModelName}FormBean.model" property=property />
 				</h:panelGroup>
 				<h:panelGroup rendered="${sharp}{true}">
-					<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=property />
+					<@util.getXhtmlInput entityName=lowerModelName path="${lowerModelName}FormBean.model" property=property />
 				</h:panelGroup>
 			</h:panelGroup>
 			<#else>
-			<util:inplace id="${property.@name}" value="${sharp}{${lowerEntityName}FormBean.entity.${property.@name}}">
-				<@util.getXhtmlInput entityName=lowerEntityName path="${lowerEntityName}FormBean.entity" property=property />
+			<util:inplace id="${property.@name}" value="${sharp}{${lowerModelName}FormBean.model.${property.@name}}">
+				<@util.getXhtmlInput entityName=lowerModelName path="${lowerModelName}FormBean.model" property=property />
 			</util:inplace>
 			</#if>
 			</#list>

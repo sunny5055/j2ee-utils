@@ -24,10 +24,7 @@ package ${listBeanPackageName};
 
 <@addTo assignTo="imports" element="javax.faces.model.SelectItem" />
 
-<@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
-<#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(entityPackageName)}.${primaryKeyType}" />
-</#if>
+<@addTo assignTo="imports" element="${modelPackageName}.${modelName}" />
 <@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
 
 ${getImports(true, listBeanPackageName, imports)}
@@ -35,7 +32,7 @@ ${getImports(true, listBeanPackageName, imports)}
 @Controller
 @Scope("session")
 @SuppressWarnings("serial")
-public class ${listBeanName} extends AbstractListBean<${primaryKeyType}, ${entityName}, ${serviceName}> {
+public class ${listBeanName} extends AbstractListBean<${primaryKeyType}, ${modelName}, ${serviceName}> {
     @Autowired
     private ${serviceName} service;
 
@@ -49,8 +46,8 @@ public class ${listBeanName} extends AbstractListBean<${primaryKeyType}, ${entit
     }
 
     @Override
-    protected SelectItem toSelectItem(${entityName} ${lowerEntityName}) {
-        return new SelectItem(${lowerEntityName}.getPrimaryKey(), ${lowerEntityName}.toString());
+    protected SelectItem toSelectItem(${modelName} ${lowerModelName}) {
+        return new SelectItem(${lowerModelName}.getPrimaryKey(), ${lowerModelName}.toString());
     }
 }
 </#list>

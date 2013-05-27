@@ -20,10 +20,7 @@ package ${converterBeanPackageName};
 <#assign imports = [] />
 <@addTo assignTo="imports" element="javax.faces.convert.FacesConverter" />
 
-<@addTo assignTo="imports" element="${entityPackageName}.${entityName}" />
-<#if primaryKey?node_name == "embedded-id">
-	<@addTo assignTo="imports" element="${util.getEmbeddedIdPackageName(entityPackageName)}.${primaryKeyType}" />
-</#if>
+<@addTo assignTo="imports" element="${modelPackageName}.${modelName}" />
 <@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
 
 <@addTo assignTo="imports" element="com.googlecode.jutils.StringUtil" />
@@ -31,8 +28,8 @@ package ${converterBeanPackageName};
 ${getImports(false, converterBeanPackageName, imports)}
 
 
-@FacesConverter(forClass = ${entityName}.class)
-public class ${converterBeanName} extends AbstractConverter<${primaryKeyType}, ${entityName}, ${serviceName}> {
+@FacesConverter(forClass = ${modelName}.class)
+public class ${converterBeanName} extends AbstractConverter<${primaryKeyType}, ${modelName}, ${serviceName}> {
 
 	@Override
     public Class<${serviceName}> getServiceClass() {

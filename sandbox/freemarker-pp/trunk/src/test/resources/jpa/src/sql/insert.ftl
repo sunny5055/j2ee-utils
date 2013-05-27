@@ -14,11 +14,11 @@
 
 <#list entities as entity>
 	<#include "/common/assign.inc" />
-
 	<#if oneToManys?? && oneToManys?size != 0>
 	<#list oneToManys as oneToMany>
 		<@util.insertJoinTableSql doc=xml entity=entity property=oneToMany />
 	</#list>
+
 	</#if>
 	<#if manyToManys?? && manyToManys?size != 0>
 	<#list manyToManys as manyToMany>

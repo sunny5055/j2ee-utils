@@ -29,9 +29,12 @@ INSERT INTO ${entity.@tableName} (${getColumnsDeclaration(doc, entity)}) VALUES
 INSERT INTO ${getJoinTableName(entity, property)} (${getJoinColumnName(entity, property)}, ${getInverseJoinColumnName(entity, property)}) VALUES
 </#compress>
 
+<@xPath xml=doc expression="//j:entity[@name='${getType(property.@targetEntity)}']" assignTo="targetEntity" />
+<#local entityId = getPrimaryKey(entity)>
+<#local targetEntityId = getPrimaryKey(targetEntity)>
 <#list 1..5 as line>
 <#compress>
-(${getValue("Integer")}, ${getValue("Integer")})<#if line_has_next>,<#else>;</#if>
+((SELECT ${getColumnName(entity.@columnPrefix, entityId)} FROM ${entity.@tableName} WHERE = 'TO_COMPLETE'), (SELECT ${getColumnName(targetEntity.@columnPrefix, targetEntityId)} FROM ${targetEntity.@tableName} WHERE = 'TO_COMPLETE'))<#if line_has_next>,<#else>;</#if>
 </#compress>
 
 </#list>
@@ -84,7 +87,11 @@ INSERT INTO ${getJoinTableName(entity, property)} (${getJoinColumnName(entity, p
 		<#local result = result + columnsDeclaration/>
 	</#if>
 	<#if manyToOnes?? && manyToOnes?size != 0>
-		<@myList list=manyToOnes var="manyToOne" assignTo="manyToOnesDeclaration">${getValue("Integer")}</@myList>
+		<@myList list=manyToOnes var="manyToOne" assignTo="manyToOnesDeclaration">
+		<@xPath xml=doc expression="//j:entity[@name='${getType(manyToOne.@targetEntity)}']" assignTo="targetEntity" />
+		<#local targetEntityId = getPrimaryKey(targetEntity)>
+		(SELECT ${getColumnName(targetEntity.@columnPrefix, targetEntityId)} FROM ${targetEntity.@tableName} WHERE = 'TO_COMPLETE')
+		</@myList>
 		<#if result?length != 0 && manyToOnesDeclaration?? && manyToOnesDeclaration?length != 0>
 			<#local result = result + ", "/>
 		</#if>

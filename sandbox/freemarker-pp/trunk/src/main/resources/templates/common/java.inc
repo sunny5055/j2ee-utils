@@ -132,6 +132,16 @@
 </#macro>
 
 
+<#macro getStaticProperty type name value visibility="public">
+  <#local varName = getConstant(name) />
+  <#if type == "String">
+  ${visibility} static final ${type} ${varName} =  "${value}";
+  <#else>
+  ${visibility} static final ${type} ${varName} =  ${value};
+  </#if>
+</#macro>
+
+
 <#macro getProperty visibility type name>
   ${visibility} ${type} ${name};
 </#macro>

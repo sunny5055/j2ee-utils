@@ -61,7 +61,14 @@ public class ${formBeanName} extends AbstractFormBean<${primaryKeyType}, ${model
     }
 
     @Override
-    protected ${modelName} getNewModelInstance() {
+    public ${primaryKeyType} getPrimaryKey() {
+    	${primaryKeyType} pk = null;
+    	//TODO to complete
+    	return pk;
+    }
+
+    @Override
+    protected ${modelName} getNewInstance() {
         return new ${modelName}();
     }
 

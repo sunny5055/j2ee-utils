@@ -62,8 +62,8 @@ public class ${formBeanName} extends AbstractFormBean<${primaryKeyType}, ${model
 
     @Override
     public ${primaryKeyType} getPrimaryKey() {
-    	${primaryKeyType} pk = null;
-    	//TODO to complete
+    	return (${primaryKeyType}) FacesUtils.getFlashAttribute(FacesContext.getCurrentInstance(), "${lowerModelName}Id");
+
     	return pk;
     }
 
@@ -75,11 +75,6 @@ public class ${formBeanName} extends AbstractFormBean<${primaryKeyType}, ${model
     @Override
     protected String getListPage() {
         return "${util.getWebResource(listXhtmlFilePath, listXhtmlFileName)}";
-    }
-
-    @Override
-    protected String getViewPage() {
-        return null;
     }
 
     @Override

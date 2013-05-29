@@ -46,7 +46,8 @@
 					</h:panelGroup>
 				</h:panelGroup>
 				<#else>
-				<util:inplace id="${property.@name}" value="${sharp}{${lowerModelName}FormBean.model.${property.@name}}">
+				<util:inplace id="${property.@name}" value="${sharp}{${lowerModelName}FormBean.model.${property.@name}}"
+					editable="${sharp}{${lowerModelName}FormBean.editionMode}">>
 					<@util.getXhtmlInput entityName=lowerModelName path="${lowerModelName}FormBean.model" property=property />
 				</util:inplace>
 				</#if>
@@ -54,15 +55,18 @@
 			</h:panelGrid>
 
 			<h:panelGroup id="formActions">
-				<p:commandButton immediate="true" process="@this"
-					value="${sharp}{bundle.update_btn}" icon="ui-icon-pencil" />
+				<p:commandButton immediate="true" process="@this" value="${sharp}{bundle.update_btn}"
+					actionListener="${sharp}{${lowerModelName}FormBean.editionMode}" update=":contentForm"
+					icon="ui-icon-pencil" rendered="${sharp}{!${lowerModelName}FormBean.editionMode}" />
+				<p:commandButton immediate="true" process="@this" value="${sharp}{bundle.return_btn}"
+					action="${util.getWebResource(listXhtmlFilePath, listXhtmlFileName)}?faces-redirect=true&amp;includeViewParams=true"
+					rendered="${sharp}{!${lowerModelName}FormBean.editionMode}" />
 
-				<p:commandButton id="updateBtn"
-					value="${sharp}{bundle.save_btn}" icon="ui-icon-disk" />
-
+				<p:commandButton id="updateBtn" value="${sharp}{bundle.save_btn}"
+					icon="ui-icon-disk"  rendered="${sharp}{${lowerModelName}FormBean.editionMode}" />
 				<p:commandButton immediate="true" process="@this"
-					value="${sharp}{bundle.cancel_btn}"
-					action="${util.getWebResource(listXhtmlFilePath, listXhtmlFileName)}?faces-redirect=true&amp;includeViewParams=true" />
+					value="${sharp}{bundle.cancel_btn}" update=":contentForm"
+					actionListener="${sharp}{${lowerModelName}FormBean.reInit}"  rendered="${sharp}{${lowerModelName}FormBean.editionMode}"  />
 			</h:panelGroup>
 		</ui:define>
 	</ui:composition>

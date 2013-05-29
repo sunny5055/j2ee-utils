@@ -97,7 +97,11 @@ public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType
 
     @Override
     protected String getViewPage() {
-        return null;
+    	<#if util.xml.getAttribute(entity.@readOnly) != "true">
+        return "${util.getWebResource(updateXhtmlFilePath, updateXhtmlFileName)}";
+		<#else>
+        return "${util.getWebResource(viewXhtmlFilePath, viewXhtmlFileName)}";
+        </#if>
     }
 
     public String getListEmpty() {
@@ -109,9 +113,15 @@ public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType
 
     public void view() {
         if (selectedObject != null) {
-            final FacesContext facesContext = FacesContext.getCurrentInstance();
+			final FacesContext facesContext = FacesContext.getCurrentInstance();
+			FacesUtils.setFlashAttribute(facesContext, "${lowerModelName}Id", selectedObject.getPrimaryKey());
 
-        }
+			try {
+				FacesUtils.redirect(facesContext, getViewPage(), true);
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		}
     }
 }
 </#list>

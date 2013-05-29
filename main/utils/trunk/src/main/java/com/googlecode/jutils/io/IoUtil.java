@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -346,5 +348,42 @@ public final class IoUtil extends IOUtils {
 			}
 		}
 		return matches;
+	}
+
+	public static Map<String, List<File>> mapByExtension(File... files) {
+		Map<String, List<File>> map = null;
+		if (!ArrayUtil.isEmpty(files)) {
+			map = mapByExtension(Arrays.asList(files));
+		}
+		return map;
+	}
+
+	public static Map<String, List<File>> mapByExtension(List<File> files) {
+		Map<String, List<File>> map = null;
+		if (!CollectionUtil.isEmpty(files)) {
+			map = new HashMap<String, List<File>>();
+
+			for (final File file : files) {
+				String key = null;
+				if (file.isFile()) {
+					key = FilenameUtils.getExtension(file.getName());
+					if (!StringUtil.isBlank(key)) {
+						key = key.toLowerCase();
+					}
+				} else {
+					key = "directory";
+				}
+
+				List<File> values = map.get(key);
+				if (values == null) {
+					values = new ArrayList<File>();
+					map.put(key, values);
+				}
+
+				values.add(file);
+			}
+		}
+
+		return map;
 	}
 }

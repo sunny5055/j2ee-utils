@@ -35,7 +35,8 @@
 				<#list allProperties as property>
 				<util:formLabel
 					forId="${property.@name}Value"
-					value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
+					value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}"
+					<#if util.xml.getAttribute(property.@nullable) == "false">required="${sharp}{true and ${lowerModelName}FormBean.editionMode}"</#if> />
 				<#if property?node_name == "one-to-many" || property?node_name == "many-to-many">
 				<h:panelGroup id="${property.@name}">
 					<h:panelGroup rendered="${sharp}{false}">

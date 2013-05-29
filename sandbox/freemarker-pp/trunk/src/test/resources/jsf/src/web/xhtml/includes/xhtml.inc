@@ -91,7 +91,7 @@
 				<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
 				>
 				<f:selectItem itemLabel="${sharp}{bundle.select}" itemValue="" />
-				<t:selectItems value="${sharp}{${property.@name}ListBean.entities}" var="${property.@name}" itemLabel="${sharp}{${property.@name}}" itemValue="${sharp}{${property.@name}}" />
+				<t:selectItems value="${sharp}{${property.@name}ListBean.list}" var="${property.@name}" itemLabel="${sharp}{${property.@name}}" itemValue="${sharp}{${property.@name}}" />
 			</p:selectOneMenu>
 		<#elseif property?node_name == "one-to-many" || property?node_name == "many-to-many">
 			<#local propertyName = getClassName(property.@targetEntity)?uncap_first/>

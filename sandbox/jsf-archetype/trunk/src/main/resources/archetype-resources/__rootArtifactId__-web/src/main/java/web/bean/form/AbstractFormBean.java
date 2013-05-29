@@ -32,7 +32,7 @@ public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<
      */
     @PostConstruct
     protected void init() {
-    	model = getFromRequest();
+    	model = getFromFlashScope();
 
     	final FacesContext facesContext = FacesContext.getCurrentInstance();
         Object parameter = null;
@@ -70,17 +70,13 @@ public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<
         this.editionMode = editionMode;
     }
 
-    public DTO getFromRequest() {
+    public DTO getFromFlashScope() {
         DTO dto = null;
         final PK pk = getPrimaryKey();
         if (pk != null) {
             dto = this.getService().get(pk);
         }
         return dto;
-    }
-
-    protected String getViewPage() {
-        return "";
     }
 
     /**

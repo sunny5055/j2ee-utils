@@ -16,11 +16,11 @@ $symbol_escape = '\' )
 <h:body>
 	<!-- INTERFACE -->
 	<composite:interface>
-		<composite:attribute name="forId" displayName="forId" shortDescription="erer"/>
+		<composite:attribute name="forId" displayName="forId" />
 		<composite:attribute name="value" required="true" />
 		<composite:attribute name="styleClass" default="right-aligned-label" />
 		<composite:attribute name="required" type="java.lang.Boolean"
-			default="${symbol_pound}{true}" />
+			default="${symbol_pound}{false}" />
 	</composite:interface>
 
 	<!-- IMPLEMENTATION -->

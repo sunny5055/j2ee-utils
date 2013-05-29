@@ -41,8 +41,8 @@
 			</h:panelGrid>
 
 			<h:panelGroup id="formActions">
-				<p:commandButton immediate="true" process="@this"
-					value="${sharp}{bundle.back}" />
+				<p:commandButton immediate="true" process="@this" value="${sharp}{bundle.return_btn}"
+					action="${util.getWebResource(listXhtmlFilePath, listXhtmlFileName)}?faces-redirect=true&amp;includeViewParams=true" />
 			</h:panelGroup>
 		</ui:define>
 	</ui:composition>

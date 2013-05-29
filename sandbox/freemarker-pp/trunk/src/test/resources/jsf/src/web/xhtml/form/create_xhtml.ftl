@@ -30,7 +30,8 @@
 				<#list allProperties as property>
 				<util:formLabel
 					forId="${property.@name}Value"
-					value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}" />
+					value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}"
+					<#if util.xml.getAttribute(property.@nullable) == "false">required="${sharp}{true}"</#if> />
 	 			<@util.getXhtmlInput entityName=lowerModelName path="${lowerModelName}CreationFormBean.model" property=property />
 
 

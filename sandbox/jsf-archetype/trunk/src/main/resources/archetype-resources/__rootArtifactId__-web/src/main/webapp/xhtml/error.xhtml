@@ -1,3 +1,7 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set(
+$symbol_escape = '\' )
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -11,17 +15,17 @@
 <f:view contentType="text/html">
 	<ui:composition template="/xhtml/template/layout.xhtml">
 		<ui:define name="headTitle">
-			<h:outputText value="#{bundle.error_head_title}" />
+			<h:outputText value="${symbol_pound}{bundle.error_head_title}" />
 		</ui:define>
 
 		<ui:define name="content">
 			<div id="content">
-				<t:htmlTag value="h2" rendered="#{!empty errorBean.title}">
-					<h:outputText value="#{errorBean.title}" />
+				<t:htmlTag value="h2" rendered="${symbol_pound}{!empty errorBean.title}">
+					<h:outputText value="${symbol_pound}{errorBean.title}" />
 				</t:htmlTag>
-				<h:outputText value="#{errorBean.message}" escape="false" />
+				<h:outputText value="${symbol_pound}{errorBean.message}" escape="false" />
 
-				<!-- #{exception} -->
+				<!-- ${symbol_pound}{exception} -->
 			</div>
 		</ui:define>
 	</ui:composition>

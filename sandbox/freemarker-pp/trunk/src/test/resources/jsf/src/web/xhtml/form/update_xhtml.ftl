@@ -47,7 +47,7 @@
 				</h:panelGroup>
 				<#else>
 				<util:inplace id="${property.@name}" value="${sharp}{${lowerModelName}FormBean.model.${property.@name}}"
-					editable="${sharp}{${lowerModelName}FormBean.editionMode}">>
+					editable="${sharp}{${lowerModelName}FormBean.editionMode}">
 					<@util.getXhtmlInput entityName=lowerModelName path="${lowerModelName}FormBean.model" property=property />
 				</util:inplace>
 				</#if>

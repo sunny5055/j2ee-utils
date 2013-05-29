@@ -34,6 +34,9 @@ package ${dataTableBeanPackageName};
 <@addTo assignTo="imports" element="com.googlecode.jutils.dal.SearchCriteria" />
 <@addTo assignTo="imports" element="${util.getBasePackageName(entityPackageName)}.util.SearchCriteriaUtil" />
 
+<@addTo assignTo="imports" element="java.io.IOException"/>
+<@addTo assignTo="imports" element="${util.getBasePackageName(entityPackageName)}.web.util.FacesUtils"/>
+
 ${getImports(false, dataTableBeanPackageName, imports)}
 
 

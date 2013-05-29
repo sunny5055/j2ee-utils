@@ -1,3 +1,7 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set(
+$symbol_escape = '\' )
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -10,22 +14,22 @@
 	xmlns:util="http://java.sun.com/jsf/composite/components">
 <f:view contentType="text/html">
 	<h:head>
-		<title><ui:insert name="headTitle" /> - <h:outputText value="#{bundle.global_head_title}" /></title>
+		<title><ui:insert name="headTitle" /> - <h:outputText value="${symbol_pound}{bundle.global_head_title}" /></title>
 		<meta http-equiv="X-UA-Compatible" content="IE=8" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	</h:head>
 
 	<h:body>
-		<link rel="stylesheet" href="#{resource['css:main.css']}" type="text/css" />
-		<!--[if lte IE 8]><link rel="stylesheet" href="#{resource['css:main-ie.css']}" type="text/css" /><![endif]-->
+		<link rel="stylesheet" href="${symbol_pound}{resource['css:main.css']}" type="text/css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="${symbol_pound}{resource['css:main-ie.css']}" type="text/css" /><![endif]-->
 
 		<ui:insert name="stylesheet" />
 
-		<!--[if lt IE 7]><script type="text/javascript" src="#{resource['js:DD_belatedPNG_0.0.8a-min.js']}"></script><![endif]-->
-		<!--[if IE]><script type="text/javascript" src="#{resource['js:html5.js']}"></script><![endif]-->
-		<!--[if lte IE 7]><script type="text/javascript" src="#{resource['js:IE8.js']}"></script><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="${symbol_pound}{resource['js:DD_belatedPNG_0.0.8a-min.js']}"></script><![endif]-->
+		<!--[if IE]><script type="text/javascript" src="${symbol_pound}{resource['js:html5.js']}"></script><![endif]-->
+		<!--[if lte IE 7]><script type="text/javascript" src="${symbol_pound}{resource['js:IE8.js']}"></script><![endif]-->
 
-		<script type="text/javascript" src="#{resource['js:main.js']}"></script>
+		<script type="text/javascript" src="${symbol_pound}{resource['js:main.js']}"></script>
 
 		<ui:insert name="javascript" />
 

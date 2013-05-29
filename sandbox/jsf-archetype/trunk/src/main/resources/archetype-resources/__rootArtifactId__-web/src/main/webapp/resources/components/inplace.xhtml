@@ -1,3 +1,7 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set(
+$symbol_escape = '\' )
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -13,20 +17,20 @@
 	<!-- INTERFACE -->
 	<composite:interface>
 		<composite:attribute name="value" required="true" />
-		<composite:attribute name="editable" default="#{true}" />
+		<composite:attribute name="editable" default="${symbol_pound}{true}" />
 		<composite:attribute name="defaultValue" />
-		<composite:attribute name="displayValue" default="#{true}" />
+		<composite:attribute name="displayValue" default="${symbol_pound}{true}" />
 		<composite:attribute name="labelStyleClass" />
 	</composite:interface>
 
 	<!-- IMPLEMENTATION -->
 	<composite:implementation>
-		<h:panelGroup rendered="#{cc.attrs.editable}">
+		<h:panelGroup rendered="${symbol_pound}{cc.attrs.editable}">
 			<composite:insertChildren />
 		</h:panelGroup>
-		<h:panelGroup rendered="#{!cc.attrs.editable}">
-			<h:outputText value="#{cc.attrs.value}" styleClass="#{cc.attrs.labelStyleClass}" rendered="#{cc.attrs.displayValue and !empty cc.attrs.value}"/>
-			<h:outputText value="#{cc.attrs.defaultValue}" styleClass="#{cc.attrs.labelStyleClass}" rendered="#{!cc.attrs.displayValue or empty cc.attrs.value}"/>
+		<h:panelGroup rendered="${symbol_pound}{!cc.attrs.editable}">
+			<h:outputText value="${symbol_pound}{cc.attrs.value}" styleClass="${symbol_pound}{cc.attrs.labelStyleClass}" rendered="${symbol_pound}{cc.attrs.displayValue and !empty cc.attrs.value}"/>
+			<h:outputText value="${symbol_pound}{cc.attrs.defaultValue}" styleClass="${symbol_pound}{cc.attrs.labelStyleClass}" rendered="${symbol_pound}{!cc.attrs.displayValue or empty cc.attrs.value}"/>
 		</h:panelGroup>
 	</composite:implementation>
 </h:body>

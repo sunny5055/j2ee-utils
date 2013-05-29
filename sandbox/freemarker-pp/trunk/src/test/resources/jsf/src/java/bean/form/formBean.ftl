@@ -42,6 +42,8 @@ package ${formBeanPackageName};
 	<@addTo assignTo="imports" element=" com.googlecode.jutils.StringUtil" />
 </#if>
 
+<@addTo assignTo="imports" element="${util.getBasePackageName(entityPackageName)}.web.util.FacesUtils"/>
+
 ${getImports(true, formBeanPackageName, imports)}
 
 @Controller
@@ -63,8 +65,6 @@ public class ${formBeanName} extends AbstractFormBean<${primaryKeyType}, ${model
     @Override
     public ${primaryKeyType} getPrimaryKey() {
     	return (${primaryKeyType}) FacesUtils.getFlashAttribute(FacesContext.getCurrentInstance(), "${lowerModelName}Id");
-
-    	return pk;
     }
 
     @Override

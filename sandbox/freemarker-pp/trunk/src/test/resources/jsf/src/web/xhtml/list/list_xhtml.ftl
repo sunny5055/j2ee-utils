@@ -50,14 +50,19 @@
 				</h:panelGroup>
 
 				<h:panelGroup id="searchFormActions">
-					<p:commandButton value="${sharp}{bundle.search_btn}"
+					<p:commandButton id="searchBtn" value="${sharp}{bundle.search_btn}"
 						title="${sharp}{bundle.search_btn}" icon="ui-icon-search"
 						oncomplete="${lowerModelName}DataTable.filter();" />
 					<p:commandButton title="${sharp}{bundle.reinit_btn}"
 						actionListener="${sharp}{${lowerModelName}FiltersBean.clearFilters}"
-						uppdate=":searchForm"
-						icon="ui-icon-close" oncomplete="${lowerModelName}DataTable.filter();" />
+						uppdate="searchFormContent"
+						process="@this"
+						icon="ui-icon-close" oncomplete="${lowerModelName}DataTable.filter();">
+						<p:resetInput target="searchFormContent" />
+				    </p:commandButton>
 				</h:panelGroup>
+
+				<p:defaultCommand target="searchBtn" />
 			</h:form>
 		</ui:define>
 

@@ -43,6 +43,9 @@
 	<#assign dataTableBeanPackageName = util.getDataTableBeanPackageName(entityPackageName) />
 	<#assign dataTableBeanName = util.getDataTableBeanName(entity.@name) />
 
+	<#assign filtersBeanPackageName = util.getFiltersBeanPackageName(entityPackageName) />
+	<#assign filtersBeanName = util.getFiltersBeanName(entity.@name) />
+
 	<#assign createFormBeanPackageName = util.getCreateFormBeanPackageName(entityPackageName) />
 	<#assign createFormBeanName = util.getCreateFormBeanName(entity.@name) />
 	<#assign formBeanPackageName = util.getFormBeanPackageName(entityPackageName) />

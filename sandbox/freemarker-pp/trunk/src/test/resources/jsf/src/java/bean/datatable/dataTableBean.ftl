@@ -36,6 +36,7 @@ package ${dataTableBeanPackageName};
 
 <@addTo assignTo="imports" element="java.io.IOException"/>
 <@addTo assignTo="imports" element="${util.getBasePackageName(entityPackageName)}.web.util.FacesUtils"/>
+<@addTo assignTo="imports" element="${filtersBeanPackageName}.${filtersBeanName}" />
 
 ${getImports(false, dataTableBeanPackageName, imports)}
 
@@ -47,6 +48,9 @@ public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType
    	@Autowired
     private ${serviceName} service;
 
+	@Autowired
+	private ${filtersBeanName} filtersBean;
+
     private LazyDataModel<${modelName}> dataModel;
 
     public ${dataTableBeanName}() {
@@ -57,6 +61,10 @@ public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType
                 List<${modelName}> ${lowerModelName}s = null;
 
                 final SearchCriteria searchCriteria = SearchCriteriaUtil.toSearchCriteria(first, pageSize, sortFields, filters);
+				if (filtersBean != null && filtersBean.hasFilters()) {
+					searchCriteria.getFilters().putAll(filtersBean.getFilters());
+				}
+
                 final Integer count = service.count(searchCriteria);
                 this.setRowCount(count);
                 if (count > 0) {
@@ -108,11 +116,15 @@ public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType
     }
 
     public String getListEmpty() {
-        String msg = null;
-        final FacesContext facesContext = FacesContext.getCurrentInstance();
-
-        return msg;
-    }
+		String msg = null;
+		final FacesContext facesContext = FacesContext.getCurrentInstance();
+		if (filtersBean != null && filtersBean.hasFilters()) {
+			msg = FacesUtils.getLabel(facesContext, "list_result_empty");
+		} else {
+			msg = FacesUtils.getLabel(facesContext, "${lowerModelName}_list_empty");
+		}
+		return msg;
+	}
 
     public void view() {
         if (selectedObject != null) {

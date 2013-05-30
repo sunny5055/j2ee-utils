@@ -39,6 +39,7 @@ return_btn=Retour
 back_btn=Précédent
 next_btn=Suivant
 search_btn=Rechercher
+reinit_btn=Réinitialiser
 export_btn=Exporter
 print_btn=Imprimer
 # Buttons
@@ -99,6 +100,10 @@ ${toUnderscoreCase(entity.@name)?lower_case}_list_head_title=${entity.@name}
 ${toUnderscoreCase(entity.@name)?lower_case}_create_head_title=Création d'un ${entity.@name?lower_case}
 ${toUnderscoreCase(entity.@name)?lower_case}_update_head_title=Mise à jour de ${entity.@name?lower_case}
 ${toUnderscoreCase(entity.@name)?lower_case}_view_head_title=Détail de ${entity.@name?lower_case}
+
+<#list allProperties as property>
+${toUnderscoreCase(entity.@name)?lower_case}_filter_${toUnderscoreCase(property.@name)?lower_case}=${property.@name?cap_first}
+</#list>
 
 ${toUnderscoreCase(entity.@name)?lower_case}_list_${toUnderscoreCase(primaryKey.@name)?lower_case}=${primaryKey.@name?cap_first}
 <#list allProperties as property>

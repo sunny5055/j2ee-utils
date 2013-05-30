@@ -460,6 +460,25 @@
 </#function>
 
 
+<#function getFiltersBeanPackageName packageName>
+    <#local filtersBeanPackageName = packageName>
+	<#if config.entityPackage??>
+		<#local filtersBeanPackageName = filtersBeanPackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.filtersBeanPackage??>
+		<#local filtersBeanPackageName = filtersBeanPackageName + config.filtersBeanPackage />
+	</#if>
+
+    <#return filtersBeanPackageName />
+</#function>
+
+
+<#function getFiltersBeanName value>
+    <@format format=config.filtersBeanFileName values=[value] assignTo="filtersBeanName"/>
+	<#return filtersBeanName?replace(".java", "") />
+</#function>
+
+
 <#function getConverterBeanPackageName packageName>
     <#local converterBeanPackageName = packageName>
 	<#if config.entityPackage??>

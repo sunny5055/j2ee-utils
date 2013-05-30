@@ -24,6 +24,43 @@
 			<h:outputText value="${sharp}{bundle.${toUnderscoreCase(modelName)?lower_case}_list_head_title}" />
 		</ui:define>
 
+		<ui:define name="searchForm">
+			<h:form id="searchForm">
+				<h:panelGroup id="searchFormContent">
+					<h2 class="main-title" id="searchTitle">
+						<h:outputText value="${sharp}{bundle.list_search_title}" />
+					</h2>
+
+					<h:panelGroup id="searchFields">
+					<#list allProperties as property>
+					<#if property?node_name = "column">
+					<h:outputLabel value="${sharp}{bundle.${lowerModelName}_filter_${toUnderscoreCase(property.@name)?lower_case}}" />
+					<@util.getXhtmlInput id="" entityName=lowerModelName path="${lowerModelName}FiltersBean" property=property useRequired=false />
+					<#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
+					<#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
+				  		<#assign propertyName = property.@name?substring(0, property.@name?length-1)>
+				  	<#else>
+				  		<#assign propertyName = property.@name>
+				  	</#if>
+					<h:outputLabel value="${sharp}{bundle.${lowerModelName}_filter_${toUnderscoreCase(propertyName)?lower_case}}" />
+					<@util.getXhtmlInput id="" entityName=lowerModelName path="${lowerModelName}FiltersBean" property=property useRequired=false />
+					</#if>
+					</#list>
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<h:panelGroup id="searchFormActions">
+					<p:commandButton value="${sharp}{bundle.search_btn}"
+						title="${sharp}{bundle.search_btn}" icon="ui-icon-search"
+						oncomplete="${lowerModelName}DataTable.filter();" />
+					<p:commandButton title="${sharp}{bundle.reinit_btn}"
+						actionListener="${sharp}{${lowerModelName}FiltersBean.clearFilters}"
+						uppdate=":searchForm"
+						icon="ui-icon-close" oncomplete="${lowerModelName}DataTable.filter();" />
+				</h:panelGroup>
+			</h:form>
+		</ui:define>
+
 		<ui:define name="content">
 			<p:dataTable id="${lowerModelName}DataTable" widgetVar="${lowerModelName}DataTable"
 				lazy="true" var="${lowerModelName}" sortMode="multiple" rowKey="${sharp}{${lowerModelName}.primaryKey}"

@@ -65,7 +65,7 @@
 	</#compress>
 </#macro>
 
-<#macro getXhtmlInput entityName property path=entityName styleClass="">
+<#macro getXhtmlInput entityName property path=entityName id="${property.@name}Value" useRequired=true styleClass="">
 	<#local value = "${path}.${property.@name}" />
 	<#local type= "" />
 	<#if property?node_name == "id" || property?node_name == "column">
@@ -77,13 +77,13 @@
   	</#if>
 	<#compress>
 		<#if property?node_name == "id">
-			<h:outputText id="${property.@name}Value"
+			<h:outputText <#if id?length != 0>id="${id}"</#if>
 				value="${sharp}{${value}}"
 				<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
 			/>
 		<#elseif property?node_name == "many-to-one">
-			<p:selectOneMenu id="${property.@name}Value"
-				<#if xml.getAttribute(property.@nullable) == "false">
+			<p:selectOneMenu <#if id?length != 0>id="${id}"</#if>
+				<#if useRequired && xml.getAttribute(property.@nullable) == "false">
 				required="true"
 				requiredMessage="${sharp}{bundle.error_${toUnderscoreCase(entityName)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required}"
 				</#if>
@@ -95,8 +95,8 @@
 			</p:selectOneMenu>
 		<#elseif property?node_name == "one-to-many" || property?node_name == "many-to-many">
 			<#local propertyName = getClassName(property.@targetEntity)?uncap_first/>
-			<p:pickList id="${property.@name}Value"
-				<#if xml.getAttribute(property.@nullable) == "false">
+			<p:pickList <#if id?length != 0>id="${id}"</#if>
+				<#if useRequired && xml.getAttribute(property.@nullable) == "false">
 				required="true"
 				requiredMessage="${sharp}{bundle.error_${toUnderscoreCase(entityName)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required}"
 				</#if>
@@ -108,8 +108,8 @@
 		<#else>
 			<#if type == "String" || type == "Character">
 				<#if xml.getAttribute(property.@length) == "" || xml.getAttribute(property.@length)?number lte 255>
-					<p:inputText id="${property.@name}Value"
-						<#if xml.getAttribute(property.@nullable) == "false">
+					<p:inputText <#if id?length != 0>id="${id}"</#if>
+						<#if useRequired && xml.getAttribute(property.@nullable) == "false">
 						required="true"
 						requiredMessage="${sharp}{bundle.error_${toUnderscoreCase(entityName)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required}"
 						</#if>
@@ -120,9 +120,9 @@
 						<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
 						/>
 				<#else>
-					<p:inputTextarea id="${property.@name}Value"
+					<p:inputTextarea <#if id?length != 0>id="${id}"</#if>
 						rows="10" cols="50"
-						<#if xml.getAttribute(property.@nullable) == "false">
+						<#if useRequired && xml.getAttribute(property.@nullable) == "false">
 						required="true"
 						requiredMessage="${sharp}{bundle.error_${toUnderscoreCase(entityName)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required}"
 						</#if>
@@ -134,8 +134,8 @@
 						/>
 				</#if>
 			<#elseif type == "Double" || type == "Float">
-				<p:inputText id="${property.@name}Value"
-					<#if xml.getAttribute(property.@nullable) == "false">
+				<p:inputText <#if id?length != 0>id="${id}"</#if>
+					<#if useRequired && xml.getAttribute(property.@nullable) == "false">
 					required="true"
 					requiredMessage="${sharp}{bundle.error_${toUnderscoreCase(entityName)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required}"
 					</#if>
@@ -146,8 +146,8 @@
 				|| type == "Long"
 				|| type == "Byte"
 				|| type == "Short">
-				<p:inputText id="${property.@name}Value"
-					<#if xml.getAttribute(property.@nullable) == "false">
+				<p:inputText <#if id?length != 0>id="${id}"</#if>
+					<#if useRequired && xml.getAttribute(property.@nullable) == "false">
 					required="true"
 					requiredMessage="${sharp}{bundle.error_${toUnderscoreCase(entityName)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required}"
 					</#if>
@@ -155,12 +155,12 @@
 					<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
 					/>
 		    <#elseif type == "Date">
-		    	<p:calendar id="${property.@name}Value"
+		    	<p:calendar <#if id?length != 0>id="${id}"</#if>
 					pattern="dd/MM/yyyy"
 					timeZone="Europe/Paris"
 					autocomplete="off"
 					showOn="both"
-					<#if xml.getAttribute(property.@nullable) == "false">
+					<#if useRequired && xml.getAttribute(property.@nullable) == "false">
 					required="true"
 					requiredMessage="${sharp}{bundle.error_${toUnderscoreCase(entityName)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required}"
 					</#if>
@@ -168,8 +168,8 @@
 					<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
 					/>
 		  	<#elseif type == "Boolean">
-		  		<#if xml.getAttribute(property.@nullable) == "false">
-				<p:selectOneMenu id="${property.@name}Value"
+		  		<#if useRequired && xml.getAttribute(property.@nullable) == "false">
+				<p:selectOneMenu <#if id?length != 0>id="${id}"</#if>
 						value="${sharp}{${value}}"
 						<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
 						>
@@ -180,7 +180,7 @@
 							itemValue="${sharp}{false}" />
 				</p:selectOneMenu>
 				<#else>
-			 		<p:selectOneRadio id="${property.@name}Value"
+			 		<p:selectOneRadio <#if id?length != 0>id="${id}"</#if>
 						value="${sharp}{${value}}"
 						<#if styleClass?length != 0> styleClass="${styleClass}"</#if>
 						>
@@ -191,8 +191,8 @@
 					</p:selectOneRadio>
 				</#if>
 			<#else>
-				<p:inputText id="${property.@name}Value"
-					<#if xml.getAttribute(property.@nullable) == "false">
+				<p:inputText <#if id?length != 0>id="${id}"</#if>
+					<#if useRequired && xml.getAttribute(property.@nullable) == "false">
 					required="true"
 					requiredMessage="${sharp}{bundle.error_${toUnderscoreCase(entityName)?lower_case}_${toUnderscoreCase(property.@name)?lower_case}_required}"
 					</#if>

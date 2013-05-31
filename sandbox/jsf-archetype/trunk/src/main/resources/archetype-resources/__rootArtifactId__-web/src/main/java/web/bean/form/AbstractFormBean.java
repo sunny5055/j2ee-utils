@@ -6,7 +6,6 @@ package ${package}.web.bean.form;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.slf4j.Logger;
@@ -34,7 +33,6 @@ public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<
     protected void init() {
     	model = getFromFlashScope();
 
-    	final FacesContext facesContext = FacesContext.getCurrentInstance();
         Object parameter = null;
         //parameter = FacesUtils.getCustomScopeParameter(facesContext, "editionMode");
         if (parameter != null && BooleanUtil.toBooleanObject(parameter)) {

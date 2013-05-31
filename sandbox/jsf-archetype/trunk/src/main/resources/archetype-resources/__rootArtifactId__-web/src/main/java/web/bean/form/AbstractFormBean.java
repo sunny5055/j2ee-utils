@@ -54,12 +54,6 @@ public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<
 
     protected abstract DTO getNewInstance();
 
-    protected abstract String getListPage();
-
-    protected String getViewPage() {
-        return "";
-    }
-
     public boolean isEditionMode() {
         return editionMode;
     }

@@ -23,7 +23,7 @@ package ${serviceImplPackageName};
 <@addTo assignTo="imports" element="org.springframework.stereotype.Service" />
 <@addTo assignTo="imports" element="org.dozer.Mapper" />
 
-<#if util.xml.getAttribute(entity.@readOnly) == "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") == "true">
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.AbstractGenericReadService" />
 <#else>
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.AbstractGenericService" />
@@ -52,7 +52,7 @@ ${getImports(false, serviceImplPackageName, imports)}
 @Service
 <#compress>
 public class ${serviceImplName} extends
-<#if util.xml.getAttribute(entity.@readOnly) == "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") == "true">
 AbstractGenericReadService<${primaryKeyType}, ${modelName}, ${entityName}, ${daoName}>
 <#else>
 AbstractGenericService<${primaryKeyType}, ${modelName}, ${entityName}, ${daoName}>

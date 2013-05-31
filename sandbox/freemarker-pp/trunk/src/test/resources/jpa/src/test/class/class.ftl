@@ -40,7 +40,7 @@ package ${servicePackageName};
 </#if>
 </#list>
 
-<#if util.xml.getAttribute(entity.@readOnly) == "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") == "true">
   <@addTo assignTo="imports" element="com.googlecode.jutils.dal.test.AbstractGenericReadServiceTest" />
 <#else>
   <@addTo assignTo="imports" element="com.googlecode.jutils.dal.test.AbstractGenericServiceTest" />
@@ -60,7 +60,7 @@ ${getImports(true, servicePackageName, imports)}
 @DatabaseSetup(value = "classpath:${util.getClassPathResource(config.testXmlDatasetFilePath, testXmlDatasetFileName)}")
 <#compress>
 public class ${testServiceName} extends
-<#if util.xml.getAttribute(entity.@readOnly) == "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") == "true">
 AbstractGenericReadServiceTest<${primaryKeyType}, ${modelName}, ${entityName}, ${serviceName}>
 <#else>
 AbstractGenericServiceTest<${primaryKeyType}, ${modelName}, ${entityName}, ${serviceName}>
@@ -115,7 +115,7 @@ AbstractGenericServiceTest<${primaryKeyType}, ${modelName}, ${entityName}, ${ser
       return ${util.java.getRandomValue(util.getPrimaryKeyType(entity), "1000")};
   }
 
-  <#if util.xml.getAttribute(entity.@readOnly) == "" || util.xml.getAttribute(entity.@readOnly) == "false">
+  <#if util.xml.getAttribute(entity.@readOnly, "false") == "" || util.xml.getAttribute(entity.@readOnly, "false") == "false">
   @Override
   protected ${modelName} createDto() {
     final ${modelName} dto = new ${modelName}();

@@ -384,25 +384,6 @@
 </#function>
 
 
-<#function getCreateFormBeanPackageName packageName>
-    <#local createFormBeanPackageName = packageName>
-	<#if config.entityPackage??>
-		<#local createFormBeanPackageName = createFormBeanPackageName?replace(config.entityPackage, "") />
-	</#if>
-	<#if config.createFormBeanPackage??>
-		<#local createFormBeanPackageName = createFormBeanPackageName + config.createFormBeanPackage />
-	</#if>
-
-    <#return createFormBeanPackageName />
-</#function>
-
-
-<#function getCreateFormBeanName value>
-    <@format format=config.createFormBeanFileName values=[value] assignTo="createFormBeanName"/>
-	<#return createFormBeanName?replace(".java", "") />
-</#function>
-
-
 <#function getFormBeanPackageName packageName>
     <#local formBeanPackageName = packageName>
 	<#if config.entityPackage??>

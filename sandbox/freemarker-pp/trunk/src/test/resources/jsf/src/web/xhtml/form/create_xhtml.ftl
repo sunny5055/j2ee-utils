@@ -32,7 +32,7 @@
 					forId="${property.@name}Value"
 					value="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_form_${toUnderscoreCase(property.@name)?lower_case}}"
 					<#if util.xml.getAttribute(property.@nullable) == "false">required="${sharp}{true}"</#if> />
-	 			<@util.getXhtmlInput entityName=lowerModelName path="${lowerModelName}CreationFormBean.model" property=property />
+	 			<@util.getXhtmlInput entityName=lowerModelName path="${lowerModelName}FormBean.model" property=property />
 
 
 				</#list>
@@ -41,7 +41,7 @@
 			<h:panelGroup id="formActions">
 				<p:commandButton id="createButton" value="${sharp}{bundle.save_btn}"
 					icon="ui-icon-disk"
-					actionListener="${sharp}{${lowerModelName}CreationFormBean.create}" />
+					actionListener="${sharp}{${lowerModelName}FormBean.create}" />
 
 				<p:commandButton value="${sharp}{bundle.cancel_btn}"
 					immediate="true" process="@this"

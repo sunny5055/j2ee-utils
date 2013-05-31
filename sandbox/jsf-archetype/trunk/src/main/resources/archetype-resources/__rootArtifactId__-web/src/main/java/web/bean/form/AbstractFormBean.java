@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.googlecode.jutils.BooleanUtil;
 import com.googlecode.jutils.dal.dto.Dto;
 import com.googlecode.jutils.dal.service.GenericService;
-
+import com.googlecode.test.web.util.FacesUtils;
 
 @SuppressWarnings("serial")
 public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<PK>, S extends GenericService<PK, DTO>>
@@ -26,15 +26,11 @@ public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<
     public AbstractFormBean() {
     }
 
-    /**
-     * Inits the.
-     */
     @PostConstruct
     protected void init() {
     	model = getFromFlashScope();
 
-        Object parameter = null;
-        //parameter = FacesUtils.getCustomScopeParameter(facesContext, "editionMode");
+        Object parameter = FacesUtils.getFlashAttribute("editionMode");
         if (parameter != null && BooleanUtil.toBooleanObject(parameter)) {
             editionMode = true;
         }
@@ -60,6 +56,10 @@ public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<
 
     protected abstract String getListPage();
 
+    protected String getViewPage() {
+        return "";
+    }
+
     public boolean isEditionMode() {
         return editionMode;
     }
@@ -77,9 +77,6 @@ public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<
         return dto;
     }
 
-    /**
-     * Re init.
-     */
     protected void reInit() {
     	 if (model != null && model.getPrimaryKey() != null) {
              model = getService().get(model.getPrimaryKey());
@@ -90,25 +87,8 @@ public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<
          setEditionMode(false);
     }
 
-    /**
-     * Re init.
-     *
-     * @param event the event
-     */
     public void reInit(ActionEvent event) {
         this.reInit();
-    }
-
-    protected abstract boolean prepareUpdate();
-
-    public void update(ActionEvent event) {
-        if (model != null) {
-            if (prepareUpdate()) {
-                this.getService().update(model);
-
-                reInit();
-            }
-        }
     }
 
     public void editionMode(ActionEvent event) {

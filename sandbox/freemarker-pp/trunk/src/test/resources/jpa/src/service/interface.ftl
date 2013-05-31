@@ -19,7 +19,7 @@ package ${servicePackageName};
 </#if>
 
 <#assign imports = [] />
-<#if util.xml.getAttribute(entity.@readOnly) == "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") == "true">
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.GenericReadService" />
 <#else>
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.service.GenericService" />
@@ -37,7 +37,7 @@ ${getImports(false, servicePackageName, imports)}
 
 <#compress>
 public interface ${serviceName} extends
-<#if util.xml.getAttribute(entity.@readOnly) == "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") == "true">
 	GenericReadService<${primaryKeyType}, ${modelName}> {
 <#else>
 	GenericService<${primaryKeyType}, ${modelName}> {

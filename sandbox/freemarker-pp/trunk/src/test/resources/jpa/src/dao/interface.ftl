@@ -19,7 +19,7 @@ package ${daoPackageName};
 </#if>
 
 <#assign imports = [] />
-<#if util.xml.getAttribute(entity.@readOnly) == "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") == "true">
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dao.GenericReadDao" />
 <#else>
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dao.GenericDao" />
@@ -36,7 +36,7 @@ ${getImports(false, daoPackageName, imports)}
 
 <#compress>
 public interface ${daoName} extends
-<#if util.xml.getAttribute(entity.@readOnly) == "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") == "true">
 GenericReadDao<${primaryKeyType}, ${entityName}> {
 <#else>
 GenericDao<${primaryKeyType}, ${entityName}> {

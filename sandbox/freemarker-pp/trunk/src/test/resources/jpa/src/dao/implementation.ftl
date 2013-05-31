@@ -20,7 +20,7 @@ package ${daoImplPackageName};
 
 <#assign imports = [] />
 <@addTo assignTo="imports" element="org.springframework.stereotype.Repository" />
-<#if util.xml.getAttribute(entity.@readOnly) == "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") == "true">
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dao.AbstractGenericJpaReadDao" />
 <#else>
 	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.dao.AbstractGenericJpaDao" />
@@ -51,7 +51,7 @@ ${getImports(false, daoImplPackageName, imports)}
 @Repository
 <#compress>
 public class ${daoImplName} extends
-<#if util.xml.getAttribute(entity.@readOnly) == "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") == "true">
 AbstractGenericJpaReadDao<${primaryKeyType}, ${entityName}>
 <#else>
 AbstractGenericJpaDao<${primaryKeyType}, ${entityName}>

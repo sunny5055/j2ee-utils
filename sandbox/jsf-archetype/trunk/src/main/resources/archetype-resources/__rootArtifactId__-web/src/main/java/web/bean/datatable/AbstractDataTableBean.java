@@ -11,18 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.googlecode.jutils.dal.dto.Dto;
 
 /**
  * The Class AbstractDataTableBean.
- *
- * @param <PK> the generic type
- * @param <DTO> the element type
  */
 @SuppressWarnings("serial")
-public abstract class AbstractDataTableBean<PK extends Serializable, DTO extends Dto<PK>> implements Serializable {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractDataTableBean.class);
-    protected DTO selectedObject;
+public abstract class AbstractDataTableBean implements Serializable {
+    protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractDataTableBean.class);    
 
     @Value("#{config.getProperty('list_default_rows')}")
     protected String defaultRows;
@@ -47,38 +42,68 @@ public abstract class AbstractDataTableBean<PK extends Serializable, DTO extends
     protected void init() {
     }
 
-    public DTO getSelectedObject() {
-        return selectedObject;
-    }
-
-    public void setSelectedObject(DTO newSelectedObject) {
-        this.selectedObject = newSelectedObject;
-    }
-
+	/**
+	 * Gets the default rows.
+	 * 
+	 * @return the default rows
+	 */
     public String getDefaultRows() {
         return defaultRows;
     }
 
+	/**
+	 * Sets the default rows.
+	 * 
+	 * @param defaultRows
+	 *            the new default rows
+	 */
     public void setDefaultRows(String defaultRows) {
         this.defaultRows = defaultRows;
     }
 
+	/**
+	 * Gets the rows per page.
+	 * 
+	 * @return the rows per page
+	 */
     public String getRowsPerPage() {
         return rowsPerPage;
     }
 
+	/**
+	 * Sets the rows per page.
+	 * 
+	 * @param rowsPerPage
+	 *            the new rows per page
+	 */
     public void setRowsPerPage(String rowsPerPage) {
         this.rowsPerPage = rowsPerPage;
     }
 
+	/**
+	 * Gets the page links.
+	 * 
+	 * @return the page links
+	 */
     public String getPageLinks() {
         return pageLinks;
     }
 
+	/**
+	 * Sets the page links.
+	 * 
+	 * @param pageLinks
+	 *            the new page links
+	 */
     public void setPageLinks(String pageLinks) {
         this.pageLinks = pageLinks;
     }
 
+	/**
+	 * Gets the view page.
+	 * 
+	 * @return the view page
+	 */
     protected String getViewPage() {
         return "";
     }

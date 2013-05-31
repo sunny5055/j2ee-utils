@@ -10,7 +10,6 @@ import javax.faces.FacesException;
 import javax.faces.application.ViewExpiredException;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerWrapper;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
 
@@ -41,33 +40,32 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
      */
     @Override
     public void handle() throws FacesException {
-        final FacesContext facesContext = FacesContext.getCurrentInstance();
         final Iterator<ExceptionQueuedEvent> it = getUnhandledExceptionQueuedEvents().iterator();
         while (it.hasNext()) {
             final ExceptionQueuedEvent event = it.next();
             final ExceptionQueuedEventContext context = (ExceptionQueuedEventContext) event.getSource();
             final Throwable exception = context.getException();
 
-            FacesUtils.setSessionAttribute(facesContext, "exception", exception);
+            FacesUtils.setSessionAttribute("exception", exception);
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug(exception.getMessage(), exception);
             }
 
             try {
                 if (exception instanceof ViewExpiredException) {
-                    FacesUtils.redirect(facesContext, "/xhtml/index.xhtml", true);
+                    FacesUtils.redirect("/xhtml/index.xhtml", true);
                 } else {
 
-                    final ErrorBean errorBean = FacesUtils.getBean(facesContext, "errorBean", ErrorBean.class);
+                    final ErrorBean errorBean = FacesUtils.getBean("errorBean", ErrorBean.class);
                     if (errorBean != null) {
-                        final String title = FacesUtils.getLabel(facesContext, "error_exception_title");
+                        final String title = FacesUtils.getLabel("error_exception_title");
                         errorBean.setTitle(title);
 
-                        final String message = FacesUtils.getLabel(facesContext, "error_exception_content");
+                        final String message = FacesUtils.getLabel("error_exception_content");
                         errorBean.setMessage(message);
                     }
 
-                    FacesUtils.redirect(facesContext, "/xhtml/error.xhtml", false);
+                    FacesUtils.redirect("/xhtml/error.xhtml", false);
                 }
             } catch (final IOException e) {
                 if (LOGGER.isDebugEnabled()) {

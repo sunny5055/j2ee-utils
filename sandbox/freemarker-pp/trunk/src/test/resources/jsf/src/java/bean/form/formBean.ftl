@@ -22,7 +22,7 @@ package ${formBeanPackageName};
 <@addTo assignTo="imports" element="org.springframework.beans.factory.annotation.Autowired" />
 <@addTo assignTo="imports" element="org.springframework.context.annotation.Scope" />
 <@addTo assignTo="imports" element="org.springframework.stereotype.Controller" />
-
+<@addTo assignTo="imports" element="javax.faces.event.ActionEvent" />
 <@addTo assignTo="imports" element="${modelPackageName}.${modelName}" />
 <@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
 
@@ -70,17 +70,36 @@ public class ${formBeanName} extends AbstractFormBean<${primaryKeyType}, ${model
         return new ${modelName}();
     }
 
-    @Override
-    protected String getListPage() {
-        return "${util.getWebResource(listXhtmlFilePath, listXhtmlFileName)}";
+ 	public void create(ActionEvent event) {
+        if (model != null) {
+            this.getService().create(model);
+
+            reInit();
+        }
     }
 
-    @Override
-    protected boolean prepareUpdate() {
-        boolean update = true;
+    public void update(ActionEvent event) {
+        if (model != null) {
+            this.getService().update(model);
 
-        return update;
+            reInit();
+        }
     }
+
+    public void delete(ActionEvent event) {
+		if (model != null) {
+			if (service.isRemovable(model)) {
+				final Integer deleted = this.getService().delete(model);
+				if (deleted == 1) {
+					FacesUtils.addInfoMessage("error_delete_failed");
+				} else {
+					FacesUtils.addErrorMessage("${lowerModelName}_deleted");
+				}
+			} else {
+				FacesUtils.addErrorMessage("error_unable_to_delete");
+			}
+		}
+	}
 }
 </#if>
 </#list>

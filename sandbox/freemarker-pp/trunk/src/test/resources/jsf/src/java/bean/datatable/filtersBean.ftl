@@ -40,9 +40,6 @@ package ${filtersBeanPackageName};
 		<@addTo assignTo="imports" element=util.getImportsFor(manyToMany, false) />
 	</#list>
 </#if>
-<#if manyToOnes?size gt 0 || oneToManys?size gt 0 || manyToManys?size gt 0>
-	<@addTo assignTo="imports" element="java.util.List" />
-</#if>
 
 <@addTo assignTo="imports" element="com.googlecode.jutils.StringUtil" />
 <@addTo assignTo="imports" element="com.googlecode.jutils.collection.MapUtil" />

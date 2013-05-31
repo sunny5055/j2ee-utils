@@ -4,7 +4,7 @@
 <#assign entities = xml["//j:entity"]/>
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 <#list entities as entity>
-<#if util.xml.getAttribute(entity.@readOnly) == "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") == "true">
 <#include "/common/assign.inc" />
 <@resolveKey map=config key="viewXhtmlFilePath" values=[projectName, lowerModelName] assignTo="filePath"/>
 <@resolveKey map=config key="viewXhtmlFileName" values=[projectName] assignTo="fileName"/>

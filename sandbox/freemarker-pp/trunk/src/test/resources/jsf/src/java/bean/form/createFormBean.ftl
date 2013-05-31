@@ -7,7 +7,7 @@
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 
 <#list entities as entity>
-<#if util.xml.getAttribute(entity.@readOnly) != "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") != "true">
 <#include "/common/assign.inc" />
 
 <@resolveKey map=config key="createFormBeanFilePath" values=[projectName] assignTo="filePath"/>
@@ -19,8 +19,6 @@ package ${createFormBeanPackageName};
 </#if>
 
 <#assign imports = [] />
-<@addTo assignTo="imports" element="javax.faces.context.FacesContext" />
-
 <@addTo assignTo="imports" element="org.springframework.beans.factory.annotation.Autowired" />
 <@addTo assignTo="imports" element="org.springframework.context.annotation.Scope" />
 <@addTo assignTo="imports" element="org.springframework.stereotype.Controller" />
@@ -78,7 +76,6 @@ public class ${createFormBeanName} extends AbstractCreateFormBean<${primaryKeyTy
     @Override
     protected boolean prepareCreate() {
         boolean create = true;
-        final FacesContext facesContext = FacesContext.getCurrentInstance();
 
         return create;
     }

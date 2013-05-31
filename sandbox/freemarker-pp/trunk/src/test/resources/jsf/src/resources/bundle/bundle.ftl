@@ -64,13 +64,15 @@ no=Non
 select_all=Tous
 blank_value=Non renseigné
 select=Sélectionnez
-confirm_delete=Êtes-vous sûr de vouloir supprimer cet élément ?
+confirm_delete_title=Suppression
+confirm_delete_content=Êtes-vous sûr de vouloir supprimer cet élément ?
 # Common form
 
 # error messages
 error_create_failed=La création a échoué
 error_update_failed=La mise à jour a échoué
 error_delete_failed=La suppression a échoué
+error_unable_to_delete=La suppression est impossible
 error_unable_to_find_entity=Impossible de trouver l'entité
 error_value_required={0} est obligatoire.
 error_int_value_invalid={0} n''est pas un nombre entier valide.

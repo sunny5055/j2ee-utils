@@ -23,7 +23,9 @@ package ${dataTableBeanPackageName};
 
 <@addTo assignTo="imports" element="java.util.List" />
 <@addTo assignTo="imports" element="java.util.Map" />
-<@addTo assignTo="imports" element="javax.faces.context.FacesContext" />
+<#if util.xml.getAttribute(entity.@readOnly, "false") == "false">
+<@addTo assignTo="imports" element="javax.faces.event.ActionEvent" />
+</#if>
 <@addTo assignTo="imports" element="org.primefaces.model.LazyDataModel" />
 <@addTo assignTo="imports" element="org.primefaces.model.SortMeta" />
 
@@ -44,7 +46,7 @@ ${getImports(false, dataTableBeanPackageName, imports)}
 @Controller
 @Scope("view")
 @SuppressWarnings("serial")
-public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType}, ${modelName}> {
+public class ${dataTableBeanName} extends AbstractSingleRowSelectionDataTableBean<${primaryKeyType}, ${modelName}> {
    	@Autowired
     private ${serviceName} service;
 
@@ -108,7 +110,7 @@ public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType
 
     @Override
     protected String getViewPage() {
-    	<#if util.xml.getAttribute(entity.@readOnly) != "true">
+    	<#if util.xml.getAttribute(entity.@readOnly, "false") != "true">
         return "${util.getWebResource(updateXhtmlFilePath, updateXhtmlFileName)}";
 		<#else>
         return "${util.getWebResource(viewXhtmlFilePath, viewXhtmlFileName)}";
@@ -117,26 +119,41 @@ public class ${dataTableBeanName} extends AbstractDataTableBean<${primaryKeyType
 
     public String getListEmpty() {
 		String msg = null;
-		final FacesContext facesContext = FacesContext.getCurrentInstance();
 		if (filtersBean != null && filtersBean.hasFilters()) {
-			msg = FacesUtils.getLabel(facesContext, "list_result_empty");
+			msg = FacesUtils.getLabel("list_result_empty");
 		} else {
-			msg = FacesUtils.getLabel(facesContext, "${lowerModelName}_list_empty");
+			msg = FacesUtils.getLabel("${lowerModelName}_list_empty");
 		}
 		return msg;
 	}
 
     public void view() {
         if (selectedObject != null) {
-			final FacesContext facesContext = FacesContext.getCurrentInstance();
-			FacesUtils.setFlashAttribute(facesContext, "${lowerModelName}Id", selectedObject.getPrimaryKey());
+			FacesUtils.setFlashAttribute("${lowerModelName}Id", selectedObject.getPrimaryKey());
 
 			try {
-				FacesUtils.redirect(facesContext, getViewPage(), true);
+				FacesUtils.redirect(getViewPage(), true);
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 		}
     }
+
+	<#if util.xml.getAttribute(entity.@readOnly, "false") == "false">
+	public void delete(ActionEvent event) {
+		if (selectedObject != null) {
+			if (service.isRemovable(selectedObject)) {
+				final Integer deleted = service.delete(selectedObject);
+				if (deleted == 1) {
+					FacesUtils.addInfoMessage("error_delete_failed");
+				} else {
+					FacesUtils.addErrorMessage("${lowerModelName}_deleted");
+				}
+			} else {
+				FacesUtils.addErrorMessage("error_unable_to_delete");
+			}
+		}
+	}
+	</#if>
 }
 </#list>

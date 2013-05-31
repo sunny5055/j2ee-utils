@@ -62,8 +62,7 @@ public class MessageHandler implements PhaseListener {
         }
 
         if (!CollectionUtil.isEmpty(messages)) {
-            final List<FacesMessage> existingMessages = (List<FacesMessage>) FacesUtils.getSessionAttribute(
-                    facesContext, FacesUtils.MSGS_KEY);
+            final List<FacesMessage> existingMessages = (List<FacesMessage>) FacesUtils.getSessionAttribute(FacesUtils.MSGS_KEY);
             if (!CollectionUtil.isEmpty(existingMessages)) {
                 existingMessages.addAll(messages);
             } else {

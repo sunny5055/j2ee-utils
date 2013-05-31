@@ -7,7 +7,7 @@
 <#assign projectName = xml["//p:configuration/p:projectName"]/>
 
 <#list entities as entity>
-<#if util.xml.getAttribute(entity.@readOnly) != "true">
+<#if util.xml.getAttribute(entity.@readOnly, "false") != "true">
 <#include "/common/assign.inc" />
 
 <@resolveKey map=config key="formBeanFilePath" values=[projectName] assignTo="filePath"/>
@@ -19,8 +19,6 @@ package ${formBeanPackageName};
 </#if>
 
 <#assign imports = [] />
-<@addTo assignTo="imports" element="javax.faces.context.FacesContext" />
-
 <@addTo assignTo="imports" element="org.springframework.beans.factory.annotation.Autowired" />
 <@addTo assignTo="imports" element="org.springframework.context.annotation.Scope" />
 <@addTo assignTo="imports" element="org.springframework.stereotype.Controller" />
@@ -64,7 +62,7 @@ public class ${formBeanName} extends AbstractFormBean<${primaryKeyType}, ${model
 
     @Override
     public ${primaryKeyType} getPrimaryKey() {
-    	return (${primaryKeyType}) FacesUtils.getFlashAttribute(FacesContext.getCurrentInstance(), "${lowerModelName}Id");
+    	return (${primaryKeyType}) FacesUtils.getFlashAttribute("${lowerModelName}Id");
     }
 
     @Override
@@ -80,7 +78,6 @@ public class ${formBeanName} extends AbstractFormBean<${primaryKeyType}, ${model
     @Override
     protected boolean prepareUpdate() {
         boolean update = true;
-        final FacesContext facesContext = FacesContext.getCurrentInstance();
 
         return update;
     }

@@ -67,6 +67,13 @@
 		</ui:define>
 
 		<ui:define name="content">
+			<#if util.xml.getAttribute(entity.@readOnly, "false") == "false">
+			<p:commandButton ajax="false" value="${sharp}{bundle.new_btn}"
+				title="${sharp}{bundle.new_btn}"
+				icon="ui-icon-plusthick"
+				action="${util.getWebResource(createXhtmlFilePath, createXhtmlFileName)}?faces-redirect=true&amp;includeViewParams=true" />
+			</#if>
+
 			<p:dataTable id="${lowerModelName}DataTable" widgetVar="${lowerModelName}DataTable"
 				lazy="true" var="${lowerModelName}" sortMode="multiple" rowKey="${sharp}{${lowerModelName}.primaryKey}"
 				value="${sharp}{${lowerModelName}DataTableBean.dataModel}" paginator="true"
@@ -91,16 +98,34 @@
 							<f:setPropertyActionListener value="${sharp}{${lowerModelName}}"
 								target="${sharp}{${lowerModelName}DataTableBean.selectedObject}" />
 						</p:commandLink>
-						<#if util.xml.getAttribute(entity.@readOnly) == "false">
-						<p:commandLink title="${sharp}{bundle.delete_btn}" styleClass="action-link delete-link">
-							<f:setPropertyActionListener value="${sharp}{${lowerModelName}}"
-								target="${sharp}{${lowerModelName}DataTableBean.selectedObject}" />
-						</p:commandLink>
+						<#if util.xml.getAttribute(entity.@readOnly, "false") == "false">
+						<p:commandButton type="button" onclick="confirmation.show()"
+								title="${sharp}{bundle.delete_btn}" styleClass="action-link delete-link">
+							<f:setPropertyActionListener value="${sharp}{${lowerModelName}}" target="${sharp}{${lowerModelName}DataTableBean.selectedObject}" />
+						</p:commandButton>
 						</#if>
 					</h:panelGroup>
 				</p:column>
 			</p:dataTable>
 		</ui:define>
+
+		<#if util.xml.getAttribute(entity.@readOnly, "false") == "false">
+		<ui:define name="confirmDialog">
+			<h:form id="confirmDialogForm">
+				<p:confirmDialog id="confirmation"
+					message="${sharp}{bundle.confirm_delete_content}"
+					header="${sharp}{bundle.confirm_delete_title}"
+					widgetVar="confirmation">
+					<p:commandButton value="${sharp}{bundle.yes}"
+						update=":msgs"
+						actionListener="${sharp}{${lowerModelName}DataTableBean.delete}"
+						oncomplete="confirmation.hide();${lowerModelName}DataTable.filter()" />
+					<p:commandButton value="${sharp}{bundle.no}" onclick="confirmation.hide()"
+						type="button" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+		</#if>
 	</ui:composition>
 </f:view>
 </html>

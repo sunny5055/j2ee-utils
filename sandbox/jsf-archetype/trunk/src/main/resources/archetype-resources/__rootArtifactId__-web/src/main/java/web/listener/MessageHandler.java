@@ -67,16 +67,15 @@ public class MessageHandler implements PhaseListener {
             if (!CollectionUtil.isEmpty(existingMessages)) {
                 existingMessages.addAll(messages);
             } else {
-                FacesUtils.setSessionAttribute(facesContext, FacesUtils.MSGS_KEY, messages);
+                FacesUtils.setSessionAttribute(FacesUtils.MSGS_KEY, messages);
             }
         }
     }
 
     @SuppressWarnings("unchecked")
     private void restoreMessages(FacesContext facesContext) {
-        final List<FacesMessage> messages = (List<FacesMessage>) FacesUtils.getSessionAttribute(facesContext,
-                FacesUtils.MSGS_KEY);
-        FacesUtils.removeSessionAttribute(facesContext, FacesUtils.MSGS_KEY);
+        final List<FacesMessage> messages = (List<FacesMessage>) FacesUtils.getSessionAttribute(FacesUtils.MSGS_KEY);
+        FacesUtils.removeSessionAttribute(FacesUtils.MSGS_KEY);
 
         if (!CollectionUtil.isEmpty(messages)) {
             for (final FacesMessage message : messages) {

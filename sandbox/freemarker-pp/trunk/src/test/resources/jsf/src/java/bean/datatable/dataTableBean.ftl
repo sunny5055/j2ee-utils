@@ -36,7 +36,6 @@ package ${dataTableBeanPackageName};
 <@addTo assignTo="imports" element="com.googlecode.jutils.dal.SearchCriteria" />
 <@addTo assignTo="imports" element="${util.getBasePackageName(entityPackageName)}.util.SearchCriteriaUtil" />
 
-<@addTo assignTo="imports" element="java.io.IOException"/>
 <@addTo assignTo="imports" element="${util.getBasePackageName(entityPackageName)}.web.util.FacesUtils"/>
 <@addTo assignTo="imports" element="${filtersBeanPackageName}.${filtersBeanName}" />
 
@@ -108,15 +107,6 @@ public class ${dataTableBeanName} extends AbstractSingleRowSelectionDataTableBea
         this.dataModel = dataModel;
     }
 
-    @Override
-    protected String getViewPage() {
-    	<#if util.xml.getAttribute(entity.@readOnly, "false") != "true">
-        return "${util.getWebResource(updateXhtmlFilePath, updateXhtmlFileName)}";
-		<#else>
-        return "${util.getWebResource(viewXhtmlFilePath, viewXhtmlFileName)}";
-        </#if>
-    }
-
     public String getListEmpty() {
 		String msg = null;
 		if (filtersBean != null && filtersBean.hasFilters()) {
@@ -127,27 +117,15 @@ public class ${dataTableBeanName} extends AbstractSingleRowSelectionDataTableBea
 		return msg;
 	}
 
-    public void view() {
-        if (selectedObject != null) {
-			FacesUtils.setFlashAttribute("${lowerModelName}Id", selectedObject.getPrimaryKey());
-
-			try {
-				FacesUtils.redirect(getViewPage(), true);
-			} catch (final IOException e) {
-				e.printStackTrace();
-			}
-		}
-    }
-
 	<#if util.xml.getAttribute(entity.@readOnly, "false") == "false">
 	public void delete(ActionEvent event) {
 		if (selectedObject != null) {
 			if (service.isRemovable(selectedObject)) {
 				final Integer deleted = service.delete(selectedObject);
 				if (deleted == 1) {
-					FacesUtils.addInfoMessage("error_delete_failed");
+					FacesUtils.addInfoMessage("${toUnderscoreCase(lowerModelName)?lower_case}_deleted");
 				} else {
-					FacesUtils.addErrorMessage("${lowerModelName}_deleted");
+					FacesUtils.addErrorMessage("error_delete_failed");
 				}
 			} else {
 				FacesUtils.addErrorMessage("error_unable_to_delete");

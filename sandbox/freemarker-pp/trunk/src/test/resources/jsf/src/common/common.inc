@@ -460,6 +460,25 @@
 </#function>
 
 
+<#function getDataModelBeanPackageName packageName>
+    <#local dataModelBeanPackageName = packageName>
+	<#if config.entityPackage??>
+		<#local dataModelBeanPackageName = dataModelBeanPackageName?replace(config.entityPackage, "") />
+	</#if>
+	<#if config.dataModelBeanPackage??>
+		<#local dataModelBeanPackageName = dataModelBeanPackageName + config.dataModelBeanPackage />
+	</#if>
+
+    <#return dataModelBeanPackageName />
+</#function>
+
+
+<#function getDataModelBeanName value>
+    <@format format=config.dataModelBeanFileName values=[value] assignTo="dataModelBeanName"/>
+	<#return dataModelBeanName?replace(".java", "") />
+</#function>
+
+
 <#function getConverterBeanPackageName packageName>
     <#local converterBeanPackageName = packageName>
 	<#if config.entityPackage??>

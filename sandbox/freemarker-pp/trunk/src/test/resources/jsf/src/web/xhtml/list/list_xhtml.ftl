@@ -36,8 +36,8 @@
 					<#if property?node_name = "column">
 					<h:outputLabel value="${sharp}{bundle.${lowerModelName}_filter_${toUnderscoreCase(property.@name)?lower_case}}" />
 					<@util.getXhtmlInput id="" entityName=lowerModelName path="${lowerModelName}FiltersBean" property=property useRequired=false />
-					<#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
-					<#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
+					<#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many">
+					<#if property?node_name = "one-to-many">
 				  		<#assign propertyName = property.@name?substring(0, property.@name?length-1)>
 				  	<#else>
 				  		<#assign propertyName = property.@name>
@@ -81,7 +81,7 @@
 				rowsPerPageTemplate="${sharp}{${lowerModelName}DataTableBean.rowsPerPage}"
 	            paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
 				currentPageReportTemplate="${sharp}{bundle.list_results} : {totalRecords} ${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_list_found} (${sharp}{bundle.list_from} {startRecord} ${sharp}{bundle.list_to} {endRecord})"
-				emptyMessage="${sharp}{${lowerModelName}DataTableBean.listEmpty}">
+				emptyMessage="${sharp}{${lowerModelName}FiltersBean.hasFilters()?bundle.list_result_empty:bundle.${lowerModelName}_list_empty}">
 				<p:column headerText="${sharp}{bundle.${toUnderscoreCase(lowerModelName)?lower_case}_list_${toUnderscoreCase(primaryKey.@name)?lower_case}}" sortBy="${sharp}{${lowerModelName}.${primaryKey.@name}}">
 					<@util.getXhtmlOutput entityName=lowerModelName property=primaryKey/>
 				</p:column>

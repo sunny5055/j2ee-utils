@@ -35,11 +35,6 @@ package ${filtersBeanPackageName};
 		<@addTo assignTo="imports" element=util.getImportsFor(oneToMany, false) />
 	</#list>
 </#if>
-<#if manyToManys?size gt 0>
-	<#list manyToManys as manyToMany>
-		<@addTo assignTo="imports" element=util.getImportsFor(manyToMany, false) />
-	</#list>
-</#if>
 
 <@addTo assignTo="imports" element="com.googlecode.jutils.StringUtil" />
 <@addTo assignTo="imports" element="com.googlecode.jutils.collection.MapUtil" />
@@ -55,8 +50,8 @@ public class ${filtersBeanName} extends AbstractFiltersBean {
 <#list allProperties as property>
   <#if property?node_name = "column">
     <@util.java.getProperty visibility="private" type=getType(property.@type) name=property.@name />
-  <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
-	  <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
+  <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many">
+	  <#if property?node_name = "one-to-many">
 	  	<#assign propertyName = property.@name?substring(0, property.@name?length-1)>
 	  <#else>
 	  	<#assign propertyName = property.@name>
@@ -74,8 +69,8 @@ public class ${filtersBeanName} extends AbstractFiltersBean {
     <@util.java.getter type=getType(property.@type) name=property.@name />
 
     <@util.java.setter type=getType(property.@type) name=property.@name />
-  <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
-	  <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
+  <#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many">
+	  <#if property?node_name = "one-to-many">
 	  	<#assign propertyName = property.@name?substring(0, property.@name?length-1)>
 	  <#else>
 	  	<#assign propertyName = property.@name>
@@ -116,8 +111,8 @@ public class ${filtersBeanName} extends AbstractFiltersBean {
 			filters.put("${property.@name}", ${property.@name});
 			</#if>
 		}
-		<#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
-		<#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
+		<#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many">
+		<#if property?node_name = "one-to-many">
 	  		<#assign propertyName = property.@name?substring(0, property.@name?length-1)>
 	  	<#else>
 	  		<#assign propertyName = property.@name>
@@ -136,8 +131,8 @@ public class ${filtersBeanName} extends AbstractFiltersBean {
 		<#list allProperties as property>
 		<#if property?node_name = "column">
 		this.${property.@name} = null;
-		<#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
-		<#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
+		<#elseif property?node_name = "many-to-one" || property?node_name = "one-to-many">
+		<#if property?node_name = "one-to-many">
 	  		<#assign propertyName = property.@name?substring(0, property.@name?length-1)>
 	  	<#else>
 	  		<#assign propertyName = property.@name>

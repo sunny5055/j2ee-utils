@@ -93,16 +93,21 @@
 
 				<p:column style="width:30px">
 					<h:panelGroup>
-						<p:commandLink ajax="false" action="${sharp}{${lowerModelName}DataTableBean.view}"
+						<p:commandLink ajax="false"
+							<#if util.xml.getAttribute(entity.@readOnly, "false") != "true">
+        					action="${util.getWebResource(updateXhtmlFilePath, updateXhtmlFileName)}?faces-redirect=true&amp;includeViewParams=true"
+							<#else>
+        					action="${util.getWebResource(viewXhtmlFilePath, viewXhtmlFileName)}?faces-redirect=true&amp;includeViewParams=true"
+        					</#if>
 							title="${sharp}{bundle.view_btn}" styleClass="action-link view-link">
-							<f:setPropertyActionListener value="${sharp}{${lowerModelName}}"
-								target="${sharp}{${lowerModelName}DataTableBean.selectedObject}" />
+							<f:setPropertyActionListener value="${sharp}{${lowerModelName}.primaryKey}"
+								target="${sharp}{flash.${lowerModelName}Id}" />
 						</p:commandLink>
 						<#if util.xml.getAttribute(entity.@readOnly, "false") == "false">
-						<p:commandButton type="button" onclick="confirmation.show()"
+						<p:commandLink onclick="confirmation.show()"
 								title="${sharp}{bundle.delete_btn}" styleClass="action-link delete-link">
 							<f:setPropertyActionListener value="${sharp}{${lowerModelName}}" target="${sharp}{${lowerModelName}DataTableBean.selectedObject}" />
-						</p:commandButton>
+						</p:commandLink>
 						</#if>
 					</h:panelGroup>
 				</p:column>

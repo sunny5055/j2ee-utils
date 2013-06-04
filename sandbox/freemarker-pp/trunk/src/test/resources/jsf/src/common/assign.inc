@@ -46,6 +46,9 @@
 	<#assign filtersBeanPackageName = util.getFiltersBeanPackageName(entityPackageName) />
 	<#assign filtersBeanName = util.getFiltersBeanName(entity.@name) />
 
+	<#assign dataModelBeanPackageName = util.getDataModelBeanPackageName(entityPackageName) />
+	<#assign dataModelBeanName = util.getDataModelBeanName(entity.@name) />
+
 	<#assign formBeanPackageName = util.getFormBeanPackageName(entityPackageName) />
 	<#assign formBeanName = util.getFormBeanName(entity.@name) />
 

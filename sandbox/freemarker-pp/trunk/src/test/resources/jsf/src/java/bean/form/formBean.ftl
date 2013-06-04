@@ -26,21 +26,6 @@ package ${formBeanPackageName};
 <@addTo assignTo="imports" element="javax.faces.event.ActionEvent" />
 <@addTo assignTo="imports" element="${modelPackageName}.${modelName}" />
 <@addTo assignTo="imports" element="${servicePackageName}.${serviceName}" />
-
-<#if uniqueConstraints?size gt 0>
-	<@addTo assignTo="imports" element="java.util.List" />
-	<@addTo assignTo="imports" element=" com.googlecode.jutils.StringUtil" />
-</#if>
-
-
-<#if uniqueColumns?size gt 0>
-	<@addTo assignTo="imports" element=" com.googlecode.jutils.StringUtil" />
-</#if>
-<#if manyToOnes?size gt 0 || oneToManys?size gt 0 || manyToManys?size gt 0>
-	<@addTo assignTo="imports" element="java.util.List" />
-	<@addTo assignTo="imports" element=" com.googlecode.jutils.StringUtil" />
-</#if>
-
 <@addTo assignTo="imports" element="${util.getBasePackageName(entityPackageName)}.web.util.FacesUtils"/>
 
 ${getImports(true, formBeanPackageName, imports)}

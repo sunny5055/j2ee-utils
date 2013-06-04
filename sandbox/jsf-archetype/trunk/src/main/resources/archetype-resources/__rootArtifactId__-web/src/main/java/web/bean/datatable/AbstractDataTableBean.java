@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractDataTableBean implements Serializable {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractDataTableBean.class);    
+    protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractDataTableBean.class);
 
     @Value("#{config.getProperty('list_default_rows')}")
     protected String defaultRows;
@@ -44,7 +44,7 @@ public abstract class AbstractDataTableBean implements Serializable {
 
 	/**
 	 * Gets the default rows.
-	 * 
+	 *
 	 * @return the default rows
 	 */
     public String getDefaultRows() {
@@ -53,7 +53,7 @@ public abstract class AbstractDataTableBean implements Serializable {
 
 	/**
 	 * Sets the default rows.
-	 * 
+	 *
 	 * @param defaultRows
 	 *            the new default rows
 	 */
@@ -63,7 +63,7 @@ public abstract class AbstractDataTableBean implements Serializable {
 
 	/**
 	 * Gets the rows per page.
-	 * 
+	 *
 	 * @return the rows per page
 	 */
     public String getRowsPerPage() {
@@ -72,7 +72,7 @@ public abstract class AbstractDataTableBean implements Serializable {
 
 	/**
 	 * Sets the rows per page.
-	 * 
+	 *
 	 * @param rowsPerPage
 	 *            the new rows per page
 	 */
@@ -82,7 +82,7 @@ public abstract class AbstractDataTableBean implements Serializable {
 
 	/**
 	 * Gets the page links.
-	 * 
+	 *
 	 * @return the page links
 	 */
     public String getPageLinks() {
@@ -91,20 +91,11 @@ public abstract class AbstractDataTableBean implements Serializable {
 
 	/**
 	 * Sets the page links.
-	 * 
+	 *
 	 * @param pageLinks
 	 *            the new page links
 	 */
     public void setPageLinks(String pageLinks) {
         this.pageLinks = pageLinks;
-    }
-
-	/**
-	 * Gets the view page.
-	 * 
-	 * @return the view page
-	 */
-    protected String getViewPage() {
-        return "";
     }
 }

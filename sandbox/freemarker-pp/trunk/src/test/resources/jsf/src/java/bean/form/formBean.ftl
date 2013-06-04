@@ -19,6 +19,7 @@ package ${formBeanPackageName};
 </#if>
 
 <#assign imports = [] />
+<@addTo assignTo="imports" element="java.io.IOException" />
 <@addTo assignTo="imports" element="org.springframework.beans.factory.annotation.Autowired" />
 <@addTo assignTo="imports" element="org.springframework.context.annotation.Scope" />
 <@addTo assignTo="imports" element="org.springframework.stereotype.Controller" />
@@ -72,9 +73,21 @@ public class ${formBeanName} extends AbstractFormBean<${primaryKeyType}, ${model
 
  	public void create(ActionEvent event) {
         if (model != null) {
-            this.getService().create(model);
+            final Integer primaryKey = this.getService().create(model);
+			if (primaryKey != null) {
+				FacesUtils.addInfoMessage("${lowerModelName}_created");
+				FacesUtils.setFlashAttribute("${lowerModelName}Id", primaryKey);
 
-            reInit();
+				try {
+					FacesUtils.redirect("${util.getWebResource(updateXhtmlFilePath, updateXhtmlFileName)}", true);
+				} catch (final IOException e) {
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug(e.getMessage(), e);
+					}
+				}
+			} else {
+				FacesUtils.addErrorMessage("error_create_failed");
+			}
         }
     }
 
@@ -91,9 +104,17 @@ public class ${formBeanName} extends AbstractFormBean<${primaryKeyType}, ${model
 			if (service.isRemovable(model)) {
 				final Integer deleted = this.getService().delete(model);
 				if (deleted == 1) {
-					FacesUtils.addInfoMessage("error_delete_failed");
+					FacesUtils.addInfoMessage("${lowerModelName}_deleted");
+
+					try {
+						FacesUtils.redirect("${util.getWebResource(listXhtmlFilePath, listXhtmlFileName)}", true);
+					} catch (final IOException e) {
+						if (LOGGER.isDebugEnabled()) {
+							LOGGER.debug(e.getMessage(), e);
+						}
+					}
 				} else {
-					FacesUtils.addErrorMessage("${lowerModelName}_deleted");
+					FacesUtils.addErrorMessage("error_delete_failed");
 				}
 			} else {
 				FacesUtils.addErrorMessage("error_unable_to_delete");

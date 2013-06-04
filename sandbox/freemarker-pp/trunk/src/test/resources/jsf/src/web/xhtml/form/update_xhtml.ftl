@@ -63,12 +63,32 @@
 					action="${util.getWebResource(listXhtmlFilePath, listXhtmlFileName)}?faces-redirect=true&amp;includeViewParams=true"
 					rendered="${sharp}{!${lowerModelName}FormBean.editionMode}" />
 
+				<p:commandButton id="deleteBtn" onclick="confirmation.show()"
+					value="${sharp}{bundle.delete_btn}"
+					rendered="${sharp}{${lowerModelName}FormBean.editionMode}" />
 				<p:commandButton id="updateBtn" value="${sharp}{bundle.save_btn}"
-					icon="ui-icon-disk"  rendered="${sharp}{${lowerModelName}FormBean.editionMode}" />
+					icon="ui-icon-disk"  rendered="${sharp}{${lowerModelName}FormBean.editionMode}"
+					actionListener="${sharp}{${lowerModelName}FormBean.update}" update=":contentForm" />
 				<p:commandButton immediate="true" process="@this"
 					value="${sharp}{bundle.cancel_btn}" update=":contentForm"
 					actionListener="${sharp}{${lowerModelName}FormBean.reInit}"  rendered="${sharp}{${lowerModelName}FormBean.editionMode}"  />
 			</h:panelGroup>
+		</ui:define>
+
+		<ui:define name="confirmDialog">
+			<h:form id="confirmDialogForm">
+				<p:confirmDialog id="confirmation"
+					message="${sharp}{bundle.confirm_delete_content}"
+					header="${sharp}{bundle.confirm_delete_title}"
+					widgetVar="confirmation">
+					<p:commandButton value="${sharp}{bundle.yes}"
+						update=":msgs"
+						actionListener="${sharp}{${lowerModelName}FormBean.delete}"
+						oncomplete="confirmation.hide()" />
+					<p:commandButton value="${sharp}{bundle.no}" onclick="confirmation.hide()"
+						type="button" />
+				</p:confirmDialog>
+			</h:form>
 		</ui:define>
 	</ui:composition>
 </f:view>

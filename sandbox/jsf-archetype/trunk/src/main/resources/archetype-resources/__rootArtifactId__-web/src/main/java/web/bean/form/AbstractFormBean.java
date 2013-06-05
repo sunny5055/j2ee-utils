@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.googlecode.jutils.BooleanUtil;
 import com.googlecode.jutils.dal.dto.Dto;
 import com.googlecode.jutils.dal.service.GenericService;
-import com.googlecode.test.web.util.FacesUtils;
+import ${package}.web.util.FacesUtils;
 
 @SuppressWarnings("serial")
 public abstract class AbstractFormBean<PK extends Serializable, DTO extends Dto<PK>, S extends GenericService<PK, DTO>>

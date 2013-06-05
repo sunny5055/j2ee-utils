@@ -15,6 +15,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
 	xmlns:util="http://java.sun.com/jsf/composite/components">
 <f:view contentType="text/html">
 	<h:body>

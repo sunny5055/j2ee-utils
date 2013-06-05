@@ -82,6 +82,8 @@
     	<#local randomValue = "new Random().nextLong()">
   	<#elseif typeClassName == "Boolean" || type == "boolean">
   		<#local randomValue = "new Random().nextBoolean()">
+	<#elseif typeClassName == "Date">
+		<#local randomValue = "new Date()">
 	</#if>
 	<#return randomValue>
 </#function>

@@ -18,7 +18,7 @@ import com.googlecode.jutils.collection.CollectionUtil;
 import ${package}.web.util.FacesUtils;
 
 @SuppressWarnings("serial")
-public class MessageHandler implements PhaseListener {
+public class MessagePhaseListener implements PhaseListener {
 
     /**
      * {@inheritedDoc}

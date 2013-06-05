@@ -296,12 +296,20 @@ public final class FacesUtils {
 
 	public static String getCurrentLanguage() {
 		String currentLanguage = null;
-		final FacesContext facesContext = FacesContext.getCurrentInstance();
-		if (facesContext != null) {
-			final Locale locale = facesContext.getViewRoot().getLocale();
+		final Locale locale = getCurrentLocale();
+		if (locale != null) {
 			currentLanguage = locale.getLanguage();
 		}
 		return currentLanguage;
+	}
+
+	public static Locale getCurrentLocale() {
+		Locale locale = null;
+		final FacesContext facesContext = FacesContext.getCurrentInstance();
+		if (facesContext != null) {
+			locale = facesContext.getViewRoot().getLocale();
+		}
+		return locale;
 	}
 
 	public static Locale updateLocale(Locale locale) {
@@ -322,6 +330,15 @@ public final class FacesUtils {
 			facesContext.getViewRoot().setLocale(selectedLocale);
 		}
 		return selectedLocale;
+	}
+
+	public static List<Locale> getSupportedLocales() {
+		List<Locale> supportedLocales = null;
+		final FacesContext facesContext = FacesContext.getCurrentInstance();
+		if (facesContext != null) {
+			supportedLocales = IteratorUtils.toList(facesContext.getApplication().getSupportedLocales());
+		}
+		return supportedLocales;
 	}
 
 	public static Object getAttribute(String name) {

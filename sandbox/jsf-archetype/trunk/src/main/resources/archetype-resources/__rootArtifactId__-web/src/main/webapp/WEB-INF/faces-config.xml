@@ -20,6 +20,7 @@
 		<exception-handler-factory>${package}.web.exception.CustomExceptionHandlerFactory</exception-handler-factory>
 	</factory>
 	<lifecycle>
-		<phase-listener>${package}.web.listener.MessageHandler</phase-listener>
+		<phase-listener>com.googlecode.test.web.listener.LocalePhaseListener</phase-listener>
+		<phase-listener>com.googlecode.test.web.listener.MessagePhaseListener</phase-listener>
 	</lifecycle>
 </faces-config>

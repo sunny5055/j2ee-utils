@@ -43,10 +43,6 @@
 
 <#macro getJoinTable doc entity property>
 <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
-	<@xPath xml=doc expression="//j:entity[@name='${getType(property.@targetEntity)}']" assignTo="targetEntity" />
-	<#assign targetPk = getPrimaryKey(targetEntity)>
-	<@xPath xml=doc expression="//j:entity[@name='${getType(property.@targetEntity)}']/j:properties/j:column" assignTo="targetColumns" />
-
 	<#list 1..5 as i>
 		<#compress>
 		<${getJoinTableName(entity, property)}

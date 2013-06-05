@@ -45,7 +45,7 @@ ${getImports(true, modelPackageName, imports)}
 
 @SuppressWarnings("serial")
 <#compress>
-public ${util.getModifiersFrom(entity)} class ${modelName} extends AbstractDto<${primaryKeyType}>
+public class ${modelName} extends AbstractDto<${primaryKeyType}>
 {</#compress>
 <@util.getProperty property=primaryKey/>
 <#list columns as column>

@@ -4,37 +4,9 @@
 <#import "/common/directives.inc" as dir>
 
 
-
 <#function getImportsFor node jpa=false>
   <#assign imports = [] />
-  <#if node?node_name = "property" || node?node_name = "type" || node?node_name = "parameter">
-      <@addTo assignTo="imports" element=node.@type />
-  <#elseif node?node_name = "property-list" || node?node_name = "type-list" || node?node_name = "parameter-list">
-      <@addTo assignTo="imports" element=node.@type />
-      <@addTo assignTo="imports" element=xml.getAttribute(node.@value) />
-  <#elseif node?node_name = "property-map" || node?node_name = "type-map" || node?node_name = "parameter-map">
-      <@addTo assignTo="imports" element=node.@type />
-      <@addTo assignTo="imports" element=xml.getAttribute(node.@value) />
-      <@addTo assignTo="imports" element=xml.getAttribute(node.@key) />
-  <#elseif node?node_name = "constructor">
-    <#assign parameters = node["b:parameters/*"]>
-    <#list parameters as parameter>
-      <@addTo assignTo="imports" element=getImportsFor(parameter) />
-    </#list>
-  <#elseif node?node_name = "operation">
-    <#if node["b:return/b:type"]?is_node>
-      <@addTo assignTo="imports" element=getImportsFor(node["b:return/b:type"]) />
-    <#elseif node["b:return/b:type-list"]?is_node>
-      <@addTo assignTo="imports" element=getImportsFor(node["b:return/b:type-list"]) />
-    <#else>
-      <@addTo assignTo="imports" element=getImportsFor(node["b:return/b:type-map"]) />
-    </#if>
-
-    <#assign parameters = node["b:parameters/*"]>
-    <#list parameters as parameter>
-      <@addTo assignTo="imports" element=getImportsFor(parameter) />
-    </#list>
-  <#elseif node?node_name = "column">
+  <#if node?node_name = "column">
       <@addTo assignTo="imports" element=node.@type />
   <#elseif node?node_name = "many-to-one">
   	  <#local targetPackage = getPackage(node.@targetEntity)/>
@@ -77,30 +49,6 @@
 </#function>
 
 
-<#function getParametersDeclaration parameters>
-  <@myList list=parameters var="parameter" assignTo="parametersDeclaration">
-  ${getType(parameter.@type, xml.getAttribute(parameter.@value))} ${parameter.@name}
-  </@myList>
-  <#return parametersDeclaration>
-</#function>
-
-
-<#function getReturnType operation>
-  <#local returnType= "">
-  <#if operation["j:return/j:type"]?is_node>
-    <#local returnType = getType(operation["j:return/j:type/@type"])>
-  <#else>
-    <#local typeList = operation["j:return/j:type-list"]>
-    <#local returnType = getType(typeList.@type, xml.getAttribute(typeList.@value))>
-  </#if>
-  <#return returnType>
-</#function>
-
-<#function getModifiersFrom node>
-  <#return getModifiers(xml.getAttribute(node.@abstract), xml.getAttribute(node.@static), xml.getAttribute(node.@final))>
-</#function>
-
-
 <#function getColumnName columnPrefix property>
   <#local columnName= "">
   <#if xml.existAttribute(property.@column)>
@@ -119,7 +67,7 @@
 
 <#function getJoinColumnName entity property>
   <#local joinColumnName= "">
-  <#if property?node_name = "many-to-one" || property?node_name = "many-to-many">
+  <#if property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
     <#local prefix = "${entity.@name?substring(0,2)?lower_case+getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
     <#local joinColumnName= "${toUnderscoreCase(prefix+'_'+entity.@name?lower_case+'_id')}">
   </#if>
@@ -128,7 +76,7 @@
 
 <#function getInverseJoinColumnName entity property>
   <#local inverseJoinColumnName= "">
-  <#if property?node_name = "many-to-one" || property?node_name = "many-to-many">
+  <#if property?node_name = "many-to-one" || property?node_name = "one-to-many" || property?node_name = "many-to-many">
     <#local prefix = "${entity.@name?substring(0,2)?lower_case+getClassName(property.@targetEntity)?substring(0,1)?lower_case}">
     <#local inverseJoinColumnName= "${toUnderscoreCase(prefix+'_'+getClassName(property.@targetEntity)?lower_case+'_id')}">
   </#if>
@@ -137,7 +85,7 @@
 
 <#function getJoinTableName entity property>
   <#local joinTableName= "">
-  <#if property?node_name = "many-to-one" || property?node_name = "many-to-many">
+  <#if property?node_name = "one-to-many" || property?node_name = "many-to-many">
     <#if xml.existAttribute(property.@joinTable)>
       <#local joinTableName= "${property.@joinTable}">
     <#else>

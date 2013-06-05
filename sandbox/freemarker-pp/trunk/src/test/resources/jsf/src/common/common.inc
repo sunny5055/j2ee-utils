@@ -7,34 +7,7 @@
 
 <#function getImportsFor node jpa=false>
   <#assign imports = [] />
-  <#if node?node_name = "property" || node?node_name = "type" || node?node_name = "parameter">
-      <@addTo assignTo="imports" element=node.@type />
-  <#elseif node?node_name = "property-list" || node?node_name = "type-list" || node?node_name = "parameter-list">
-      <@addTo assignTo="imports" element=node.@type />
-      <@addTo assignTo="imports" element=xml.getAttribute(node.@value) />
-  <#elseif node?node_name = "property-map" || node?node_name = "type-map" || node?node_name = "parameter-map">
-      <@addTo assignTo="imports" element=node.@type />
-      <@addTo assignTo="imports" element=xml.getAttribute(node.@value) />
-      <@addTo assignTo="imports" element=xml.getAttribute(node.@key) />
-  <#elseif node?node_name = "constructor">
-    <#assign parameters = node["b:parameters/*"]>
-    <#list parameters as parameter>
-      <@addTo assignTo="imports" element=getImportsFor(parameter) />
-    </#list>
-  <#elseif node?node_name = "operation">
-    <#if node["b:return/b:type"]?is_node>
-      <@addTo assignTo="imports" element=getImportsFor(node["b:return/b:type"]) />
-    <#elseif node["b:return/b:type-list"]?is_node>
-      <@addTo assignTo="imports" element=getImportsFor(node["b:return/b:type-list"]) />
-    <#else>
-      <@addTo assignTo="imports" element=getImportsFor(node["b:return/b:type-map"]) />
-    </#if>
-
-    <#assign parameters = node["b:parameters/*"]>
-    <#list parameters as parameter>
-      <@addTo assignTo="imports" element=getImportsFor(parameter) />
-    </#list>
-  <#elseif node?node_name = "column">
+  <#if node?node_name = "column">
       <@addTo assignTo="imports" element=node.@type />
   <#elseif node?node_name = "many-to-one">
   	  <#local targetPackage = getPackage(node.@targetEntity)/>
@@ -73,26 +46,6 @@
 
 <#function getPrimaryKeyType entity>
   <#return getType(entity["j:id/@type"])>
-</#function>
-
-
-<#function getParametersDeclaration parameters>
-  <@myList list=parameters var="parameter" assignTo="parametersDeclaration">
-  ${getType(parameter.@type, xml.getAttribute(parameter.@value))} ${parameter.@name}
-  </@myList>
-  <#return parametersDeclaration>
-</#function>
-
-
-<#function getReturnType operation>
-  <#local returnType= "">
-  <#if operation["j:return/j:type"]?is_node>
-    <#local returnType = getType(operation["j:return/j:type/@type"])>
-  <#else>
-    <#local typeList = operation["j:return/j:type-list"]>
-    <#local returnType = getType(typeList.@type, xml.getAttribute(typeList.@value))>
-  </#if>
-  <#return returnType>
 </#function>
 
 

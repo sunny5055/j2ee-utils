@@ -171,14 +171,17 @@
 		              		<#else>
 				                <#local propertyName = property.@name>
 			              	</#if>
-				            <#if property_index != 0>
-				              else
-				            </#if>
 				            <#if property?node_name = "column">
+					            <#if property_index != 0>
+					              else
+					            </#if>
 				                <@getSearchParameter columnPrefix=columnPrefix propertyName=propertyName propertyType=getType(property.@type) />
 				            <#elseif property?node_name = "many-to-one">
 		                 		<@xPath xml=doc expression="//j:entity[@name='${getType(property.@targetEntity)}']" assignTo="targetEntity" />
 			                	<#if targetEntity??>
+						            <#if property_index != 0>
+					              	else
+					            	</#if>
 			                    	<@xPath xml=doc expression="//j:entity[@name='${getType(property.@targetEntity)}']/j:properties/j:column[@unique='true']" assignTo="uniqueColumns" />
 			                    	<#if uniqueColumns?? && uniqueColumns?size == 1>
 			                      		<#local targetColumn = uniqueColumns[0]>
@@ -214,14 +217,17 @@
 						<#else>
 					  		<#local propertyName = property.@name>
 						</#if>
-						<#if property_index != 0>
-							else
-						</#if>
 						<#if property?node_name = "column">
+							<#if property_index != 0>
+								else
+							</#if>
 					  		<@getSortParameter columnPrefix=columnPrefix propertyName=propertyName />
 						<#elseif property?node_name = "many-to-one">
 					  		<@xPath xml=doc expression="//j:entity[@name='${getType(property.@targetEntity)}']" assignTo="targetEntity" />
 					  		<#if targetEntity??>
+								<#if property_index != 0>
+									else
+								</#if>
 								<@xPath xml=doc expression="//j:entity[@name='${getType(property.@targetEntity)}']/j:properties/j:column[@unique='true']" assignTo="uniqueColumns" />
 								<#if uniqueColumns?? && uniqueColumns?size == 1>
 					  				<#local targetColumn = uniqueColumns[0]>

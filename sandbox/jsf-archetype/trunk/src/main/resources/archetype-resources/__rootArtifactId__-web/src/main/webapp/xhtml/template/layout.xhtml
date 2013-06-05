@@ -23,11 +23,16 @@ $symbol_escape = '\' )
 		</f:facet>
 
 		<link rel="stylesheet" href="${symbol_pound}{resource['css:main.css']}" type="text/css" />
-		<h:outputText value="&lt;!--[if lte IE 8]&gt;&lt;link rel=&quot;stylesheet&quot; href=&quot;${symbol_pound}{resource['css:main-ie.css']}&quot; type=&quot;text/css&quot; /&gt;&lt;![endif]--&gt;" escape="false" />
-
-		<h:outputText value="&lt;!--[if lt IE 7]&gt;&lt;script type=&quot;text/javascript&quot; src=&quot;${symbol_pound}{resource['js:DD_belatedPNG_0.0.8a-min.js']}&quot;&gt;&lt;/script&gt;&lt;![endif]--&gt;" escape="false" />
-		<h:outputText value="&lt;!--[if IE]&gt;&lt;script type=&quot;text/javascript&quot; src=&quot;${symbol_pound}{resource['js:html5.js']}&quot;&gt;&lt;/script&gt;&lt;![endif]--&gt;" escape="false" />
-		<h:outputText value="&lt;!--[if lte IE 7]&gt;&lt;script type=&quot;text/javascript&quot; src=&quot;${symbol_pound}{resource['js:IE8.js']}&quot;&gt;&lt;/script&gt;&lt;![endif]--&gt;" escape="false" />
+		<o:conditionalComment if="IE">
+		    <link rel="stylesheet" href="#{resource['css:main-ie.css']}" type="text/css" />
+		</o:conditionalComment>
+		<o:conditionalComment if="lte IE 7">
+		    <h:outputScript library="js" name="DD_belatedPNG_0.0.8a-min.js"/>
+		</o:conditionalComment>
+		<o:conditionalComment if="lt IE 9">
+		    <h:outputScript library="js" name="IE9.js"/>
+		    <h:outputScript library="js" name="html5-ie.js"/>
+		</o:conditionalComment>
 
 		<h:outputScript library="js" name="main.js"/>
 

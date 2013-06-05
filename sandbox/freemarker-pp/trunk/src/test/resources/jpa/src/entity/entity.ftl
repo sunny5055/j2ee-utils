@@ -21,15 +21,7 @@ package ${entityPackageName};
 </#if>
 
 <#assign imports = [] />
-<#if util.xml.existAttribute(entity.@superClass)>
-	<@addTo assignTo="imports" element=getFqdn(entity.@superClass) />
-<#else>
-	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.entity.AbstractEntity" />
-</#if>
-<#list interfaces as interface>
-	<@addTo assignTo="imports" element=getFqdn(interface) />
-</#list>
-
+<@addTo assignTo="imports" element="com.googlecode.jutils.dal.entity.AbstractEntity" />
 <@addTo assignTo="imports" element="javax.persistence.Entity" />
 <@addTo assignTo="imports" element="javax.persistence.Table" />
 <@addTo assignTo="imports" element="javax.persistence.Column" />
@@ -59,7 +51,6 @@ package ${entityPackageName};
 </#if>
 <#if manyToManys?size gt 0>
 	<@addTo assignTo="imports" element="javax.persistence.ManyToMany" />
-	<@addTo assignTo="imports" element="javax.persistence.JoinTable" />
 	<#list manyToManys as manyToMany>
 		<@addTo assignTo="imports" element=util.getImportsFor(manyToMany, true) />
 	</#list>
@@ -69,13 +60,9 @@ package ${entityPackageName};
 	<@addTo assignTo="imports" element="javax.persistence.JoinColumn" />
 	<@addTo assignTo="imports" element="javax.persistence.FetchType" />
 </#if>
-<#list constructors as constructor>
-	<@addTo assignTo="imports" element=util.getImportsFor(constructor, true) />
-</#list>
-<#list operations as operation>
-  <@addTo assignTo="imports" element=util.getImportsFor(operation, true) />
-</#list>
-
+<#if oneToManys?size gt 0 || manyToManys?size gt 0>
+	<@addTo assignTo="imports" element="javax.persistence.JoinTable" />
+</#if>
 <#if queries.hasNamedQuery(xml, entity) == "true">
 	<@addTo assignTo="imports" element="javax.persistence.NamedQueries" />
 	<@addTo assignTo="imports" element="javax.persistence.NamedQuery" />
@@ -86,17 +73,7 @@ ${getImports(true, entityPackageName, imports)}
 ${jpa.getTableAnnotation(xml, entity)}
 <@queries.getNamedQueries doc=xml entity=entity/>
 @SuppressWarnings("serial")
-<#compress>
-public ${util.getModifiersFrom(entity)} class ${entityName}
-<#if util.xml.existAttribute(entity.@superClass)>
- extends ${getClassName(entity.@superClass)}
-<#else>
- extends AbstractEntity<${primaryKeyType}>
-</#if>
-<#if interfaces?size gt 0>
- implements <@myList list=interfaces var="interface">${getClassName(interface)}</@myList>
-</#if>
-{</#compress>
+public class ${entityName} extends AbstractEntity<${primaryKeyType}> {
 <@queries.getQueryNames doc=xml entity=entity />
 
 
@@ -128,10 +105,6 @@ ${jpa.getJpaAnnotation(entity, manyToMany)}
 			<@util.initProperties property=manyToMany/>
 		</#list>
   	}
-
-<#list constructors as constructor>
-	<@util.constructor className=entityName constructor=constructor/>
-</#list>
 
 <@util.getterPrimaryKey property=primaryKey/>
 

@@ -35,6 +35,8 @@ package ${servicePackageName};
 <#list columns as column>
 <#if column.@type == "String">
 	<@addTo assignTo="imports" element="org.apache.commons.lang3.RandomStringUtils" />
+<#elseif getClassName(column.@type) == "Date">
+	<@addTo assignTo="imports" element="java.util.Date" />
 <#else>
 	<@addTo assignTo="imports" element="java.util.Random" />
 </#if>

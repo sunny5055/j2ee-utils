@@ -64,14 +64,3 @@
   </#if>
 </#macro>
 
-
-<#macro constructor className constructor>
-  <#assign parameters = constructor["j:parameters/*"]>
-  <#local visibility= xml.getAttribute(constructor.@visibility, "public")>
-  <#if constructor["j:content"]?is_node>
-    <@java.constructor visibility=visibility className=className parameters=getParametersDeclaration(parameters) content=constructor["j:content"] />
-  <#else>
-  <@java.constructor visibility=visibility className=className parameters=getParametersDeclaration(parameters) />
-  </#if>
-</#macro>
-

@@ -1,5 +1,4 @@
 <#if entity??>
-	<#assign interfaces = entity["./j:interface"]>
 	<#assign primaryKey = util.getPrimaryKey(entity)>
 	<#assign primaryKeyType = util.getPrimaryKeyType(entity) />
 	<#assign allProperties = entity["./j:properties/*"]>
@@ -8,8 +7,6 @@
 	<#assign manyToOnes = entity["./j:properties/j:many-to-one"]>
 	<#assign oneToManys = entity["./j:properties/j:one-to-many"]>
 	<#assign manyToManys = entity["./j:properties/j:many-to-many"]>
-	<#assign constructors = entity["./j:constructor"]>
-	<#assign operations = entity["./j:operation"]>
 
 	<#assign allConstraints=entity["./j:constraints/*"] />
 	<#assign uniqueConstraints=entity["./j:constraints/j:uniqueConstraint"] />

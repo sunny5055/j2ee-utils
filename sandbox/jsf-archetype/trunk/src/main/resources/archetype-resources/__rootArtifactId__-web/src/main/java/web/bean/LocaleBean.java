@@ -16,6 +16,7 @@ import ${package}.web.util.FacesUtils;
 @SuppressWarnings("serial")
 public class LocaleBean implements Serializable {
 	private Locale locale;
+	private String timeZone;
 	private String datePattern;
 	private String dateTimePattern;
 	private String timePattern;
@@ -28,10 +29,15 @@ public class LocaleBean implements Serializable {
 	protected void init() {
 		final Locale currentLocale = FacesUtils.getCurrentLocale();
 
-		this.locale = FacesUtils.updateLocale(currentLocale);
-		this.datePattern = FacesUtils.getLabel("date_pattern");
-		this.dateTimePattern = FacesUtils.getLabel("datetime_pattern");
-		this.timePattern = FacesUtils.getLabel("time_pattern");
+		changeLocale(currentLocale);
+	}
+
+	public String getTimeZone() {
+		return timeZone;
+	}
+
+	public void setTimeZone(String timeZone) {
+		this.timeZone = timeZone;
 	}
 
 	public Locale getLocale() {
@@ -69,9 +75,13 @@ public class LocaleBean implements Serializable {
 	public void changeLocale(ValueChangeEvent event) {
 		final Locale newLocale = (Locale) event.getNewValue();
 
+		changeLocale(newLocale);
+	}
+
+	private void changeLocale(Locale newLocale) {
 		if (newLocale != null) {
 			this.locale = FacesUtils.updateLocale(newLocale);
-
+			this.timeZone = FacesUtils.getLabel("time_zone");
 			this.datePattern = FacesUtils.getLabel("date_pattern");
 			this.dateTimePattern = FacesUtils.getLabel("datetime_pattern");
 			this.timePattern = FacesUtils.getLabel("time_pattern");

@@ -48,7 +48,7 @@
 					<#if id?length != 0>id="${id}"</#if>
 					value="${sharp}{${value}}"
 					<#if styleClass?length != 0>styleClass="${styleClass}"</#if>>
-					<f:convertDateTime pattern="dd/MM/yyyy" timeZone="Europe/Paris" />
+					<f:convertDateTime pattern="${sharp}{localeBean.datePattern}" timeZone="${sharp}{localeBean.timeZone}" />
 				</h:outputText>
 		  	<#elseif type == "Boolean">
 		  		<h:panelGroup <#if id?length != 0>id="${id}"</#if>>
@@ -156,8 +156,8 @@
 					/>
 		    <#elseif type == "Date">
 		    	<p:calendar <#if id?length != 0>id="${id}"</#if>
-					pattern="dd/MM/yyyy"
-					timeZone="Europe/Paris"
+		    		pattern="${sharp}{localeBean.datePattern}"
+		    		timeZone="${sharp}{localeBean.timeZone}"
 					autocomplete="off"
 					showOn="both"
 					<#if useRequired && xml.getAttribute(property.@nullable) == "false">

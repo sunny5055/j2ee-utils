@@ -45,6 +45,10 @@ print_btn=Imprimer
 # Buttons
 
 loading=Chargement...
+time_zone=Europe/Paris
+date_pattern=dd/MM/yyyy
+datetime_pattern=dd/MM/yyyy HH:mm
+time_pattern=HH:mm
 
 # Common list
 list_results_per_page=Résultats par page

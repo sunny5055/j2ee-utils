@@ -9,7 +9,7 @@
 	<xsd:element name="entity">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element name="id" type="j:id" />
+				<xsd:element name="id" type="j:id" minOccurs="0" />
 				<xsd:element name="properties" minOccurs="0">
 					<xsd:complexType>
 						<xsd:choice minOccurs="0" maxOccurs="unbounded">
@@ -29,12 +29,15 @@
 					</xsd:complexType>
 				</xsd:element>
 			</xsd:sequence>
+			<xsd:attribute name="abstract" type="xsd:boolean" use="optional"
+				default="false" />
 			<xsd:attribute name="name" type="xsd:string" use="required" />
 			<xsd:attribute name="tableName" type="xsd:string" use="required" />
 			<xsd:attribute name="columnPrefix" type="xsd:string"
 				use="required" />
 			<xsd:attribute name="readOnly" type="xsd:boolean" use="optional"
 				default="false" />
+			<xsd:attribute name="superClass" type="xsd:string" use="optional" />
 		</xsd:complexType>
 	</xsd:element>
 

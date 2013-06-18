@@ -1,6 +1,6 @@
 {
 	sourceDirectory : 'src',
-	outputDirectory : 'out',
+	outputDirectory : 'D:\\jschaal\\Perso\\Projets\\j2ee-utils\\test',
 	actions : [
 		{
 			name : 'process',

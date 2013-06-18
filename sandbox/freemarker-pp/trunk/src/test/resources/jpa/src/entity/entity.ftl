@@ -21,7 +21,11 @@ package ${entityPackageName};
 </#if>
 
 <#assign imports = [] />
-<@addTo assignTo="imports" element="com.googlecode.jutils.dal.entity.AbstractEntity" />
+<#if util.xml.existAttribute(entity.@superClass)>
+	<@addTo assignTo="imports" element=getFqdn(entity.@superClass) />
+<#else>
+	<@addTo assignTo="imports" element="com.googlecode.jutils.dal.entity.AbstractEntity" />
+</#if>
 <@addTo assignTo="imports" element="javax.persistence.Entity" />
 <@addTo assignTo="imports" element="javax.persistence.Table" />
 <@addTo assignTo="imports" element="javax.persistence.Column" />
@@ -73,12 +77,19 @@ ${getImports(true, entityPackageName, imports)}
 ${jpa.getTableAnnotation(xml, entity)}
 <@queries.getNamedQueries doc=xml entity=entity/>
 @SuppressWarnings("serial")
-public class ${entityName} extends AbstractEntity<${primaryKeyType}> {
+<#compress>
+public ${util.getModifiersFrom(entity)} class ${entityName}
+<#if util.xml.existAttribute(entity.@superClass)>
+ extends ${getClassName(entity.@superClass)}
+<#else>
+ extends AbstractEntity<${primaryKeyType}>
+</#if>
+{</#compress>
 <@queries.getQueryNames doc=xml entity=entity />
-
 
 ${jpa.getJpaAnnotation(entity, primaryKey)}
 <@util.getProperty property=primaryKey/>
+
 <#list columns as column>
 ${jpa.getJpaAnnotation(entity, column)}
 <@util.getProperty property=column/>
@@ -113,6 +124,7 @@ ${jpa.getJpaAnnotation(entity, manyToMany)}
 <@util.getter property=primaryKey/>
 
 <@util.setter property=primaryKey/>
+
 
 <#list columns as column>
   <@util.getter property=column/>

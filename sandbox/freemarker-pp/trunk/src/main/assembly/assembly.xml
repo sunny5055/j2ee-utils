@@ -9,28 +9,26 @@
 	</formats>
 	<dependencySets>
 		<dependencySet>
-			<outputDirectory>/build/lib</outputDirectory>
-			<excludes>
-				<exclude>${project.groupId}:${project.artifactId}:*</exclude>
-			</excludes>
+			<useProjectArtifact>true</useProjectArtifact>
+			<outputDirectory>lib</outputDirectory>
 			<unpack>false</unpack>
 		</dependencySet>
 	</dependencySets>
 	<fileSets>
 		<fileSet>
 			<directory>src/main/config</directory>
-			<outputDirectory>/bin</outputDirectory>
+			<outputDirectory>/config</outputDirectory>
 			<filtered>true</filtered>
 			<includes>
-				<include>**/*.bat</include>
-				<include>**/*.sh</include>
+				<include>*.*</include>
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>${project.build.directory}</directory>
-			<outputDirectory>/build</outputDirectory>
+			<directory>${project.build.scriptSourceDirectory}</directory>
+			<outputDirectory>/</outputDirectory>
+			<filtered>true</filtered>
 			<includes>
-				<include>*.jar</include>
+				<include>*.bat</include>
 			</includes>
 		</fileSet>
 	</fileSets>

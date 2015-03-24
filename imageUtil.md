@@ -1,0 +1,3 @@
+# image-util #
+
+This project provides classes that facilitate the images manipulation (resizing, insertion in a file...) for different file formats (jpg, jpeg, png, gif).

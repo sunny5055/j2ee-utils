@@ -1,0 +1,4 @@
+# jpa-dal #
+
+This projects extends classes contains in 'common-dal' and adapts them to a Jpa usage.
+In addition, it provides utilitary classes used for entity management.

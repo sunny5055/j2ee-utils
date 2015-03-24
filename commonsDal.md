@@ -1,0 +1,3 @@
+# commons-dal #
+
+This project provides generics classes and interfaces for DAOs, DTOs and models management.

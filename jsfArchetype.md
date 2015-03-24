@@ -1,0 +1,16 @@
+# jsf-archetype #
+
+This project defines a Web project archetype that relies on Spring, JPA (Hibernate), Maven, JSF2 and PrimeFaces. It creates a main project splitted into three modules :
+<ul>
+<blockquote><li>An api module : contains the models and service interfaces of the application;</li>
+<li>A service module : contains the dao and service implementations of the application;</li>
+<li>A web module : contains all the components that are used in the Web GUI.</li>
+</ul></blockquote>
+
+```
+mvn archetype:generate -DgroupId=com.google
+	-DartifactId=test 
+	-DarchetypeGroupId=jee-utils 
+	-DarchetypeArtifactId=jsf-archetype 
+	-DarchetypeVersion=1.0.0
+```

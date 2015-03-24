@@ -1,0 +1,33 @@
+# Index #
+
+## Summary ##
+
+This wiki sums up all the projects's aims and goals. It explains how you can use them and gives details and quick descriptions of their configurations files.
+
+## Useful Maven command ##
+
+Generate a maven project
+```
+mvn archetype:create -DgroupId= -DartifactId= -Dversion=
+```
+
+Generate a maven webapp project
+```
+mvn archetype:generate -DarchetypeArtifactId=maven-archetype-webapp -DgroupId= -DartifactId= -Dversion=
+```
+
+Install a project with source code and javadoc
+```
+mvn clean javadoc:jar source:jar install clean
+```
+
+Obtain the source code of all dependencies
+```
+mvn dependency:sources
+```
+
+Perform a release without a repository
+```
+mvn release:prepare
+mvn release:perform -Dgoals=install
+```

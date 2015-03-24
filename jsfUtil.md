@@ -1,0 +1,4 @@
+# jsf-util #
+
+This project contains classes that extends components classes from JSF2's and PrimeFaces' components API.
+It includes all the dependencies linked to the use of JSF, PrimeFaces and Web GUI development.

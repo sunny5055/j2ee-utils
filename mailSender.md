@@ -1,0 +1,59 @@
+# mail-sender #
+
+## Getting started ##
+
+Define a `JavaMailSenderImpl` as following :
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+	<context:component-scan base-package="com.google" />
+	<context:annotation-config />
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="25" />
+		<property name="username" value="username" />
+		<property name="password" value="password" />
+		<property name="javaMailProperties">
+			<props>
+				<!-- Use SMTP transport protocol -->
+				<prop key="mail.transport.protocol">smtp</prop>
+				<!-- Use SMTP-AUTH to authenticate to SMTP server -->
+				<prop key="mail.smtp.auth">true</prop>
+				<!-- Use TLS to encrypt communication with SMTP server -->
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+</beans>
+```
+
+Use the component as follows :
+
+```
+ public static void main(String[] args) throws IOException {
+	final ApplicationContext context = new ClassPathXmlApplicationContext("spring/application-context.xml");
+	final MailSenderService mailSenderService = context.getBean(MailSenderService.class);
+
+	final List<String> recipients = new ArrayList<String>();
+	recipients.add("john.doe@gmail.com");
+
+	try {
+		mailSenderService.sendMail("malcolm.x@gmail.com", recipients, "Test", "This is a test !", false);            		
+	} catch (final MailSenderServiceException e) {		
+		e.printStackTrace();
+	}
+}
+```

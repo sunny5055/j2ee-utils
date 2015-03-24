@@ -1,0 +1,20 @@
+# sftp-util #
+
+This project contains a utilitary class that provides basic functions, in order to establish a SFTP connexion and to manipulate files that are located on the host Server.
+
+## How to launch ##
+
+If you want to use this program, you need to follow these steps :
+<ol type='I'>
+<blockquote><li>Create a directory named "ftp" at the root of your C: directory</li>
+<li>Launch "msftpsrvr.exe" located in "src/test/resources"</li>
+<li>Once the program is launched, enter the following informations</li>
+<blockquote><ul>
+<blockquote><li>User : test</li>
+<li>Password : test</li>
+<li>Port : 22</li>
+<li>Root path : C:/ftp</li>
+<li>Then, click on the start button.</li>
+</blockquote></ul>
+</blockquote><li>Launch the Demo.java program</li>
+</ol>
